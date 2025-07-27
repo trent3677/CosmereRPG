@@ -192,6 +192,10 @@ class ModulePathManager:
         """Get the path to the main module file"""
         return f"{self.module_dir}/{self.module_name}_module.json"
     
+    def get_context_path(self):
+        """Get the path to the module context file"""
+        return f"{self.module_dir}/module_context.json"
+    
     # Player character paths
     def get_player_path(self, player_name):
         """Get the path to a player character file (legacy support)"""

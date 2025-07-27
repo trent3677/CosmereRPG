@@ -20,6 +20,7 @@ Maintains consistency across all module generation by tracking references and re
 """
 
 import json
+import re
 from typing import Dict, List, Any, Set
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -61,29 +62,66 @@ class ModuleContext:
         }
     
     def add_npc(self, npc_name: str, area_id: str = None, location_id: str = None, 
-                role: str = "", faction: str = ""):
-        """Register an NPC and track where they appear"""
+                role: str = "", faction: str = "", description: str = ""):
+        """
+        Smarter NPC registration that finds or creates a canonical entry.
+        It normalizes names and handles aliases/duplicates.
+        """
         from updates.update_character_info import normalize_character_name
-        npc_key = normalize_character_name(npc_name)
         
-        if npc_key not in self.npcs:
-            self.npcs[npc_key] = {
-                "name": npc_name,
+        # --- New Smart Matching Logic ---
+        # 1. Get the "base name" by removing parenthetical descriptions (e.g., "Elder Myra")
+        base_name = re.sub(r'\s*\([^)]*\)\s*', '', npc_name).strip()
+        
+        # 2. Search for an existing NPC with the same base name
+        canonical_key = None
+        for key, data in self.npcs.items():
+            existing_base_name = re.sub(r'\s*\([^)]*\)\s*', '', data['name']).strip()
+            if base_name.lower() == existing_base_name.lower():
+                canonical_key = key
+                break
+        
+        # 3. Handle special cases like "Specter of Abbot Liran" vs "Spirit of Abbot Liran"
+        if not canonical_key:
+            if "abbot liran" in base_name.lower():
+                for key, data in self.npcs.items():
+                    if "abbot liran" in data['name'].lower():
+                        canonical_key = key
+                        break
+
+        # 4. If no match is found, create a NEW canonical entry
+        if not canonical_key:
+            canonical_key = normalize_character_name(base_name)  # The key is based on the clean name
+            self.npcs[canonical_key] = {
+                "name": base_name,  # Store the clean, canonical name
                 "role": role,
                 "faction": faction,
-                "appears_in": []
+                "description": description,
+                "appears_in": [],
+                "aliases": [npc_name]  # Track the original generated name as an alias
             }
+        # 5. If a match IS found, update the existing entry
+        else:
+            # Add the new variant as an alias if it's not already there
+            if npc_name not in self.npcs[canonical_key].get("aliases", []):
+                self.npcs[canonical_key].setdefault("aliases", []).append(npc_name)
+            # If the new entry has a description and the old one doesn't, add it
+            if description and not self.npcs[canonical_key].get("description"):
+                self.npcs[canonical_key]["description"] = description
         
-        # Track where this NPC appears
+        # --- End of New Logic ---
+
+        # Track where this NPC appears using the canonical entry
         if area_id and location_id:
             appearance = {"area": area_id, "location": location_id}
-            if appearance not in self.npcs[npc_key]["appears_in"]:
-                self.npcs[npc_key]["appears_in"].append(appearance)
+            if appearance not in self.npcs[canonical_key]["appears_in"]:
+                self.npcs[canonical_key]["appears_in"].append(appearance)
         
-        # Add to area tracking
+        # Add to the area's NPC list using the canonical name
         if area_id and area_id in self.areas:
-            if npc_name not in self.areas[area_id]["npcs"]:
-                self.areas[area_id]["npcs"].append(npc_name)
+            canonical_name = self.npcs[canonical_key]['name']
+            if canonical_name not in self.areas[area_id]["npcs"]:
+                self.areas[area_id]["npcs"].append(canonical_name)
     
     def add_location(self, location_id: str, location_name: str, area_id: str):
         """Register a location"""

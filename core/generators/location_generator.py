@@ -496,9 +496,10 @@ For each location stub provided, generate complete location data following the s
 Ensure locations:
 1. Connect logically based on the map layout
 2. Support the plot's needs (place key items, NPCs, and clues appropriately)
-3. Vary in purpose and challenge
-4. Include a mix of combat, exploration, and roleplay opportunities
-5. Feel cohesive as part of the same {area_data.get('areaType', 'area')}
+3. If a location stub already has an NPC entry (like a pre-placed antagonist), you MUST include that NPC. You can enhance their description, but their name and presence are mandatory
+4. Vary in purpose and challenge
+5. Include a mix of combat, exploration, and roleplay opportunities
+6. Feel cohesive as part of the same {area_data.get('areaType', 'area')}
 
 Return a JSON object with a 'locations' array containing all complete location objects.
 Each location must include ALL required fields from the location schema.
@@ -616,10 +617,17 @@ Check the location schema carefully for all required fields.
                 location_id = location.get("locationId")
                 for npc in location.get("npcs", []):
                     npc_name = npc.get("name")
+                    # --- CHANGE IS HERE ---
+                    npc_description = npc.get("description", "")  # Get the description
                     if npc_name and area_id and location_id:
-                        # Update context with actual placement
-                        context.add_npc(npc_name, area_id, location_id)
-                        print(f"DEBUG: [Location Generator] Updated context: {npc_name} placed in {area_id}:{location_id}")
+                        # Update context with full NPC info for better matching
+                        context.add_npc(
+                            npc_name=npc_name, 
+                            area_id=area_id, 
+                            location_id=location_id,
+                            description=npc_description  # Pass the description
+                        )
+                        print(f"DEBUG: [Location Generator] Registered/Updated context for: {npc_name} in {area_id}:{location_id}")
             
             # Ensure plot-critical locations have appropriate content
             location_id = location["locationId"]

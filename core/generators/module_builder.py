@@ -46,6 +46,7 @@ except ImportError:
 
 from utils.module_context import ModuleContext
 from utils.enhanced_logger import debug, info, warning, error, set_script_name
+from utils.npc_reconciler import NpcReconciler
 
 # Set script name for logging
 set_script_name("module_builder")
@@ -169,6 +170,10 @@ MODULE INDEPENDENCE RULES:
         self.log("Step 4.6: Updating area plot hooks...")
         self.update_area_plot_hooks()
         
+        # Step 4.7: Inject the antagonist into the climactic location
+        self.log("Step 4.7: Mandating antagonist placement...")
+        self._inject_antagonist_into_climactic_location()
+        
         # Step 5: Generate initial party tracker
         self.log("Step 5: Creating party tracker...")
         self.create_party_tracker()
@@ -176,6 +181,12 @@ MODULE INDEPENDENCE RULES:
         # Step 6: Create module summary
         self.log("Step 6: Creating module summary...")
         self.create_module_summary()
+        
+        # Step 6.5: Reconcile NPC names across all files
+        self.log("Step 6.5: Reconciling NPC names for consistency...")
+        reconciler = NpcReconciler(self.config.module_name)
+        if reconciler.load_context():
+            reconciler.reconcile_all_areas()
         
         # Step 7: Validate and save context
         self.log("Step 7: Validating module consistency...")
@@ -188,6 +199,80 @@ MODULE INDEPENDENCE RULES:
         self.log("Module generation complete!")
         self.log(f"Output saved to: {self.config.output_directory}")
     
+    def _inject_antagonist_into_climactic_location(self):
+        """
+        Ensures the main antagonist is placed in the final location of the module.
+        This works by reading the generated area files and updating them directly.
+        """
+        self.log("Injecting main antagonist into climactic location...")
+
+        # 1. Identify the main antagonist from the module data
+        antagonist_name = self.module_data.get("mainPlot", {}).get("antagonist")
+        if not antagonist_name:
+            self.log("  - WARNING: No antagonist found in module data. Skipping injection.")
+            return
+
+        # 2. Identify the climactic area by reading the unified plot file
+        plot_file_path = os.path.join(self.config.output_directory, "module_plot.json")
+        if not os.path.exists(plot_file_path):
+            self.log(f"  - WARNING: module_plot.json not found. Cannot determine climactic location.")
+            return
+
+        from utils.file_operations import safe_read_json, safe_write_json
+        unified_plot = safe_read_json(plot_file_path)
+        plot_points = unified_plot.get("plotPoints", [])
+        if not plot_points:
+            self.log("  - WARNING: No plot points found. Cannot determine climactic location.")
+            return
+
+        # The climactic plot point is the last one in the list
+        climactic_plot_point = plot_points[-1]
+        climactic_area_id = climactic_plot_point.get("location") # This gives us the area ID, e.g., "SD001"
+
+        if not climactic_area_id:
+            self.log(f"  - WARNING: No location specified in climactic plot point.")
+            return
+
+        # 3. Load the area file
+        area_file_path = os.path.join(self.config.output_directory, "areas", f"{climactic_area_id}.json")
+        if not os.path.exists(area_file_path):
+            self.log(f"  - WARNING: Area file {area_file_path} not found.")
+            return
+            
+        area_data = safe_read_json(area_file_path)
+        if not area_data:
+            self.log(f"  - WARNING: Could not read area file {area_file_path}.")
+            return
+        
+        # 4. Find the last location in this area
+        locations = area_data.get("locations", [])
+        if not locations:
+            self.log(f"  - WARNING: No locations found in area {climactic_area_id}.")
+            return
+            
+        # The last location is our target
+        climactic_location = locations[-1]
+        climactic_location_id = climactic_location.get("locationId")
+
+        # 5. Check if antagonist is already there
+        npcs = climactic_location.get("npcs", [])
+        if any(npc.get("name") == antagonist_name for npc in npcs):
+            self.log(f"  - INFO: Antagonist '{antagonist_name}' already present in {climactic_area_id}:{climactic_location_id}.")
+            return
+
+        # 6. Create and inject the antagonist NPC
+        antagonist_npc_entry = {
+            "name": antagonist_name,
+            "description": f"The main antagonist of the story, {antagonist_name}.",
+            "attitude": "hostile"
+        }
+        
+        climactic_location.setdefault("npcs", []).append(antagonist_npc_entry)
+        
+        # 7. Save the updated area file
+        safe_write_json(area_data, area_file_path)
+        self.log(f"  - SUCCESS: Mandated placement of '{antagonist_name}' in {climactic_area_id}:{climactic_location_id}.")
+
     def generate_areas(self):
         """Generate detailed area files from the module world map"""
         world_map = self.module_data.get("worldMap", [])
