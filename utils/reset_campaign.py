@@ -61,7 +61,8 @@ def create_backup():
         "modules/conversation_history/third_model_history.json", "debug_encounter_update.json", "debug_initial_response.json",
         "debug_npc_update.json", "debug_player_update.json", "debug_second_model.json",
         "npc_update_debug_log.json", "npc_update_detailed_log.json", "prompt_validation.json",
-        "training_data.json", "debug.txt", "claude.txt"
+        "training_data.json", "debug.txt", "claude.txt",
+        "modules/effects_tracker.json", "modules/default/effects_tracker.json"
     ]
     
     for file in root_files:
@@ -177,6 +178,12 @@ def reset_global_state():
     if os.path.exists(world_registry_file):
         os.remove(world_registry_file)
         print("  ✓ Removed world_registry.json (will be created fresh)")
+    
+    # Delete effects_tracker.json files
+    effects_tracker_files = ["modules/effects_tracker.json", "modules/default/effects_tracker.json"]
+    for file in effects_tracker_files:
+        if os.path.exists(file):
+            os.remove(file)
     
     # Reset current location to Keep of Doom starting point
     starting_location = {

@@ -141,6 +141,8 @@ class SaveGameManager:
         essential_files.extend([
             "modules/campaign.json",
             "modules/world_registry.json",
+            "modules/effects_tracker.json",
+            "modules/default/effects_tracker.json",
         ])
         
         # Campaign continuity files (CRITICAL for module transitions)
