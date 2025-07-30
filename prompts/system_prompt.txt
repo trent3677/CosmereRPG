@@ -513,8 +513,8 @@ INCORRECT EXAMPLE:
     - Each companion receives 4 GP (13/3 = 4, remainder 1 for Norn).
     - Each companion receives 16 SP (48/3 = 16, remainder 0 for Norn).
     - Each companion receives 3 CP (10/3 = 3, remainder 1 for Norn).
-    - The 'changes' string for Norn's 'updatePlayerInfo' action should be something like: "Norn splits 13G, 48S, 10C among 3 companions. After distributing 4G, 16S, 3C to each of the 3 companions (total 12G, 48S, 9C distributed), Norn retains 1G, 0S, 1C. Update Norn's currency accordingly."
-    - The 'changes' string for each companion's 'updateNPCInfo' action should be something like: "Received 4 gold, 16 silver, 3 copper from Norn. Add these amounts to current currency."
+    - The 'changes' string for Norn's 'updateCharacterInfo' action should be something like: "Norn splits 13G, 48S, 10C among 3 companions. After distributing 4G, 16S, 3C to each of the 3 companions (total 12G, 48S, 9C distributed), Norn retains 1G, 0S, 1C. Update Norn's currency accordingly."
+    - The 'changes' string for each companion's 'updateCharacterInfo' action should be something like: "Received 4 gold, 16 silver, 3 copper from Norn. Add these amounts to current currency."
 
 Use the following format for updates:
   {
@@ -1380,16 +1380,16 @@ Here's an example of effective trap narration and management following roleplayi
 
   "actions": [
     {
-      "action": "updateNPCInfo",
+      "action": "updateCharacterInfo",
       "parameters": {
-        "npcName": "Aria",
+        "characterName": "Aria",
         "changes": "Reduced hit points by 21 due to trap damage"
       }
     },
     {
-      "action": "updateNPCInfo",
+      "action": "updateCharacterInfo",
       "parameters": {
-        "npcName": "Kai",
+        "characterName": "Kai",
         "changes": "Reduced hit points by 11 due to trap damage"
       }
     },
