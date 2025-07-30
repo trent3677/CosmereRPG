@@ -78,6 +78,7 @@
 
 import json
 import os
+import re
 from utils.module_path_manager import ModulePathManager
 from utils.encoding_utils import safe_json_load
 from utils.plot_formatting import format_plot_for_ai
@@ -292,8 +293,8 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
     # ============================================================================
     # Check if there has been a module transition by comparing current module
     # with the module from previous conversation state BEFORE removing system messages
-    current_module = party_tracker_data.get('module', 'Unknown') if party_tracker_data else 'Unknown'
-    previous_module = get_previous_module_from_history(conversation_history)
+    previous_module = party_tracker_data.get('module', 'Unknown') if party_tracker_data else 'Unknown'
+    current_module = get_previous_module_from_history(conversation_history)
 
     # Remove any existing system messages for location, party tracker, plot, map, module data, world state, and campaign context
     updated_history = [
@@ -326,15 +327,24 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
     # Check if we're transitioning to a different module
     if previous_module and current_module and previous_module != current_module and current_module != 'Unknown':
         debug(f"STATE_CHANGE: Module transition detected in update_conversation_history: {previous_module} -> {current_module}", category="module_management")
+        print(f"DEBUG: [Module Transition] Detected transition from {previous_module} to {current_module}")
         
-        # Archive is handled by campaign_manager, we just need to load the right conversation
+        # ALWAYS clear the conversation history first on module transition
+        debug(f"STATE_CHANGE: Clearing conversation history for module transition", category="module_management")
+        print(f"DEBUG: [Module Transition] Clearing conversation history")
+        updated_history = []
+        
+        # THEN try to restore from archive if available
+        # Use the previous module as the destination
+        destination_module = previous_module
+        print(f"DEBUG: [Module Transition] Loading conversation for destination module: {destination_module}")
+        
         archive_dir = "modules/campaign_archives"
         
-        # Find the most recent archive for the current module
+        # Find the most recent archive for the destination module
         if os.path.exists(archive_dir):
-            import re
             archive_files = []
-            pattern = re.compile(f"{current_module}_conversation_(\\d{{3}})\\.json")
+            pattern = re.compile(f"{destination_module}_conversation_(\\d{{3}})\\.json")
             
             for filename in os.listdir(archive_dir):
                 match = pattern.match(filename)
@@ -348,6 +358,7 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
                 most_recent_sequence, most_recent_file = archive_files[0]
                 
                 archive_path = os.path.join(archive_dir, most_recent_file)
+                print(f"DEBUG: [Module Transition] Attempting to load archive: {most_recent_file}")
                 archive_data = safe_json_load(archive_path)
                 
                 if archive_data and isinstance(archive_data, dict) and 'conversationHistory' in archive_data:
@@ -357,17 +368,21 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
                         if msg.get('role') in ['user', 'assistant']
                     ]
                     debug(f"STATE_CHANGE: Loaded {len(archived_messages)} messages from {most_recent_file} for {current_module}", category="module_management")
+                    print(f"DEBUG: [Module Transition] Successfully loaded {len(archived_messages)} messages from {most_recent_file}")
                     # Replace updated_history with the archived messages
                     updated_history = archived_messages
                 else:
                     debug(f"STATE_CHANGE: Starting fresh conversation for {current_module} (archive format issue)", category="module_management")
+                    print(f"DEBUG: [Module Transition] Archive format issue with {most_recent_file} - starting fresh")
                     updated_history = []
             else:
                 # No archive exists, start fresh
                 debug(f"STATE_CHANGE: Starting fresh conversation for {current_module} (no archive found)", category="module_management")
+                print(f"DEBUG: [Module Transition] No archive found for {current_module} - starting fresh")
                 updated_history = []
         else:
             debug(f"STATE_CHANGE: Starting fresh conversation for {current_module} (archive directory not found)", category="module_management")
+            print(f"DEBUG: [Module Transition] Archive directory not found - starting fresh")
             updated_history = []
 
     # Insert world state information
