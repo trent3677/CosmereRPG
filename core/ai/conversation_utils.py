@@ -319,6 +319,43 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
     
     # Module transition detection and marker insertion now happens in action_handler.py
     # This section is preserved for any future module transition logic
+    
+    # ============================================================================
+    # MODULE-SPECIFIC CONVERSATION HISTORY
+    # ============================================================================
+    # Check if we're transitioning to a different module
+    if previous_module and current_module and previous_module != current_module and current_module != 'Unknown':
+        debug(f"STATE_CHANGE: Module transition detected in update_conversation_history: {previous_module} -> {current_module}", category="module_management")
+        
+        # Archive the current conversation for the previous module
+        if previous_module != 'Unknown':
+            archive_dir = "modules/conversation_history/module_archives"
+            os.makedirs(archive_dir, exist_ok=True)
+            
+            archive_file = os.path.join(archive_dir, f"{previous_module}_conversation.json")
+            # Include only user/assistant messages from updated_history
+            messages_to_archive = [msg for msg in updated_history if msg.get("role") in ["user", "assistant"]]
+            
+            from utils.file_operations import safe_write_json
+            safe_write_json(messages_to_archive, archive_file)
+            debug(f"STATE_CHANGE: Archived {len(messages_to_archive)} messages for {previous_module}", category="module_management")
+        
+        # Check if we have an archived conversation for the current module
+        current_archive_file = os.path.join("modules/conversation_history/module_archives", f"{current_module}_conversation.json")
+        if os.path.exists(current_archive_file):
+            # Load the archived conversation
+            archived_messages = safe_json_load(current_archive_file)
+            if archived_messages:
+                debug(f"STATE_CHANGE: Loaded {len(archived_messages)} archived messages for {current_module}", category="module_management")
+                # Replace updated_history with the archived messages
+                updated_history = archived_messages
+            else:
+                debug(f"STATE_CHANGE: Starting fresh conversation for {current_module} (archive was empty)", category="module_management")
+                updated_history = []
+        else:
+            # No archive exists, start fresh
+            debug(f"STATE_CHANGE: Starting fresh conversation for {current_module} (no archive found)", category="module_management")
+            updated_history = []
 
     # Insert world state information
     try:
