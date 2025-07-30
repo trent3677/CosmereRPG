@@ -130,6 +130,11 @@ Thumbs.db
 /Gnomengarde.json
 /*_campaign.json
 
+# Game state files (these change during gameplay)
+modules/campaign.json
+modules/world_registry.json
+modules/effects_tracker.json
+
 # Temporary test files
 test_character_sheet*.html
 capture_screenshot.py
