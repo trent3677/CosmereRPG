@@ -327,34 +327,47 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
     if previous_module and current_module and previous_module != current_module and current_module != 'Unknown':
         debug(f"STATE_CHANGE: Module transition detected in update_conversation_history: {previous_module} -> {current_module}", category="module_management")
         
-        # Archive the current conversation for the previous module
-        if previous_module != 'Unknown':
-            archive_dir = "modules/conversation_history/module_archives"
-            os.makedirs(archive_dir, exist_ok=True)
-            
-            archive_file = os.path.join(archive_dir, f"{previous_module}_conversation.json")
-            # Include only user/assistant messages from updated_history
-            messages_to_archive = [msg for msg in updated_history if msg.get("role") in ["user", "assistant"]]
-            
-            from utils.file_operations import safe_write_json
-            safe_write_json(messages_to_archive, archive_file)
-            debug(f"STATE_CHANGE: Archived {len(messages_to_archive)} messages for {previous_module}", category="module_management")
+        # Archive is handled by campaign_manager, we just need to load the right conversation
+        archive_dir = "modules/campaign_archives"
         
-        # Check if we have an archived conversation for the current module
-        current_archive_file = os.path.join("modules/conversation_history/module_archives", f"{current_module}_conversation.json")
-        if os.path.exists(current_archive_file):
-            # Load the archived conversation
-            archived_messages = safe_json_load(current_archive_file)
-            if archived_messages:
-                debug(f"STATE_CHANGE: Loaded {len(archived_messages)} archived messages for {current_module}", category="module_management")
-                # Replace updated_history with the archived messages
-                updated_history = archived_messages
+        # Find the most recent archive for the current module
+        if os.path.exists(archive_dir):
+            import re
+            archive_files = []
+            pattern = re.compile(f"{current_module}_conversation_(\\d{{3}})\\.json")
+            
+            for filename in os.listdir(archive_dir):
+                match = pattern.match(filename)
+                if match:
+                    sequence_num = int(match.group(1))
+                    archive_files.append((sequence_num, filename))
+            
+            if archive_files:
+                # Sort by sequence number and get the most recent
+                archive_files.sort(key=lambda x: x[0], reverse=True)
+                most_recent_sequence, most_recent_file = archive_files[0]
+                
+                archive_path = os.path.join(archive_dir, most_recent_file)
+                archive_data = safe_json_load(archive_path)
+                
+                if archive_data and isinstance(archive_data, dict) and 'conversationHistory' in archive_data:
+                    # Extract just the user/assistant messages
+                    archived_messages = [
+                        msg for msg in archive_data['conversationHistory'] 
+                        if msg.get('role') in ['user', 'assistant']
+                    ]
+                    debug(f"STATE_CHANGE: Loaded {len(archived_messages)} messages from {most_recent_file} for {current_module}", category="module_management")
+                    # Replace updated_history with the archived messages
+                    updated_history = archived_messages
+                else:
+                    debug(f"STATE_CHANGE: Starting fresh conversation for {current_module} (archive format issue)", category="module_management")
+                    updated_history = []
             else:
-                debug(f"STATE_CHANGE: Starting fresh conversation for {current_module} (archive was empty)", category="module_management")
+                # No archive exists, start fresh
+                debug(f"STATE_CHANGE: Starting fresh conversation for {current_module} (no archive found)", category="module_management")
                 updated_history = []
         else:
-            # No archive exists, start fresh
-            debug(f"STATE_CHANGE: Starting fresh conversation for {current_module} (no archive found)", category="module_management")
+            debug(f"STATE_CHANGE: Starting fresh conversation for {current_module} (archive directory not found)", category="module_management")
             updated_history = []
 
     # Insert world state information
