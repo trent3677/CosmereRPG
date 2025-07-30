@@ -1177,14 +1177,18 @@ Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
             print(f"DEBUG: [Module Generator] Warning: Missing locationId in connection between {from_area} and {to_area}")
             return
         
+        # Get the final, refined names of the areas
+        from_area_name = area_files[from_area].get("areaName")
+        to_area_name = area_files[to_area].get("areaName")
+
         # Update area connectivity in from_area exit
         if "areaConnectivity" not in exit_loc:
             exit_loc["areaConnectivity"] = []
         if "areaConnectivityId" not in exit_loc:
             exit_loc["areaConnectivityId"] = []
         
-        # Store the location name and location ID for proper connectivity
-        exit_loc["areaConnectivity"].append(entrance_loc["name"])
+        # Store the refined area name and the location ID for proper connectivity
+        exit_loc["areaConnectivity"].append(to_area_name)  # Use the refined name of the destination area
         exit_loc["areaConnectivityId"].append(entrance_loc["locationId"])
         print(f"DEBUG: [Module Generator] Connected {from_area} location {exit_loc['locationId']} to {to_area} location {entrance_loc['locationId']}")
         
@@ -1194,7 +1198,7 @@ Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
         if "areaConnectivityId" not in entrance_loc:
             entrance_loc["areaConnectivityId"] = []
         
-        entrance_loc["areaConnectivity"].append(exit_loc["name"])
+        entrance_loc["areaConnectivity"].append(from_area_name)  # Use the refined name of the source area
         entrance_loc["areaConnectivityId"].append(exit_loc["locationId"])
     
     def finalize_locations_and_connections(self):

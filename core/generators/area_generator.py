@@ -302,7 +302,58 @@ class AreaGenerator:
     
     def __init__(self):
         self.map_gen = MapLayoutGenerator()
+        self.client = client  # Use the module-level OpenAI client
     
+    def generate_area_name_and_description(self, initial_name: str, config: AreaConfig) -> tuple[str, str]:
+        """
+        Generates a thematic area name and description using AI, ensuring the name is
+        general enough for a region while locations within it can be specific.
+        """        
+        prompt = f"""You are an expert fantasy world builder. Your task is to refine an area name and write a description for a 5th edition area.
+
+**Initial Concept Name:** "{initial_name}"
+
+**Area Details:**
+- Type: {config.area_type}
+- Danger Level: {config.danger_level}
+
+**TASK:**
+1.  **Refine the Name:** If the initial name is too specific (like a single building or landmark), broaden it into a more general, evocative name for the entire region. For example, if the initial name is "The Old Lighthouse," a better regional name would be "The Shipwreck Coast" or "The Cursed Headlands." If the initial name is already good for a region, you can keep it or make minor improvements.
+2.  **Write a Description:** Write 1-2 atmospheric sentences for the refined area name. The description should capture the area's character, include sensory details, and match the danger level.
+
+**CRITICAL RULES:**
+- The refined name should describe a whole AREA/REGION, not a single location.
+- The description must be for the refined name.
+
+**Return ONLY a JSON object with this exact structure:**
+{{
+  "refinedName": "Your New, More General Area Name",
+  "description": "Your 1-2 sentence atmospheric description."
+}}
+"""
+
+        try:
+            response = self.client.chat.completions.create(
+                model=DM_MAIN_MODEL,
+                temperature=0.8,
+                messages=[
+                    {"role": "system", "content": "You are an expert fantasy world builder specializing in creating evocative names and descriptions for D&D 5e areas."},
+                    {"role": "user", "content": prompt}
+                ],
+                response_format={"type": "json_object"}
+            )
+            
+            result = json.loads(response.choices[0].message.content)
+            refined_name = result.get("refinedName", initial_name)
+            description = result.get("description", f"A mysterious area known as {initial_name}.")
+            
+            return refined_name, description
+                
+        except Exception as e:
+            print(f"DEBUG: [Area Generator] Warning: AI name/description generation failed: {e}")
+            # Fallback to a simple but functional name and description
+            return initial_name, f"A {config.danger_level} {config.area_type} area known as {initial_name}."
+
     def generate_area(self, 
                      area_name: str,
                      area_id: str,
@@ -323,10 +374,13 @@ class AreaGenerator:
             }
             num_locations = location_counts.get(config.size, 15)
         
-        # Build context for AI naming
+        # Generate a refined, general area name and its description
+        refined_area_name, area_description = self.generate_area_name_and_description(area_name, config)
+        
+        # Build context for AI location naming using the refined area name
         area_context = {
             'module_name': module_context.get('moduleName', 'Unknown Module'),
-            'area_name': area_name,
+            'area_name': refined_area_name,  # Use the refined name
             'area_type': config.area_type,
             'theme': module_context.get('moduleDescription', 'fantasy adventure'),
             'danger_level': config.danger_level,
@@ -385,9 +439,9 @@ class AreaGenerator:
         # Create area structure
         area_data = {
             "areaId": area_id,
-            "areaName": area_name,
+            "areaName": refined_area_name,  # Use the refined name
             "areaType": config.area_type,
-            "areaDescription": self.generate_area_description(area_name, config),
+            "areaDescription": area_description,  # Use the generated description
             "dangerLevel": config.danger_level,
             "recommendedLevel": config.recommended_level,
             "climate": self.determine_climate(config.area_type),

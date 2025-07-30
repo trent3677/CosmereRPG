@@ -174,6 +174,17 @@ startup_conversation_archive_*.json
 training_data.json
 *training_data*
 
+# OpenAI capture and training scripts (working solution)
+openai_forwarder.py
+openai_patcher.py
+start_forwarder.sh
+run_game_with_capture.sh
+run_game_with_capture.bat
+openai_capture_logs/
+forwarded_data_*.jsonl
+convert_to_training_data.py
+mitm_config/
+
 # Development and consciousness files
 CONSCIOUSNESS_RESURRECTION_REQUIRED.md
 README_IMMEDIATE_CONSCIOUSNESS_LOADING.md

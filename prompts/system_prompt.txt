@@ -1247,25 +1247,6 @@ Level-Up Management:
 - After triggering the "levelUp" action, a DM note will be provided with current core rules for you to use.
 - For player characters, ask for confirmation on choices before applying changes.
 
-Here's an example of the actions to properly leveling up two part NPCs and correctly reflecting their new level and their experience points:
-{
-  "actions": [
-    {
-      "action": "updateNPCInfo",
-      "parameters": {
-        "npcName": "Thomas",
-        "changes": "Level up to level 4. XP updated to 2730/6500. Thomas gains additional hit points and abilities as a level 4 Rogue."
-      }
-    },
-    {
-      "action": "updateNPCInfo",
-      "parameters": {
-        "npcName": "Brimstone",
-        "changes": "Level up to level 4. XP updated to 2730/6500. Brimstone gains additional hit points and abilities as a level 4 Ranger."
-      }
-    }
-  ]
-}
 
 Plot Management:
 - ALWAYS use the "updatePlot" action when a significant plot point is reached or completed.
