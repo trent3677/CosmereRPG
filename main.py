@@ -1957,8 +1957,13 @@ def main_game_loop():
             max_hp = player_data_current.get("maxHitPoints", "N/A")
             current_xp = player_data_current.get("experience_points", "N/A")
             next_level_xp = player_data_current.get("exp_required_for_next_level", "N/A")
+            # Get time with context for display
+            from utils.time_context import get_time_context
             current_time_str = party_tracker_data["worldConditions"]["time"]
-            stats_display = f"{LIGHT_OFF_GREEN}[{current_time_str}][HP:{current_hp}/{max_hp}][XP:{current_xp}/{next_level_xp}]{RESET_COLOR}"
+            time_context = get_time_context(current_time_str)
+            # Show both time and context in prompt
+            time_display = f"{current_time_str[:5]} ({time_context})"  # Show HH:MM (context)
+            stats_display = f"{LIGHT_OFF_GREEN}[{time_display}][HP:{current_hp}/{max_hp}][XP:{current_xp}/{next_level_xp}]{RESET_COLOR}"
             player_name_display = f"{SOLID_GREEN}{player_name_actual}{RESET_COLOR}"
             user_input_text = input(f"{stats_display} {player_name_display}: ")
         else:
@@ -2030,7 +2035,9 @@ def main_game_loop():
 
         if party_members_stats:
             world_conditions = party_tracker_data["worldConditions"]
-            date_time_str = f"{world_conditions['year']} {world_conditions['month']} {world_conditions['day']} {world_conditions['time']}"
+            # Use enhanced time formatting with context
+            from utils.time_context import format_time_with_context
+            date_time_str = format_time_with_context(world_conditions)
             party_stats_formatted = []
             for stats_item in party_members_stats:
                 # Check if this is a player or an NPC
@@ -2306,18 +2313,39 @@ def main_game_loop():
             # Sanitize location name before using in DM note
             current_location_name_note = sanitize_text(current_location_name_note)
             
+            # Get current module, season, and area for enhanced DM note
+            current_module_name = party_tracker_data.get('module', 'Unknown')
+            current_season = world_conditions.get('season', 'Unknown')
+            current_area_name = world_conditions.get('currentArea', 'Unknown')
+            
+            # Format party members and NPCs for DM note
+            party_members_list = party_tracker_data.get('partyMembers', [])
+            party_members_str = ", ".join(party_members_list) if party_members_list else "None"
+            
+            party_npcs_list = party_tracker_data.get('partyNPCs', [])
+            party_npcs_formatted = []
+            for npc in party_npcs_list:
+                party_npcs_formatted.append(f"{npc['name']} ({npc['role']})") 
+            party_npcs_str = ", ".join(party_npcs_formatted) if party_npcs_formatted else "None"
+            
             # Build DM note - exclude plot/quest info when module creation is active
             if should_inject_creation_prompt:
                 # Simplified DM note for module creation - no confusing plot/quest info
-                dm_note = (f"Dungeon Master Note: Current date and time: {date_time_str}. "
+                dm_note = (f"Dungeon Master Note: Current date and time: {date_time_str}, {current_season} season. "
+                    f"Current module: {current_module_name}. "
+                    f"Current location: {current_location_name_note} ({current_location_id_note}) in the {current_area_name} area. "
+                    f"Party members: {party_members_str}. "
+                    f"Party NPCs: {party_npcs_str}. "
                     f"Party stats: {party_stats_str}. "
-                    f"Current location: {current_location_name_note} ({current_location_id_note}). "
                     f"Adjacent locations in this area: {connected_locations_display_str}{connected_areas_display_str}{available_modules_str}.\n")
             else:
                 # Normal DM note with all plot/quest/monster info
-                dm_note = (f"Dungeon Master Note: Current date and time: {date_time_str}. "
+                dm_note = (f"Dungeon Master Note: Current date and time: {date_time_str}, {current_season} season. "
+                    f"Current module: {current_module_name}. "
+                    f"Current location: {current_location_name_note} ({current_location_id_note}) in the {current_area_name} area. "
+                    f"Party members: {party_members_str}. "
+                    f"Party NPCs: {party_npcs_str}. "
                     f"Party stats: {party_stats_str}. "
-                    f"Current location: {current_location_name_note} ({current_location_id_note}). "
                     # --- MODIFIED LINE TO INCLUDE CONNECTIVITY ---
                     f"Adjacent locations in this area: {connected_locations_display_str}{connected_areas_display_str}{available_modules_str}.\n"
                     # --- END OF MODIFIED LINE ---

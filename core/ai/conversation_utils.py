@@ -421,24 +421,31 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
             "content": f"Current Location:\n{compress_json_data(current_location)}\n"
         })
 
-    # Add party tracker data with calendar system information
-    if party_tracker_data:
-        # Load calendar system prompt
-        calendar_info = ""
-        try:
-            with open("prompts/calendar.txt", "r", encoding="utf-8") as f:
-                calendar_info = f.read()
-        except:
-            debug("WARNING: Could not load calendar.txt prompt", category="conversation_management")
-        
-        party_tracker_message = "Here's the updated party tracker data:\n"
-        party_tracker_message += f"Party Tracker Data: {compress_json_data(party_tracker_data)}\n"
-        
-        # Add calendar information if available
-        if calendar_info:
-            party_tracker_message += f"\n{calendar_info}\n"
-        
-        new_history.append({"role": "system", "content": party_tracker_message})
+    # COMMENTED OUT: Party tracker JSON insertion - redundant information now included in DM Note
+    # The DM Note now contains all necessary information in a more readable format:
+    # - Date/time with season and contextual time (morning/evening)
+    # - Current module name
+    # - Current location with area name
+    # - Party members and NPCs with roles
+    # - Party stats (HP, XP, abilities, spell slots)
+    #
+    # if party_tracker_data:
+    #     # Load calendar system prompt
+    #     calendar_info = ""
+    #     try:
+    #         with open("prompts/calendar.txt", "r", encoding="utf-8") as f:
+    #             calendar_info = f.read()
+    #     except:
+    #         debug("WARNING: Could not load calendar.txt prompt", category="conversation_management")
+    #     
+    #     party_tracker_message = "Here's the updated party tracker data:\n"
+    #     party_tracker_message += f"Party Tracker Data: {compress_json_data(party_tracker_data)}\n"
+    #     
+    #     # Add calendar information if available
+    #     if calendar_info:
+    #         party_tracker_message += f"\n{calendar_info}\n"
+    #     
+    #     new_history.append({"role": "system", "content": party_tracker_message})
 
     # Add the rest of the conversation history
     debug(f"STATE_CHANGE: update_conversation_history preserving {len(updated_history)} messages", category="conversation_management")
