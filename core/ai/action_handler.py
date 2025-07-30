@@ -768,37 +768,19 @@ def process_action(action, party_tracker_data, location_data, conversation_histo
                 )
                 
                 if is_cross_module:
-                    info(f"STATE_CHANGE: Cross-module transition detected: {from_module} -> {to_module}", category="module_management")
+                    info(f"STATE_CHANGE: Cross-module transition detected during location change: {from_module} -> {to_module}", category="module_management")
                     
-                    # Handle conversation segmentation - summarize current module and add transition marker
-                    conversation_history = handle_module_conversation_segmentation(
-                        conversation_history, from_module, to_module
-                    )
-                    save_conversation_history(conversation_history)
-                    debug("STATE_CHANGE: Module conversation segmentation complete", category="module_management")
+                    # DON'T generate summary here - it will be handled by updatePartyTracker
+                    # This prevents duplicate summaries for the same module transition
+                    debug("STATE_CHANGE: Deferring module summary generation to updatePartyTracker action", category="module_management")
                     
-                    # Auto-summarize the module being left and update campaign state
-                    summary = campaign_manager.handle_cross_module_transition(
-                        from_module, to_module, updated_party_tracker, conversation_history
-                    )
-                    
-                    # Update party tracker module field
+                    # Just update the module field in party tracker
                     updated_party_tracker["module"] = to_module
                     safe_json_dump(updated_party_tracker, "party_tracker.json")
+                    debug(f"STATE_CHANGE: Updated party tracker module to {to_module}", category="module_management")
                     
-                    # Inject accumulated campaign context
-                    debug(f"AI_CALL: Requesting campaign context for module: {to_module}", category="module_management")
-                    campaign_context = campaign_manager.get_accumulated_summaries_context(to_module)
-                    debug(f"AI_CALL: Campaign context received - Length: {len(campaign_context) if campaign_context else 0} characters", category="module_management")
-                    if campaign_context:
-                        conversation_history.append({
-                            "role": "system", 
-                            "content": f"=== CAMPAIGN CONTEXT ===\n{campaign_context}"
-                        })
-                        save_conversation_history(conversation_history)
-                        info(f"SUCCESS: Campaign context injected for {to_module}", category="module_management")
-                    else:
-                        warning(f"STATE_CHANGE: No campaign context to inject for {to_module} - context was empty", category="module_management")
+                    # Note: Campaign context injection will happen when updatePartyTracker is called
+                    # This ensures summaries are generated only once per transition
                 else:
                     debug(f"STATE_CHANGE: Within-module transition: {current_location_id} -> {new_location_id}", category="location_transitions")
                     
@@ -1181,6 +1163,7 @@ Please use a valid location that exists in the current area ({current_area_id}) 
                 
                 # Import campaign manager for auto-archiving
                 from core.managers.campaign_manager import CampaignManager
+                from main import save_conversation_history
                 campaign_manager = CampaignManager()
                 
                 # Auto-archive and summarize previous module
@@ -1193,6 +1176,20 @@ Please use a valid location that exists in the current area ({current_area_id}) 
                         info(f"SUCCESS: Archived conversation and generated summary for {current_module}", category="module_management")
                     else:
                         warning(f"STATE_CHANGE: No summary generated for {current_module}", category="module_management")
+                    
+                    # Inject accumulated campaign context for the new module
+                    debug(f"AI_CALL: Requesting campaign context for module: {new_module}", category="module_management")
+                    campaign_context = campaign_manager.get_accumulated_summaries_context(new_module)
+                    debug(f"AI_CALL: Campaign context received - Length: {len(campaign_context) if campaign_context else 0} characters", category="module_management")
+                    if campaign_context:
+                        conversation_history.append({
+                            "role": "system", 
+                            "content": f"=== CAMPAIGN CONTEXT ===\n{campaign_context}"
+                        })
+                        save_conversation_history(conversation_history)
+                        info(f"SUCCESS: Campaign context injected for {new_module}", category="module_management")
+                    else:
+                        warning(f"STATE_CHANGE: No campaign context to inject for {new_module} - context was empty", category="module_management")
                 
                 # Auto-update to starting location if not explicitly provided
                 if ("currentAreaId" not in parameters and 
