@@ -91,8 +91,13 @@ set_script_name("conversation_utils")
 # CAMPAIGN SUMMARY INJECTION
 # ============================================================================
 
-def inject_campaign_summaries(new_history):
-    """Inject campaign summaries as system messages into conversation history"""
+def inject_campaign_summaries(new_history, current_module=None):
+    """Inject campaign summaries as system messages into conversation history
+    
+    Args:
+        new_history: The conversation history list to append summaries to
+        current_module: The current module name to exclude from summaries
+    """
     try:
         summaries_dir = "modules/campaign_summaries"
         if os.path.exists(summaries_dir):
@@ -118,6 +123,11 @@ def inject_campaign_summaries(new_history):
                         if summary_data and "summary" in summary_data:
                             module_name = summary_data.get("moduleName", "Unknown Module")
                             sequence = summary_data.get("sequenceNumber", 1)
+                            
+                            # Skip the current module's summaries
+                            if current_module and module_name == current_module:
+                                debug(f"INFO: Skipping summary for current module {module_name}", category="campaign_context")
+                                continue
                             
                             # Create the full content for this single chronicle
                             chronicle_content = (
@@ -429,7 +439,9 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
     
     # CAMPAIGN SUMMARY INJECTION: Add previous adventure context
     try:
-        inject_campaign_summaries(new_history)
+        # Get the current module from party tracker
+        current_module_name = party_tracker_data.get('module') if party_tracker_data else None
+        inject_campaign_summaries(new_history, current_module_name)
     except Exception as e:
         debug(f"FAILURE: Error injecting campaign summaries", exception=e, category="campaign_context")
     
