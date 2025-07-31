@@ -13,7 +13,8 @@ CRITICAL VALIDATION PRIORITIES:
 4. USER INPUT COMPLIANCE: Pay special attention to the user's ACTUAL INPUT that triggered the assistant's response
 5. SPELL SLOT VALIDATION: Cantrips (0-level spells) do NOT consume spell slots and can be cast unlimited times. Only leveled spells (1st-9th level) should reduce spell slots via updateCharacterInfo actions.
 6. LOCATION PATH VALIDATION: When validating transitionLocation actions, check the "Path Validation" section in the context. ONLY allow movement along valid, connected paths. Reject any transitions that show "WARNING" or "No valid path" messages.
-7. COMBAT INITIATION VALIDATION: Review each turn for the Combat Commitment Point. If a hostile action occurred that alerted enemies, was createEncounter called IMMEDIATELY? If any combat actions were resolved narratively after enemies became aware, mark as INVALID. EXCEPTION: Messages marked with [COMBAT CONCLUDED - HISTORICAL RECORD] are exempt from this rule as they represent already-resolved combat.
+7. SAME-LOCATION TRANSITION VALIDATION: NEVER allow transitionLocation from a location to itself (e.g., "Town Square (X01) to Town Square (X01)"). This is ALWAYS invalid. If a player immediately leaves after arriving, the DM should roleplay the scene without transitioning, or clarify where the player actually wants to go.
+8. COMBAT INITIATION VALIDATION: Review each turn for the Combat Commitment Point. If a hostile action occurred that alerted enemies, was createEncounter called IMMEDIATELY? If any combat actions were resolved narratively after enemies became aware, mark as INVALID. EXCEPTION: Messages marked with [COMBAT CONCLUDED - HISTORICAL RECORD] are exempt from this rule as they represent already-resolved combat.
 
 ANTI-HALLUCINATION ENFORCEMENT:
 - NPCs that exist in the complete character database from ALL modules may be referenced in dialogue, memories, or stories
@@ -111,31 +112,37 @@ Always respond with a JSON object in the following format:
   "reason": "The response uses transitionLocation to move the party from 'RO01' to 'TW01', but the Path Validation section shows 'WARNING: No valid path exists between RO01 and TW01'. Only allow movement along connected paths. Rewrite the response without the invalid transition or suggest a valid connected route."
 }
 
-// Example Response 13: False - Combat not initiated at commitment point
+// Example Response 13: False - Same location transition
+{
+  "valid": false,
+  "reason": "The response contains a transitionLocation action from 'Market Square (MS01)' to 'Market Square (MS01)' - attempting to transition to the same location. This is invalid. The DM should either roleplay the current scene without transitioning, or ask the player to clarify their intended destination. Do not use transitionLocation when staying in the same location."
+}
+
+// Example Response 14: False - Combat not initiated at commitment point
 {
   "valid": false,
   "reason": "The assistant narrated a sneak attack that killed a bandit and alerted other enemies, then continued to narrate additional combat actions without using createEncounter. Once enemies are aware after a hostile action (the Combat Commitment Point), formal combat MUST begin immediately. Revise to include createEncounter action after the first attack alerts the enemies."
 }
 
-// Example Response 14: True - Correct combat initiation  
+// Example Response 15: True - Correct combat initiation  
 {
   "valid": true,
   "reason": "The assistant correctly identified the Combat Commitment Point when the first sneak attack alerted the remaining bandits, and immediately used createEncounter to initiate formal combat before any further actions were resolved."
 }
 
-// Example Response 15: True - Valid cross-module NPC reference
+// Example Response 16: True - Valid cross-module NPC reference
 {
   "valid": true,
   "reason": "The assistant appropriately allows the player to reference 'Marcus from our last adventure' who exists in the character database from a previous module. Cross-module references are permitted for known NPCs when discussing memories or shared experiences."
 }
 
-// Example Response 16: False - True NPC hallucination
+// Example Response 17: False - True NPC hallucination
 {
   "valid": false,
   "reason": "The response introduces 'Elder Bronwick' who does not exist in any module's character database. This is a true hallucination and validation failure. Use only NPCs that exist in the complete character database from all modules."
 }
 
-// Example Response 17: True - Valid narrative appearance of cross-module NPC
+// Example Response 18: True - Valid narrative appearance of cross-module NPC
 {
   "valid": true,
   "reason": "The assistant allows 'Scout Elen' (who exists in the character database) to appear in the scene as part of a rescue/discovery narrative. Cross-module NPCs may appear if the story supports it and they exist in the database."
