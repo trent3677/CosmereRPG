@@ -125,7 +125,11 @@ def inject_campaign_summaries(new_history, current_module=None):
                             sequence = summary_data.get("sequenceNumber", 1)
                             
                             # Skip the current module's summaries
-                            if current_module and module_name == current_module:
+                            # Normalize module names for comparison (handle underscore vs space differences)
+                            normalized_module_name = module_name.replace('_', ' ')
+                            normalized_current = current_module.replace('_', ' ') if current_module else None
+                            
+                            if normalized_current and normalized_module_name == normalized_current:
                                 debug(f"INFO: Skipping summary for current module {module_name}", category="campaign_context")
                                 continue
                             
