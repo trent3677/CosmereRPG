@@ -342,12 +342,19 @@ class CampaignManager:
         # Generate module summary
         summary = self._generate_module_summary(module_name, party_tracker_data, conversation_history)
         
-        # Save summary with sequential numbering
-        sequence_num = self._get_next_sequence_number(self.summaries_dir, f"{module_name}_summary", ".json")
-        summary_file = os.path.join(self.summaries_dir, f"{module_name}_summary_{sequence_num:03d}.json")
+        # Get existing visit info
+        visit_info = self._get_module_visit_info(module_name)
         
-        # Add sequence number to summary data
-        summary["sequenceNumber"] = sequence_num
+        # Update visit tracking
+        summary["visitCount"] = visit_info["visitCount"] + 1
+        summary["firstVisitDate"] = visit_info["firstVisitDate"] or datetime.now().isoformat()
+        summary["lastVisitDate"] = datetime.now().isoformat()
+        
+        # Save summary as living document (always _001)
+        summary_file = os.path.join(self.summaries_dir, f"{module_name}_summary_001.json")
+        
+        # Add sequence number to summary data (always 1 for living summaries)
+        summary["sequenceNumber"] = 1
         safe_json_dump(summary, summary_file)
         
         # Update campaign state
@@ -670,6 +677,22 @@ Focus on story outcomes, character development, and decisions that will matter i
         # Return next available number
         return max(sequence_numbers) + 1 if sequence_numbers else 1
     
+    def _get_module_visit_info(self, module_name: str) -> Dict[str, Any]:
+        """Get visit tracking information for a module"""
+        summary_file = os.path.join(self.summaries_dir, f"{module_name}_summary_001.json")
+        if os.path.exists(summary_file):
+            existing_summary = safe_json_load(summary_file)
+            return {
+                "visitCount": existing_summary.get("visitCount", 0),
+                "firstVisitDate": existing_summary.get("firstVisitDate", None),
+                "lastVisitDate": existing_summary.get("lastVisitDate", None)
+            }
+        return {
+            "visitCount": 0,
+            "firstVisitDate": None,
+            "lastVisitDate": None
+        }
+    
     def _process_module_summary_for_export(self, summary_text: str, party_tracker_data: Dict[str, Any]) -> Dict[str, Any]:
         """Let AI extract exportable data from module completion"""
         # This method would use AI to extract key data agnostically
@@ -819,12 +842,19 @@ Focus on story outcomes, character development, and decisions that will matter i
             
             summary = self._generate_module_summary(from_module, party_tracker_data, conversation_history)
             
-            # Save summary with sequential numbering
-            sequence_num = self._get_next_sequence_number(self.summaries_dir, f"{from_module}_summary", ".json")
-            summary_file = os.path.join(self.summaries_dir, f"{from_module}_summary_{sequence_num:03d}.json")
+            # Get existing visit info
+            visit_info = self._get_module_visit_info(from_module)
             
-            # Add sequence number to summary data
-            summary["sequenceNumber"] = sequence_num
+            # Update visit tracking
+            summary["visitCount"] = visit_info["visitCount"] + 1
+            summary["firstVisitDate"] = visit_info["firstVisitDate"] or datetime.now().isoformat()
+            summary["lastVisitDate"] = datetime.now().isoformat()
+            
+            # Save summary as living document (always _001)
+            summary_file = os.path.join(self.summaries_dir, f"{from_module}_summary_001.json")
+            
+            # Add sequence number to summary data (always 1 for living summaries)
+            summary["sequenceNumber"] = 1
             safe_json_dump(summary, summary_file)
             
             # Update campaign state (track completion but allow revisits)
