@@ -868,7 +868,7 @@ Focus on story outcomes, character development, and decisions that will matter i
             self.campaign_data['lastUpdated'] = datetime.now().isoformat()
             safe_json_dump(self.campaign_data, self.campaign_file)
             
-            info(f"SUCCESS: {from_module} summarized and archived (visit #{sequence_num})", category="summary_building")
+            info(f"SUCCESS: {from_module} summarized and archived (visit #{summary.get('visitCount', 1)})", category="summary_building")
             return summary
         
         debug(f"STATE_CHANGE: No summary generated - no source module specified", category="module_loading")
