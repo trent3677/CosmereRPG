@@ -628,24 +628,33 @@ Focus on story outcomes, character development, and decisions that will matter i
             import copy
             archived_history = copy.deepcopy(conversation_history)
             
-            # Find and modify any transition markers
+            # Filter out campaign context system messages and neutralize transition markers
+            filtered_history = []
             for msg in archived_history:
+                # Skip campaign context system messages
+                if msg.get("role") == "system" and "=== CAMPAIGN CONTEXT ===" in msg.get("content", ""):
+                    print(f"DEBUG: [Module Archive] Filtered out campaign context system message")
+                    continue
+                    
+                # Neutralize transition markers
                 if msg.get("role") == "user" and "Module transition:" in msg.get("content", ""):
                     # Modify the marker so it won't be detected as active
                     original_content = msg["content"]
                     msg["content"] = msg["content"].replace("Module transition:", "[Archived] Module transition:", 1)
                     print(f"DEBUG: [Module Archive] Neutralized transition marker: '{original_content}' -> '{msg['content']}'")
+                
+                filtered_history.append(msg)
             
             archive_data = {
                 "moduleName": module_name,
                 "sequenceNumber": sequence_num,
                 "archiveDate": datetime.now().isoformat(),
-                "conversationHistory": archived_history,
-                "totalMessages": len(archived_history)
+                "conversationHistory": filtered_history,
+                "totalMessages": len(filtered_history)
             }
             safe_json_dump(archive_data, archive_file)
-            print(f"DEBUG: [Module Archive] Archived {len(archived_history)} messages to: {archive_file}")
-            info(f"SUCCESS: Archived {len(conversation_history)} conversation messages for {module_name} (sequence {sequence_num:03d})", category="summary_building")
+            print(f"DEBUG: [Module Archive] Archived {len(filtered_history)} messages to: {archive_file}")
+            info(f"SUCCESS: Archived {len(filtered_history)} conversation messages for {module_name} (sequence {sequence_num:03d})", category="summary_building")
         except Exception as e:
             warning(f"FAILURE: Failed to archive conversation history for {module_name}: {e}", category="summary_building")
     
