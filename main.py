@@ -1391,10 +1391,18 @@ def process_ai_response(response, party_tracker_data, location_data, conversatio
                 elif isinstance(result, bool) and result:
                     needs_conversation_history_update = True
         
+        # Track pending archive info for delayed processing
+        pending_archive_info = None
+        
         # Process all other actions sequentially
         for action in other_actions:
             result = action_handler.process_action(action, party_tracker_data, location_data, conversation_history)
             actions_processed = True
+            
+            # Check for pending archive flag from module transitions
+            if isinstance(result, dict) and result.get("response_data", {}).get("pending_archive"):
+                pending_archive_info = result["response_data"]["pending_archive"]
+                print(f"DEBUG: [Module Transition] Captured pending archive info: from {pending_archive_info['from_module']} to {pending_archive_info['to_module']}")
             
             # --- SIGNAL-BASED SUB-SYSTEM CONTROL ---
             # Check for special signals from the action handler that indicate a sub-system has completed.
@@ -1465,6 +1473,36 @@ def process_ai_response(response, party_tracker_data, location_data, conversatio
         assistant_message = {"role": "assistant", "content": response}
         conversation_history.append(assistant_message)
         save_conversation_history(conversation_history)
+        
+        # DELAYED ARCHIVING: Process any pending archive after the AI response is saved
+        if pending_archive_info:
+            print(f"DEBUG: [Module Transition] Processing delayed archive for module: {pending_archive_info['from_module']}")
+            try:
+                from core.managers.campaign_manager import CampaignManager
+                campaign_manager = CampaignManager()
+                
+                # Reload conversation history to ensure we have the travel narrative
+                fresh_conversation_history = load_json_file("modules/conversation_history/conversation_history.json") or []
+                
+                # Archive the conversation history
+                archive_success = campaign_manager._archive_conversation_history(
+                    pending_archive_info['from_module'],
+                    fresh_conversation_history,
+                    pending_archive_info.get('party_tracker_data', {})
+                )
+                
+                if archive_success:
+                    print(f"DEBUG: [Module Transition] Successfully archived conversation history for {pending_archive_info['from_module']}")
+                    info(f"SUCCESS: Archived conversation history for module: {pending_archive_info['from_module']}", category="module_management")
+                else:
+                    print(f"DEBUG: [Module Transition] Failed to archive conversation history for {pending_archive_info['from_module']}")
+                    warning(f"FAILURE: Could not archive conversation history for module: {pending_archive_info['from_module']}", category="module_management")
+                    
+            except Exception as e:
+                print(f"ERROR: Failed to process delayed archive: {str(e)}")
+                import traceback
+                traceback.print_exc()
+        
         return assistant_message
 
     except json.JSONDecodeError as e:

@@ -1171,17 +1171,18 @@ Please use a valid location that exists in the current area ({current_area_id}) 
                 from main import save_conversation_history
                 campaign_manager = CampaignManager()
                 
-                # Auto-archive and summarize previous module
+                # DELAYED ARCHIVING: Don't archive immediately, set a flag instead
+                # This allows the travel narrative to be added to conversation history first
                 if current_module != "Unknown":
-                    print(f"DEBUG: [Module Transition] Starting auto-archive and summary for module: {current_module}")
-                    info(f"STATE_CHANGE: Auto-archiving conversation and generating summary for {current_module}", category="module_management")
-                    summary = campaign_manager.handle_cross_module_transition(
-                        current_module, new_module, current_party_data, conversation_history
-                    )
-                    if summary:
-                        info(f"SUCCESS: Archived conversation and generated summary for {current_module}", category="module_management")
-                    else:
-                        warning(f"STATE_CHANGE: No summary generated for {current_module}", category="module_management")
+                    print(f"DEBUG: [Module Transition] Setting pending archive flag for module: {current_module}")
+                    info(f"STATE_CHANGE: Module transition detected - archiving will occur after travel narrative", category="module_management")
+                    
+                    # Store the pending archive info in the return result
+                    pending_archive = {
+                        "from_module": current_module,
+                        "to_module": new_module,
+                        "party_tracker_data": current_party_data.copy()
+                    }
                     
                     # Inject accumulated campaign context for the new module
                     debug(f"AI_CALL: Requesting campaign context for module: {new_module}", category="module_management")
@@ -1230,6 +1231,14 @@ Please use a valid location that exists in the current area ({current_area_id}) 
             info("SUCCESS: Party tracker updated successfully", category="party_management")
             # Always reload conversation history to pick up changes
             needs_conversation_history_update = True
+            
+            # If we set a pending archive flag, include it in the return
+            if new_module and new_module != current_module and current_module != "Unknown":
+                print(f"DEBUG: [Module Transition] Returning with pending_archive flag")
+                return create_return(
+                    needs_update=needs_conversation_history_update,
+                    response_data={"pending_archive": pending_archive}
+                )
             
         except Exception as e:
             print(f"ERROR: Exception while updating party tracker: {str(e)}")
