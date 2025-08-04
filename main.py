@@ -1487,8 +1487,7 @@ def process_ai_response(response, party_tracker_data, location_data, conversatio
                 # Archive the conversation history
                 archive_success = campaign_manager._archive_conversation_history(
                     pending_archive_info['from_module'],
-                    fresh_conversation_history,
-                    pending_archive_info.get('party_tracker_data', {})
+                    fresh_conversation_history
                 )
                 
                 if archive_success:
