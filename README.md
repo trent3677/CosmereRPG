@@ -102,13 +102,15 @@ Traditional AI systems have limited memory - typically 100-200k tokens. In a tex
 
 NeverEndingQuest implements a sophisticated compression pipeline that maintains full contextual understanding:
 
-#### 1. **Automatic Chronicle Generation**
-- When conversation history reaches 12 location transitions, the system triggers compression
-- AI analyzes and compresses the oldest 6 transitions into a beautifully written chronicle
-- Original events are preserved in elevated fantasy prose, reducing tokens by 85-90%
-- Chronicles maintain all critical story beats, character developments, and world changes
+#### 1. **Living Summary Generation**
+- Each module generates a comprehensive living summary upon exit that captures the complete adventure
+- AI analyzes the entire module conversation and creates beautifully written fantasy prose summaries
+- Living summaries are completely regenerated (not appended) on each visit to incorporate new experiences
+- Original events preserved in elevated narrative form while reducing tokens by 85-90%
+- **Visit Evolution**: Summaries become richer and more detailed with each return visit
+- **Single File System**: Always `[Module_Name]_summary_001.json` - never increments, always regenerates
 
-#### 2. **Hub-and-Spoke Architecture**
+#### 2. **Hub-and-Spoke Architecture with Module-Specific Conversations**
 ```
 Module Structure:
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
@@ -119,49 +121,94 @@ Module Structure:
        └────────────────────┴────────────────────┘
                     Shared Context
                  (Character History)
+
+Module Conversation Management:
+┌─────────────────┐     ┌─────────────────┐
+│ Current Module  │────►│ Module Archive  │
+│ Conversation    │     │ (Auto-saved)    │
+└─────────────────┘     └─────────────────┘
+         ↓                       ↓
+┌─────────────────┐     ┌─────────────────┐
+│ New Module      │◄────│ Previous Conv.  │
+│ (Fresh Start)   │     │ (Auto-restored) │
+└─────────────────┘     └─────────────────┘
 ```
 
-- Each module is a self-contained geographic region
-- Modules connect naturally through narrative bridges
-- Context accumulates in a central character history
-- Return to any location with full memory of past events
+- Each module is a self-contained geographic region with its own conversation history
+- **Module-Specific Conversations**: When leaving a module, conversations are archived and cleared
+- **Automatic Restoration**: Returning to a module restores its specific conversation history
+- **Prevents Infinite Buildup**: Each module maintains its own context bubble, preventing token explosion
+- Return to any location with full memory of past events specific to that module
 
-#### 3. **Living World Persistence**
-- **NPC Memory**: Characters remember your entire relationship history
+#### 3. **Living World Persistence with Smart Summary Management**
+- **NPC Memory**: Characters remember your entire relationship history through living summaries
 - **Decision Consequences**: Past choices affect future module availability
 - **World State Tracking**: Completed quests permanently change the world
 - **Cross-Module Continuity**: Items, relationships, and reputation carry forward
+- **Living Summary System**: Each module maintains a single, evolving summary that updates with each visit
+- **Visit Tracking**: System tracks `visitCount`, `firstVisitDate`, and `lastVisitDate` for each module
+- **Smart Context Injection**: Previous module summaries are injected as campaign context, excluding the current module to prevent duplication
 
-#### 4. **Conversation Compaction Pipeline**
+#### 4. **Module-Specific Conversation Management**
 ```
-Full Conversation History Structure:
+Active Module Conversation Structure:
 ┌─────────────────┐
 │ System Prompts  │ (Base rules & character setup)
 └────────┬────────┘
          ▼
 ┌─────────────────┐
-│Module Chronicle │ (AI-generated summary from Module 1)
+│ Campaign Context│ (Living summaries from OTHER modules)
+│ Living Summary  │ • Module 1 - visitCount: 3, complete history
+│ Living Summary  │ • Module 2 - visitCount: 1, complete history  
+│ (Current module │ • [Current module excluded to prevent duplication]
+│  excluded)      │
 └────────┬────────┘
          ▼
 ┌─────────────────┐
-│Module Chronicle │ (AI-generated summary from Module 2)
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Compressed      │ (6 location summaries from current module)
-│ Locations       │ "You explored the haunted tower..."
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Recent          │ (Last 6 full conversations)
-│ Conversations   │ "DM: The door creaks open..."
+│ Module-Specific │ (This module's conversation history)
+│ Conversation    │ • Restored from archive (if returning)
+│                 │ • Fresh start (if first visit)
+│ "DM: You stand  │ • Full conversation context maintained
+│  at the castle  │ • No token contamination from other modules
+│  gates..."      │
 └────────┬────────┘
          ▼
 ┌─────────────────┐
 │ Current Action  │ (What's happening right now)
 └─────────────────┘
 
-Combat Isolation:
+Module Transition & Living Summary Process:
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│ Module A Active │────►│ Archive & Update│────►│ Clear & Load    │
+│ Conversation    │     │ Living Summary  │     │ Module B        │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+         │                       │                        │
+         ▼                       ▼                        ▼
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│ Detect Module   │     │ Save to:        │     │ Module B Active │
+│ Transition      │     │ • campaign_     │     │ Conversation    │
+│ (via location   │     │   archives/     │     │ (Restored from  │
+│  change)        │     │ • Update living │     │  archive or     │
+│                 │     │   summary_001   │     │  fresh start)   │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+
+Living Summary Evolution:
+Visit 1: ┌─────────────────┐ → ┌─────────────────┐
+         │ Fresh Module    │   │ Module_summary_ │
+         │ Conversation    │   │ 001.json        │
+         └─────────────────┘   │ visitCount: 1   │
+                               │ Complete summary│
+                               └─────────────────┘
+                                       ↓
+Visit 2: ┌─────────────────┐ → ┌─────────────────┐
+         │ Return Visit    │   │ Module_summary_ │
+         │ + New Adventures│   │ 001.json        │
+         └─────────────────┘   │ visitCount: 2   │
+                               │ REGENERATED     │
+                               │ Enhanced summary│
+                               └─────────────────┘
+
+Combat Isolation (unchanged):
 ┌─────────────────┐     ┌─────────────────┐
 │ Main Timeline   │────►│ Combat Instance │
 │                 │     │ (Isolated)      │
@@ -180,28 +227,105 @@ Combat Isolation:
                         └─────────────────┘
 ```
 
-- **Compression Triggers**: After 12 location transitions or when context grows too large
+- **Module-Specific Conversations**: Each module maintains its own conversation bubble, preventing token explosion across adventures
+- **Living Summary Evolution**: Single `_summary_001.json` per module regenerated completely on each visit with enhanced context
+- **Automatic Archive/Restore**: Module conversations saved to `campaign_archives/` on exit, restored on return
+- **Smart Context Injection**: Campaign summaries from OTHER modules injected as context (current module excluded)
+- **Visit Tracking**: Each summary tracks `visitCount`, `firstVisitDate`, and `lastVisitDate` for rich progression metadata
 - **Combat Isolation**: Each combat runs in its own context bubble, then returns a summary
-- **Token Efficiency**: Reduces 50,000+ tokens to ~5,000 while maintaining narrative continuity
-- **Module Transitions**: Previous modules become single chronicle entries
+- **Token Efficiency**: Module separation prevents infinite context growth while maintaining complete adventure history
+- **Zero Context Contamination**: Visiting other modules briefly doesn't permanently expand your main adventure's context
+- **Complete History Preservation**: Full conversation context restored when returning to any previously visited module
 
 ### Real-World Example
 ```
+FIRST VISIT TO THORNWOOD WATCH:
 Session 1-5: 50,000 tokens of gameplay in Thornwood Watch
-    ↓ (Compression)
-Chronicle: 5,000 tokens preserving all key events
-    ↓
-Session 6-10: New adventures in Keep of Doom
-    ↓
-Total Context: 10,000 tokens instead of 100,000
-Result: Infinite adventure potential without hitting limits
+    ↓ (Module Exit - Travel to Keep of Doom)
+Archive Process:
+• Full conversation → campaign_archives/Thornwood_Watch_conversation_001.json
+• Living Summary → campaign_summaries/Thornwood_Watch_summary_001.json
+  - visitCount: 1, firstVisitDate: 2024-01-15
+  - Complete adventure summary (5,000 tokens)
+• Clear conversation history (ready for new module)
+
+KEEP OF DOOM MODULE:
+• Fresh conversation context (0 tokens to start)
+• Campaign context injected: Thornwood Watch summary (5,000 tokens)
+• Session 6-10: New adventures without Thornwood's 50k tokens
+    ↓ (Return to Thornwood Watch after 6 months)
+
+RETURN VISIT TO THORNWOOD WATCH:
+Archive Restoration:
+• Load: Thornwood_Watch_conversation_001.json (full 50k token history restored)
+• Campaign context: Keep of Doom summary (excludes current Thornwood summary)
+• Session continues exactly where it left off with full NPC memory
+    ↓ (Exit after new adventures)
+Living Summary Update:
+• REGENERATE Thornwood_Watch_summary_001.json (not append!)
+  - visitCount: 2, lastVisitDate: 2024-07-20
+  - Enhanced summary incorporating both visits (6,000 tokens)
+
+Result: Each module maintains complete history while preventing token explosion
+Total per module: ~10,000 tokens (not 150,000+ from all adventures combined!)
+```
+
+### Module Transition System Details
+
+The enhanced module transition system ensures optimal performance and narrative continuity:
+
+#### 5-Step Transition Process
+1. **Immediate Detection**: Module changes detected instantly when `updatePartyTracker` changes current module
+2. **Archive & Summarize**: Current conversation archived to `campaign_archives/[Module_Name]_conversation_[sequence].json` and living summary regenerated in `campaign_summaries/[Module_Name]_summary_001.json`
+3. **Clear Conversation**: Current conversation history cleared to prevent token buildup
+4. **Restore Destination**: Load archived conversation for destination module (if returning) or start fresh (if first visit)
+5. **Inject Campaign Context**: Inject living summaries from OTHER modules as campaign context (current module excluded)
+
+#### Module-Specific Conversation Management
+Each module maintains its own "conversation bubble" that:
+- **Prevents Token Explosion**: Brief visits don't permanently add to main conversation
+- **Enables Quick Transitions**: Visit a shop in another module without context penalty
+- **Maintains Narrative Focus**: Each adventure keeps its own story thread
+- **Restores Completely**: Full conversation returns when you revisit
+
+#### Living Summary System
+- **Single File Per Module**: `[Module_Name]_summary_001.json` (always _001, never increments)
+- **Complete Regeneration**: Entire summary recreated fresh on each module exit
+- **Visit Metadata**: Tracks `visitCount`, `firstVisitDate`, `lastVisitDate`
+- **Rich Context**: Full adventure narrative available for other modules to reference
+
+Example Living Summary Evolution:
+```json
+// After First Visit (visitCount: 1)
+{
+  "module_name": "Thornwood_Watch",
+  "visitCount": 1,
+  "firstVisitDate": "2024-01-15",
+  "lastVisitDate": "2024-01-15",
+  "summary": "The party arrived at Rangers' Outpost and successfully defended it from bandit attacks. They formed strong relationships with Captain Thorne and the local rangers, securing the trade routes and establishing themselves as protectors of the Thornwood region."
+}
+
+// After Return Visit (visitCount: 2) - COMPLETELY REGENERATED
+{
+  "module_name": "Thornwood_Watch", 
+  "visitCount": 2,
+  "firstVisitDate": "2024-01-15",
+  "lastVisitDate": "2024-07-20",
+  "summary": "FIRST EXPEDITION: The party arrived as unknown adventurers and defended Rangers' Outpost from bandit attacks, earning the trust of Captain Thorne and establishing themselves as protectors of the region.\n\nRETURN AS HEROES: Six months later, the party returned as renowned heroes. The outpost had flourished under their protection, with new recruits and expanded defenses. Captain Thorne welcomed them warmly, and the party discovered new threats emerging from deeper in the Thornwood, leading to advanced adventures involving ancient druidic mysteries and corrupted forest spirits."
+}
 ```
 
 ### Benefits
-- **Truly Infinite Campaigns**: Play for hundreds of hours without context loss
-- **Persistent Relationships**: NPCs remember you after months of real-time play
-- **Coherent Storytelling**: Every adventure builds on previous experiences
-- **Reduced API Costs**: 85-90% token reduction through intelligent compression
+- **Truly Infinite Campaigns**: Play for hundreds of hours without context loss across multiple adventures
+- **Persistent Relationships**: NPCs remember you after months of real-time play through living summaries
+- **Coherent Storytelling**: Every adventure builds on previous experiences with complete cross-module continuity
+- **Zero Context Contamination**: Each module maintains its own conversation bubble, preventing token explosion
+- **Seamless Module Returns**: Full conversation history restored when revisiting any module
+- **Living World Evolution**: Summaries grow richer with each visit, tracking your expanding impact
+- **Optimized Performance**: Module separation prevents infinite context growth while preserving complete history
+- **Smart Context Management**: Campaign summaries provide relevant background without duplication
+- **Visit Progression Tracking**: Rich metadata shows your journey across the world over time
+- **Reduced API Costs**: Efficient token management through intelligent conversation separation
 
 ## Installation
 
@@ -493,7 +617,8 @@ The AI analyzes area descriptions and themes to suggest natural narrative bridge
 ├── web/                   # Web interface
 ├── modules/               # Adventure modules and game data
 │   ├── conversation_history/  # All conversation files
-│   ├── campaign_summaries/    # AI-generated summaries
+│   ├── campaign_archives/     # Archived module conversations
+│   ├── campaign_summaries/    # Living AI-generated summaries
 │   └── [module_name]/        # Individual adventure modules
 ├── prompts/               # AI system prompts
 ├── schemas/               # JSON validation schemas
@@ -846,12 +971,21 @@ Creative Commons Attribution 4.0 International License and the Fair Source Licen
 - **Enhanced Module Stitcher**: Fixed areas/ subdirectory scanning with automatic ID conflict resolution
 - **Centralized AI Configuration**: Removed all hardcoded GPT models, now uses config.py for consistency
 - **Startup Wizard Architecture**: Complete rewrite with proper error handling and Windows compatibility
-- **Campaign Path Management**: Implemented `CampaignPathManager` for centralized file path handling
-- **Combat System Fixes**: Fixed monster file loading in combat to use campaign directories
-- **Directory Structure**: All campaign-specific files now stored in organized campaign folders
+- **Module Path Management**: Implemented `ModulePathManager` for centralized file path handling
+- **Combat System Fixes**: Fixed monster file loading in combat to use module directories
+- **Directory Structure**: All module-specific files now stored in organized module folders
 - **Legacy Cleanup**: Moved old files to legacy folder, cleaning up root directory
 - **Validation System**: Relaxed combat validation to focus on major errors only
 - **Equipment Syncing**: Verified arrow transfer sync between character files
+
+### Conversation Compression Improvements (v1.5)
+- **Module-Specific Conversation History**: Each module maintains separate conversation context to prevent infinite buildup
+- **Living Summary System**: Single, continuously updated summary per module instead of sequential files
+- **Smart Context Injection**: Campaign summaries exclude current module to prevent duplication
+- **Automatic Archive/Restore**: Module conversations archived on exit, restored on return
+- **Visit Tracking**: Added metadata tracking for module visits (count, first/last visit dates)
+- **Improved Transition Detection**: Module changes detected immediately via `updatePartyTracker`
+- **Campaign Archive Structure**: Organized storage in `campaign_archives/` and `campaign_summaries/`
 
 ### Safety & Protection
 - **Atomic File Operations**: Backup/restore functionality prevents data corruption
