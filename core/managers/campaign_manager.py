@@ -623,14 +623,28 @@ Focus on story outcomes, character development, and decisions that will matter i
             sequence_num = self._get_next_sequence_number(self.archives_dir, f"{module_name}_conversation", ".json")
             archive_file = os.path.join(self.archives_dir, f"{module_name}_conversation_{sequence_num:03d}.json")
             
+            # Neutralize any module transition markers before archiving to prevent false detection on reload
+            # Make a deep copy to avoid modifying the original
+            import copy
+            archived_history = copy.deepcopy(conversation_history)
+            
+            # Find and modify any transition markers
+            for msg in archived_history:
+                if msg.get("role") == "user" and "Module transition:" in msg.get("content", ""):
+                    # Modify the marker so it won't be detected as active
+                    original_content = msg["content"]
+                    msg["content"] = msg["content"].replace("Module transition:", "[Archived] Module transition:", 1)
+                    print(f"DEBUG: [Module Archive] Neutralized transition marker: '{original_content}' -> '{msg['content']}'")
+            
             archive_data = {
                 "moduleName": module_name,
                 "sequenceNumber": sequence_num,
                 "archiveDate": datetime.now().isoformat(),
-                "conversationHistory": conversation_history,
-                "totalMessages": len(conversation_history)
+                "conversationHistory": archived_history,
+                "totalMessages": len(archived_history)
             }
             safe_json_dump(archive_data, archive_file)
+            print(f"DEBUG: [Module Archive] Archived {len(archived_history)} messages to: {archive_file}")
             info(f"SUCCESS: Archived {len(conversation_history)} conversation messages for {module_name} (sequence {sequence_num:03d})", category="summary_building")
         except Exception as e:
             warning(f"FAILURE: Failed to archive conversation history for {module_name}: {e}", category="summary_building")
@@ -838,6 +852,7 @@ Focus on story outcomes, character development, and decisions that will matter i
         
         # Auto-summarize the module being left (allow multiple visits to same module)
         if from_module:
+            print(f"DEBUG: [Module Summary] Generating AI summary for module: {from_module}")
             debug(f"STATE_CHANGE: Auto-generating summary for {from_module}...", category="summary_building")
             
             summary = self._generate_module_summary(from_module, party_tracker_data, conversation_history)
@@ -856,6 +871,7 @@ Focus on story outcomes, character development, and decisions that will matter i
             # Add sequence number to summary data (always 1 for living summaries)
             summary["sequenceNumber"] = 1
             safe_json_dump(summary, summary_file)
+            print(f"DEBUG: [Module Summary] Summary saved to: {summary_file}")
             
             # Update campaign state (track completion but allow revisits)
             if from_module not in self.campaign_data['completedModules']:

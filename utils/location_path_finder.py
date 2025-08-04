@@ -95,6 +95,7 @@ class LocationGraph:
         
     def load_module_data(self):
         """Load all area data and build the graph"""
+        print("DEBUG: [LocationGraph.load_module_data] Starting to load module data...")
         # Load world registry to get all available modules
         world_registry_path = "modules/world_registry.json"
         world_registry = safe_read_json(world_registry_path)
@@ -189,6 +190,7 @@ class LocationGraph:
         self._process_external_connections()
         
         write_debug(f"Graph built: {len(self.nodes)} locations, {sum(len(v) for v in self.edges.values())} connections")
+        print(f"DEBUG: [LocationGraph.load_module_data] Load complete. Total nodes: {len(self.nodes)}, Total edges: {sum(len(v) for v in self.edges.values())}")
     
     def _process_area_locations(self, area_id: str, area_data: Dict):
         """Process all locations in an area and add them to the graph"""
@@ -267,7 +269,10 @@ class LocationGraph:
             (success, path_of_location_ids, message)
         """
         # Validate input locations
+        print(f"DEBUG: [LocationGraph.find_path] Checking path from '{from_location_id}' to '{to_location_id}'")
+        print(f"DEBUG: [LocationGraph.find_path] Total nodes in graph: {len(self.nodes)}")
         if from_location_id not in self.nodes:
+            print(f"DEBUG: [LocationGraph.find_path] ERROR - '{from_location_id}' not in nodes. First 10 nodes: {list(self.nodes.keys())[:10]}")
             return False, [], f"Starting location ID '{from_location_id}' not found"
         
         if to_location_id not in self.nodes:

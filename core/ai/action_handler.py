@@ -687,8 +687,10 @@ def process_action(action, party_tracker_data, location_data, conversation_histo
         current_area_id = party_tracker_data["worldConditions"]["currentAreaId"]
         
         # Initialize location graph for validation
+        print("DEBUG: [LocationGraph] WARNING - Creating NEW LocationGraph instance in action_handler (not using global)")
         location_graph = LocationGraph()
         location_graph.load_module_data()
+        print(f"DEBUG: [LocationGraph] action_handler local graph loaded with {len(location_graph.nodes)} nodes")
         
         # MAP: Convert area ID to entry location ID if needed (TW001 -> TW01)
         if not location_graph.validate_location_id_format(new_location_name_or_id):
@@ -1150,6 +1152,8 @@ Please use a valid location that exists in the current area ({current_area_id}) 
             # Check if module is being changed
             new_module = parameters.get("module")
             if new_module and new_module != current_module:
+                print(f"DEBUG: [Module Transition] Module change detected: {current_module} -> {new_module}")
+                print(f"DEBUG: [Party Tracker Before Update] Module: {current_party_data.get('module', 'Unknown')}")
                 info(f"STATE_CHANGE: Module change detected: {current_module} -> {new_module}", category="module_management")
                 
                 # Insert module transition marker immediately when module change is detected
@@ -1159,6 +1163,7 @@ Please use a valid location that exists in the current area ({current_area_id}) 
                     "content": transition_text
                 }
                 conversation_history.append(transition_message)
+                print(f"DEBUG: [Module Transition] Inserted transition marker: '{transition_text}'")
                 debug(f"STATE_CHANGE: Inserted module transition marker: '{transition_text}'", category="module_management")
                 
                 # Import campaign manager for auto-archiving
@@ -1168,6 +1173,7 @@ Please use a valid location that exists in the current area ({current_area_id}) 
                 
                 # Auto-archive and summarize previous module
                 if current_module != "Unknown":
+                    print(f"DEBUG: [Module Transition] Starting auto-archive and summary for module: {current_module}")
                     info(f"STATE_CHANGE: Auto-archiving conversation and generating summary for {current_module}", category="module_management")
                     summary = campaign_manager.handle_cross_module_transition(
                         current_module, new_module, current_party_data, conversation_history
@@ -1220,6 +1226,7 @@ Please use a valid location that exists in the current area ({current_area_id}) 
             
             # Save updated party tracker
             safe_json_dump(current_party_data, "party_tracker.json")
+            print(f"DEBUG: [Party Tracker After Update] Module: {current_party_data.get('module', 'Unknown')}")
             info("SUCCESS: Party tracker updated successfully", category="party_management")
             # Always reload conversation history to pick up changes
             needs_conversation_history_update = True

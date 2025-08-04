@@ -305,32 +305,58 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
     # ============================================================================
     # MODULE TRANSITION DETECTION (BEFORE SYSTEM MESSAGE REMOVAL)
     # ============================================================================
-    # Check if there has been a module transition by comparing current module
-    # with the module from previous conversation state BEFORE removing system messages
-    previous_module = party_tracker_data.get('module', 'Unknown') if party_tracker_data else 'Unknown'
-    current_module = get_previous_module_from_history(conversation_history)
+    # Check if there's a recent unprocessed module transition marker
+    # This indicates we just transitioned and need to load the destination module's archive
+    current_module = party_tracker_data.get('module', 'Unknown') if party_tracker_data else 'Unknown'
+    
+    # Look for a recent module transition marker that hasn't been processed yet
+    has_unprocessed_transition = False
+    transition_from_module = None
+    transition_to_module = None
+    
+    # Check last few messages for an unprocessed transition marker
+    for i in range(max(0, len(conversation_history) - 5), len(conversation_history)):
+        if i < len(conversation_history):
+            msg = conversation_history[i]
+            if msg.get("role") == "user" and "Module transition:" in msg.get("content", ""):
+                # Found a transition marker - parse it
+                import re
+                match = re.match(r"Module transition: (.+?) to (.+?)$", msg.get("content", ""))
+                if match:
+                    transition_from_module = match.group(1)
+                    transition_to_module = match.group(2)
+                    has_unprocessed_transition = True
+                    print(f"DEBUG: [update_conversation_history] Found unprocessed transition: {transition_from_module} -> {transition_to_module}")
+                    break
+    
+    print(f"DEBUG: [update_conversation_history] Party tracker module: {current_module}")
+    print(f"DEBUG: [update_conversation_history] Has unprocessed transition: {has_unprocessed_transition}")
 
     # Remove any existing system messages for location, party tracker, plot, map, module data, world state, and campaign context
+    # Also remove module transition markers as they're processed separately
     updated_history = [
         msg for msg in conversation_history 
-        if not (msg["role"] == "system" and 
-                any(key in msg["content"] for key in [
-                    "Current Location:", 
-                    "No active location data available",
-                    "Here's the updated party tracker data:",
-                    "Here's the current plot data:",
-                    "=== ADVENTURE PLOT STATUS ===",
-                    "Here's the current map data:",
-                    "Here's the module data:",
-                    "WORLD STATE CONTEXT:",
-                    "=== CAMPAIGN CONTEXT ==="
-                ]))
+        if not (
+            (msg["role"] == "system" and 
+             any(key in msg["content"] for key in [
+                 "Current Location:", 
+                 "No active location data available",
+                 "Here's the updated party tracker data:",
+                 "Here's the current plot data:",
+                 "=== ADVENTURE PLOT STATUS ===",
+                 "Here's the current map data:",
+                 "Here's the module data:",
+                 "WORLD STATE CONTEXT:",
+                 "=== CAMPAIGN CONTEXT ==="
+             ])) or
+            (msg["role"] == "user" and "Module transition:" in msg.get("content", ""))
+        )
     ]
 
     # Create a new list starting with the primary system prompt
     new_history = [primary_system_prompt] if primary_system_prompt else []
     
-    debug(f"VALIDATION: Module transition check - previous: '{previous_module}', current: '{current_module}'", category="module_management")
+    debug(f"VALIDATION: Current module from party tracker: '{current_module}'", category="module_management")
     
     # Module transition detection and marker insertion now happens in action_handler.py
     # This section is preserved for any future module transition logic
@@ -338,10 +364,11 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
     # ============================================================================
     # MODULE-SPECIFIC CONVERSATION HISTORY
     # ============================================================================
-    # Check if we're transitioning to a different module
-    if previous_module and current_module and previous_module != current_module and current_module != 'Unknown':
-        debug(f"STATE_CHANGE: Module transition detected in update_conversation_history: {previous_module} -> {current_module}", category="module_management")
-        print(f"DEBUG: [Module Transition] Detected transition from {previous_module} to {current_module}")
+    # If we found an unprocessed module transition, handle it
+    if has_unprocessed_transition and transition_to_module:
+        debug(f"STATE_CHANGE: Processing module transition: {transition_from_module} -> {transition_to_module}", category="module_management")
+        print(f"DEBUG: [Module Transition] Processing transition from {transition_from_module} to {transition_to_module}")
+        print(f"DEBUG: [Party Tracker] Current module in party_tracker: {current_module}")
         
         # ALWAYS clear the conversation history first on module transition
         debug(f"STATE_CHANGE: Clearing conversation history for module transition", category="module_management")
@@ -349,9 +376,10 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
         updated_history = []
         
         # THEN try to restore from archive if available
-        # Use the previous module as the destination
-        destination_module = previous_module
+        # Use the transition destination module
+        destination_module = transition_to_module
         print(f"DEBUG: [Module Transition] Loading conversation for destination module: {destination_module}")
+        print(f"DEBUG: [Module Conversation] Loading conversation for destination module: {destination_module}")
         
         archive_dir = "modules/campaign_archives"
         
@@ -373,6 +401,7 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
                 
                 archive_path = os.path.join(archive_dir, most_recent_file)
                 print(f"DEBUG: [Module Transition] Attempting to load archive: {most_recent_file}")
+                print(f"DEBUG: [Module Conversation] Loading archive file: {most_recent_file}")
                 archive_data = safe_json_load(archive_path)
                 
                 if archive_data and isinstance(archive_data, dict) and 'conversationHistory' in archive_data:
@@ -383,6 +412,7 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
                     ]
                     debug(f"STATE_CHANGE: Loaded {len(archived_messages)} messages from {most_recent_file} for {current_module}", category="module_management")
                     print(f"DEBUG: [Module Transition] Successfully loaded {len(archived_messages)} messages from {most_recent_file}")
+                    print(f"DEBUG: [Module Conversation] Successfully loaded {len(archived_messages)} messages from archive")
                     # Replace updated_history with the archived messages
                     updated_history = archived_messages
                 else:

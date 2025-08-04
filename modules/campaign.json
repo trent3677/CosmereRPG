@@ -1,0 +1,26 @@
+{
+  "campaignName": "Fantasy Adventure Campaign",
+  "currentModule": null,
+  "hubModule": null,
+  "completedModules": [
+    "Shadows_of_Kharos",
+    "Keep_of_Doom"
+  ],
+  "availableModules": [
+    "The_Thornwood_Watch",
+    "Keep_of_Doom",
+    "Shadows_of_Kharos"
+  ],
+  "hubs": {},
+  "relationships": {},
+  "artifacts": {},
+  "worldState": {
+    "keepOwnership": false,
+    "majorDecisions": [],
+    "crossModuleRelationships": {},
+    "unlockedAreas": [],
+    "hubEstablished": false
+  },
+  "lastUpdated": "2025-08-04T11:33:51.980404",
+  "version": "1.0.0"
+}

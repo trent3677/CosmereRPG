@@ -140,8 +140,13 @@ from config import (
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Initialize location graph for path validation
+print("DEBUG: [LocationGraph] Initializing location graph at startup...")
 location_graph = LocationGraph()
+print("DEBUG: [LocationGraph] Loading module data...")
 location_graph.load_module_data()
+print(f"DEBUG: [LocationGraph] Initialization complete. Total nodes loaded: {len(location_graph.nodes)}")
+print(f"DEBUG: [LocationGraph] Total edges loaded: {sum(len(edges) for edges in location_graph.edges.values())}")
+print(f"DEBUG: [LocationGraph] First 5 location IDs: {list(location_graph.nodes.keys())[:5]}")
 
 # Temperature Configuration (remains the same)
 TEMPERATURE = 0.8
@@ -700,6 +705,8 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
                     path_info = f"Path Validation ERROR: Location graph not initialized."
                 else:
                     # Validate path using location graph
+                    print(f"DEBUG: [LocationGraph] Path validation - From: {current_origin}, To: {destination}")
+                    print(f"DEBUG: [LocationGraph] Current graph state - Nodes: {len(location_graph.nodes)}, Has origin: {current_origin in location_graph.nodes}")
                     success, path, message = location_graph.find_path(current_origin, destination)
                     
                     if success:
@@ -1896,6 +1903,9 @@ def main_game_loop():
             debug("STATE_CHANGE: Reloading conversation history from disk due to needs_conversation_history_update flag", category="conversation_management")
             # Reload conversation history from disk to get any changes made during actions
             conversation_history = load_json_file("modules/conversation_history/conversation_history.json") or []
+            # CRITICAL: Also reload party tracker to get the latest module information
+            party_tracker_data = load_json_file("party_tracker.json")
+            print(f"DEBUG: [Main Loop] Reloaded party tracker after update. Module: {party_tracker_data.get('module', 'Unknown')}")
             conversation_history = process_conversation_history(conversation_history)
             save_conversation_history(conversation_history)
             needs_conversation_history_update = False
@@ -2499,6 +2509,10 @@ def main_game_loop():
         status_ready()
 
         # This block now only runs if a response was NOT held
+        # CRITICAL: Reload party tracker to ensure we have the latest module information after any updates
+        party_tracker_data = load_json_file("party_tracker.json")
+        print(f"DEBUG: [Before update_conversation_history] Reloaded party tracker. Module: {party_tracker_data.get('module', 'Unknown')}")
+        
         current_area_id = party_tracker_data["worldConditions"]["currentAreaId"] 
         # Use current module from party tracker for plot data  
         module_name_updated = party_tracker_data.get("module", "").replace(" ", "_")
