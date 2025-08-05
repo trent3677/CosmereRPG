@@ -1493,6 +1493,25 @@ def process_ai_response(response, party_tracker_data, location_data, conversatio
                 if archive_success:
                     print(f"DEBUG: [Module Transition] Successfully archived conversation history for {pending_archive_info['from_module']}")
                     info(f"SUCCESS: Archived conversation history for module: {pending_archive_info['from_module']}", category="module_management")
+                    
+                    # Regenerate the summary with the complete conversation history (including travel narrative)
+                    print(f"DEBUG: [Module Transition] Regenerating summary with complete conversation history")
+                    summary = campaign_manager._generate_module_summary(
+                        pending_archive_info['from_module'],
+                        pending_archive_info.get('party_tracker_data', {}),
+                        fresh_conversation_history,
+                        skip_archiving=True  # Skip archiving since we just did it
+                    )
+                    
+                    # Update the summary file with the regenerated summary
+                    summary_file = os.path.join(campaign_manager.summaries_dir, f"{pending_archive_info['from_module']}_summary_001.json")
+                    summary["sequenceNumber"] = 1
+                    summary["visitCount"] = campaign_manager._get_module_visit_info(pending_archive_info['from_module']).get("visitCount", 0) + 1
+                    summary["lastVisitDate"] = datetime.now().isoformat()
+                    safe_json_dump(summary, summary_file)
+                    
+                    print(f"DEBUG: [Module Transition] Summary regenerated and saved for {pending_archive_info['from_module']}")
+                    info(f"SUCCESS: Regenerated summary with travel narrative for module: {pending_archive_info['from_module']}", category="module_management")
                 else:
                     print(f"DEBUG: [Module Transition] Failed to archive conversation history for {pending_archive_info['from_module']}")
                     warning(f"FAILURE: Could not archive conversation history for module: {pending_archive_info['from_module']}", category="module_management")

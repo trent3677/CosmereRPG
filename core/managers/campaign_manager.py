@@ -374,10 +374,11 @@ class CampaignManager:
         return summary
     
     def _generate_module_summary(self, module_name: str, party_tracker_data: Dict[str, Any],
-                                conversation_history: List[Dict[str, Any]]) -> Dict[str, Any]:
+                                conversation_history: List[Dict[str, Any]], skip_archiving: bool = False) -> Dict[str, Any]:
         """Generate AI-powered module summary"""
-        # Archive full conversation history before summarization
-        self._archive_conversation_history(module_name, conversation_history)
+        # Archive full conversation history before summarization (unless skipped for delayed archiving)
+        if not skip_archiving:
+            self._archive_conversation_history(module_name, conversation_history)
         
         # Load module plot data for structured information
         plot_data = self._load_module_plot_data(module_name)
@@ -864,7 +865,7 @@ Focus on story outcomes, character development, and decisions that will matter i
             print(f"DEBUG: [Module Summary] Generating AI summary for module: {from_module}")
             debug(f"STATE_CHANGE: Auto-generating summary for {from_module}...", category="summary_building")
             
-            summary = self._generate_module_summary(from_module, party_tracker_data, conversation_history)
+            summary = self._generate_module_summary(from_module, party_tracker_data, conversation_history, skip_archiving=True)
             
             # Get existing visit info
             visit_info = self._get_module_visit_info(from_module)
