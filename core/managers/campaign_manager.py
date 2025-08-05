@@ -617,7 +617,7 @@ Focus on story outcomes, character development, and decisions that will matter i
             if module not in self.campaign_data['availableModules']:
                 self.campaign_data['availableModules'].append(module)
     
-    def _archive_conversation_history(self, module_name: str, conversation_history: List[Dict[str, Any]]):
+    def _archive_conversation_history(self, module_name: str, conversation_history: List[Dict[str, Any]]) -> bool:
         """Archive the full conversation history for a module before summarization"""
         try:
             # Find next available sequence number
@@ -656,8 +656,10 @@ Focus on story outcomes, character development, and decisions that will matter i
             safe_json_dump(archive_data, archive_file)
             print(f"DEBUG: [Module Archive] Archived {len(filtered_history)} messages to: {archive_file}")
             info(f"SUCCESS: Archived {len(filtered_history)} conversation messages for {module_name} (sequence {sequence_num:03d})", category="summary_building")
+            return True
         except Exception as e:
             warning(f"FAILURE: Failed to archive conversation history for {module_name}: {e}", category="summary_building")
+            return False
     
     def _load_module_plot_data(self, module_name: str) -> Optional[Dict[str, Any]]:
         """Load module plot data for structured information"""
