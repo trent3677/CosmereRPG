@@ -1,3 +1,0 @@
-Final Minor Recommendations for BV001.json locations:
-doors: Add the missing name, description, type, and locked boolean to each door object for full schema compliance.
-areaConnectivityId: Review its usage. If a location doesn't explicitly lead to another map area, areaConnectivityId: [] might be more semantically correct according to the schema description than areaConnectivityId: "BV001". If it's an exit to Gloamwood (GW001), then areaConnectivityId: ["GW001"].

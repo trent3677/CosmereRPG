@@ -245,6 +245,18 @@ run_dm_tests.py
 spell_extraction_log.txt
 system_prompt\ copy\ 6.txt
 
+# One-time fix scripts removed from repo
+fix_all_file_paths.py
+fix_compression_boundaries.py
+fix_conversation_paths.py
+fix_imports.py
+
+# Standalone development tools removed from repo
+check_conversation_paths.py
+verify_prompt_integration.py
+asci_map.py
+campaign_notes.txt
+
 # Development files that should stay local only
 architecture_docs.md
 clean_debug_log.py
