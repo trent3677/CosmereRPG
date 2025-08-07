@@ -1099,14 +1099,37 @@ Respond with JSON:
         """Get list of all available modules with basic info"""
         try:
             modules = self.world_registry.get('modules', {})
+            all_areas = self.world_registry.get('areas', {})  # Get all areas once
             module_list = []
             
             for module_name, module_data in modules.items():
+                # Get total location count for this module
+                total_locations = 0
+                module_areas = 0
+                for area_id, area_data in all_areas.items():
+                    if area_data.get('module') == module_name:
+                        module_areas += 1
+                        total_locations += area_data.get('locationCount', 0)
+                
+                # Get plot point count from themes or plotPoints
+                plot_point_count = 0
+                # Check for themes (plot hooks)
+                themes = module_data.get('themes', [])
+                if themes:
+                    plot_point_count = len(themes)
+                
+                # Also check for plotPoints if themes is empty
+                if plot_point_count == 0:
+                    plot_points = module_data.get('plotPoints', [])
+                    plot_point_count = len(plot_points)
+                
                 module_list.append({
                     "moduleName": module_name,
                     "plotObjective": module_data.get('plotObjective', ''),
                     "levelRange": module_data.get('levelRange', {}),
-                    "areaCount": module_data.get('areaCount', 0),
+                    "areaCount": module_areas if module_areas > 0 else module_data.get('areaCount', 0),
+                    "locationCount": total_locations,  # Add new data
+                    "plotPointCount": plot_point_count,  # Add new data
                     "addedDate": module_data.get('addedDate', ''),
                     "hasTravel": bool(module_data.get('travelNarration'))
                 })

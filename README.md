@@ -495,8 +495,9 @@ The AI analyzes area descriptions and themes to suggest natural narrative bridge
 - **Plug-and-Play**: Simply drop modules in the `modules/` directory and they integrate on next startup
 
 ### Module Creation & Sharing
-- **Module Builder**: Create new adventure modules with integrated areas, plots, and NPCs
+- **Web Module Builder**: Interactive web interface for creating complete adventure modules
 - **AI-Assisted Creation**: AI helps generate cohesive module content that integrates seamlessly
+- **Real-time Progress Tracking**: Visual progress bar shows module generation stages
 - **Community Standards**: Built-in validation ensures your modules work perfectly for other players
 - **Organic Integration**: New modules connect naturally to existing worlds without manual configuration
 
@@ -510,7 +511,7 @@ The AI analyzes area descriptions and themes to suggest natural narrative bridge
 - **Automatic Compression Triggers**: Manages token limits seamlessly (12 transitions trigger, 6 compressed)
 
 ### Module Generation & Management
-- **Complete Module Builder**: Generate entire adventure modules with areas, locations, plots, and NPCs
+- **Web-Based Module Builder**: Launch with `python module_builder_web.py` for an interactive creation experience
 - **Context-Aware Generation**: Maintains consistency across all generated content
 - **Schema Compliance**: All files follow strict 5th edition JSON schemas
 - **Community Module Support**: Framework for sharing and auto-integrating downloaded adventures
@@ -627,6 +628,7 @@ The AI analyzes area descriptions and themes to suggest natural narrative bridge
 
 ### Core Systems
 - `main.py` - Main game loop and player interaction
+- `module_builder_web.py` - **Web interface for module creation** (run this to create modules)
 - `core/generators/module_builder.py` - Automated module generation system
 - `core/generators/module_stitcher.py` - Organic module integration
 - `core/managers/campaign_manager.py` - Hub-and-spoke campaign orchestration
@@ -764,6 +766,30 @@ Player: "Let's gather at the tavern we established"
 AI: *Transitions party to hub location with full context*
 ```
 
+### Creating Custom Modules
+
+#### **Web Module Builder (Recommended)**
+The easiest way to create custom modules is through the web interface:
+
+```bash
+python module_builder_web.py
+```
+
+This launches an interactive web interface that:
+- Auto-opens in your browser on a random port (7000-9000)
+- Provides real-time progress tracking with visual indicators
+- Shows existing modules with area counts and plot points
+- Guides you through module creation with AI assistance
+- Validates all generated content automatically
+
+**Web Builder Features:**
+- **Module Name**: Unique identifier for your adventure
+- **Number of Areas**: 1-10 distinct regions (default: 3)
+- **Locations per Area**: 1-30 locations per region (default: 5)
+- **AI Narrative Prompt**: Describe your module concept in detail
+- **Progress Tracking**: 9-stage visual progress bar showing generation status
+- **Module Library**: View all existing modules with statistics
+
 ### AI Module Generation Examples
 
 #### **Contextual Adventure Creation**
@@ -885,7 +911,7 @@ We welcome contributions to NeverEndingQuest! This project thrives on community 
 5. **Submit a pull request** with a clear description of changes
 
 #### For Content Creators
-- **Create adventure modules** using the module builder
+- **Create adventure modules** using the web module builder: `python module_builder_web.py`
 - **Share your modules** with the community
 - **Report balance issues** or suggest improvements
 - **Write documentation** or tutorials

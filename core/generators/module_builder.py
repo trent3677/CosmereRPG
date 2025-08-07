@@ -70,6 +70,7 @@ class ModuleBuilder:
         self.locations_data = {}
         self.plots_data = {}
         self.context = ModuleContext()
+        self.progress_callback = None  # For progress reporting
         
         # Initialize generators
         self.module_gen = ModuleGenerator()
@@ -1414,7 +1415,7 @@ Return ONLY the JSON object, no explanations or additional text."""
         "plot_themes": "adventure,mystery"
     }
 
-def ai_driven_module_creation(params: Dict[str, Any]) -> tuple[bool, Optional[str]]:
+def ai_driven_module_creation(params: Dict[str, Any], progress_callback=None) -> tuple[bool, Optional[str]]:
     """AI-driven module creation that accepts a narrative and autonomously creates a module
     
     This function is fully agentic - it can work with just a narrative description
@@ -1427,6 +1428,7 @@ def ai_driven_module_creation(params: Dict[str, Any]) -> tuple[bool, Optional[st
             - Other optional params that override AI parsing
             OR just:
             - narrative: Full narrative description (AI will parse all params)
+        progress_callback: Optional callback function for progress updates
     
     Returns:
         tuple[bool, Optional[str]]: (success_status, module_name)
@@ -1434,6 +1436,9 @@ def ai_driven_module_creation(params: Dict[str, Any]) -> tuple[bool, Optional[st
             - module_name: Name of the created module if successful, None if failed
     """
     try:
+        # Report progress if callback provided
+        if progress_callback:
+            progress_callback({'stage': 0, 'total_stages': 9, 'stage_name': 'Initializing', 'percentage': 0, 'message': 'Starting module creation...'})
         # Check if we have a narrative to parse
         narrative = params.get("narrative") or params.get("concept")
         if not narrative:
@@ -1441,6 +1446,8 @@ def ai_driven_module_creation(params: Dict[str, Any]) -> tuple[bool, Optional[st
             return False, None
         
         # Parse narrative with AI to get module parameters
+        if progress_callback:
+            progress_callback({'stage': 1, 'total_stages': 9, 'stage_name': 'Parsing narrative', 'percentage': 11, 'message': 'Analyzing narrative to extract module parameters...'})
         parsed_params = parse_narrative_to_module_params(narrative)
         
         # Allow explicit parameters to override AI parsing (check both camelCase and snake_case)
@@ -1482,6 +1489,8 @@ def ai_driven_module_creation(params: Dict[str, Any]) -> tuple[bool, Optional[st
         debug(f"MODULE_CREATION: AI-driven module creation starting for '{module_name}'", category="module_creation")
         
         # Configure builder with AI parameters
+        if progress_callback:
+            progress_callback({'stage': 2, 'total_stages': 9, 'stage_name': 'Configuring builder', 'percentage': 22, 'message': f'Setting up module: {module_name}...'})
         config = BuilderConfig(
             module_name=module_name,
             num_areas=int(num_areas),
@@ -1491,15 +1500,26 @@ def ai_driven_module_creation(params: Dict[str, Any]) -> tuple[bool, Optional[st
         )
         
         # Create and run the builder
+        if progress_callback:
+            progress_callback({'stage': 3, 'total_stages': 9, 'stage_name': 'Creating builder', 'percentage': 33, 'message': 'Initializing module builder...'})
         builder = ModuleBuilder(config)
+        
+        # Set progress callback on builder if available
+        if progress_callback:
+            builder.progress_callback = progress_callback
         
         # Store AI context for generators to use
         # The generators will pick up these values from the enhanced_concept text
         
         # Build the module
+        if progress_callback:
+            progress_callback({'stage': 4, 'total_stages': 9, 'stage_name': 'Building module', 'percentage': 44, 'message': 'Starting module generation process...'})
         builder.build_module(enhanced_concept)
         
         info(f"SUCCESS: Module '{module_name}' created successfully at {config.output_directory}", category="module_creation")
+        
+        if progress_callback:
+            progress_callback({'stage': 7, 'total_stages': 9, 'stage_name': 'Finalizing', 'percentage': 77, 'message': 'Finalizing module data...'})
         
         # Create a module_plot.json file for the new module (required by the system)
         plot_file_path = os.path.join(config.output_directory, "module_plot.json")
@@ -1524,6 +1544,9 @@ def ai_driven_module_creation(params: Dict[str, Any]) -> tuple[bool, Optional[st
             with open(plot_file_path, "w") as f:
                 json.dump(unified_plot, f, indent=2)
             info(f"SUCCESS: Created unified module_plot.json with {len(unified_plot['plotPoints'])} plot points", category="module_creation")
+        
+        if progress_callback:
+            progress_callback({'stage': 8, 'total_stages': 9, 'stage_name': 'Complete', 'percentage': 100, 'message': f'Module {module_name} created successfully!'})
         
         return True, module_name
         
