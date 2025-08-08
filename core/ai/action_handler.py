@@ -954,6 +954,16 @@ Please use a valid location that exists in the current area ({current_area_id}) 
             # The AI is fully in control of module creation
             from core.generators.module_builder import ai_driven_module_creation
             
+            # Define progress callback to send updates to web interface
+            def module_progress_callback(progress_data):
+                """Send module creation progress to web interface"""
+                try:
+                    from web.web_interface import socketio
+                    socketio.emit('module_creation_progress', progress_data)
+                    debug(f"MODULE_PROGRESS: Stage {progress_data.get('stage')}/{progress_data.get('total_stages')} - {progress_data.get('message')}", category="module_management")
+                except Exception as e:
+                    debug(f"Could not emit progress update: {e}", category="module_management")
+            
             # Check if this is a single narrative parameter (new format)
             # or multiple parameters (old format)
             if len(parameters) == 1 and isinstance(list(parameters.values())[0], str):
@@ -963,7 +973,7 @@ Please use a valid location that exists in the current area ({current_area_id}) 
             
             # Let the module builder handle ALL parameter validation
             # This makes the system fully agentic - AI decides everything
-            success, module_name = ai_driven_module_creation(parameters)
+            success, module_name = ai_driven_module_creation(parameters, progress_callback=module_progress_callback)
             
             if success:
                 # Module name is now returned from the AI parser

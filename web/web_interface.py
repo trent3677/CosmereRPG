@@ -887,6 +887,37 @@ def handle_model_toggle(data):
         error(f"Error toggling model: {e}", exception=e, category="web_interface")
         emit('error', {'message': f"Failed to toggle model: {str(e)}"})
 
+@socketio.on('test_module_progress')
+def handle_test_module_progress():
+    """Test handler to simulate module creation progress"""
+    import threading
+    import time
+    
+    def simulate_progress():
+        """Simulate module creation progress events"""
+        stages = [
+            {'stage': 0, 'total_stages': 9, 'stage_name': 'Initializing', 'percentage': 0, 'message': 'Starting module creation...'},
+            {'stage': 1, 'total_stages': 9, 'stage_name': 'Parsing narrative', 'percentage': 11, 'message': 'Analyzing narrative to extract module parameters...'},
+            {'stage': 2, 'total_stages': 9, 'stage_name': 'Configuring builder', 'percentage': 22, 'message': 'Setting up module: Test_Module...'},
+            {'stage': 3, 'total_stages': 9, 'stage_name': 'Creating builder', 'percentage': 33, 'message': 'Initializing module builder...'},
+            {'stage': 4, 'total_stages': 9, 'stage_name': 'Building module', 'percentage': 44, 'message': 'Starting module generation process...'},
+            {'stage': 5, 'total_stages': 9, 'stage_name': 'Creating areas', 'percentage': 55, 'message': 'Generating area layouts and descriptions...'},
+            {'stage': 6, 'total_stages': 9, 'stage_name': 'Populating locations', 'percentage': 66, 'message': 'Adding NPCs and encounters...'},
+            {'stage': 7, 'total_stages': 9, 'stage_name': 'Finalizing', 'percentage': 77, 'message': 'Finalizing module data...'},
+            {'stage': 8, 'total_stages': 9, 'stage_name': 'Complete', 'percentage': 100, 'message': 'Module Test_Module created successfully!'}
+        ]
+        
+        for stage_data in stages:
+            socketio.emit('module_creation_progress', stage_data)
+            time.sleep(1.5)  # Delay between stages for visual effect
+    
+    # Run simulation in background thread
+    thread = threading.Thread(target=simulate_progress)
+    thread.daemon = True
+    thread.start()
+    
+    emit('system_message', {'content': 'Starting module progress test simulation...'})
+
 @socketio.on('generate_image')
 def handle_generate_image(data):
     """Handle image generation requests"""
