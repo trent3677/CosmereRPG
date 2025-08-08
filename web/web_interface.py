@@ -869,6 +869,24 @@ def handle_user_exit():
     except Exception as e:
         print(f"ERROR handling user exit: {e}")
 
+@socketio.on('toggle_model')
+def handle_model_toggle(data):
+    """Handle model toggle between GPT-4.1 and GPT-5"""
+    try:
+        import config
+        use_gpt5 = data.get('use_gpt5', False)
+        config.USE_GPT5_MODELS = use_gpt5
+        
+        # Log the change
+        debug(f"Model toggled to: {'GPT-5' if use_gpt5 else 'GPT-4.1'}", category="web_interface")
+        
+        # Send confirmation back to client
+        emit('model_toggled', {'use_gpt5': config.USE_GPT5_MODELS}, broadcast=True)
+        
+    except Exception as e:
+        error(f"Error toggling model: {e}", exception=e, category="web_interface")
+        emit('error', {'message': f"Failed to toggle model: {str(e)}"})
+
 @socketio.on('generate_image')
 def handle_generate_image(data):
     """Handle image generation requests"""

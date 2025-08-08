@@ -1567,13 +1567,26 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
        try:
            print("[COMBAT_MANAGER] Getting re-engagement narration from AI...")
            # Use base temperature for re-engagement (no validation failures)
-           temperature_used = get_combat_temperature(encounter_data, validation_attempt=0)
+           # Import GPT-5 config
+           from config import USE_GPT5_MODELS, GPT5_MINI_MODEL
            
-           response = client.chat.completions.create(
-               model=COMBAT_MAIN_MODEL,
-               temperature=temperature_used,
-               messages=conversation_history
-           )
+           if USE_GPT5_MODELS:
+               # GPT-5: Use mini model for re-engagement
+               print(f"DEBUG: [COMBAT RE-ENGAGE] Using GPT-5 model: {GPT5_MINI_MODEL}")
+               response = client.chat.completions.create(
+                   model=GPT5_MINI_MODEL,
+                   messages=conversation_history
+               )
+           else:
+               # GPT-4.1: Use temperature
+               temperature_used = get_combat_temperature(encounter_data, validation_attempt=0)
+               
+               print(f"DEBUG: [COMBAT RE-ENGAGE] Using GPT-4.1 model: {COMBAT_MAIN_MODEL} (temp: {temperature_used})")
+               response = client.chat.completions.create(
+                   model=COMBAT_MAIN_MODEL,
+                   temperature=temperature_used,
+                   messages=conversation_history
+               )
            resume_response_content = response.choices[0].message.content.strip()
            
            conversation_history.append({"role": "assistant", "content": resume_response_content})
@@ -1949,14 +1962,32 @@ Do not narrate or process any actions from the next round in this response. The 
                except Exception as e:
                    debug(f"Could not update status: {e}", category="status")
                
-               # Calculate temperature with attempt number for dynamic adjustment
-               temperature_used = get_combat_temperature(encounter_data, validation_attempt=attempt)
+               # Import GPT-5 config
+               from config import USE_GPT5_MODELS, GPT5_MINI_MODEL, GPT5_FULL_MODEL
                
-               response = client.chat.completions.create(
-                   model=COMBAT_MAIN_MODEL,
-                   temperature=temperature_used,
-                   messages=conversation_history
-               )
+               if USE_GPT5_MODELS:
+                   # GPT-5: Use mini, fallback to full after 4 failures
+                   if attempt >= 4:
+                       combat_model = GPT5_FULL_MODEL
+                       print(f"DEBUG: [COMBAT] GPT-5 - Switching to FULL model after {attempt} attempts")
+                   else:
+                       combat_model = GPT5_MINI_MODEL
+                   
+                   print(f"DEBUG: [COMBAT] Using GPT-5 model: {combat_model}")
+                   response = client.chat.completions.create(
+                       model=combat_model,
+                       messages=conversation_history
+                   )
+               else:
+                   # GPT-4.1: Keep existing temperature escalation
+                   temperature_used = get_combat_temperature(encounter_data, validation_attempt=attempt)
+                   
+                   print(f"DEBUG: [COMBAT] Using GPT-4.1 model: {COMBAT_MAIN_MODEL} (temp: {temperature_used})")
+                   response = client.chat.completions.create(
+                       model=COMBAT_MAIN_MODEL,
+                       temperature=temperature_used,
+                       messages=conversation_history
+                   )
                ai_response = response.choices[0].message.content.strip()
                
                print(f"[COMBAT_MANAGER] AI response received ({len(ai_response)} chars)")

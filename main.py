@@ -1586,6 +1586,7 @@ def get_ai_response(conversation_history, validation_retry_count=0):
     # Import action predictor and config
     from utils.action_predictor import predict_actions_required, extract_actual_actions, log_prediction_accuracy
     from config import ENABLE_INTELLIGENT_ROUTING, DM_MINI_MODEL, DM_FULL_MODEL, MAX_VALIDATION_RETRIES
+    from config import USE_GPT5_MODELS, GPT5_MINI_MODEL, GPT5_FULL_MODEL
     
     # Get the last user message for action prediction
     user_input = ""
@@ -1624,11 +1625,28 @@ def get_ai_response(conversation_history, validation_retry_count=0):
             print(f"DEBUG: MODEL ROUTING - Intelligent routing disabled, using FULL MODEL")
     
     # Generate response with selected model
-    response = client.chat.completions.create(
-        model=selected_model,
-        temperature=TEMPERATURE,
-        messages=conversation_history
-    )
+    if USE_GPT5_MODELS:
+        # GPT-5: Always use mini, no temperature/max_tokens
+        selected_model = GPT5_MINI_MODEL
+        
+        # Handle retry logic for GPT-5 - switch to full model after failures
+        if validation_retry_count >= 4:
+            selected_model = GPT5_FULL_MODEL
+            print(f"DEBUG: GPT-5 - Switching to full model after {validation_retry_count} retries")
+        
+        print(f"DEBUG: [MAIN.PY] Using GPT-5 model: {selected_model}")
+        response = client.chat.completions.create(
+            model=selected_model,
+            messages=conversation_history
+        )
+    else:
+        # GPT-4.1: Use existing logic with temperature
+        print(f"DEBUG: [MAIN.PY] Using GPT-4.1 model: {selected_model}")
+        response = client.chat.completions.create(
+            model=selected_model,
+            temperature=TEMPERATURE,
+            messages=conversation_history
+        )
     content = response.choices[0].message.content.strip()
     
     # Extract actual actions from the response for accuracy tracking (only on initial attempt)

@@ -2836,6 +2836,50 @@
             display: block;
         }
 
+        /* Model Toggle Tooltip */
+        .model-tooltip {
+            position: fixed;
+            z-index: 1000;
+            background-color: #2c2c2c;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            padding: 12px;
+            max-width: 350px;
+            color: #d4d4d4;
+            font-size: 13px;
+            line-height: 1.5;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            pointer-events: none;
+        }
+        
+        .model-tooltip.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .model-tooltip-header {
+            color: #4CAF50;
+            font-weight: bold;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #3a3a3a;
+            padding-bottom: 5px;
+        }
+        
+        .model-tooltip-content {
+            margin-bottom: 8px;
+        }
+        
+        .model-tooltip-warning {
+            color: #FFA500;
+            font-weight: bold;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #3a3a3a;
+        }
+        
         /* Spell Tooltip Styles */
         .spell-tooltip {
             position: fixed; /* Takes the tooltip out of the document flow, FIXING THE SHUDDER */
@@ -3113,6 +3157,13 @@
                     <input type="checkbox" id="image-generation-toggle" checked>
                     <span class="toggle-slider"></span>
                     <span class="toggle-text">AI Images</span>
+                </label>
+            </div>
+            <div class="image-generation-toggle" style="margin-left: 15px;">
+                <label class="toggle-label" id="model-toggle-label">
+                    <input type="checkbox" id="model-toggle" unchecked>
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-text" id="model-toggle-text">GPT-4.1</span>
                 </label>
             </div>
             <button class="exit-button" id="exit-button" onclick="exitGame()" title="Exit Game">× Exit</button>
@@ -4016,6 +4067,70 @@
                 // Update visibility of existing buttons
                 updateImageButtonVisibility();
             });
+            
+            // Initialize model toggle
+            const modelToggle = document.getElementById('model-toggle');
+            const modelToggleText = document.getElementById('model-toggle-text');
+            const modelToggleLabel = document.getElementById('model-toggle-label');
+            
+            // Create model tooltip
+            const modelTooltip = document.createElement('div');
+            modelTooltip.className = 'model-tooltip';
+            modelTooltip.innerHTML = `
+                <div class="model-tooltip-header">GPT-5 Model Information</div>
+                <div class="model-tooltip-content">
+                    <strong>Testing as GPT-4.1 replacement</strong><br>
+                    • Significant cost savings in token usage<br>
+                    • Slower response times (especially full model)<br>
+                    • More accurate and detailed responses<br>
+                    • Very structured, may break immersion
+                </div>
+                <div class="model-tooltip-warning">
+                    Warning: Untested - may have unpredictable results
+                </div>
+            `;
+            document.body.appendChild(modelTooltip);
+            
+            // Show tooltip on hover
+            modelToggleLabel.addEventListener('mouseenter', function(e) {
+                const rect = this.getBoundingClientRect();
+                modelTooltip.style.left = rect.left + 'px';
+                modelTooltip.style.top = (rect.bottom + 5) + 'px';
+                modelTooltip.classList.add('visible');
+            });
+            
+            modelToggleLabel.addEventListener('mouseleave', function() {
+                modelTooltip.classList.remove('visible');
+            });
+            
+            // Handle model toggle changes
+            modelToggle.addEventListener('change', function() {
+                const useGPT5 = this.checked;
+                
+                // Show warning when enabling GPT-5
+                if (useGPT5) {
+                    const hasSeenWarning = localStorage.getItem('gpt5WarningShown');
+                    if (!hasSeenWarning) {
+                        showGPT5Warning();
+                        localStorage.setItem('gpt5WarningShown', 'true');
+                    }
+                }
+                
+                modelToggleText.textContent = useGPT5 ? 'GPT-5' : 'GPT-4.1';
+                
+                // Send toggle state to backend
+                socket.emit('toggle_model', { use_gpt5: useGPT5 });
+                
+                // Log the change
+                console.log('Model toggled to:', useGPT5 ? 'GPT-5' : 'GPT-4.1');
+            });
+            
+            // Listen for model toggle confirmation from server
+            socket.on('model_toggled', function(data) {
+                console.log('Model toggle confirmed:', data);
+                modelToggle.checked = data.use_gpt5;
+                modelToggleText.textContent = data.use_gpt5 ? 'GPT-5' : 'GPT-4.1';
+            });
         });
         
         // Function to update image button visibility
@@ -4117,6 +4232,14 @@
         }
         
         function closeNPCDetails() { document.getElementById('npc-details-modal').style.display = 'none'; }
+        
+        function showGPT5Warning() {
+            document.getElementById('gpt5-warning-modal').style.display = 'block';
+        }
+        
+        function closeGPT5Warning() {
+            document.getElementById('gpt5-warning-modal').style.display = 'none';
+        }
         
         function showNPCSpells(npcName, spellsData) {
             const modal = document.getElementById('npc-spells-modal');
@@ -4267,6 +4390,51 @@
     <div id="npc-inventory-modal" class="npc-inventory-modal"><div class="npc-inventory-modal-content"><div class="npc-inventory-header"><div id="npc-inventory-title" class="npc-inventory-title"></div><span class="npc-inventory-close" onclick="closeNPCInventory()">&times;</span></div><div id="npc-inventory-body" class="npc-inventory-body"></div></div></div>
     <div id="npc-details-modal" class="npc-details-modal"><div class="npc-details-modal-content"><div class="npc-details-header"><div id="npc-details-title" class="npc-details-title"></div><span class="npc-details-close" onclick="closeNPCDetails()">&times;</span></div><div id="npc-details-body" class="npc-details-body"></div></div></div>
     <div id="npc-spells-modal" class="npc-inventory-modal"><div class="npc-inventory-modal-content"><div class="npc-inventory-header"><div id="npc-spells-modal-title" class="npc-inventory-title">NPC Spells</div><span class="npc-inventory-close" onclick="closeNPCSpells()">&times;</span></div><div id="npc-spells-modal-body" class="npc-inventory-body"></div></div></div>
+    
+    <!-- GPT-5 Warning Modal -->
+    <div id="gpt5-warning-modal" class="npc-details-modal" style="display: none;">
+        <div class="npc-details-modal-content" style="max-width: 600px;">
+            <div class="npc-details-header" style="border-bottom: 2px solid #FF6B35;">
+                <div class="npc-details-title" style="color: #FFA500;">GPT-5 Model Warning</div>
+                <span class="npc-details-close" onclick="closeGPT5Warning()">&times;</span>
+            </div>
+            <div class="npc-details-body" style="padding: 20px; line-height: 1.6;">
+                <p style="color: #4CAF50; font-weight: bold; margin-bottom: 15px;">
+                    GPT-5 mini is being tested as a replacement for GPT-4.1
+                </p>
+                <p style="margin-bottom: 15px;">
+                    This experimental model offers <strong style="color: #4CAF50;">significant cost savings</strong> in token utilization while potentially maintaining comparable performance.
+                </p>
+                <div style="background-color: #3a3a3a; padding: 15px; border-radius: 5px; border-left: 3px solid #4CAF50; margin: 15px 0;">
+                    <p style="color: #4CAF50; font-weight: bold; margin-bottom: 10px;">
+                        Performance Characteristics:
+                    </p>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li><strong>Slower response times</strong> than GPT-4.1 (especially when using full model)</li>
+                        <li><strong>More accurate</strong> and detailed responses expected</li>
+                        <li>Please be patient while responses generate</li>
+                    </ul>
+                </div>
+                <div style="background-color: #3a3a3a; padding: 15px; border-radius: 5px; border-left: 3px solid #FFA500; margin: 15px 0;">
+                    <p style="color: #FFA500; font-weight: bold; margin-bottom: 10px;">
+                        IMPORTANT NOTICE:
+                    </p>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li>This model is currently <strong>UNTESTED</strong> in production</li>
+                        <li>May produce <strong>unpredictable results</strong></li>
+                        <li>Combat and complex interactions may behave differently</li>
+                        <li>GPT-5 is very structured and may <strong>talk out of DM turn</strong>, breaking immersion</li>
+                        <li>Use at your own risk during this testing phase</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 15px; text-align: center;">
+                    <button onclick="closeGPT5Warning()" style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                        I Understand - Proceed
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
     <div id="search-popup" class="search-popup"><div class="search-popup-content"><div class="search-popup-header"><div class="search-popup-title">Search Inventory</div><span class="search-popup-close" onclick="closeSearchPopup()">&times;</span></div><input type="text" class="search-popup-input" id="search-popup-input" placeholder="Search items..." onkeyup="performSearch()"></div></div>
     <div id="save-dialog-overlay" class="save-dialog-overlay">
         <div class="save-dialog enhanced-save-dialog">
