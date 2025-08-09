@@ -779,6 +779,73 @@ def handle_npc_inventory_request(data):
     except Exception as e:
         emit('npc_inventory_response', {'npcName': npc_name, 'data': None, 'error': str(e)})
 
+@socketio.on('request_initiative_data')
+def handle_initiative_data_request():
+    """Handles requests for the current combat initiative order."""
+    try:
+        from utils.file_operations import safe_json_load
+        
+        # Check if combat is active via party_tracker.json
+        party_tracker = safe_json_load("party_tracker.json")
+        if not party_tracker:
+            emit('initiative_data_response', {'active': False, 'combatants': []})
+            return
+
+        # Get the active combat encounter ID
+        active_encounter_id = party_tracker.get("worldConditions", {}).get("activeCombatEncounter")
+        if not active_encounter_id:
+            # No combat is active
+            emit('initiative_data_response', {'active': False, 'combatants': []})
+            return
+
+        # Load the specific encounter file
+        encounter_file = f"modules/encounters/encounter_{active_encounter_id}.json"
+        encounter_data = safe_json_load(encounter_file)
+        if not encounter_data or "creatures" not in encounter_data:
+            emit('initiative_data_response', {'active': False, 'combatants': []})
+            return
+
+        # Filter for living combatants only
+        living_combatants = [
+            c for c in encounter_data["creatures"] 
+            if c.get("status", "unknown").lower() == "alive"
+        ]
+        
+        if not living_combatants:
+            # Combat is over if no one is alive
+            emit('initiative_data_response', {'active': False, 'combatants': []})
+            return
+
+        # Sort by initiative (highest first)
+        sorted_combatants = sorted(
+            living_combatants, 
+            key=lambda x: x.get("initiative", 0), 
+            reverse=True
+        )
+
+        # Prepare clean data for frontend
+        combatant_list = [
+            {
+                "name": c.get("name"),
+                "type": c.get("type"),  # 'player', 'npc', or 'enemy'
+                "initiative": c.get("initiative"),
+                "currentHp": c.get("currentHitPoints"),
+                "maxHp": c.get("maxHitPoints")
+            }
+            for c in sorted_combatants
+        ]
+
+        # Send the data to the browser
+        emit('initiative_data_response', {
+            'active': True, 
+            'combatants': combatant_list,
+            'round': encounter_data.get('combat_round', 1)
+        })
+
+    except Exception as e:
+        error(f"Error handling initiative data request: {e}", exception=e, category="web_interface")
+        emit('initiative_data_response', {'active': False, 'combatants': []})
+
 # Add this entire function to web_interface.py
 
 @socketio.on('request_plot_data')

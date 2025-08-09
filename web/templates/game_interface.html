@@ -126,6 +126,66 @@
             gap: 15px;
         }
         
+        /* Initiative Tracker Styles */
+        .initiative-tracker-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex: 1;
+            justify-content: flex-start;
+            margin: 0 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .initiative-item {
+            flex-shrink: 0;
+            width: 100px;
+            height: 35px;
+            border: 2px solid #555;
+            background-color: #1e1e1e;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 5px;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        /* Color-coding for different types of combatants */
+        .initiative-item.player { 
+            border-color: #4a90e2; 
+            background-color: rgba(74, 144, 226, 0.1); 
+        }
+        
+        .initiative-item.npc { 
+            border-color: #4CAF50; 
+            background-color: rgba(76, 175, 80, 0.1); 
+        }
+        
+        .initiative-item.enemy { 
+            border-color: #f44336; 
+            background-color: rgba(244, 67, 54, 0.1); 
+        }
+
+        /* The "glow" style for the active turn */
+        .initiative-item.active {
+            border-color: #FFA500;
+            background-color: #3a3a3a;
+            color: #FFA500;
+            transform: scale(1.08);
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.7);
+            z-index: 5;
+        }
+        
         /* Dice Rolling Strip - Inline with header */
         .dice-strip-inline {
             display: flex;
@@ -3368,6 +3428,10 @@
         <div class="panel game-panel">
             <div class="panel-header">
                 <span>Game Output</span>
+                
+                <!-- Initiative Tracker Container -->
+                <div id="initiative-tracker-container" class="initiative-tracker-container" style="display: none;"></div>
+                
                 <!-- Dice Rolling Strip -->
                 <div class="dice-strip-inline">
                     <span class="dice-label">Quick Rolls:</span>
@@ -3463,11 +3527,18 @@
         const socket = io();
         let connected = false;
         let gameStarted = false;
+        let initiativeOrder = []; // Store the ordered list of combatants
+        let playerName = '';      // Store the player's name for highlighting
         
         // Capitalize first letter of each word function
         function capitalizeWords(str) {
             if (!str) return str;
             return str.replace(/\b\w/g, l => l.toUpperCase());
+        }
+        
+        // Function to request initiative data
+        function requestInitiativeData() {
+            socket.emit('request_initiative_data');
         }
         
         // Auto-scroll to bottom function
@@ -3723,6 +3794,18 @@
                 input.disabled = false;
                 sendButton.disabled = false;
                 input.focus();
+            }
+            
+            // Update initiative tracker highlighting
+            const items = document.querySelectorAll('.initiative-item');
+            items.forEach(item => item.classList.remove('active'));
+            
+            // If the game is NOT processing, it's the player's turn. Highlight them.
+            if (!data.is_processing && playerName && initiativeOrder.length > 0) {
+                const playerItem = document.querySelector(`.initiative-item[data-name="${playerName}"]`);
+                if (playerItem) {
+                    playerItem.classList.add('active');
+                }
             }
         });
         
@@ -4346,6 +4429,10 @@
                     displayInventory(response.data);
                 }
             } else if (response.dataType === 'stats') {
+                // Capture player name when stats are loaded
+                if (response.data && response.data.name) {
+                    playerName = response.data.name;
+                }
                 displayCharacterStats(response.data);
             } else if (response.dataType === 'spells') {
                 displaySpellsAndMagic(response.data);
@@ -4356,8 +4443,52 @@
         
         socket.on('location_data_response', (response) => { displayLocationData(response.data); });
         
+        // Socket listener for initiative data
+        socket.on('initiative_data_response', (response) => {
+            const container = document.getElementById('initiative-tracker-container');
+            if (!response || !response.active || !response.combatants || response.combatants.length === 0) {
+                container.style.display = 'none'; // Hide tracker if combat is not active
+                initiativeOrder = [];
+                return;
+            }
+
+            initiativeOrder = response.combatants; // Store the order for later use
+            container.style.display = 'flex'; // Show the tracker
+            container.innerHTML = ''; // Clear any old items
+
+            // Loop through the combatants and create a box for each one
+            initiativeOrder.forEach(combatant => {
+                const item = document.createElement('div');
+                item.classList.add('initiative-item', combatant.type);
+                item.dataset.name = combatant.name; // Use a data attribute for easy selection
+                
+                // Display name with spaces instead of underscores
+                const displayName = combatant.name.replace(/_/g, ' ');
+                
+                // Show HP if available
+                let hpText = '';
+                if (combatant.currentHp !== undefined && combatant.maxHp !== undefined) {
+                    hpText = ` (${combatant.currentHp}/${combatant.maxHp})`;
+                }
+                
+                item.textContent = displayName;
+                item.title = `${displayName} (Initiative: ${combatant.initiative})${hpText}`;
+                container.appendChild(item);
+            });
+
+            // After building, check the current game status to highlight the player if it's their turn
+            const input = document.getElementById('user-input');
+            if (!input.disabled && playerName) { // If input is enabled, it's the player's turn
+                const playerItem = document.querySelector(`.initiative-item[data-name="${playerName}"]`);
+                if (playerItem) {
+                    playerItem.classList.add('active');
+                }
+            }
+        });
+        
         setInterval(() => {
             loadLocationData();
+            requestInitiativeData(); // Refresh initiative tracker periodically
             const activeTab = document.querySelector('.tab-button.active')?.textContent.toLowerCase();
             if (activeTab === 'inventory') loadInventory();
             else if (activeTab === 'character') loadCharacterStats();
@@ -4368,6 +4499,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('user-input').focus();
             loadLocationData();
+            requestInitiativeData(); // Load initiative tracker on page load
             if (connected) {
                 loadCharacterStats();
             }
