@@ -132,10 +132,23 @@
             align-items: center;
             gap: 5px;
             flex: 1;
+            min-width: 0; /* Critical for flexbox to allow shrinking */
             justify-content: flex-start;
             margin: 0 10px;
             overflow-x: auto;
             padding-bottom: 5px;
+        }
+        
+        .combat-round-display {
+            flex-shrink: 0;
+            background-color: #1a1a1a;
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid #FFA500;
+            color: #FFA500;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
         }
 
         .initiative-item {
@@ -3713,10 +3726,13 @@
             addMessage('game-output', { type: 'system', content: 'Game started! You can now enter commands.' });
             loadCharacterStats();
             loadLocationData();
+            requestInitiativeData(); // Check for combat on game start
         });
         
         socket.on('game_output', (message) => { 
             addMessage('game-output', message); 
+            // Check for combat immediately after any game output
+            requestInitiativeData();
             // After any game output, refresh plot data with a slight delay
             setTimeout(() => {
                 requestPlotData();
@@ -4455,6 +4471,14 @@
             initiativeOrder = response.combatants; // Store the order for later use
             container.style.display = 'flex'; // Show the tracker
             container.innerHTML = ''; // Clear any old items
+
+            // Add the round display if available
+            if (response.round) {
+                const roundDisplay = document.createElement('div');
+                roundDisplay.className = 'combat-round-display';
+                roundDisplay.textContent = `Round: ${response.round}`;
+                container.appendChild(roundDisplay);
+            }
 
             // Loop through the combatants and create a box for each one
             initiativeOrder.forEach(combatant => {
