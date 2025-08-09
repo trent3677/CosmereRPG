@@ -3914,9 +3914,9 @@
             
             html += '</div>';
 
-            html += '<div class="skills-saves-container">';
+            // Saving Throws (Full-width with 2-column internal layout)
             if (data.savingThrows && data.savingThrows.length > 0) {
-                html += '<div class="stat-group saving-throws-group"><h4>Saving Throws</h4><div class="stat-group-content">';
+                html += '<div class="stat-group saving-throws-group" style="margin-top: 3px;"><h4>Saving Throws</h4><div class="stat-group-content">';
                 ['Strength', 'Dexterity', 'Constitution', 'Intelligence', 'Wisdom', 'Charisma'].forEach(save => {
                     const isProficient = data.savingThrows.includes(save);
                     const abilityMod = data.abilities ? Math.floor((data.abilities[save.toLowerCase()] - 10) / 2) : 0;
@@ -3926,7 +3926,8 @@
                 html += '</div></div>';
             }
             // Skills section removed - now shown via ability score tooltips
-            html += '</div>';
+            
+            // Features and other sections (in abilities-grid for better layout)
             html += '<div class="abilities-grid">';
             if (data.classFeatures && data.classFeatures.length > 0) {
                 html += '<div class="stat-group"><h4>Class Features</h4><div class="stat-group-content">';
