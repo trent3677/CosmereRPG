@@ -120,6 +120,17 @@ import subprocess
 from datetime import datetime
 from utils.xp import main as calculate_xp
 from openai import OpenAI
+
+# Import OpenAI usage tracking (safe - won't break if fails)
+try:
+    from utils.openai_usage_tracker import track_response, get_usage_stats
+    USAGE_TRACKING_AVAILABLE = True
+    print("[COMBAT_MANAGER] OpenAI usage tracking enabled")
+except Exception as e:
+    USAGE_TRACKING_AVAILABLE = False
+    print(f"[COMBAT_MANAGER] OpenAI usage tracking not available: {e}")
+    def track_response(r): pass
+    def get_usage_stats(): return {}
 # Import model configurations from config.py
 from config import (
     OPENAI_API_KEY,
@@ -369,6 +380,50 @@ def save_json_file(file_path, data):
         safe_write_json(file_path, data)
     except Exception as e:
         error(f"FILE_OP: Failed to save {file_path}: {str(e)}", category="file_operations")
+
+def clean_combat_state_blocks(conversation_history):
+    """
+    Remove the instructional combat state blocks from all but the most recent user message.
+    This prevents bloating the conversation with repeated instructions while preserving
+    the actual player actions and narrative.
+    """
+    # Find all user messages that contain combat state blocks
+    user_messages_with_state = []
+    for i, message in enumerate(conversation_history):
+        if (message.get("role") == "user" and 
+            "--- CURRENT COMBAT STATE ---" in message.get("content", "")):
+            user_messages_with_state.append(i)
+    
+    # If we have more than one, clean all but the last one
+    if len(user_messages_with_state) > 1:
+        for idx in user_messages_with_state[:-1]:  # All except the last one
+            content = conversation_history[idx]["content"]
+            
+            # Extract just the player's actual message
+            # Look for the pattern "Player: " after the state block ends
+            if "Player: " in content:
+                # Find where the state block ends (after "--- END OF STATE & DICE ---")
+                if "--- END OF STATE & DICE ---" in content:
+                    # Split on the end marker and then find the player message
+                    parts = content.split("--- END OF STATE & DICE ---", 1)
+                    if len(parts) == 2 and "Player: " in parts[1]:
+                        # Extract just the player's message
+                        player_parts = parts[1].split("Player: ", 1)
+                        if len(player_parts) == 2:
+                            player_msg = player_parts[1].split("\n\nNow, continue the combat flow", 1)[0].strip()
+                            # Replace the entire message with just the player's input
+                            conversation_history[idx]["content"] = f"Player: {player_msg}"
+                            continue
+            
+            # Fallback: If we can't extract cleanly, at least remove the bulk of the state
+            # but keep any player message
+            if "Player: " in content:
+                player_split = content.split("Player: ", 1)
+                if len(player_split) == 2:
+                    player_msg = player_split[1].split("\n\nNow, continue the combat flow", 1)[0].strip()
+                    conversation_history[idx]["content"] = f"Player: {player_msg}"
+    
+    return conversation_history
 
 def clean_old_dm_notes(conversation_history):
     """
@@ -664,6 +719,13 @@ def validate_combat_response(response, encounter_data, user_input, conversation_
                 temperature=0.3,  # Lower temperature for more consistent validation
                 messages=validation_conversation
             )
+            
+            # Track usage
+            if USAGE_TRACKING_AVAILABLE:
+                try:
+                    track_response(validation_result)
+                except:
+                    pass
 
             validation_response = validation_result.choices[0].message.content.strip()
             
@@ -861,6 +923,13 @@ def summarize_dialogue(conversation_history_param, location_data, party_tracker_
         temperature=TEMPERATURE,
         messages=dialogue_summary_prompt
     )
+    
+    # Track usage
+    if USAGE_TRACKING_AVAILABLE:
+        try:
+            track_response(response)
+        except:
+            pass
 
     dialogue_summary = response.choices[0].message.content.strip()
 
@@ -1125,6 +1194,193 @@ def filter_dynamic_fields(data):
                      'temporaryEffects', 'currentHitPoints']
     return {k: v for k, v in data.items() if k not in dynamic_fields}
 
+def format_character_for_combat(char_data, char_type="player", role=None):
+    """
+    Format character data (player or NPC) for combat system prompts using the same format as conversation_utils.
+    This ensures consistency between main conversation and combat systems.
+    
+    Args:
+        char_data: The character's data dictionary
+        char_type: "player" or "npc"
+        role: Optional role description (mainly for NPCs)
+    
+    Returns:
+        Formatted string matching conversation_utils format
+    """
+    # Get equipment string
+    equipment_str = "None"
+    if char_data.get('equipment'):
+        equipped_items = [f"{item['item_name']} ({item['item_type']})" 
+                         for item in char_data['equipment'] 
+                         if item.get('equipped', False)]
+        if equipped_items:
+            equipment_str = ", ".join(equipped_items)
+    
+    # Get background feature name
+    bg_feature_name = "None"
+    bg_feature = char_data.get('backgroundFeature', {})
+    if bg_feature and isinstance(bg_feature, dict):
+        bg_feature_name = bg_feature.get('name', 'None')
+    
+    # Determine header based on type
+    if char_type == "player":
+        header = f"CHAR: {char_data.get('name', 'Unknown')}"
+        type_line = f"TYPE: {char_data.get('character_type', 'player').capitalize()}"
+    else:
+        header = f"NPC: {char_data.get('name', 'Unknown')}"
+        type_line = f"ROLE: {role if role else 'Adventurer'} | TYPE: {char_data.get('character_type', 'npc').capitalize()}"
+    
+    # Build the formatted string (exactly matching conversation_utils format)
+    formatted_data = f"""{header}
+{type_line} | LVL: {char_data.get('level', 1)} | RACE: {char_data.get('race', 'Unknown')} | CLASS: {char_data.get('class', 'Unknown')} | ALIGN: {char_data.get('alignment', 'neutral')[:2].upper()} | BG: {char_data.get('background', 'None')}
+AC: {char_data.get('armorClass', 10)} | SPD: {char_data.get('speed', 30)}
+STATUS: {char_data.get('status', 'alive')} | CONDITION: {char_data.get('condition', 'none')} | AFFECTED: {', '.join(char_data.get('condition_affected', []))}
+STATS: STR {char_data.get('abilities', {}).get('strength', 10)}, DEX {char_data.get('abilities', {}).get('dexterity', 10)}, CON {char_data.get('abilities', {}).get('constitution', 10)}, INT {char_data.get('abilities', {}).get('intelligence', 10)}, WIS {char_data.get('abilities', {}).get('wisdom', 10)}, CHA {char_data.get('abilities', {}).get('charisma', 10)}
+SAVES: {', '.join(char_data.get('savingThrows', []))}
+SKILLS: {', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" for skill, bonus in char_data.get('skills', {}).items())}
+PROF BONUS: +{char_data.get('proficiencyBonus', 2)}
+SENSES: {', '.join(f"{sense} {value}" for sense, value in char_data.get('senses', {}).items())}
+LANGUAGES: {', '.join(char_data.get('languages', ['Common']))}
+PROF: {', '.join([f"{cat}: {', '.join(items) if items else 'none'}" for cat, items in char_data.get('proficiencies', {}).items()])}
+VULN: {', '.join(char_data.get('damageVulnerabilities', []))}
+RES: {', '.join(char_data.get('damageResistances', []))}
+IMM: {', '.join(char_data.get('damageImmunities', []))}
+COND IMM: {', '.join(char_data.get('conditionImmunities', []))}
+CLASS FEAT: {', '.join([f['name'] for f in char_data.get('classFeatures', [])])}
+RACIAL: {', '.join([t['name'] for t in char_data.get('racialTraits', [])])}
+BG FEAT: {bg_feature_name}
+FEATS: {', '.join([f['name'] for f in char_data.get('feats', [])])}
+TEMP FX: {', '.join([e['name'] for e in char_data.get('temporaryEffects', [])])}
+EQUIP: {equipment_str}
+AMMO: {', '.join([f"{a['name']} x{a['quantity']}" for a in char_data.get('ammunition', [])])}
+ATK: {', '.join([f"{a['name']} ({a.get('type', 'melee')}, {a.get('damageDice', '1d4')} {a.get('damageType', 'bludgeoning')})" for a in char_data.get('attacksAndSpellcasting', [])])}"""
+    
+    # Add spellcasting if present
+    spellcasting = char_data.get('spellcasting', {})
+    if spellcasting:
+        formatted_data += f"""
+SPELLCASTING: {spellcasting.get('ability', 'N/A')} | DC: {spellcasting.get('spellSaveDC', 'N/A')} | ATK: +{spellcasting.get('spellAttackBonus', 'N/A')}
+SPELLS: {', '.join([f"{level}: {', '.join(spells)}" for level, spells in spellcasting.get('spells', {}).items() if spells])}"""
+    
+    # Add currency
+    currency = char_data.get('currency', {})
+    if currency:
+        formatted_data += f"""
+CURRENCY: {currency.get('gold', 0)}G, {currency.get('silver', 0)}S, {currency.get('copper', 0)}C"""
+    
+    # Add XP
+    if 'experience_points' in char_data:
+        formatted_data += f"""
+XP: {char_data['experience_points']}/{char_data.get('exp_required_for_next_level', 'N/A')}"""
+    
+    # Add personality traits
+    if char_data.get('personality_traits'):
+        formatted_data += f"""
+TRAITS: {char_data['personality_traits']}"""
+    
+    if char_data.get('ideals'):
+        formatted_data += f"""
+IDEALS: {char_data['ideals']}"""
+    
+    if char_data.get('bonds'):
+        formatted_data += f"""
+BONDS: {char_data['bonds']}"""
+    
+    if char_data.get('flaws'):
+        formatted_data += f"""
+FLAWS: {char_data['flaws']}"""
+    
+    return formatted_data
+
+def format_npc_for_combat(npc_data, npc_role=None):
+    """
+    Format NPC data for combat system prompts using the same format as conversation_utils.
+    This ensures consistency between main conversation and combat systems.
+    
+    Args:
+        npc_data: The NPC's character data dictionary
+        npc_role: Optional role description from party tracker
+    
+    Returns:
+        Formatted string matching conversation_utils format
+    """
+    # Get equipment string
+    equipment_str = "None"
+    if npc_data.get('equipment'):
+        equipped_items = [f"{item['item_name']} ({item['item_type']})" 
+                         for item in npc_data['equipment'] 
+                         if item.get('equipped', False)]
+        if equipped_items:
+            equipment_str = ", ".join(equipped_items)
+    
+    # Get background feature name
+    bg_feature_name = "None"
+    bg_feature = npc_data.get('backgroundFeature', {})
+    if bg_feature and isinstance(bg_feature, dict):
+        bg_feature_name = bg_feature.get('name', 'None')
+    
+    # Build the formatted string (exactly matching conversation_utils format)
+    formatted_data = f"""NPC: {npc_data.get('name', 'Unknown')}
+ROLE: {npc_role if npc_role else 'Adventurer'} | TYPE: {npc_data.get('character_type', 'npc').capitalize()} | LVL: {npc_data.get('level', 1)} | RACE: {npc_data.get('race', 'Unknown')} | CLASS: {npc_data.get('class', 'Unknown')} | ALIGN: {npc_data.get('alignment', 'neutral')[:2].upper()} | BG: {npc_data.get('background', 'None')}
+AC: {npc_data.get('armorClass', 10)} | SPD: {npc_data.get('speed', 30)}
+STATUS: {npc_data.get('status', 'alive')} | CONDITION: {npc_data.get('condition', 'none')} | AFFECTED: {', '.join(npc_data.get('condition_affected', []))}
+STATS: STR {npc_data.get('abilities', {}).get('strength', 10)}, DEX {npc_data.get('abilities', {}).get('dexterity', 10)}, CON {npc_data.get('abilities', {}).get('constitution', 10)}, INT {npc_data.get('abilities', {}).get('intelligence', 10)}, WIS {npc_data.get('abilities', {}).get('wisdom', 10)}, CHA {npc_data.get('abilities', {}).get('charisma', 10)}
+SAVES: {', '.join(npc_data.get('savingThrows', []))}
+SKILLS: {', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" for skill, bonus in npc_data.get('skills', {}).items())}
+PROF BONUS: +{npc_data.get('proficiencyBonus', 2)}
+SENSES: {', '.join(f"{sense} {value}" for sense, value in npc_data.get('senses', {}).items())}
+LANGUAGES: {', '.join(npc_data.get('languages', ['Common']))}
+PROF: {', '.join([f"{cat}: {', '.join(items) if items else 'none'}" for cat, items in npc_data.get('proficiencies', {}).items()])}
+VULN: {', '.join(npc_data.get('damageVulnerabilities', []))}
+RES: {', '.join(npc_data.get('damageResistances', []))}
+IMM: {', '.join(npc_data.get('damageImmunities', []))}
+COND IMM: {', '.join(npc_data.get('conditionImmunities', []))}
+CLASS FEAT: {', '.join([f['name'] for f in npc_data.get('classFeatures', [])])}
+RACIAL: {', '.join([t['name'] for t in npc_data.get('racialTraits', [])])}
+BG FEAT: {bg_feature_name}
+FEATS: {', '.join([f['name'] for f in npc_data.get('feats', [])])}
+TEMP FX: {', '.join([e['name'] for e in npc_data.get('temporaryEffects', [])])}
+EQUIP: {equipment_str}
+AMMO: {', '.join([f"{a['name']} x{a['quantity']}" for a in npc_data.get('ammunition', [])])}
+ATK: {', '.join([f"{a['name']} ({a.get('type', 'melee')}, {a.get('damageDice', '1d4')} {a.get('damageType', 'bludgeoning')})" for a in npc_data.get('attacksAndSpellcasting', [])])}"""
+    
+    # Add spellcasting if present
+    spellcasting = npc_data.get('spellcasting', {})
+    if spellcasting:
+        formatted_data += f"""
+SPELLCASTING: {spellcasting.get('ability', 'N/A')} | DC: {spellcasting.get('spellSaveDC', 'N/A')} | ATK: +{spellcasting.get('spellAttackBonus', 'N/A')}
+SPELLS: {', '.join([f"{level}: {', '.join(spells)}" for level, spells in spellcasting.get('spells', {}).items() if spells])}"""
+    
+    # Add currency
+    currency = npc_data.get('currency', {})
+    if currency:
+        formatted_data += f"""
+CURRENCY: {currency.get('gold', 0)}G, {currency.get('silver', 0)}S, {currency.get('copper', 0)}C"""
+    
+    # Add XP
+    if 'experience_points' in npc_data:
+        formatted_data += f"""
+XP: {npc_data['experience_points']}/{npc_data.get('exp_required_for_next_level', 'N/A')}"""
+    
+    # Add personality traits
+    if npc_data.get('personality_traits'):
+        formatted_data += f"""
+TRAITS: {npc_data['personality_traits']}"""
+    
+    if npc_data.get('ideals'):
+        formatted_data += f"""
+IDEALS: {npc_data['ideals']}"""
+    
+    if npc_data.get('bonds'):
+        formatted_data += f"""
+BONDS: {npc_data['bonds']}"""
+    
+    if npc_data.get('flaws'):
+        formatted_data += f"""
+FLAWS: {npc_data['flaws']}"""
+    
+    return formatted_data
+
 def filter_encounter_for_system_prompt(encounter_data):
     """Create minimal encounter data for system prompt with only essential fields"""
     if not encounter_data or not isinstance(encounter_data, dict):
@@ -1349,6 +1605,13 @@ Focus on mechanical accuracy for the actions. For narrative_highlights, extract 
             response_format={"type": "json_object"}
         )
         
+        # Track usage
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(response)
+            except:
+                pass
+        
         summary = json.loads(response.choices[0].message.content)
         return summary
         
@@ -1478,20 +1741,99 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
            else:
                error(f"FAILURE: Failed to load NPC file for: {creature['name']}", category="file_operations")
    
-   # Populate the system messages ONLY if it's a new combat session
+   # Populate the system messages
    if not is_resuming:
-       conversation_history[2]["content"] = f"Player Character:\n{json.dumps(filter_dynamic_fields(player_info), indent=2)}"
+       # New combat - create fresh system messages
+       # Format player character using the same function as NPCs
+       formatted_player = format_character_for_combat(player_info, char_type="player")
+       conversation_history[2]["content"] = f"Here's the player character data:\n\n{formatted_player}\n"
        conversation_history[3]["content"] = f"Monster Templates:\n{json.dumps({k: filter_dynamic_fields(v) for k, v in monster_templates.items()}, indent=2)}"
        if not monster_templates and any(c["type"] == "enemy" for c in encounter_data["creatures"]):
            error("FAILURE: No monster templates were loaded!", category="file_operations")
            return None, None
        
        conversation_history[4]["content"] = f"Location:\n{json.dumps(location_info, indent=2)}"
-       conversation_history.append({"role": "system", "content": f"NPC Templates:\n{json.dumps({k: filter_dynamic_fields(v) for k, v in npc_templates.items()}, indent=2)}"})
+       
+       # Add each NPC as a separate system message (matching conversation_utils format)
+       # Get NPC roles from party tracker
+       party_npcs = party_tracker_data.get('partyNPCs', [])
+       npc_roles = {npc['name']: npc.get('role', 'Adventurer') for npc in party_npcs}
+       
+       # Format and add each NPC individually
+       for npc_name, npc_data in npc_templates.items():
+           # Get the role for this NPC
+           npc_role = npc_roles.get(npc_data.get('name', ''), 'Adventurer')
+           
+           # Format the NPC data using the same format as conversation_utils
+           formatted_data = format_npc_for_combat(npc_data, npc_role)
+           npc_message = f"Here's the NPC data for {npc_data['name']}:\n\n{formatted_data}\n"
+           conversation_history.append({"role": "system", "content": npc_message})
+       
        conversation_history.append({"role": "system", "content": f"Encounter Details:\n{json.dumps(filter_encounter_for_system_prompt(encounter_data), indent=2)}"})
        
        log_conversation_structure(conversation_history)
        save_json_file(conversation_history_file, conversation_history)
+   else:
+       # Resuming combat - update player character and NPC templates to new format if needed
+       print("[COMBAT_MANAGER] Updating player and NPC templates to new format during resume...")
+       
+       # First, update the player character format
+       for i in range(len(conversation_history)):
+           msg = conversation_history[i]
+           if msg.get("role") == "system" and "Player Character:" in msg.get("content", "") and "json" in msg.get("content", "").lower():
+               # Found old player format - update it
+               print(f"[COMBAT_MANAGER] Updating player character format at index {i}")
+               formatted_player = format_character_for_combat(player_info, char_type="player")
+               conversation_history[i]["content"] = f"Here's the player character data:\n\n{formatted_player}\n"
+               break
+       
+       # Find and remove old NPC Templates message if it exists
+       for i in range(len(conversation_history) - 1, -1, -1):
+           msg = conversation_history[i]
+           if msg.get("role") == "system" and "NPC Templates:" in msg.get("content", ""):
+               # Found old format - remove it
+               print(f"[COMBAT_MANAGER] Removing old NPC Templates at index {i}")
+               conversation_history.pop(i)
+               break
+       
+       # Also remove any old individual NPC messages (in case of partial migration)
+       indices_to_remove = []
+       for i in range(len(conversation_history) - 1, -1, -1):
+           msg = conversation_history[i]
+           if msg.get("role") == "system" and "Here's the NPC data for" in msg.get("content", ""):
+               indices_to_remove.append(i)
+       
+       for idx in sorted(indices_to_remove, reverse=True):
+           print(f"[COMBAT_MANAGER] Removing old NPC message at index {idx}")
+           conversation_history.pop(idx)
+       
+       # Now add NPCs in new format
+       party_npcs = party_tracker_data.get('partyNPCs', [])
+       npc_roles = {npc['name']: npc.get('role', 'Adventurer') for npc in party_npcs}
+       
+       # Find where to insert the new NPC messages (after location, before encounter details)
+       insert_index = -1
+       for i, msg in enumerate(conversation_history):
+           if msg.get("role") == "system" and "Location:" in msg.get("content", ""):
+               insert_index = i + 1
+               break
+       
+       if insert_index == -1:
+           # Fallback: insert at position 5 (after standard system messages)
+           insert_index = min(5, len(conversation_history))
+       
+       # Insert each NPC in the new format
+       for npc_name, npc_data in npc_templates.items():
+           npc_role = npc_roles.get(npc_data.get('name', ''), 'Adventurer')
+           formatted_data = format_npc_for_combat(npc_data, npc_role)
+           npc_message = f"Here's the NPC data for {npc_data['name']}:\n\n{formatted_data}\n"
+           conversation_history.insert(insert_index, {"role": "system", "content": npc_message})
+           insert_index += 1
+           print(f"[COMBAT_MANAGER] Added NPC {npc_data['name']} in new format at index {insert_index - 1}")
+       
+       # Save the updated conversation history
+       save_json_file(conversation_history_file, conversation_history)
+       print("[COMBAT_MANAGER] NPC templates updated to new format")
    
    # Prepare initial dynamic state info for all creatures
    dynamic_state_parts = []
@@ -1587,6 +1929,14 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
                    temperature=temperature_used,
                    messages=conversation_history
                )
+           
+           # Track usage if available
+           if USAGE_TRACKING_AVAILABLE:
+               try:
+                   track_response(response)
+               except:
+                   pass  # Silently ignore tracking errors
+           
            resume_response_content = response.choices[0].message.content.strip()
            
            conversation_history.append({"role": "assistant", "content": resume_response_content})
@@ -1599,6 +1949,8 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
        except Exception as e:
            error("FAILURE: Could not get re-engagement narration.", exception=e, category="combat_events")
            print("Dungeon Master: The battle continues! What will you do next?")
+           import sys
+           sys.stdout.flush()
    else:
        # This is a new combat. Use the original logic to get the initial scene.
        debug("AI_CALL: Getting initial scene description...", category="combat_events")
@@ -1644,6 +1996,14 @@ Player: {initial_prompt_text}"""
                    temperature=temperature_used, 
                    messages=conversation_history
                )
+               
+               # Track usage
+               if USAGE_TRACKING_AVAILABLE:
+                   try:
+                       track_response(response)
+                   except:
+                       pass
+               
                initial_response = response.choices[0].message.content.strip()
                conversation_history.append({"role": "assistant", "content": initial_response})
                
@@ -1676,8 +2036,12 @@ Player: {initial_prompt_text}"""
            try:
                parsed_response = json.loads(initial_response)
                print(f"Dungeon Master: {parsed_response['narration']}")
+               import sys
+               sys.stdout.flush()
            except (json.JSONDecodeError, KeyError):
                print(f"Dungeon Master: {initial_response}") # Print raw if parsing fails
+               import sys
+               sys.stdout.flush()
        else:
            error("FAILURE: Could not get a valid initial scene from AI.", category="combat_events")
            return None, None # Exit if we can't start combat
@@ -1936,8 +2300,9 @@ Your response narratively MUST stop at one of two points:
 
 Do not narrate or process any actions from the next round in this response. The goal is to complete the current round of actions and then pause. If you do need to stop, please engage me creatively so I don't get bored."""
        
-       # Clean old DM notes before adding new user input
+       # Clean old DM notes and combat state blocks before adding new user input
        conversation_history = clean_old_dm_notes(conversation_history)
+       conversation_history = clean_combat_state_blocks(conversation_history)
        
        # Add user input to conversation history
        conversation_history.append({"role": "user", "content": user_input_with_note})
@@ -1988,6 +2353,14 @@ Do not narrate or process any actions from the next round in this response. The 
                        temperature=temperature_used,
                        messages=conversation_history
                    )
+               
+               # Track usage
+               if USAGE_TRACKING_AVAILABLE:
+                   try:
+                       track_response(response)
+                   except:
+                       pass  # Silently ignore tracking errors
+               
                ai_response = response.choices[0].message.content.strip()
                
                print(f"[COMBAT_MANAGER] AI response received ({len(ai_response)} chars)")

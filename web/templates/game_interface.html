@@ -32,8 +32,15 @@
         }
         
         .header h1 {
-            color: #4CAF50;
-            font-size: 24px;
+            font-size: 28px;
+            font-family: 'Cinzel', Georgia, serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        
+        .header h1 span {
+            color: #66BB6A;
         }
         
         .location-info {
@@ -118,20 +125,58 @@
         }
         
         .dice-button {
-            background-color: #4CAF50;
+            background: linear-gradient(145deg, #9c27b0, #7b1fa2, #4a148c);
             color: white;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 6px 12px;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 13px;
             font-weight: bold;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
             min-width: 50px;
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dice-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            transition: left 0.5s;
         }
         
         .dice-button:hover {
-            background-color: #45a049;
+            background: linear-gradient(145deg, #ab47bc, #8e24aa, #6a1b9a);
+            transform: translateY(-1px);
+            box-shadow: 
+                0 6px 12px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .dice-button:hover:before {
+            left: 100%;
+        }
+        
+        .dice-button:active {
+            transform: translateY(0);
+            box-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
         }
         
         .dice-clear-button {
@@ -3204,7 +3249,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>NeverEndingQuest</h1>
+        <h1 style="color: #4CAF50;">Never<span>Ending</span>Quest</h1>
         <div class="location-info" id="location-info">
             <div class="location-name" id="location-name">Loading location...</div>
             <div class="location-details" id="location-details"></div>
@@ -4594,23 +4639,41 @@
     
     <!-- Module Creation Progress Modal -->
     <div id="module-progress-modal" class="npc-details-modal" style="display: none;">
-        <div class="npc-details-modal-content" style="max-width: 500px;">
-            <div class="npc-details-header" style="border-bottom: 2px solid #4CAF50;">
-                <div class="npc-details-title" style="color: #4CAF50;">Creating New Module</div>
-            </div>
-            <div class="npc-details-body" style="padding: 20px;">
-                <div style="text-align: center; margin-bottom: 15px;">
-                    <div style="font-size: 18px; color: #FFA500; margin-bottom: 10px;">
-                        Stage <span id="current-stage">0</span> of <span id="total-stages">9</span>
-                    </div>
-                    <div style="font-size: 16px; color: #d4d4d4; font-weight: bold;" id="stage-name">Initializing...</div>
+        <div class="npc-details-modal-content" style="max-width: 800px; min-height: 500px; position: relative; overflow: hidden;">
+            <!-- Dwarf Smith Video Background -->
+            <video id="dwarf-smith-video" 
+                   style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.25; z-index: 0;" 
+                   autoplay loop muted playsinline>
+                <source src="/static/media/videos/dwarf_smith_compressed.mp4" type="video/mp4">
+            </video>
+            <div style="position: relative; z-index: 1; text-align: center; padding: 15px;">
+                <div style="display: inline-block; background-color: rgba(44, 44, 44, 0.85); padding: 12px 25px; border-radius: 8px;">
+                    <div class="npc-details-title" style="color: #4CAF50; font-size: 22px;">Aye! Forgin' Yer Adventure - Won't Be But a Moment...</div>
                 </div>
-                <div style="width: 100%; height: 30px; background-color: #2c2c2c; border: 2px solid #4CAF50; border-radius: 4px; overflow: hidden; margin: 20px 0;">
-                    <div id="module-progress-bar" style="height: 100%; background-color: #4CAF50; width: 0%; transition: width 0.5s ease;"></div>
+            </div>
+            <div class="npc-details-body" style="padding: 30px; position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: flex-end; min-height: 400px;">
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <div style="display: inline-block; background-color: rgba(28, 28, 28, 0.75); padding: 8px 15px; border-radius: 5px; margin-bottom: 8px;">
+                        <span style="font-size: 18px; color: #FFA500; text-shadow: 2px 2px 4px rgba(0,0,0,0.9);">
+                            Stage <span id="current-stage">0</span> of <span id="total-stages">9</span>
+                        </span>
+                    </div>
+                    <br>
+                    <div style="display: inline-block; background-color: rgba(28, 28, 28, 0.75); padding: 6px 12px; border-radius: 5px;">
+                        <span style="font-size: 16px; color: #d4d4d4; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.9);" id="stage-name">Forging module...</span>
+                    </div>
+                </div>
+                <div style="width: 80%; height: 25px; background-color: rgba(44, 44, 44, 0.6); border: 2px solid #4CAF50; border-radius: 4px; overflow: hidden; margin: 20px auto; box-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+                    <div id="module-progress-bar" style="height: 100%; background: linear-gradient(90deg, #4CAF50, #66BB6A); width: 0%; transition: width 0.5s ease; box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);"></div>
                 </div>
                 <div style="text-align: center;">
-                    <div style="font-size: 24px; color: #4CAF50; font-weight: bold; margin-bottom: 10px;" id="progress-percentage">0%</div>
-                    <div style="color: #a0a0a0; font-style: italic;" id="progress-message">Starting module creation...</div>
+                    <div style="display: inline-block; background-color: rgba(28, 28, 28, 0.75); padding: 8px 20px; border-radius: 5px; margin-bottom: 10px;">
+                        <span style="font-size: 28px; color: #4CAF50; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.9);" id="progress-percentage">0%</span>
+                    </div>
+                    <br>
+                    <div style="display: inline-block; background-color: rgba(28, 28, 28, 0.7); padding: 5px 15px; border-radius: 5px;">
+                        <span style="color: #a0a0a0; font-style: italic; font-size: 14px; text-shadow: 1px 1px 2px rgba(0,0,0,0.9);" id="progress-message">The forge awakens...</span>
+                    </div>
                 </div>
             </div>
         </div>

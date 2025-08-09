@@ -357,6 +357,16 @@ def index():
     """Serve the main game interface"""
     return render_template('game_interface.html')
 
+@app.route('/static/media/videos/<path:filename>')
+def serve_video(filename):
+    """Serve video files from the media directory"""
+    import os
+    from flask import send_file
+    video_path = os.path.join(os.path.dirname(__file__), 'static', 'media', 'videos', filename)
+    if os.path.exists(video_path):
+        return send_file(video_path, mimetype='video/mp4')
+    return "Video not found", 404
+
 @app.route('/static/dm_logo.png')
 def serve_dm_logo():
     """Serve the DM logo image"""
