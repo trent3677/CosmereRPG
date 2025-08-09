@@ -783,10 +783,10 @@ def handle_npc_inventory_request(data):
 def handle_initiative_data_request():
     """Handles requests for the current combat initiative order."""
     try:
-        from utils.file_operations import safe_json_load
+        from utils.file_operations import safe_read_json
         
         # Check if combat is active via party_tracker.json
-        party_tracker = safe_json_load("party_tracker.json")
+        party_tracker = safe_read_json("party_tracker.json")
         if not party_tracker:
             emit('initiative_data_response', {'active': False, 'combatants': []})
             return
@@ -800,7 +800,7 @@ def handle_initiative_data_request():
 
         # Load the specific encounter file
         encounter_file = f"modules/encounters/encounter_{active_encounter_id}.json"
-        encounter_data = safe_json_load(encounter_file)
+        encounter_data = safe_read_json(encounter_file)
         if not encounter_data or "creatures" not in encounter_data:
             emit('initiative_data_response', {'active': False, 'combatants': []})
             return
