@@ -36,11 +36,28 @@
             font-family: 'Cinzel', Georgia, serif;
             font-weight: 600;
             letter-spacing: 0.5px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            background: linear-gradient(135deg, #50C878, #00A86B, #2E8B57, #50C878);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmerEmerald 3.5s ease infinite;
+            filter: drop-shadow(0 0 15px rgba(80, 200, 120, 0.5));
+            text-shadow: none;
+        }
+        
+        @keyframes shimmerEmerald {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         .header h1 span {
-            color: #66BB6A;
+            background: inherit;
+            background-size: inherit;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .location-info {
@@ -125,9 +142,14 @@
         }
         
         .dice-button {
-            background: linear-gradient(145deg, #9c27b0, #7b1fa2, #4a148c);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: linear-gradient(145deg, 
+                rgba(38, 97, 156, 0.4), 
+                rgba(25, 118, 210, 0.5), 
+                rgba(13, 71, 161, 0.6));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             padding: 6px 12px;
             border-radius: 6px;
             cursor: pointer;
@@ -136,10 +158,13 @@
             transition: all 0.3s;
             min-width: 50px;
             box-shadow: 
-                0 4px 6px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+                0 4px 6px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                inset 0 -1px 0 rgba(25, 118, 210, 0.3);
+            text-shadow: 
+                -1px -1px 1px rgba(255, 255, 255, 0.5),
+                1px 1px 2px rgba(0, 0, 0, 0.8),
+                0 0 3px rgba(0, 0, 0, 0.5) inset;
             position: relative;
             overflow: hidden;
         }
@@ -153,18 +178,21 @@
             height: 100%;
             background: linear-gradient(90deg, 
                 transparent, 
-                rgba(255, 255, 255, 0.3), 
+                rgba(255, 255, 255, 0.4), 
                 transparent);
             transition: left 0.5s;
         }
         
         .dice-button:hover {
-            background: linear-gradient(145deg, #ab47bc, #8e24aa, #6a1b9a);
+            background: linear-gradient(145deg, 
+                rgba(38, 97, 156, 0.6), 
+                rgba(25, 118, 210, 0.7), 
+                rgba(13, 71, 161, 0.8));
             transform: translateY(-1px);
             box-shadow: 
-                0 6px 12px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.5),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+                0 6px 12px rgba(25, 118, 210, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7),
+                inset 0 -1px 0 rgba(25, 118, 210, 0.4);
         }
         
         .dice-button:hover:before {
@@ -174,9 +202,9 @@
         .dice-button:active {
             transform: translateY(0);
             box-shadow: 
-                0 2px 4px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+                0 2px 4px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -1px 0 rgba(25, 118, 210, 0.3);
         }
         
         .dice-clear-button {
@@ -225,6 +253,61 @@
             white-space: pre-wrap;
             word-wrap: break-word;
             width: 100%;
+        }
+        
+        /* Token usage header - fixed at top of debug panel */
+        .token-usage-header {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(to bottom, #1a1a1a, #0f0f0f);
+            border-bottom: 2px solid #444;
+            padding: 8px 12px;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .token-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #e0e0e0;
+        }
+        
+        .token-label {
+            color: #888;
+            font-weight: bold;
+        }
+        
+        #tpm-value, #rpm-value, #total-tokens {
+            color: #4CAF50;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: left;
+        }
+        
+        .token-separator {
+            color: #555;
+        }
+        
+        /* Make debug output scrollable below the header */
+        .debug-scrollable {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            width: 100%;
+            height: calc(100% - 50px); /* Account for header height */
+        }
+        
+        #debug-tab {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         
         /* Inventory Tab - Simplified Layout */
@@ -3249,7 +3332,7 @@
 </head>
 <body>
     <div class="header">
-        <h1 style="color: #4CAF50;">Never<span>Ending</span>Quest</h1>
+        <h1>Never<span>Ending</span>Quest</h1>
         <div class="location-info" id="location-info">
             <div class="location-name" id="location-name">Loading location...</div>
             <div class="location-details" id="location-details"></div>
@@ -3325,7 +3408,16 @@
                 <button class="tab-button" onclick="switchTab('debug')">Debug</button>
             </div>
             <div class="tab-content" id="debug-tab" style="display: none;">
-                <div class="panel-content" id="debug-output"></div>
+                <div class="token-usage-header" id="token-usage">
+                    <div class="token-stats">
+                        <span class="token-label">TPM:</span> <span id="tpm-value">0</span>
+                        <span class="token-separator">|</span>
+                        <span class="token-label">RPM:</span> <span id="rpm-value">0</span>
+                        <span class="token-separator">|</span>
+                        <span class="token-label">Total:</span> <span id="total-tokens">0</span>
+                    </div>
+                </div>
+                <div class="panel-content debug-scrollable" id="debug-output"></div>
             </div>
             <div class="tab-content" id="inventory-tab" style="display: none;">
                 <div class="loading">Loading inventory...</div>
@@ -3561,6 +3653,13 @@
         });
         socket.on('debug_output', (message) => { addMessage('debug-output', message); });
         socket.on('error', (error) => { addMessage('game-output', { type: 'error', content: error.message }); });
+        
+        // Token usage updates
+        socket.on('token_update', (data) => {
+            if (data.tpm !== undefined) document.getElementById('tpm-value').textContent = data.tpm.toLocaleString();
+            if (data.rpm !== undefined) document.getElementById('rpm-value').textContent = data.rpm;
+            if (data.total_tokens !== undefined) document.getElementById('total-tokens').textContent = data.total_tokens.toLocaleString();
+        });
         
         // Image generation event handlers
         socket.on('image_generated', (data) => {

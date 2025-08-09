@@ -144,11 +144,17 @@ class WebOutputCapture:
                         # Start capturing DM content
                         self.in_dm_section = True
                         self.dm_buffer = [clean_line]
+                        # Debug trace for combat output
+                        debug_output_queue.put({
+                            'type': 'debug',
+                            'content': f"[OUTPUT_TRACE] Started DM section: {clean_line[:100]}...",
+                            'timestamp': datetime.now().isoformat()
+                        })
                     except Exception:
                         # If DM section initialization fails, send to debug instead
                         debug_output_queue.put({
                             'type': 'debug',
-                            'content': clean_line,
+                            'content': f"[OUTPUT_ERROR] DM section init failed: {clean_line}",
                             'timestamp': datetime.now().isoformat()
                         })
                 elif self.in_dm_section:
@@ -175,12 +181,18 @@ class WebOutputCapture:
                                         'type': 'narration',
                                         'content': combined_content
                                     })
-                            except Exception:
+                                    # Debug trace for successful DM output
+                                    debug_output_queue.put({
+                                        'type': 'debug',
+                                        'content': f"[OUTPUT_TRACE] Sent DM content to game_output: {len(combined_content)} chars",
+                                        'timestamp': datetime.now().isoformat()
+                                    })
+                            except Exception as e:
                                 # If DM content processing fails, send raw content to debug
                                 try:
                                     debug_output_queue.put({
                                         'type': 'debug',
-                                        'content': f"DM content error: {str(self.dm_buffer)}",
+                                        'content': f"[OUTPUT_ERROR] DM content processing failed: {str(e)} - Buffer: {str(self.dm_buffer)}",
                                         'timestamp': datetime.now().isoformat()
                                     })
                                 except Exception:
@@ -1122,6 +1134,8 @@ def run_game_loop():
 
 def send_output_to_clients():
     """Send queued output to all connected clients"""
+    last_token_update = time.time()
+    
     while True:
         try:
             # Send game output
@@ -1141,6 +1155,89 @@ def send_output_to_clients():
                 except Exception:
                     # If queue operation or emit fails, just continue
                     break
+            
+            # Try to send token updates every 2 seconds (completely isolated)
+            current_time = time.time()
+            if current_time - last_token_update > 2:
+                last_token_update = current_time  # Update time FIRST to prevent retry loops
+                try:
+                    # Try to import and get stats
+                    from utils.openai_usage_tracker import get_usage_stats
+                    stats = get_usage_stats()
+                    # Send to UI silently
+                    socketio.emit('token_update', {
+                        'tpm': stats.get('tpm', 0),
+                        'rpm': stats.get('rpm', 0),
+                        'total_tokens': stats.get('total_tokens', 0)
+                    })
+                except:
+                    # If anything fails, just send zeros (but don't spam)
+                    try:
+                        socketio.emit('token_update', {
+                            'tpm': 0,
+                            'rpm': 0,
+                            'total_tokens': 0
+                        })
+                    except:
+                        pass  # Even sending zeros failed, just skip
+                        
+        except Exception:
+            # If any other error occurs, just continue
+            pass
+        
+        time.sleep(0.1)  # Small delay to prevent CPU spinning
+
+def send_output_to_clients_original():
+    """Send queued output to all connected clients"""
+    last_token_update = time.time()
+    
+    while True:
+        try:
+            # Send game output
+            while not game_output_queue.empty():
+                try:
+                    msg = game_output_queue.get()
+                    socketio.emit('game_output', msg)
+                except Exception:
+                    # If queue operation or emit fails, just continue
+                    break
+            
+            # Send debug output
+            while not debug_output_queue.empty():
+                try:
+                    msg = debug_output_queue.get()
+                    socketio.emit('debug_output', msg)
+                except Exception:
+                    # If queue operation or emit fails, just continue
+                    break
+            
+            # Send token updates every 2 seconds
+            current_time = time.time()
+            if current_time - last_token_update > 2:
+                try:
+                    from utils.token_tracker import get_tracker
+                    tracker = get_tracker()
+                    stats = tracker.get_stats()
+                    socketio.emit('token_update', {
+                        'tpm': stats['tpm'],
+                        'rpm': stats['rpm'],
+                        'total_tokens': stats['total_tokens']
+                    })
+                except (ImportError, AttributeError, Exception):
+                    # If token tracking fails for any reason, send zeros to UI
+                    # Don't let token errors block the main output processing
+                    try:
+                        socketio.emit('token_update', {
+                            'tpm': 0,
+                            'rpm': 0,
+                            'total_tokens': 0
+                        })
+                    except Exception:
+                        # If even sending zeros fails, just skip token updates
+                        pass
+                finally:
+                    # Always update the timestamp to prevent infinite retries
+                    last_token_update = current_time
         except Exception:
             # If any other error occurs, just continue
             pass

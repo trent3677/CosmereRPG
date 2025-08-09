@@ -8,6 +8,14 @@ from jsonschema import validate, ValidationError
 from openai import OpenAI
 import time
 
+# Import OpenAI usage tracking (safe - won't break if fails)
+try:
+    from utils.openai_usage_tracker import track_response
+    USAGE_TRACKING_AVAILABLE = True
+except:
+    USAGE_TRACKING_AVAILABLE = False
+    def track_response(r): pass
+
 # Import model configuration from config.py
 from config import OPENAI_API_KEY, PLOT_UPDATE_MODEL
 from utils.module_path_manager import ModulePathManager
@@ -143,6 +151,13 @@ Examples:
             temperature=TEMPERATURE,
             messages=prompt_messages
         )
+        
+        # Track usage if available
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(response)
+            except:
+                pass
 
         ai_response_content = response.choices[0].message.content.strip() # Renamed variable
 

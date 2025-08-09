@@ -21,6 +21,14 @@ from updates.update_character_info import normalize_character_name
 from openai import OpenAI
 import config
 
+# Import OpenAI usage tracking (safe - won't break if fails)
+try:
+    from utils.openai_usage_tracker import track_response
+    USAGE_TRACKING_AVAILABLE = True
+except:
+    USAGE_TRACKING_AVAILABLE = False
+    def track_response(r): pass
+
 # Set up logging
 from utils.enhanced_logger import set_script_name
 set_script_name(os.path.basename(__file__))
@@ -196,6 +204,13 @@ Set affects_max to true for effects like Aid that modify both current and maximu
                 {"role": "user", "content": f"Analyze this update: {change_description}"}
             ]
         )
+        
+        # Track usage if available
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(response)
+            except:
+                pass
         
         # Clean response and parse JSON
         response_text = response.choices[0].message.content.strip()

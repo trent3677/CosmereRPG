@@ -104,6 +104,14 @@ import os
 from datetime import datetime
 from jsonschema import validate, ValidationError
 from openai import OpenAI
+
+# Import OpenAI usage tracking (safe - won't break if fails)
+try:
+    from utils.openai_usage_tracker import track_response
+    USAGE_TRACKING_AVAILABLE = True
+except:
+    USAGE_TRACKING_AVAILABLE = False
+    def track_response(r): pass
 import time
 import re
 # Import model configuration from config.py
@@ -1435,6 +1443,13 @@ Character Role: {character_role}
                 messages=messages,
                 temperature=TEMPERATURE
             )
+            
+            # Track usage
+            if USAGE_TRACKING_AVAILABLE:
+                try:
+                    track_response(response)
+                except:
+                    pass
             
             raw_response = response.choices[0].message.content.strip()
             

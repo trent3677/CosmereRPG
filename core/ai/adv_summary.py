@@ -23,6 +23,15 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from openai import OpenAI
+
+# Import OpenAI usage tracking (safe - won't break if fails)
+try:
+    from utils.openai_usage_tracker import track_response
+    USAGE_TRACKING_AVAILABLE = True
+except:
+    USAGE_TRACKING_AVAILABLE = False
+    def track_response(r): pass
+
 from jsonschema import validate, ValidationError
 from config import OPENAI_API_KEY, ADVENTURE_SUMMARY_MODEL
 from utils.module_path_manager import ModulePathManager
@@ -221,6 +230,14 @@ def update_location_json(adventure_summary, location_info, current_area_id_from_
                 temperature=TEMPERATURE,
                 messages=location_updater_prompt
             )
+            
+            # Track usage if available
+            if USAGE_TRACKING_AVAILABLE:
+                try:
+                    track_response(response)
+                except:
+                    pass
+            
             location_updates = response.choices[0].message.content.strip()
             # Sanitize AI response to prevent encoding issues
             location_updates = sanitize_text(location_updates)
@@ -445,6 +462,14 @@ Your writing should feel immersive, literary, and grounded—like a historical e
             temperature=TEMPERATURE,
             messages=dialogue_data
         )
+        
+        # Track usage if available
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(response)
+            except:
+                pass
+        
         adventure_summary = response.choices[0].message.content.strip()
         # Sanitize AI response to prevent encoding issues
         adventure_summary = sanitize_text(adventure_summary)

@@ -12,6 +12,14 @@ import re
 import copy
 # Import model configuration from config.py
 from config import OPENAI_API_KEY, ENCOUNTER_UPDATE_MODEL
+
+# Import OpenAI usage tracking (safe - won't break if fails)
+try:
+    from utils.openai_usage_tracker import track_response
+    USAGE_TRACKING_AVAILABLE = True
+except:
+    USAGE_TRACKING_AVAILABLE = False
+    def track_response(r): pass
 from utils.module_path_manager import ModulePathManager
 from utils.enhanced_logger import debug, info, warning, error, set_script_name
 
@@ -77,6 +85,13 @@ Remember to only update monster information and leave player and NPC data unchan
             temperature=TEMPERATURE,
             messages=prompt
         )
+        
+        # Track usage
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(response)
+            except:
+                pass
 
         ai_response = response.choices[0].message.content.strip()
 

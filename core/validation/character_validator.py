@@ -63,6 +63,14 @@ import copy
 import logging
 from typing import Dict, List, Any, Optional
 from openai import OpenAI
+
+# Import OpenAI usage tracking (safe - won't break if fails)
+try:
+    from utils.openai_usage_tracker import track_response
+    USAGE_TRACKING_AVAILABLE = True
+except:
+    USAGE_TRACKING_AVAILABLE = False
+    def track_response(r): pass
 from config import OPENAI_API_KEY, CHARACTER_VALIDATOR_MODEL
 from utils.file_operations import safe_read_json, safe_write_json
 from utils.enhanced_logger import debug, info, warning, error, set_script_name
@@ -156,6 +164,13 @@ class AICharacterValidator:
                 ]
             )
             
+            # Track usage if available
+            if USAGE_TRACKING_AVAILABLE:
+                try:
+                    track_response(response)
+                except:
+                    pass
+            
             ai_response = response.choices[0].message.content.strip()
             
             # Parse AI response to get corrected character data
@@ -195,6 +210,13 @@ class AICharacterValidator:
                     ]
                     # No max_tokens - let AI return full response
                 )
+                
+                # Track usage if available
+                if USAGE_TRACKING_AVAILABLE:
+                    try:
+                        track_response(response)
+                    except:
+                        pass
                 
                 ai_response = response.choices[0].message.content.strip()
                 
@@ -735,6 +757,13 @@ IMPORTANT: Return ONLY the items that need their item_type corrected. Do not inc
                 ]
             )
             
+            # Track usage if available
+            if USAGE_TRACKING_AVAILABLE:
+                try:
+                    track_response(response)
+                except:
+                    pass
+            
             ai_response = response.choices[0].message.content.strip()
             
             # Parse AI response to get all corrections
@@ -1089,6 +1118,13 @@ Remember to return a single JSON response with all four validation results."""
                         {"role": "user", "content": consolidation_prompt}
                     ]
                 )
+                
+                # Track usage if available
+                if USAGE_TRACKING_AVAILABLE:
+                    try:
+                        track_response(response)
+                    except:
+                        pass
                 
                 ai_response = response.choices[0].message.content.strip()
                 

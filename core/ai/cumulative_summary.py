@@ -53,6 +53,14 @@ import json
 import os
 from datetime import datetime
 from openai import OpenAI
+
+# Import OpenAI usage tracking (safe - won't break if fails)
+try:
+    from utils.openai_usage_tracker import track_response
+    USAGE_TRACKING_AVAILABLE = True
+except:
+    USAGE_TRACKING_AVAILABLE = False
+    def track_response(r): pass
 from config import OPENAI_API_KEY, ADVENTURE_SUMMARY_MODEL
 from utils.module_path_manager import ModulePathManager
 from utils.file_operations import safe_write_json, safe_read_json
@@ -275,6 +283,14 @@ Use past tense and third person. Be vivid, specific, and emotional where appropr
             temperature=TEMPERATURE,
             messages=messages
         )
+        
+        # Track usage if available
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(response)
+            except:
+                pass
+        
         summary = response.choices[0].message.content.strip()
         # Sanitize AI response to prevent encoding issues
         summary = sanitize_text(summary)
@@ -541,6 +557,14 @@ Keep the narrative engaging but factual."""},
                 temperature=TEMPERATURE,
                 messages=messages
             )
+            
+            # Track usage if available
+            if USAGE_TRACKING_AVAILABLE:
+                try:
+                    track_response(response)
+                except:
+                    pass
+            
             enhanced_summary = response.choices[0].message.content.strip()
             # Sanitize AI response to prevent encoding issues
             enhanced_summary = sanitize_text(enhanced_summary)
