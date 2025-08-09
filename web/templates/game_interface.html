@@ -1976,6 +1976,13 @@
             margin: 0;
         }
         
+        /* Two-column layout for saving throws */
+        .saving-throws-group .stat-group-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 15px;
+        }
+        
         .stat-group h4 {
             margin: 0 0 2px 0;
             color: #FFA500;
@@ -3909,7 +3916,7 @@
 
             html += '<div class="skills-saves-container">';
             if (data.savingThrows && data.savingThrows.length > 0) {
-                html += '<div class="stat-group"><h4>Saving Throws</h4><div class="stat-group-content">';
+                html += '<div class="stat-group saving-throws-group"><h4>Saving Throws</h4><div class="stat-group-content">';
                 ['Strength', 'Dexterity', 'Constitution', 'Intelligence', 'Wisdom', 'Charisma'].forEach(save => {
                     const isProficient = data.savingThrows.includes(save);
                     const abilityMod = data.abilities ? Math.floor((data.abilities[save.toLowerCase()] - 10) / 2) : 0;
