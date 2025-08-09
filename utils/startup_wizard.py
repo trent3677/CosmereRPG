@@ -584,11 +584,8 @@ def create_fallback_character(module):
                 "wisdom": 13,
                 "charisma": 11
             },
-            "savingThrows": ["strength", "constitution"],
-            "skills": {
-                "athletics": 4,
-                "intimidation": 2
-            },
+            "savingThrows": ["Strength", "Constitution"],
+            "skills": ["Animal Handling", "Survival", "Athletics", "Intimidation"],
             "proficiencyBonus": 2,
             "senses": {
                 "darkvision": 0,
@@ -770,6 +767,16 @@ RACE AND CLASS RULES:
 JSON OUTPUT REQUIREMENTS:
 When the player confirms they are ready to finalize their character, you MUST respond with ONLY a valid JSON object that matches the provided character schema exactly. 
 
+SKILL PROFICIENCY REQUIREMENTS:
+- The "skills" field MUST be an array of skill names, NOT an object with bonuses
+- Format example: ["Athletics", "Perception", "Stealth", "Arcana"]
+- Include ONLY skills the character is proficient in
+- During the interview, help the player select:
+  * Background skills (each background grants 2 specific skills)
+  * Class skills (number varies by class - Fighter: 2, Rogue: 4, Ranger: 3, Bard: 3, etc.)
+- Present skill choices naturally during character creation conversation
+- Example: "As a Fighter, you can choose 2 skills from: Acrobatics, Animal Handling, Athletics, History, Insight, Intimidation, Perception, or Survival. What skills would fit your character?"
+
 CRITICAL JSON FORMATTING RULES:
 - Use ONLY standard ASCII characters in the JSON
 - No emojis, Unicode symbols, or special characters anywhere in the JSON
@@ -777,6 +784,7 @@ CRITICAL JSON FORMATTING RULES:
 - All string values must use only plain text
 - Ensure all required schema fields are populated
 - Use proper JSON syntax with correct quotes and brackets
+- The "skills" field MUST be an array format: ["Skill1", "Skill2"]
 
 The character must be level 1 and have experience_points set to 0.
 The character should be marked as character_role: "player" and character_type: "player".
@@ -1324,19 +1332,119 @@ def calculate_derived_stats(character_data):
     # Calculate passive perception
     character_data['senses']['passivePerception'] = 10 + wis_mod
     
-    # Set basic skills (this is simplified - real implementation would be more complex)
-    character_data['skills'] = {}
+    # Initialize skills using new array format
+    # Skills will be selected based on class and background
+    character_data['skills'] = []
     
-    # Add basic class features (simplified)
+    # Add basic class features and skill proficiencies
+    # D&D 5e standard class skill selections
+    class_skills = {
+        'fighter': {
+            'savingThrows': ["Strength", "Constitution"],
+            'skillChoices': ["Acrobatics", "Animal Handling", "Athletics", "History", 
+                           "Insight", "Intimidation", "Perception", "Survival"],
+            'numSkills': 2
+        },
+        'wizard': {
+            'savingThrows': ["Intelligence", "Wisdom"],
+            'skillChoices': ["Arcana", "History", "Insight", "Investigation", 
+                           "Medicine", "Religion"],
+            'numSkills': 2
+        },
+        'rogue': {
+            'savingThrows': ["Dexterity", "Intelligence"],
+            'skillChoices': ["Acrobatics", "Athletics", "Deception", "Insight", 
+                           "Intimidation", "Investigation", "Perception", "Performance",
+                           "Persuasion", "Sleight of Hand", "Stealth"],
+            'numSkills': 4
+        },
+        'cleric': {
+            'savingThrows': ["Wisdom", "Charisma"],
+            'skillChoices': ["History", "Insight", "Medicine", "Persuasion", "Religion"],
+            'numSkills': 2
+        },
+        'ranger': {
+            'savingThrows': ["Strength", "Dexterity"],
+            'skillChoices': ["Animal Handling", "Athletics", "Insight", "Investigation",
+                           "Nature", "Perception", "Stealth", "Survival"],
+            'numSkills': 3
+        },
+        'barbarian': {
+            'savingThrows': ["Strength", "Constitution"],
+            'skillChoices': ["Animal Handling", "Athletics", "Intimidation", "Nature",
+                           "Perception", "Survival"],
+            'numSkills': 2
+        },
+        'bard': {
+            'savingThrows': ["Dexterity", "Charisma"],
+            'skillChoices': ["Athletics", "Acrobatics", "Sleight of Hand", "Stealth",
+                           "Arcana", "History", "Investigation", "Nature", "Religion",
+                           "Animal Handling", "Insight", "Medicine", "Perception", "Survival",
+                           "Deception", "Intimidation", "Performance", "Persuasion"],
+            'numSkills': 3
+        },
+        'druid': {
+            'savingThrows': ["Intelligence", "Wisdom"],
+            'skillChoices': ["Arcana", "Animal Handling", "Insight", "Medicine",
+                           "Nature", "Perception", "Religion", "Survival"],
+            'numSkills': 2
+        },
+        'monk': {
+            'savingThrows': ["Strength", "Dexterity"],
+            'skillChoices': ["Acrobatics", "Athletics", "History", "Insight",
+                           "Religion", "Stealth"],
+            'numSkills': 2
+        },
+        'paladin': {
+            'savingThrows': ["Wisdom", "Charisma"],
+            'skillChoices': ["Athletics", "Insight", "Intimidation", "Medicine",
+                           "Persuasion", "Religion"],
+            'numSkills': 2
+        },
+        'sorcerer': {
+            'savingThrows': ["Constitution", "Charisma"],
+            'skillChoices': ["Arcana", "Deception", "Insight", "Intimidation",
+                           "Persuasion", "Religion"],
+            'numSkills': 2
+        },
+        'warlock': {
+            'savingThrows': ["Wisdom", "Charisma"],
+            'skillChoices': ["Arcana", "Deception", "History", "Intimidation",
+                           "Investigation", "Nature", "Religion"],
+            'numSkills': 2
+        }
+    }
+    
+    # Background skill proficiencies (D&D 5e standard)
+    background_skills = {
+        'Acolyte': ["Insight", "Religion"],
+        'Criminal': ["Deception", "Stealth"],
+        'Folk Hero': ["Animal Handling", "Survival"],
+        'Noble': ["History", "Persuasion"],
+        'Sage': ["Arcana", "History"],
+        'Soldier': ["Athletics", "Intimidation"],
+        'Charlatan': ["Deception", "Sleight of Hand"],
+        'Entertainer': ["Acrobatics", "Performance"],
+        'Guild Artisan': ["Insight", "Persuasion"],
+        'Hermit': ["Medicine", "Religion"]
+    }
+    
+    # Apply class features and saving throws
+    class_info = class_skills.get(class_name, class_skills['fighter'])
+    character_data['savingThrows'] = class_info['savingThrows']
+    
+    # Add background skills automatically
+    bg_skills = background_skills.get(background, [])
+    character_data['skills'].extend(bg_skills)
+    
+    # Class-specific features
     if class_name == 'fighter':
         character_data['classFeatures'].append({
             "name": "Second Wind",
             "description": "Once per short rest, regain 1d10 + fighter level HP as a bonus action",
             "source": "Fighter feature"
         })
-        character_data['savingThrows'] = ["Strength", "Constitution"]
     elif class_name == 'wizard':
-        character_data['savingThrows'] = ["Intelligence", "Wisdom"]
         character_data['spellSlots'] = {"1": {"current": 2, "max": 2}}
     elif class_name == 'rogue':
         character_data['classFeatures'].append({
@@ -1344,8 +1452,7 @@ def calculate_derived_stats(character_data):
             "description": "Deal extra 1d6 damage when you have advantage or an ally is within 5 feet of target",
             "source": "Rogue feature"
         })
-        character_data['savingThrows'] = ["Dexterity", "Intelligence"]
-    # Add more classes as needed...
+    # Add more class features as needed...
     
     # Set alignment to neutral good by default
     character_data['alignment'] = "neutral good"
