@@ -1785,6 +1785,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
         }
         
         .ability-score:hover {
@@ -1907,6 +1908,64 @@
             gap: 5px;
             margin-top: 3px; /* MODIFIED: Added margin */
             margin-bottom: 3px;
+        }
+
+        /* Skill Tooltip System */
+        .skill-tooltip {
+            position: fixed;
+            z-index: 1000;
+            background-color: #1f1f1f;
+            border: 1px solid #FFA500;
+            border-radius: 6px;
+            padding: 10px;
+            width: 220px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            color: #e0e0e0;
+            font-family: 'Crimson Text', Georgia, serif;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+            visibility: hidden;
+        }
+
+        .skill-tooltip.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .skill-tooltip-header {
+            font-family: 'Cinzel', Georgia, serif;
+            font-size: 16px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #444;
+            text-transform: uppercase;
+        }
+
+        .skill-tooltip-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 2px;
+            font-size: 15px;
+        }
+
+        .skill-tooltip-name {
+            color: #ccc;
+        }
+
+        .skill-tooltip-value {
+            color: #e0e0e0;
+            font-weight: bold;
+        }
+
+        /* Make ability scores hoverable */
+        .ability-score:hover {
+            border-color: #FFA500;
+            cursor: pointer;
+            transform: scale(1.05);
         }
         
         .stat-group {
@@ -3647,6 +3706,77 @@
             initializeAllTooltips();
         }
         
+        // Skill Tooltip System (Backward-Compatible)
+        let skillTooltip = null;
+
+        const SKILL_MAP = {
+            'Strength': ['Athletics'],
+            'Dexterity': ['Acrobatics', 'Sleight of Hand', 'Stealth'],
+            'Intelligence': ['Arcana', 'History', 'Investigation', 'Nature', 'Religion'],
+            'Wisdom': ['Animal Handling', 'Insight', 'Medicine', 'Perception', 'Survival'],
+            'Charisma': ['Deception', 'Intimidation', 'Performance', 'Persuasion']
+        };
+
+        function createSkillTooltip(abilityName, characterData, proficientSkills) {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'skill-tooltip';
+            
+            let content = `<div class="skill-tooltip-header">${abilityName} Skills</div>`;
+            const associatedSkills = SKILL_MAP[abilityName];
+            const proficientSkillsLower = proficientSkills.map(s => s.toLowerCase());
+
+            associatedSkills.forEach(skill => {
+                const isProficient = proficientSkillsLower.includes(skill.toLowerCase());
+                const abilityMod = characterData.abilities[abilityName.toLowerCase()] ? 
+                    Math.floor((characterData.abilities[abilityName.toLowerCase()] - 10) / 2) : 0;
+                const bonus = isProficient ? 
+                    abilityMod + (characterData.proficiencyBonus || 2) : abilityMod;
+
+                content += `<div class="skill-tooltip-item">
+                    <span class="skill-tooltip-name">${isProficient ? '[OK]' : 'o'} ${skill}</span>
+                    <span class="skill-tooltip-value">${bonus >= 0 ? '+' : ''}${bonus}</span>
+                </div>`;
+            });
+
+            tooltip.innerHTML = content;
+            return tooltip;
+        }
+
+        function showSkillTooltip(event, characterData, proficientSkills) {
+            hideSkillTooltip();
+            
+            const target = event.currentTarget;
+            const abilityName = target.dataset.ability;
+            
+            skillTooltip = createSkillTooltip(abilityName, characterData, proficientSkills);
+            document.body.appendChild(skillTooltip);
+            
+            const rect = target.getBoundingClientRect();
+            const tooltipRect = skillTooltip.getBoundingClientRect();
+            let top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+            let left = rect.right + 10;
+            
+            if (left + tooltipRect.width > window.innerWidth) {
+                left = rect.left - tooltipRect.width - 10;
+            }
+            if (top < 0) {
+                top = 10;
+            } else if (top + tooltipRect.height > window.innerHeight) {
+                top = window.innerHeight - tooltipRect.height - 10;
+            }
+            
+            skillTooltip.style.left = `${left}px`;
+            skillTooltip.style.top = `${top}px`;
+            skillTooltip.classList.add('visible');
+        }
+
+        function hideSkillTooltip() {
+            if (skillTooltip) {
+                skillTooltip.remove();
+                skillTooltip = null;
+            }
+        }
+
         // Display character stats
         function displayCharacterStats(data) {
             // Save scroll position before updating
@@ -3658,6 +3788,37 @@
                 container.innerHTML = '<div class="loading">No character data available</div>';
                 return;
             }
+            
+            // Data Normalization for Skills (Backward-Compatible)
+            let proficientSkills = [];
+            if (data.skills) {
+                if (Array.isArray(data.skills)) {
+                    // NEW FORMAT: Already an array of proficient skills
+                    proficientSkills = data.skills;
+                } else if (typeof data.skills === 'object') {
+                    // OLD FORMAT: Object mapping skills to bonuses
+                    // Infer proficiency by checking if bonus > ability modifier
+                    Object.keys(SKILL_MAP).forEach(abilityName => {
+                        const ability = abilityName.toLowerCase();
+                        SKILL_MAP[abilityName].forEach(skill => {
+                            const skillLower = skill.toLowerCase().replace(' ', '');
+                            // Check various formats (lowercase, no spaces, etc.)
+                            const skillValue = data.skills[skillLower] || 
+                                               data.skills[skill.toLowerCase()] || 
+                                               data.skills[skill];
+                            if (skillValue !== undefined) {
+                                const abilityMod = data.abilities[ability] ? 
+                                    Math.floor((data.abilities[ability] - 10) / 2) : 0;
+                                // If skill bonus > ability modifier, assume proficiency
+                                if (skillValue > abilityMod) {
+                                    proficientSkills.push(skill);
+                                }
+                            }
+                        });
+                    });
+                }
+            }
+            
             function getModifier(score) { const mod = Math.floor((score - 10) / 2); return mod >= 0 ? `+${mod}` : `${mod}`; }
             const hpPercent = (data.hitPoints / data.maxHitPoints) * 100;
             let hpClass = '';
@@ -3668,7 +3829,20 @@
                 html += '<div class="abilities-row">';
                 ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'].forEach(ability => {
                     const score = data.abilities[ability] || 10;
-                    html += `<div class="ability-score"><div class="ability-name">${ability.substr(0, 3).toUpperCase()}</div><div class="ability-value">${score}</div><div class="ability-modifier">${getModifier(score)}</div></div>`;
+                    const capitalizedAbility = ability.charAt(0).toUpperCase() + ability.slice(1);
+                    
+                    // Pass data and proficientSkills to hover handlers
+                    const dataString = JSON.stringify(data).replace(/"/g, '&quot;');
+                    const skillsString = JSON.stringify(proficientSkills).replace(/"/g, '&quot;');
+                    
+                    html += `<div class="ability-score" 
+                                  data-ability="${capitalizedAbility}"
+                                  onmouseenter="showSkillTooltip(event, ${dataString}, ${skillsString})"
+                                  onmouseleave="hideSkillTooltip()">
+                                <div class="ability-name">${ability.substr(0, 3).toUpperCase()}</div>
+                                <div class="ability-value">${score}</div>
+                                <div class="ability-modifier">${getModifier(score)}</div>
+                             </div>`;
                 });
                 html += '</div>';
             }
@@ -3744,15 +3918,7 @@
                 });
                 html += '</div></div>';
             }
-            if (data.skills) {
-                html += '<div class="stat-group"><h4>Skills</h4><div class="stat-group-content">';
-                // MODIFIED: Capitalize skill names
-                Object.entries(data.skills).forEach(([skill, value]) => { 
-                    const capitalizedSkill = skill.charAt(0).toUpperCase() + skill.slice(1);
-                    html += `<div class="skill-item"><span class="skill-name">${capitalizedSkill}</span><span class="skill-value">${value >= 0 ? '+' : ''}${value}</span></div>`; 
-                });
-                html += '</div></div>';
-            }
+            // Skills section removed - now shown via ability score tooltips
             html += '</div>';
             html += '<div class="abilities-grid">';
             if (data.classFeatures && data.classFeatures.length > 0) {

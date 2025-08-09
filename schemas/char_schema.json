@@ -86,8 +86,28 @@
       "items": {"type": "string"}
     },
     "skills": {
-      "type": "object",
-      "additionalProperties": {"type": "integer"}
+      "description": "Character skills. Can be an array of proficient skill names (recommended) or object mapping skill names to bonuses (legacy).",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Acrobatics", "Animal Handling", "Arcana", "Athletics", 
+              "Deception", "History", "Insight", "Intimidation", 
+              "Investigation", "Medicine", "Nature", "Perception", 
+              "Performance", "Persuasion", "Religion", "Sleight of Hand",
+              "Stealth", "Survival"
+            ]
+          },
+          "description": "Array of skill names in which the character is proficient"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {"type": "integer"},
+          "description": "Legacy format: Object mapping all skill names to their final bonus"
+        }
+      ]
     },
     "proficiencyBonus": {
       "type": "integer"
