@@ -3740,7 +3740,7 @@
                     abilityMod + (characterData.proficiencyBonus || 2) : abilityMod;
 
                 content += `<div class="skill-tooltip-item">
-                    <span class="skill-tooltip-name">${isProficient ? '[OK]' : 'o'} ${skill}</span>
+                    <span class="skill-tooltip-name">${isProficient ? '●' : '○'} ${skill}</span>
                     <span class="skill-tooltip-value">${bonus >= 0 ? '+' : ''}${bonus}</span>
                 </div>`;
             });
