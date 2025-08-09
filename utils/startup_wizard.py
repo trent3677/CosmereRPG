@@ -1333,109 +1333,28 @@ def calculate_derived_stats(character_data):
     character_data['senses']['passivePerception'] = 10 + wis_mod
     
     # Initialize skills using new array format
-    # Skills will be selected based on class and background
-    character_data['skills'] = []
+    # Skills should be populated by the AI during character creation interview
+    # The AI will guide players through selecting skills based on class and background
+    if 'skills' not in character_data:
+        character_data['skills'] = []
     
-    # Add basic class features and skill proficiencies
-    # D&D 5e standard class skill selections
-    class_skills = {
-        'fighter': {
-            'savingThrows': ["Strength", "Constitution"],
-            'skillChoices': ["Acrobatics", "Animal Handling", "Athletics", "History", 
-                           "Insight", "Intimidation", "Perception", "Survival"],
-            'numSkills': 2
-        },
-        'wizard': {
-            'savingThrows': ["Intelligence", "Wisdom"],
-            'skillChoices': ["Arcana", "History", "Insight", "Investigation", 
-                           "Medicine", "Religion"],
-            'numSkills': 2
-        },
-        'rogue': {
-            'savingThrows': ["Dexterity", "Intelligence"],
-            'skillChoices': ["Acrobatics", "Athletics", "Deception", "Insight", 
-                           "Intimidation", "Investigation", "Perception", "Performance",
-                           "Persuasion", "Sleight of Hand", "Stealth"],
-            'numSkills': 4
-        },
-        'cleric': {
-            'savingThrows': ["Wisdom", "Charisma"],
-            'skillChoices': ["History", "Insight", "Medicine", "Persuasion", "Religion"],
-            'numSkills': 2
-        },
-        'ranger': {
-            'savingThrows': ["Strength", "Dexterity"],
-            'skillChoices': ["Animal Handling", "Athletics", "Insight", "Investigation",
-                           "Nature", "Perception", "Stealth", "Survival"],
-            'numSkills': 3
-        },
-        'barbarian': {
-            'savingThrows': ["Strength", "Constitution"],
-            'skillChoices': ["Animal Handling", "Athletics", "Intimidation", "Nature",
-                           "Perception", "Survival"],
-            'numSkills': 2
-        },
-        'bard': {
-            'savingThrows': ["Dexterity", "Charisma"],
-            'skillChoices': ["Athletics", "Acrobatics", "Sleight of Hand", "Stealth",
-                           "Arcana", "History", "Investigation", "Nature", "Religion",
-                           "Animal Handling", "Insight", "Medicine", "Perception", "Survival",
-                           "Deception", "Intimidation", "Performance", "Persuasion"],
-            'numSkills': 3
-        },
-        'druid': {
-            'savingThrows': ["Intelligence", "Wisdom"],
-            'skillChoices': ["Arcana", "Animal Handling", "Insight", "Medicine",
-                           "Nature", "Perception", "Religion", "Survival"],
-            'numSkills': 2
-        },
-        'monk': {
-            'savingThrows': ["Strength", "Dexterity"],
-            'skillChoices': ["Acrobatics", "Athletics", "History", "Insight",
-                           "Religion", "Stealth"],
-            'numSkills': 2
-        },
-        'paladin': {
-            'savingThrows': ["Wisdom", "Charisma"],
-            'skillChoices': ["Athletics", "Insight", "Intimidation", "Medicine",
-                           "Persuasion", "Religion"],
-            'numSkills': 2
-        },
-        'sorcerer': {
-            'savingThrows': ["Constitution", "Charisma"],
-            'skillChoices': ["Arcana", "Deception", "Insight", "Intimidation",
-                           "Persuasion", "Religion"],
-            'numSkills': 2
-        },
-        'warlock': {
-            'savingThrows': ["Wisdom", "Charisma"],
-            'skillChoices': ["Arcana", "Deception", "History", "Intimidation",
-                           "Investigation", "Nature", "Religion"],
-            'numSkills': 2
-        }
+    # Set saving throws based on class (this is standard D&D 5e and doesn't change)
+    saving_throws_by_class = {
+        'fighter': ["Strength", "Constitution"],
+        'wizard': ["Intelligence", "Wisdom"],
+        'rogue': ["Dexterity", "Intelligence"],
+        'cleric': ["Wisdom", "Charisma"],
+        'ranger': ["Strength", "Dexterity"],
+        'barbarian': ["Strength", "Constitution"],
+        'bard': ["Dexterity", "Charisma"],
+        'druid': ["Intelligence", "Wisdom"],
+        'monk': ["Strength", "Dexterity"],
+        'paladin': ["Wisdom", "Charisma"],
+        'sorcerer': ["Constitution", "Charisma"],
+        'warlock': ["Wisdom", "Charisma"]
     }
     
-    # Background skill proficiencies (D&D 5e standard)
-    background_skills = {
-        'Acolyte': ["Insight", "Religion"],
-        'Criminal': ["Deception", "Stealth"],
-        'Folk Hero': ["Animal Handling", "Survival"],
-        'Noble': ["History", "Persuasion"],
-        'Sage': ["Arcana", "History"],
-        'Soldier': ["Athletics", "Intimidation"],
-        'Charlatan': ["Deception", "Sleight of Hand"],
-        'Entertainer': ["Acrobatics", "Performance"],
-        'Guild Artisan': ["Insight", "Persuasion"],
-        'Hermit': ["Medicine", "Religion"]
-    }
-    
-    # Apply class features and saving throws
-    class_info = class_skills.get(class_name, class_skills['fighter'])
-    character_data['savingThrows'] = class_info['savingThrows']
-    
-    # Add background skills automatically
-    bg_skills = background_skills.get(background, [])
-    character_data['skills'].extend(bg_skills)
+    character_data['savingThrows'] = saving_throws_by_class.get(class_name, ["Strength", "Constitution"])
     
     # Class-specific features
     if class_name == 'fighter':
