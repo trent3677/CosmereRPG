@@ -295,5 +295,6 @@ modules/campaign_summaries/
 modules/*/
 !modules/Keep_of_Doom/
 !modules/The_Thornwood_Watch/
-!modules/campaign.json
-!modules/world_registry.json
+# Game state files - should NOT be tracked
+# modules/campaign.json
+# modules/world_registry.json
