@@ -147,15 +147,15 @@
 
         .initiative-item {
             flex-shrink: 0;
-            width: 55px;  /* Bigger square */
-            height: 55px; /* Bigger square */
+            width: 60px;  /* Increased from 55px (10% increase rounded) */
+            height: 60px; /* Increased from 55px (10% increase rounded) */
             border: 2px solid #555;
             background-color: #1e1e1e;
             color: #ccc;
             display: flex;
             align-items: flex-end;  /* Align to bottom */
             justify-content: center;
-            font-size: 10px;  /* Base font size */
+            font-size: 11px;  /* Increased from 10px (10% increase) */
             font-weight: bold;
             text-align: center;
             border-radius: 4px;
@@ -270,16 +270,45 @@
         }
         
         .dice-label {
+            position: relative;
+            text-align: center;
+            margin-bottom: 4px;  /* Reduced from 8px */
+            padding: 5px 0;  /* Reduced from 10px */
+            width: 100%;  /* Ensure full width */
+        }
+        
+        .dice-label::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, 
+                transparent 0%, 
+                #FFA500 10%, 
+                #FFA500 40%, 
+                transparent 40%, 
+                transparent 60%, 
+                #FFA500 60%, 
+                #FFA500 90%, 
+                transparent 100%);
+            z-index: 0;  /* Ensure it's behind the text */
+        }
+        
+        .dice-label-text {
+            position: relative;
+            background: #333;  /* Must match panel-header background */
+            padding: 2px 20px;
             color: #FFA500;
             font-weight: bold;
             font-size: 12px;
-            border-bottom: 2px solid #FFA500;
-            padding-bottom: 2px;
-            padding-left: 150px;  /* Extended 25% more */
-            padding-right: 150px; /* Extended 25% more */
-            margin-bottom: 4px;
             text-transform: uppercase;
             letter-spacing: 1px;
+            border: 1px solid #FFA500;
+            border-radius: 3px;
+            z-index: 1;  /* Ensure it's above the line */
+            display: inline-block;  /* Ensure proper inline display */
         }
         
         .dice-buttons {
@@ -3560,7 +3589,9 @@
                 <!-- Dice Rolling Strip -->
                 <div class="dice-strip-inline">
                     <div class="dice-container">
-                        <span class="dice-label">Quick Rolls</span>
+                        <div class="dice-label">
+                            <span class="dice-label-text">Quick Rolls</span>
+                        </div>
                         <div class="dice-buttons">
                             <button class="dice-button" onclick="rollDice(20)" title="Roll D20">D20</button>
                             <button class="dice-button" onclick="rollDice(12)" title="Roll D12">D12</button>
@@ -4797,26 +4828,113 @@
                     hpText = ` - HP: ${combatant.currentHp}/${combatant.maxHp}`;
                 }
                 
-                // Add special handling for skeleton enemies
-                if (combatant.type === 'enemy' && combatant.name.toLowerCase().includes('skeleton')) {
-                    item.classList.add('skeleton');
+                // Add special handling for enemy monsters with media assets
+                if (combatant.type === 'enemy' && combatant.monsterType) {
+                    // Use the monsterType field for lookup
+                    const monsterType = combatant.monsterType.toLowerCase();
+                    const monsterThumbUrl = `/static/media/monsters/${monsterType}_thumb.jpg`;
+                    const monsterVideoUrl = `/static/media/monsters/${monsterType}_video.mp4`;
                     
-                    // --- START OF HOVER LOGIC ---
+                    // Set thumbnail immediately (no async checking to prevent flicker)
+                    item.style.backgroundImage = `url('${monsterThumbUrl}')`;
+                    item.style.backgroundSize = 'cover';
+                    item.style.backgroundPosition = 'center';
+                    item.style.color = 'white';
+                    item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
+                    item.style.cursor = 'pointer';
+                    
+                    // Add hover for video (assume it exists if thumbnail exists)
                     item.addEventListener('mouseenter', (event) => {
-                        // Clear any previous timer to prevent popups from lingering
                         clearTimeout(hoverTimer);
-                        // Start a new timer for 1 second (1000 milliseconds)
                         hoverTimer = setTimeout(() => {
-                            showVideoPopup(event.currentTarget, '/static/media/videos/skeleton_compressed.mp4');
+                            showVideoPopup(event.currentTarget, monsterVideoUrl);
                         }, 1000);
                     });
                     
                     item.addEventListener('mouseleave', () => {
-                        // When the mouse leaves, cancel the timer and hide the popup immediately
                         clearTimeout(hoverTimer);
                         hideVideoPopup();
                     });
-                    // --- END OF HOVER LOGIC ---
+                    
+                    // Silently validate the thumbnail exists
+                    const thumbImg = new Image();
+                    thumbImg.onerror = () => {
+                        // Remove background if thumbnail doesn't exist
+                        item.style.backgroundImage = '';
+                        item.style.cursor = 'default';
+                    };
+                    thumbImg.src = monsterThumbUrl;
+                }
+                
+                // Add special handling for player characters - set portrait image directly
+                if (combatant.type === 'player') {
+                    // Clean the character name for the filename
+                    const cleanName = combatant.name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                    const portraitUrl = `/static/portraits/${cleanName}.png`;
+                    
+                    // Set the portrait directly (same as skeleton approach)
+                    item.style.backgroundImage = `url('${portraitUrl}')`;
+                    item.style.backgroundSize = 'cover';
+                    item.style.backgroundPosition = 'center';
+                    item.style.color = 'white';
+                    item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
+                    
+                    // Add error handler for missing images
+                    const img = new Image();
+                    img.onerror = () => {
+                        // If portrait doesn't exist, remove the background image
+                        item.style.backgroundImage = '';
+                    };
+                    img.src = portraitUrl;
+                }
+                
+                // Add special handling for NPCs - use class-based portraits from name
+                if (combatant.type === 'npc') {
+                    // Determine portrait based on name keywords (no async lookups)
+                    const nameLower = combatant.name.toLowerCase();
+                    let npcPortraitUrl = '/static/media/class_portraits/default_npc.png';
+                    
+                    // Direct name-based class matching
+                    if (nameLower.includes('ranger')) {
+                        npcPortraitUrl = '/static/media/class_portraits/ranger.png';
+                    } else if (nameLower.includes('scout')) {
+                        // Scouts are typically rogues
+                        npcPortraitUrl = '/static/media/class_portraits/rogue.png';
+                    } else if (nameLower.includes('cleric')) {
+                        npcPortraitUrl = '/static/media/class_portraits/cleric.png';
+                    } else if (nameLower.includes('druid')) {
+                        npcPortraitUrl = '/static/media/class_portraits/druid.png';
+                    } else if (nameLower.includes('paladin')) {
+                        npcPortraitUrl = '/static/media/class_portraits/paladin.png';
+                    } else if (nameLower.includes('rogue')) {
+                        npcPortraitUrl = '/static/media/class_portraits/rogue.png';
+                    } else if (nameLower.includes('fighter')) {
+                        npcPortraitUrl = '/static/media/class_portraits/fighter.png';
+                    } else if (nameLower.includes('barbarian')) {
+                        npcPortraitUrl = '/static/media/class_portraits/barbarian.png';
+                    } else if (nameLower.includes('monk')) {
+                        npcPortraitUrl = '/static/media/class_portraits/monk.png';
+                    } else if (nameLower.includes('bard')) {
+                        npcPortraitUrl = '/static/media/class_portraits/bard.png';
+                    } else if (nameLower.includes('wizard') || nameLower.includes('sorcerer') || 
+                               nameLower.includes('warlock') || nameLower.includes('mage')) {
+                        npcPortraitUrl = '/static/media/class_portraits/wizard.png';
+                    }
+                    
+                    // Set the portrait immediately (no checking, no changing)
+                    item.style.backgroundImage = `url('${npcPortraitUrl}')`;
+                    item.style.backgroundSize = 'cover';
+                    item.style.backgroundPosition = 'center';
+                    item.style.color = 'white';
+                    item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
+                    
+                    // Silently validate it exists
+                    const img = new Image();
+                    img.onerror = () => {
+                        // Fall back to default if class portrait doesn't exist
+                        item.style.backgroundImage = `url('/static/media/class_portraits/default_npc.png')`;
+                    };
+                    img.src = npcPortraitUrl;
                 }
                 
                 // Create text element with dynamic sizing

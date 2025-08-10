@@ -415,6 +415,35 @@ def serve_portrait(filename):
         return send_file(portrait_path, mimetype='image/png')
     return "Not found", 404
 
+@app.route('/get_character_data')
+def get_character_data():
+    """Get character data including class for NPC portraits."""
+    try:
+        from utils.file_operations import safe_read_json
+        
+        character_name = request.args.get('character_name')
+        if not character_name:
+            return jsonify({'error': 'No character name provided'}), 400
+        
+        # Look for character file in characters folder
+        character_path = f'characters/{character_name}.json'
+        character_data = safe_read_json(character_path)
+        
+        if character_data:
+            # Return relevant character data
+            return jsonify({
+                'name': character_data.get('name'),
+                'class': character_data.get('class'),
+                'race': character_data.get('race'),
+                'level': character_data.get('level')
+            })
+        else:
+            return jsonify({'error': 'Character not found'}), 404
+            
+    except Exception as e:
+        error(f"Error getting character data: {e}", exception=e, category="web_interface")
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/upload-portrait', methods=['POST'])
 def upload_portrait():
     """Handle character portrait upload, cropping, and saving."""
@@ -912,7 +941,9 @@ def handle_initiative_data_request():
                 "type": c.get("type"),  # 'player', 'npc', or 'enemy'
                 "initiative": c.get("initiative"),
                 "currentHp": c.get("currentHitPoints"),
-                "maxHp": c.get("maxHitPoints")
+                "maxHp": c.get("maxHitPoints"),
+                "monsterType": c.get("monsterType"),  # For enemy type lookup
+                "class": c.get("class")  # For NPC class lookup
             }
             for c in sorted_combatants
         ]

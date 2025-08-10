@@ -118,6 +118,9 @@ class SaveGameManager:
             # Character data
             "characters/",
             
+            # Character portraits (added for portrait system)
+            "web/static/portraits/",
+            
             # Active encounters - we need to use glob to find these
             # Will be handled separately
         ]
@@ -132,6 +135,7 @@ class SaveGameManager:
                 f"{module_base}/characters/",
                 f"{module_base}/monsters/",
                 f"{module_base}/encounters/",
+                f"{module_base}/portraits/",  # Module-specific portraits
                 # CRITICAL: Include BU files for reset functionality
                 f"{module_base}/areas/*_BU.json",
                 f"{module_base}/*_BU.json",
@@ -223,6 +227,10 @@ class SaveGameManager:
         """Determine if a file should be included in the save"""
         # Convert to forward slashes for consistent pattern matching
         filepath = filepath.replace("\\", "/")
+        
+        # Special case: Always include portrait images
+        if "/portraits/" in filepath and filepath.endswith(".png"):
+            return True
         
         # Check exclusion patterns
         excluded_patterns = self.get_excluded_patterns()
