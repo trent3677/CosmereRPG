@@ -116,7 +116,7 @@
         
         .panel-header {
             background-color: #333;
-            padding: 5px 10px;
+            padding: 5px 10px 12px 10px; /* Increased bottom padding from 5px to 12px */
             font-weight: bold;
             border-bottom: none; /* Removed since we're adding a custom divider */
             display: flex;
@@ -141,6 +141,8 @@
             );
             position: relative;
             box-shadow: 0 0 8px rgba(100, 180, 255, 0.4);
+            margin-top: 8px; /* Add space above the divider */
+            margin-bottom: 4px; /* Small space below the divider */
         }
         
         /* New Combat Round Box Styles */
