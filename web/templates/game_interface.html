@@ -147,20 +147,25 @@
             background-color: #1e1e1e;
             color: #ccc;
             display: flex;
-            align-items: center;
+            align-items: flex-end;  /* Align to bottom */
             justify-content: center;
-            font-size: 11px;  /* Slightly bigger text for larger box */
+            font-size: 10px;  /* Base font size */
             font-weight: bold;
             text-align: center;
             border-radius: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding: 1px;  /* Minimal padding */
+            padding: 2px;  /* Small padding */
             transition: all 0.3s ease;
             cursor: default;
-            word-break: break-word;  /* Allow text to wrap if needed */
-            line-height: 1.2;  /* Tighter line spacing */
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .initiative-item-text {
+            width: 100%;
+            word-wrap: break-word;
+            line-height: 1.1;
+            margin-bottom: 2px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8), -1px -1px 2px rgba(0,0,0,0.8);
         }
 
         /* Color-coding for different types of combatants */
@@ -4611,24 +4616,16 @@
                 item.classList.add('initiative-item', combatant.type);
                 item.dataset.name = combatant.name; // Use a data attribute for easy selection
                 
-                // Display abbreviated name for better fit
+                // Extract monster type from name (e.g., "Skeleton_1" -> "Skeleton")
                 let displayName = combatant.name.replace(/_/g, ' ');
                 
-                // Shorten common enemy names for better display
-                if (displayName.startsWith('Skeleton')) {
-                    displayName = displayName.replace('Skeleton', 'Skel');
-                }
-                
-                // Further abbreviate if name is too long
-                if (displayName.length > 8) {
-                    // Try to use just first name or first part
-                    const parts = displayName.split(' ');
-                    if (parts.length > 1 && parts[0].length <= 6) {
-                        displayName = parts[0];
-                    } else {
-                        // Truncate to 6 chars
-                        displayName = displayName.substring(0, 6);
-                    }
+                // For enemies and NPCs, extract just the creature type (remove numbers)
+                if (combatant.type === 'enemy' || combatant.type === 'npc') {
+                    // Remove trailing numbers and spaces (e.g., "Skeleton 1" -> "Skeleton")
+                    displayName = displayName.replace(/\s*\d+\s*$/, '').trim();
+                    
+                    // For multi-word types, keep them as is for wrapping
+                    // e.g., "Dire Wolf" stays as "Dire Wolf"
                 }
                 
                 // Show HP if available in tooltip
@@ -4659,7 +4656,21 @@
                     // --- END OF HOVER LOGIC ---
                 }
                 
-                item.textContent = displayName;
+                // Create text element with dynamic sizing
+                const textSpan = document.createElement('span');
+                textSpan.classList.add('initiative-item-text');
+                textSpan.textContent = displayName;
+                
+                // Dynamic font sizing based on text length
+                if (displayName.length <= 6) {
+                    textSpan.style.fontSize = '11px';
+                } else if (displayName.length <= 10) {
+                    textSpan.style.fontSize = '9px';
+                } else {
+                    textSpan.style.fontSize = '8px';
+                }
+                
+                item.appendChild(textSpan);
                 item.title = `${combatant.name.replace(/_/g, ' ')} (Initiative: ${combatant.initiative})${hpText}`;
                 container.appendChild(item);
             });
