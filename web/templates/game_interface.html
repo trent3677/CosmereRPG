@@ -5140,6 +5140,13 @@
             
             // Only show party display if not in combat
             if (initiativeContainer.style.display === 'none' || !initiativeContainer.children.length) {
+                // Check if we're hovering or video is playing - if so, skip update
+                const videoPopup = document.getElementById('video-popup');
+                if (isHoveringInitiative || (videoPopup && videoPopup.style.display === 'block')) {
+                    // Either hovering (might show video soon) or video is playing, don't update
+                    return;
+                }
+                
                 partyContainer.innerHTML = ''; // Clear existing content
                 partyContainer.style.display = 'flex'; // Show party display
                 
@@ -5188,14 +5195,20 @@
                         
                         // Check for video on hover
                         item.addEventListener('mouseenter', function() {
+                            isHoveringInitiative = true;  // Prevent refresh while hovering
+                            clearTimeout(hoverTimer);
                             const video = document.createElement('video');
                             video.src = videoUrl;
                             video.onloadedmetadata = () => {
-                                showVideoPopup(item, videoUrl);
+                                hoverTimer = setTimeout(() => {
+                                    showVideoPopup(item, videoUrl);
+                                }, 1000);
                             };
                         });
                         
                         item.addEventListener('mouseleave', function() {
+                            isHoveringInitiative = false;  // Allow refresh after hover ends
+                            clearTimeout(hoverTimer);
                             hideVideoPopup();
                         });
                         
