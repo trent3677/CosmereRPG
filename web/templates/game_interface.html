@@ -1975,16 +1975,21 @@
             border: 2px solid #444;
             border-radius: 4px;
             background-color: #111;
-            overflow: hidden; /* Ensures the image stays within the rounded corners */
+            overflow: hidden;
+            padding: 0; /* Ensure no padding */
+            margin: 0; /* Ensure no margin */
+            display: block; /* Block display to prevent inline spacing */
         }
 
         .character-portrait img {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* This crops the image to fill the square without distortion */
-            object-position: center center; /* Ensures perfect centering when cropped */
-            /* Alternative: Use 'contain' instead of 'cover' to show full image with letterboxing */
-            /* object-fit: contain; */
+            object-fit: cover;
+            object-position: center center;
+            z-index: 1;
         }
 
         .character-portrait .upload-overlay {
@@ -2003,6 +2008,7 @@
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
+            z-index: 2; /* Above the image */
         }
 
         .character-portrait:hover .upload-overlay {
@@ -2010,21 +2016,20 @@
         }
 
         #portrait-upload-input {
-            display: none; /* Hide the ugly default file input */
+            display: none;
         }
         
-        /* This is the new container for the character's text info */
         .character-header-info {
-            flex-grow: 1; /* Allows it to take up the remaining space */
+            flex-grow: 1;
             background-color: #1a1a1a;
             border: 1px solid #444;
             border-radius: 8px;
             padding: 10px;
             display: flex;
             flex-direction: column;
+            height: 150px; /* Match portrait height */
         }
         
-        /* Character Sheet Styling */
         .character-sheet {
             padding: 8px;
             margin: 0;
@@ -2042,12 +2047,10 @@
                 );
         }
         
-        
-        /* MODIFIED */
         .character-details {
             display: flex;
             flex-direction: column;
-            gap: 4px; /* This creates perfect, even spacing between each line */
+            gap: 4px;
             color: #ccc;
             font-size: 16px;
             line-height: 1.2;
@@ -2058,7 +2061,6 @@
             font-weight: bold;
         }
         
-        /* MODIFIED */
         .character-name {
             font-size: 24px;
             font-weight: 600;
@@ -3680,26 +3682,50 @@
             }
         }
         
-        // Handle portrait upload - make it global so it survives DOM recreation
+        // Create a persistent file input that survives DOM refreshes
+        let persistentPortraitInput = null;
+        
+        function getOrCreatePortraitInput() {
+            if (!persistentPortraitInput || !document.body.contains(persistentPortraitInput)) {
+                persistentPortraitInput = document.createElement('input');
+                persistentPortraitInput.type = 'file';
+                persistentPortraitInput.accept = 'image/*';
+                persistentPortraitInput.style.display = 'none';
+                persistentPortraitInput.id = 'persistent-portrait-input';
+                document.body.appendChild(persistentPortraitInput);
+            }
+            return persistentPortraitInput;
+        }
+        
+        // Handle portrait upload - make global for inline event handlers
         window.uploadPortrait = function(characterName) {
-            console.log('uploadPortrait called for:', characterName);
-            const input = document.getElementById('portrait-upload-input');
-            if (!input) {
-                console.error('Portrait upload input not found!');
-                return;
-            }
-            const file = input.files[0];
+            console.log('uploadPortrait triggered for:', characterName);
+            
+            // Use the persistent input instead
+            const input = getOrCreatePortraitInput();
+            
+            // Set up the change handler
+            input.onchange = function() {
+                const file = input.files[0];
+                if (!file) {
+                    console.log("No file selected.");
+                    return;
+                }
+                processPortraitUpload(file, characterName);
+            };
+            
+            // Trigger the file dialog
+            input.click();
+        }
+        
+        function processPortraitUpload(file, characterName) {
 
-            if (!file) {
-                console.log("No file selected.");
-                return;
-            }
-
+            console.log(`Processing upload for ${characterName}: ${file.name}`);
+            
             const formData = new FormData();
             formData.append('portrait', file);
             formData.append('characterName', characterName);
 
-            // Show a system message to the user
             addMessage('game-output', { type: 'system', content: 'Uploading and processing portrait...' });
 
             fetch('/upload-portrait', {
@@ -3711,17 +3737,18 @@
                 if (data.success) {
                     addMessage('game-output', { type: 'system', content: 'Portrait updated successfully!' });
                     
-                    // FIX #1: Reset the file input so it can be used again immediately
-                    input.value = '';
-                    
-                    // FIX #2: Force reload ONLY the image without redrawing the entire character sheet
+                    // Force the image to update by adding a unique timestamp to its URL.
                     const portraitImg = document.getElementById('char-portrait-img');
                     if (portraitImg) {
                         const baseUrl = `/static/portraits/${characterName}.png`;
-                        // Add timestamp to bypass browser cache
-                        portraitImg.src = `${baseUrl}?t=${Date.now()}`;
+                        // Add timestamp only for the upload, not regular refreshes
+                        portraitImg.src = `${baseUrl}?v=${Date.now()}`;
                     }
-                    // No need to reload entire character stats - just the image
+                    
+                    // Reset the persistent input
+                    if (persistentPortraitInput) {
+                        persistentPortraitInput.value = '';
+                    }
                 } else {
                     addMessage('game-output', { type: 'error', content: `Upload failed: ${data.message}` });
                 }
@@ -3731,6 +3758,9 @@
                 addMessage('game-output', { type: 'error', content: 'An error occurred during upload.' });
             });
         }
+        
+        // Also keep as regular function for backwards compatibility
+        const uploadPortrait = window.uploadPortrait;
         
         // Function to request initiative data
         function requestInitiativeData() {
@@ -4263,6 +4293,10 @@
             const scrollableContainer = document.getElementById('stats-tab');
             const scrollPosition = scrollableContainer ? scrollableContainer.scrollTop : 0;
             
+            // Preserve portrait to prevent flickering
+            const existingPortrait = document.querySelector('.character-portrait');
+            let shouldPreservePortrait = !!existingPortrait;
+            
             const container = document.getElementById('stats-content');
             if (!data) {
                 container.innerHTML = '<div class="loading">No character data available</div>';
@@ -4312,10 +4346,10 @@
                         <!-- COLUMN 1: PORTRAIT -->
                         <div class="character-portrait">
                             <img id="char-portrait-img" src="/static/portraits/${normalizedName}.png" onerror="this.onerror=null;this.src='/static/icons/default_portrait.png';">
-                            <label for="portrait-upload-input" class="upload-overlay">
+                            <div class="upload-overlay" onclick="uploadPortrait('${normalizedName}')">
                                 <span>Upload Portrait</span>
-                            </label>
-                            <input type="file" id="portrait-upload-input" accept="image/*" onchange="window.uploadPortrait('${normalizedName}')">
+                            </div>
+                            <!-- Hidden input removed - using persistent input instead -->
                         </div>
                         
                         <!-- COLUMN 2: HEADER INFO BOX -->
@@ -4474,6 +4508,15 @@
 
             html += '</div>'; // close character-sheet
             container.innerHTML = html;
+            
+            // If we had a portrait, restore it to prevent flickering
+            if (shouldPreservePortrait && existingPortrait) {
+                const newPortraitContainer = document.querySelector('.character-portrait');
+                if (newPortraitContainer && existingPortrait) {
+                    // Replace the newly created portrait with the preserved one
+                    newPortraitContainer.parentNode.replaceChild(existingPortrait, newPortraitContainer);
+                }
+            }
             
             // Restore scroll position after updating
             if (scrollableContainer) {

@@ -458,14 +458,21 @@ def upload_portrait():
             
             # Also save to the character's module folder for persistence
             try:
-                from utils.module_path_manager import ModulePathManager
-                manager = ModulePathManager()
-                if manager.current_module:
-                    module_portraits_dir = os.path.join(manager.get_module_dir(), 'portraits')
-                    os.makedirs(module_portraits_dir, exist_ok=True)
-                    module_save_path = os.path.join(module_portraits_dir, save_filename)
-                    img.save(module_save_path, 'PNG')
-                    info(f"PORTRAIT: Also saved to module folder at {module_save_path}")
+                # Get current module from party tracker
+                party_tracker_path = 'party_tracker.json'
+                if os.path.exists(party_tracker_path):
+                    with open(party_tracker_path, 'r', encoding='utf-8') as f:
+                        party_tracker = json.load(f)
+                        current_module = party_tracker.get('module', '').replace(' ', '_')
+                        
+                        if current_module:
+                            from utils.module_path_manager import ModulePathManager
+                            manager = ModulePathManager(current_module)
+                            module_portraits_dir = os.path.join(manager.get_module_dir(), 'portraits')
+                            os.makedirs(module_portraits_dir, exist_ok=True)
+                            module_save_path = os.path.join(module_portraits_dir, save_filename)
+                            img.save(module_save_path, 'PNG')
+                            info(f"PORTRAIT: Also saved to module folder at {module_save_path}")
             except Exception as e:
                 warning(f"PORTRAIT: Could not save to module folder: {e}")
             
