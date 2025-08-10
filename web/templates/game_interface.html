@@ -130,7 +130,7 @@
         .initiative-tracker-container {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 1px;  /* Minimal gap between boxes */
             flex: 1;
             min-width: 0; /* Critical for flexbox to allow shrinking */
             justify-content: flex-start;
@@ -189,6 +189,62 @@
             z-index: 5;
         }
         
+        /* Skeleton-specific initiative item */
+        .initiative-item.skeleton {
+            background-image: url('/static/media/videos/skeleton_thumb.jpg');
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            color: white;
+            text-shadow: 1px 1px 2px black, -1px -1px 2px black;
+        }
+        
+        .initiative-item.skeleton:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+        
+        /* Video popup styles */
+        .video-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .video-popup-content {
+            position: relative;
+            max-width: 80%;
+            max-height: 80%;
+        }
+        
+        .video-close-btn {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            font-size: 36px;
+            color: white;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .video-close-btn:hover {
+            color: #FFA500;
+        }
+        
+        #popup-video {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            border-radius: 8px;
+        }
+        
         /* Dice Rolling Strip - Inline with header */
         .dice-strip-inline {
             display: flex;
@@ -208,8 +264,8 @@
             font-size: 12px;
             border-bottom: 2px solid #FFA500;
             padding-bottom: 2px;
-            padding-left: 30px;  /* Extend underline to left */
-            padding-right: 30px; /* Extend underline to right */
+            padding-left: 120px;  /* Much wider underline */
+            padding-right: 120px; /* Much wider underline */
             margin-bottom: 4px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -3565,6 +3621,22 @@
             socket.emit('request_initiative_data');
         }
         
+        // Video popup functions
+        function openVideoPopup(videoSrc) {
+            const popup = document.getElementById('video-popup');
+            const video = document.getElementById('popup-video');
+            video.src = videoSrc;
+            popup.style.display = 'flex';
+        }
+        
+        function closeVideoPopup() {
+            const popup = document.getElementById('video-popup');
+            const video = document.getElementById('popup-video');
+            video.pause();
+            video.src = '';
+            popup.style.display = 'none';
+        }
+        
         // Auto-scroll to bottom function
         function scrollToBottom(contentElementId) {
             const contentElement = document.getElementById(contentElementId);
@@ -4515,6 +4587,14 @@
                     hpText = ` - HP: ${combatant.currentHp}/${combatant.maxHp}`;
                 }
                 
+                // Add special handling for skeleton enemies
+                if (combatant.type === 'enemy' && combatant.name.toLowerCase().includes('skeleton')) {
+                    item.classList.add('skeleton');
+                    item.onclick = function() {
+                        openVideoPopup('/static/media/videos/skeleton_compressed.mp4');
+                    };
+                }
+                
                 item.textContent = displayName;
                 item.title = `${combatant.name.replace(/_/g, ' ')} (Initiative: ${combatant.initiative})${hpText}`;
                 container.appendChild(item);
@@ -4547,6 +4627,13 @@
             if (connected) {
                 loadCharacterStats();
             }
+            
+            // Close video popup on background click
+            document.getElementById('video-popup').onclick = function(e) {
+                if (e.target === this) {
+                    closeVideoPopup();
+                }
+            };
             
             // Initialize image generation toggle from localStorage
             const imageToggle = document.getElementById('image-generation-toggle');
@@ -5615,5 +5702,16 @@
         }
 
     </script>
+    
+    <!-- Video Popup Modal -->
+    <div id="video-popup" class="video-popup" style="display: none;">
+        <div class="video-popup-content">
+            <span class="video-close-btn" onclick="closeVideoPopup()">×</span>
+            <video id="popup-video" controls autoplay>
+                <source src="" type="video/mp4">
+            </video>
+        </div>
+    </div>
+    
 </body>
 </html>
