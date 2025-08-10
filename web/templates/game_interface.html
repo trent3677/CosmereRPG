@@ -118,12 +118,29 @@
             background-color: #333;
             padding: 5px 10px;
             font-weight: bold;
-            border-bottom: 1px solid #444;
+            border-bottom: none; /* Removed since we're adding a custom divider */
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: nowrap; /* CHANGE: This is the key fix to prevent wrapping */
             gap: 15px;
+        }
+        
+        /* Header Divider Line with Fading Edges */
+        .header-divider-line {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(100, 180, 255, 0.3) 10%,
+                rgba(100, 180, 255, 0.6) 30%,
+                #64B4FF 50%,
+                rgba(100, 180, 255, 0.6) 70%,
+                rgba(100, 180, 255, 0.3) 90%,
+                transparent 100%
+            );
+            position: relative;
+            box-shadow: 0 0 8px rgba(100, 180, 255, 0.4);
         }
         
         /* New Combat Round Box Styles */
@@ -3767,6 +3784,9 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Header Divider Line with Fading Edges -->
+            <div class="header-divider-line"></div>
             
             <!-- Dice Results Area -->
             <div class="dice-results" id="dice-results" style="display: none;"></div>
