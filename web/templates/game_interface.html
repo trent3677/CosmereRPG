@@ -204,49 +204,43 @@
             transform: scale(1.05);
         }
         
-        /* Video popup styles */
+        /* Video popup styles - hover-activated preview */
         .video-popup {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             z-index: 10000;
+            pointer-events: none; /* Allows mouse events to pass through the overlay */
+            
+            /* Control visibility with opacity and a transition */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease-in-out, visibility 0s 0.2s;
         }
-        
+
+        .video-popup.visible {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.2s ease-in-out;
+        }
+
         .video-popup-content {
-            position: relative;
-            max-width: 40%;  /* Reduced from 80% */
-            max-height: 40%; /* Reduced from 80% */
-            border: 3px solid #FFA500;  /* Orange border */
+            position: absolute; /* This will be positioned by JavaScript */
+            width: 350px;
+            border: 3px solid #FFA500;
             border-radius: 8px;
             background: #1a1a1a;
-            padding: 10px;
+            padding: 5px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.7);
         }
-        
-        .video-close-btn {
-            position: absolute;
-            top: 10px;  /* Changed from -40px */
-            right: 10px;  /* Changed from 0 */
-            font-size: 36px;
-            color: white;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        
-        .video-close-btn:hover {
-            color: #FFA500;
-        }
-        
+
         #popup-video {
             width: 100%;
             height: auto;
-            max-height: 80vh;
-            border-radius: 8px;
+            display: block; /* Removes any extra space below the video */
+            border-radius: 5px;
         }
         
         /* Dice Rolling Strip - Inline with header */
@@ -3613,6 +3607,7 @@
         let gameStarted = false;
         let initiativeOrder = []; // Store the ordered list of combatants
         let playerName = '';      // Store the player's name for highlighting
+        let hoverTimer = null;    // For managing hover delay on video preview
         
         // Capitalize first letter of each word function
         function capitalizeWords(str) {
@@ -3620,25 +3615,82 @@
             return str.replace(/\b\w/g, l => l.toUpperCase());
         }
         
+        // Helper function to highlight the current turn in initiative tracker
+        function highlightCurrentTurn() {
+            const items = document.querySelectorAll('.initiative-item');
+            items.forEach(item => item.classList.remove('active'));
+
+            // The input field being enabled is our signal that it's the player's turn.
+            const isPlayerTurn = !document.getElementById('user-input').disabled;
+
+            if (isPlayerTurn && playerName && initiativeOrder.length > 0) {
+                const playerItem = document.querySelector(`.initiative-item[data-name="${playerName}"]`);
+                if (playerItem) {
+                    playerItem.classList.add('active');
+                }
+            }
+        }
+        
         // Function to request initiative data
         function requestInitiativeData() {
             socket.emit('request_initiative_data');
         }
         
-        // Video popup functions
-        function openVideoPopup(videoSrc) {
+        // Video popup functions - hover-activated with requestAnimationFrame
+        function showVideoPopup(targetElement, videoSrc) {
             const popup = document.getElementById('video-popup');
+            const popupContent = popup.querySelector('.video-popup-content');
             const video = document.getElementById('popup-video');
+            
             video.src = videoSrc;
-            popup.style.display = 'flex';
+            popup.classList.add('visible');
+
+            // Use requestAnimationFrame to ensure the element is measurable before positioning.
+            // This is a robust way to wait for the browser to be ready.
+            requestAnimationFrame(() => {
+                const targetRect = targetElement.getBoundingClientRect();
+                const popupRect = popupContent.getBoundingClientRect();
+
+                let top, left;
+
+                // Try to position the popup ABOVE the icon
+                top = targetRect.top - popupRect.height - 10; // 10px margin
+
+                // If it goes off the top of the screen, position it BELOW instead
+                if (top < 10) {
+                    top = targetRect.bottom + 10;
+                }
+
+                // Center it horizontally with the icon
+                left = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2);
+
+                // If it goes off the left or right edges, push it back into view
+                if (left < 10) {
+                    left = 10;
+                } else if (left + popupRect.width > window.innerWidth - 10) {
+                    left = window.innerWidth - popupRect.width - 10;
+                }
+
+                // Apply the final, calculated positions
+                popupContent.style.top = `${top}px`;
+                popupContent.style.left = `${left}px`;
+                
+                video.play().catch(e => console.error("Video autoplay was prevented:", e));
+            });
         }
-        
-        function closeVideoPopup() {
+
+        function hideVideoPopup() {
+            clearTimeout(hoverTimer);
             const popup = document.getElementById('video-popup');
             const video = document.getElementById('popup-video');
-            video.pause();
-            video.src = '';
-            popup.style.display = 'none';
+            
+            popup.classList.remove('visible');
+            
+            // Stop the video after a short delay to prevent it from playing while invisible
+            setTimeout(() => {
+                video.pause();
+                video.src = ''; 
+            }, 200); // This duration matches the CSS transition
         }
         
         // Auto-scroll to bottom function
@@ -3898,18 +3950,8 @@
                 sendButton.disabled = false;
                 input.focus();
             }
-            
-            // Update initiative tracker highlighting
-            const items = document.querySelectorAll('.initiative-item');
-            items.forEach(item => item.classList.remove('active'));
-            
-            // If the game is NOT processing, it's the player's turn. Highlight them.
-            if (!data.is_processing && playerName && initiativeOrder.length > 0) {
-                const playerItem = document.querySelector(`.initiative-item[data-name="${playerName}"]`);
-                if (playerItem) {
-                    playerItem.classList.add('active');
-                }
-            }
+            // This single call now handles all highlighting logic.
+            highlightCurrentTurn();
         });
         
         // User interaction functions
@@ -4598,9 +4640,23 @@
                 // Add special handling for skeleton enemies
                 if (combatant.type === 'enemy' && combatant.name.toLowerCase().includes('skeleton')) {
                     item.classList.add('skeleton');
-                    item.onclick = function() {
-                        openVideoPopup('/static/media/videos/skeleton_compressed.mp4');
-                    };
+                    
+                    // --- START OF HOVER LOGIC ---
+                    item.addEventListener('mouseenter', (event) => {
+                        // Clear any previous timer to prevent popups from lingering
+                        clearTimeout(hoverTimer);
+                        // Start a new timer for 1 second (1000 milliseconds)
+                        hoverTimer = setTimeout(() => {
+                            showVideoPopup(event.currentTarget, '/static/media/videos/skeleton_compressed.mp4');
+                        }, 1000);
+                    });
+                    
+                    item.addEventListener('mouseleave', () => {
+                        // When the mouse leaves, cancel the timer and hide the popup immediately
+                        clearTimeout(hoverTimer);
+                        hideVideoPopup();
+                    });
+                    // --- END OF HOVER LOGIC ---
                 }
                 
                 item.textContent = displayName;
@@ -4608,14 +4664,8 @@
                 container.appendChild(item);
             });
 
-            // After building, check the current game status to highlight the player if it's their turn
-            const input = document.getElementById('user-input');
-            if (!input.disabled && playerName) { // If input is enabled, it's the player's turn
-                const playerItem = document.querySelector(`.initiative-item[data-name="${playerName}"]`);
-                if (playerItem) {
-                    playerItem.classList.add('active');
-                }
-            }
+            // This ensures the highlight is correct as soon as the tracker is drawn.
+            highlightCurrentTurn();
         });
         
         setInterval(() => {
@@ -4635,13 +4685,6 @@
             if (connected) {
                 loadCharacterStats();
             }
-            
-            // Close video popup on background click
-            document.getElementById('video-popup').onclick = function(e) {
-                if (e.target === this) {
-                    closeVideoPopup();
-                }
-            };
             
             // Initialize image generation toggle from localStorage
             const imageToggle = document.getElementById('image-generation-toggle');
@@ -5712,10 +5755,11 @@
     </script>
     
     <!-- Video Popup Modal -->
-    <div id="video-popup" class="video-popup" style="display: none;">
+    <div id="video-popup" class="video-popup">
         <div class="video-popup-content">
-            <span class="video-close-btn" onclick="closeVideoPopup()">×</span>
-            <video id="popup-video" controls autoplay>
+            <!-- The close button is removed, hiding is handled by mouse leave -->
+            <video id="popup-video" autoplay loop muted playsinline>
+                <!-- playsinline helps on mobile browsers -->
                 <source src="" type="video/mp4">
             </video>
         </div>
