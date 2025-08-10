@@ -4888,53 +4888,83 @@
                     img.src = portraitUrl;
                 }
                 
-                // Add special handling for NPCs - use class-based portraits from name
+                // Add special handling for NPCs - determine portrait based on known NPCs
                 if (combatant.type === 'npc') {
-                    // Determine portrait based on name keywords (no async lookups)
+                    // Convert NPC name to filename format (e.g., "Scout Kira" -> "scout_kira")
+                    const npcFilename = combatant.name.toLowerCase().replace(/\s+/g, '_');
                     const nameLower = combatant.name.toLowerCase();
-                    let npcPortraitUrl = '/static/media/class_portraits/default_npc.png';
                     
-                    // Direct name-based class matching
-                    if (nameLower.includes('ranger')) {
-                        npcPortraitUrl = '/static/media/class_portraits/ranger.png';
-                    } else if (nameLower.includes('scout')) {
-                        // Scouts are typically rogues
-                        npcPortraitUrl = '/static/media/class_portraits/rogue.png';
-                    } else if (nameLower.includes('cleric')) {
-                        npcPortraitUrl = '/static/media/class_portraits/cleric.png';
-                    } else if (nameLower.includes('druid')) {
-                        npcPortraitUrl = '/static/media/class_portraits/druid.png';
-                    } else if (nameLower.includes('paladin')) {
-                        npcPortraitUrl = '/static/media/class_portraits/paladin.png';
-                    } else if (nameLower.includes('rogue')) {
-                        npcPortraitUrl = '/static/media/class_portraits/rogue.png';
-                    } else if (nameLower.includes('fighter')) {
-                        npcPortraitUrl = '/static/media/class_portraits/fighter.png';
-                    } else if (nameLower.includes('barbarian')) {
-                        npcPortraitUrl = '/static/media/class_portraits/barbarian.png';
-                    } else if (nameLower.includes('monk')) {
-                        npcPortraitUrl = '/static/media/class_portraits/monk.png';
-                    } else if (nameLower.includes('bard')) {
-                        npcPortraitUrl = '/static/media/class_portraits/bard.png';
-                    } else if (nameLower.includes('wizard') || nameLower.includes('sorcerer') || 
-                               nameLower.includes('warlock') || nameLower.includes('mage')) {
-                        npcPortraitUrl = '/static/media/class_portraits/wizard.png';
+                    // Determine which portrait to use based on known NPCs
+                    let portraitUrl = '/static/media/class_portraits/default_npc.png';
+                    let hasAnimation = false;
+                    
+                    // Known NPCs with custom media (hardcoded for no flicker)
+                    if (npcFilename === 'scout_kira') {
+                        portraitUrl = `/static/media/npcs/scout_kira_thumb.jpg`;
+                        hasAnimation = true;
+                    } else if (npcFilename === 'ranger_thane') {
+                        portraitUrl = `/static/media/npcs/ranger_thane_thumb.jpg`;
+                        hasAnimation = false;
+                    } else {
+                        // Fall back to class-based portraits
+                        if (nameLower.includes('ranger')) {
+                            portraitUrl = '/static/media/class_portraits/ranger.png';
+                        } else if (nameLower.includes('scout')) {
+                            portraitUrl = '/static/media/class_portraits/rogue.png';
+                        } else if (nameLower.includes('cleric')) {
+                            portraitUrl = '/static/media/class_portraits/cleric.png';
+                        } else if (nameLower.includes('druid')) {
+                            portraitUrl = '/static/media/class_portraits/druid.png';
+                        } else if (nameLower.includes('paladin')) {
+                            portraitUrl = '/static/media/class_portraits/paladin.png';
+                        } else if (nameLower.includes('rogue')) {
+                            portraitUrl = '/static/media/class_portraits/rogue.png';
+                        } else if (nameLower.includes('fighter')) {
+                            portraitUrl = '/static/media/class_portraits/fighter.png';
+                        } else if (nameLower.includes('barbarian')) {
+                            portraitUrl = '/static/media/class_portraits/barbarian.png';
+                        } else if (nameLower.includes('monk')) {
+                            portraitUrl = '/static/media/class_portraits/monk.png';
+                        } else if (nameLower.includes('bard')) {
+                            portraitUrl = '/static/media/class_portraits/bard.png';
+                        } else if (nameLower.includes('wizard') || nameLower.includes('sorcerer') || 
+                                   nameLower.includes('warlock') || nameLower.includes('mage')) {
+                            portraitUrl = '/static/media/class_portraits/wizard.png';
+                        }
                     }
                     
-                    // Set the portrait immediately (no checking, no changing)
-                    item.style.backgroundImage = `url('${npcPortraitUrl}')`;
+                    // Set portrait immediately
+                    item.style.backgroundImage = `url('${portraitUrl}')`;
                     item.style.backgroundSize = 'cover';
                     item.style.backgroundPosition = 'center';
                     item.style.color = 'white';
                     item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
                     
-                    // Silently validate it exists
+                    // Add video hover only for NPCs known to have animations
+                    if (hasAnimation) {
+                        item.style.cursor = 'pointer';
+                        const npcVideoUrl = `/static/media/npcs/${npcFilename}_video.mp4`;
+                        item.addEventListener('mouseenter', (event) => {
+                            clearTimeout(hoverTimer);
+                            hoverTimer = setTimeout(() => {
+                                showVideoPopup(event.currentTarget, npcVideoUrl);
+                            }, 1000);
+                        });
+                        item.addEventListener('mouseleave', () => {
+                            clearTimeout(hoverTimer);
+                            hideVideoPopup();
+                        });
+                    } else {
+                        item.style.cursor = 'default';
+                    }
+                    
+                    // Silent validation only
                     const img = new Image();
                     img.onerror = () => {
-                        // Fall back to default if class portrait doesn't exist
+                        // Fall back to default if portrait doesn't exist
                         item.style.backgroundImage = `url('/static/media/class_portraits/default_npc.png')`;
                     };
-                    img.src = npcPortraitUrl;
+                    img.src = portraitUrl;
                 }
                 
                 // Create text element with dynamic sizing
