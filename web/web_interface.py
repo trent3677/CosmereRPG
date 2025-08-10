@@ -52,6 +52,7 @@ from datetime import datetime
 import io
 from contextlib import redirect_stdout, redirect_stderr
 from openai import OpenAI
+from PIL import Image
 
 # Add parent directory to path so we can import from utils, core, etc.
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -400,6 +401,80 @@ def serve_icon(filename):
     if os.path.exists(icon_path):
         return send_file(icon_path, mimetype='image/png')
     return "Not found", 404
+
+@app.route('/static/portraits/<path:filename>')
+def serve_portrait(filename):
+    """Serve character portrait images."""
+    import mimetypes
+    from flask import send_file
+    # Ensure the filename ends with .png for security
+    if not filename.endswith('.png'):
+        return "Not found", 404
+    portrait_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'portraits', filename)
+    if os.path.exists(portrait_path):
+        return send_file(portrait_path, mimetype='image/png')
+    return "Not found", 404
+
+@app.route('/upload-portrait', methods=['POST'])
+def upload_portrait():
+    """Handle character portrait upload, cropping, and saving."""
+    try:
+        if 'portrait' not in request.files:
+            return jsonify({'success': False, 'message': 'No file part'})
+        
+        file = request.files['portrait']
+        character_name = request.form.get('characterName')
+
+        if file.filename == '' or not character_name:
+            return jsonify({'success': False, 'message': 'No selected file or character name'})
+
+        if file:
+            # Create the portraits directory if it doesn't exist
+            portraits_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'portraits')
+            os.makedirs(portraits_dir, exist_ok=True)
+
+            # Open the image with Pillow
+            img = Image.open(file.stream)
+
+            # --- Cropping Logic ---
+            width, height = img.size
+            if width != height:
+                # Find the smaller dimension
+                min_dim = min(width, height)
+                # Calculate coordinates for a center crop
+                left = (width - min_dim) / 2
+                top = (height - min_dim) / 2
+                right = (width + min_dim) / 2
+                bottom = (height + min_dim) / 2
+                img = img.crop((left, top, right, bottom))
+            
+            # Resize to a standard size (e.g., 256x256) for consistency
+            img = img.resize((256, 256), Image.Resampling.LANCZOS)
+
+            # Save the processed image as PNG in web static folder
+            save_filename = f"{character_name}.png"
+            save_path = os.path.join(portraits_dir, save_filename)
+            img.save(save_path, 'PNG')
+            
+            # Also save to the character's module folder for persistence
+            try:
+                from utils.module_path_manager import ModulePathManager
+                manager = ModulePathManager()
+                if manager.current_module:
+                    module_portraits_dir = os.path.join(manager.get_module_dir(), 'portraits')
+                    os.makedirs(module_portraits_dir, exist_ok=True)
+                    module_save_path = os.path.join(module_portraits_dir, save_filename)
+                    img.save(module_save_path, 'PNG')
+                    info(f"PORTRAIT: Also saved to module folder at {module_save_path}")
+            except Exception as e:
+                warning(f"PORTRAIT: Could not save to module folder: {e}")
+            
+            info(f"PORTRAIT: Saved new portrait for {character_name} to {save_path}")
+            return jsonify({'success': True, 'message': 'Portrait uploaded successfully'})
+
+    except Exception as e:
+        error(f"PORTRAIT: Upload failed", exception=e, category="web_interface")
+        return jsonify({'success': False, 'message': str(e)})
 
 @app.route('/spell-data')
 def get_spell_data():

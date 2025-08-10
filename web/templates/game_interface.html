@@ -122,7 +122,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap; /* CHANGE: This is the key fix to prevent wrapping */
             gap: 15px;
         }
         
@@ -130,13 +130,19 @@
         .initiative-tracker-container {
             display: flex;
             align-items: center;
-            gap: 1px;  /* Minimal gap between boxes */
+            gap: 4px;  /* Small gap between boxes for visual separation */
             flex: 1;
             min-width: 0; /* Critical for flexbox to allow shrinking */
             justify-content: flex-start;
             margin: 0 10px;
             overflow-x: auto;
             padding-bottom: 0;  /* Removed bottom padding */
+        }
+        
+        #panel-header-label {
+            flex-shrink: 0; /* Prevents the label from shrinking */
+            white-space: nowrap; /* Prevents text wrapping */
+            margin-right: 15px; /* Space between label and other elements */
         }
 
         .initiative-item {
@@ -252,6 +258,8 @@
         .dice-strip-inline {
             display: flex;
             align-items: center;
+            gap: 8px;
+            flex-shrink: 0; /* ADD THIS: Prevents the dice container from shrinking */
         }
         
         .dice-container {
@@ -1948,6 +1956,74 @@
             margin-bottom: 10px;
         }
         
+        /* Character Sheet Portrait and Top Section */
+        .character-sheet-top {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #666;
+            align-items: center;
+            width: 100%;
+        }
+
+        .character-portrait {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            flex-shrink: 0;
+            border: 2px solid #444;
+            border-radius: 4px;
+            background-color: #111;
+            overflow: hidden; /* Ensures the image stays within the rounded corners */
+        }
+
+        .character-portrait img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* This crops the image to fill the square without distortion */
+            object-position: center center; /* Ensures perfect centering when cropped */
+            /* Alternative: Use 'contain' instead of 'cover' to show full image with letterboxing */
+            /* object-fit: contain; */
+        }
+
+        .character-portrait .upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .character-portrait:hover .upload-overlay {
+            opacity: 1;
+        }
+
+        #portrait-upload-input {
+            display: none; /* Hide the ugly default file input */
+        }
+        
+        /* This is the new container for the character's text info */
+        .character-header-info {
+            flex-grow: 1; /* Allows it to take up the remaining space */
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        
         /* Character Sheet Styling */
         .character-sheet {
             padding: 8px;
@@ -1966,44 +2042,15 @@
                 );
         }
         
-        /* MODIFIED */
-        .character-header {
-            margin: 0;
-            padding: 0 0 3px 0;
-            border-bottom: 2px solid #666;
-        }
         
         /* MODIFIED */
         .character-details {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            flex-direction: column;
+            gap: 4px; /* This creates perfect, even spacing between each line */
             color: #ccc;
             font-size: 16px;
             line-height: 1.2;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        /* ADDED */
-        .character-details > .detail-left > div,
-        .character-details > .detail-right > div {
-            margin-bottom: 2px; /* Small gap between lines in each column */
-            min-height: 1.3em; /* Ensure lines take up similar space for better cross-alignment */
-        }
-        
-        /* ADDED */
-        .character-details > .detail-left > div:last-child,
-        .character-details > .detail-right > div:last-child {
-            margin-bottom: 0; /* No margin for the last line in each column */
-        }
-        
-        .detail-left {
-            flex: 1;
-        }
-        
-        .detail-right {
-            text-align: right;
         }
         
         .orange {
@@ -2013,7 +2060,7 @@
         
         /* MODIFIED */
         .character-name {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 600;
             color: #FFA500;
             text-transform: uppercase;
@@ -2021,12 +2068,9 @@
             font-family: 'Cinzel', Georgia, serif;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             line-height: 1;
-            margin: 0 !important;
-            padding: 0 !important;
-            border: 0;
-            outline: 0;
-            vertical-align: baseline;
-            background: transparent;
+            margin: 0 0 6px 0;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #666;
         }
         
         /* Ability Scores */
@@ -3636,6 +3680,58 @@
             }
         }
         
+        // Handle portrait upload - make it global so it survives DOM recreation
+        window.uploadPortrait = function(characterName) {
+            console.log('uploadPortrait called for:', characterName);
+            const input = document.getElementById('portrait-upload-input');
+            if (!input) {
+                console.error('Portrait upload input not found!');
+                return;
+            }
+            const file = input.files[0];
+
+            if (!file) {
+                console.log("No file selected.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('portrait', file);
+            formData.append('characterName', characterName);
+
+            // Show a system message to the user
+            addMessage('game-output', { type: 'system', content: 'Uploading and processing portrait...' });
+
+            fetch('/upload-portrait', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    addMessage('game-output', { type: 'system', content: 'Portrait updated successfully!' });
+                    
+                    // FIX #1: Reset the file input so it can be used again immediately
+                    input.value = '';
+                    
+                    // FIX #2: Force reload ONLY the image without redrawing the entire character sheet
+                    const portraitImg = document.getElementById('char-portrait-img');
+                    if (portraitImg) {
+                        const baseUrl = `/static/portraits/${characterName}.png`;
+                        // Add timestamp to bypass browser cache
+                        portraitImg.src = `${baseUrl}?t=${Date.now()}`;
+                    }
+                    // No need to reload entire character stats - just the image
+                } else {
+                    addMessage('game-output', { type: 'error', content: `Upload failed: ${data.message}` });
+                }
+            })
+            .catch(error => {
+                console.error('Error uploading portrait:', error);
+                addMessage('game-output', { type: 'error', content: 'An error occurred during upload.' });
+            });
+        }
+        
         // Function to request initiative data
         function requestInitiativeData() {
             socket.emit('request_initiative_data');
@@ -4207,8 +4303,32 @@
             const hpPercent = (data.hitPoints / data.maxHitPoints) * 100;
             let hpClass = '';
             if (hpPercent <= 25) hpClass = 'low'; else if (hpPercent <= 50) hpClass = 'medium';
+            const normalizedName = data.name.toLowerCase().replace(/\s+/g, '_');
             let html = '<div class="character-sheet">';
-            html += `<div class="character-header"><div class="character-name">${data.name}</div><div class="character-details"><div class="detail-left"><div><span class="orange">Level ${data.level}</span> ${data.race} ${data.class}</div><div><span class="orange">Profession:</span> ${data.background || 'Adventurer'} • <span class="orange">Alignment:</span> ${capitalizeWords(data.alignment) || 'Neutral'}</div></div><div class="detail-right"><div><span class="orange">XP:</span> ${data.experience_points} / ${data.exp_required_for_next_level}</div><div><span class="orange">Status:</span> ${capitalizeWords(data.status) || 'Alive'} • <span class="orange">Prof:</span> +${data.proficiencyBonus || 2}</div></div></div></div>`;
+            
+            // --- NEW TWO-COLUMN TOP SECTION ---
+            html += `<div class="character-sheet-top">
+                        
+                        <!-- COLUMN 1: PORTRAIT -->
+                        <div class="character-portrait">
+                            <img id="char-portrait-img" src="/static/portraits/${normalizedName}.png" onerror="this.onerror=null;this.src='/static/icons/default_portrait.png';">
+                            <label for="portrait-upload-input" class="upload-overlay">
+                                <span>Upload Portrait</span>
+                            </label>
+                            <input type="file" id="portrait-upload-input" accept="image/*" onchange="window.uploadPortrait('${normalizedName}')">
+                        </div>
+                        
+                        <!-- COLUMN 2: HEADER INFO BOX -->
+                        <div class="character-header-info">
+                            <div class="character-name">${data.name}</div>
+                            <div class="character-details">
+                                <div><span class="orange">Level ${data.level}</span> ${data.race} ${data.class}</div>
+                                <div><span class="orange">XP:</span> ${data.experience_points} / ${data.exp_required_for_next_level}</div>
+                                <div><span class="orange">Profession:</span> ${data.background || 'Adventurer'}</div>
+                                <div><span class="orange">Alignment:</span> ${capitalizeWords(data.alignment) || 'Neutral'}</div>
+                            </div>
+                        </div>
+                    </div>`;
             if (data.abilities) {
                 html += '<div class="abilities-row">';
                 ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'].forEach(ability => {
@@ -4608,7 +4728,7 @@
             initiativeOrder = response.combatants; // Store the order for later use
             container.style.display = 'flex'; // Show the tracker
             container.innerHTML = ''; // Clear any old items
-            headerLabel.textContent = 'Combat Initiative Order'; // Update label for combat
+            headerLabel.textContent = 'COMBAT:'; // Compact combat indicator
 
             // Loop through the combatants and create a box for each one
             initiativeOrder.forEach(combatant => {
