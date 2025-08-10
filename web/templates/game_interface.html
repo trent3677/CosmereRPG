@@ -174,6 +174,52 @@
             line-height: 1.1;
         }
         
+        /* Adventure/Exploration Box Styles (non-combat) */
+        .adventure-box {
+            flex-shrink: 0;
+            width: 85px;
+            height: 60px;
+            background-color: #1e1e1e;
+            border: 2px solid #555;
+            border-radius: 6px;
+            padding: 4px;
+            margin-right: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.6);
+        }
+        
+        .adventure-box-title {
+            font-family: 'Cinzel', Georgia, serif;
+            font-size: 12px;
+            font-weight: bold;
+            color: #4CAF50; /* Green for exploration */
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+        
+        .adventure-box-separator {
+            width: 80%;
+            height: 1px;
+            background-color: #444;
+            margin: 2px 0;
+        }
+        
+        .adventure-box-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+        
+        .adventure-icon {
+            font-size: 24px;
+            line-height: 1;
+        }
+        
         /* Party Display Styles (non-combat) */
         .party-display-container {
             display: flex;
@@ -3688,6 +3734,15 @@
                     <div id="combat-round-number" class="combat-round-number">1</div>
                 </div>
                 
+                <!-- Adventure/Exploration Box (shown when not in combat) -->
+                <div id="adventure-box" class="adventure-box" style="display: flex;">
+                    <div class="adventure-box-title">EXPLORE</div>
+                    <div class="adventure-box-separator"></div>
+                    <div class="adventure-box-content">
+                        <div id="adventure-icon" class="adventure-icon">🧭</div>
+                    </div>
+                </div>
+                
                 <!-- Party Display Container (shown when not in combat) -->
                 <div id="party-display-container" class="party-display-container"></div>
                 
@@ -4908,18 +4963,19 @@
             const partyContainer = document.getElementById('party-display-container');
             const headerLabel = document.getElementById('panel-header-label');
             const combatRoundBox = document.getElementById('combat-round-box');
+            const adventureBox = document.getElementById('adventure-box');
             const combatRoundNumber = document.getElementById('combat-round-number');
             
             if (!response || !response.active || !response.combatants || response.combatants.length === 0) {
                 container.style.display = 'none'; // Hide tracker if combat is not active
                 partyContainer.style.display = 'flex'; // Show party display when not in combat
                 initiativeOrder = [];
-                // When not in combat, show the label and hide the box
-                headerLabel.style.display = 'inline';
+                // When not in combat, hide combat box and show adventure box
+                headerLabel.style.display = 'none'; // Hide label when showing adventure box
                 if (combatRoundBox) combatRoundBox.style.display = 'none';
+                if (adventureBox) adventureBox.style.display = 'flex';
                 // Request party data to refresh display
                 requestPartyData();
-                headerLabel.innerHTML = 'Game Output';
                 return;
             }
 
@@ -4935,8 +4991,9 @@
             partyContainer.style.display = 'none'; // Hide party display during combat
             container.innerHTML = ''; // Clear any old items
             
-            // When in combat, hide the label, show and update the box
+            // When in combat, hide the adventure box and show combat box
             headerLabel.style.display = 'none';
+            if (adventureBox) adventureBox.style.display = 'none';
             if (combatRoundBox) {
                 combatRoundBox.style.display = 'flex';
                 if (combatRoundNumber) {
