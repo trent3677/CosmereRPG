@@ -2082,8 +2082,9 @@ Player: {initial_prompt_text}"""
            if not fresh_player_data:
                error(f"FAILURE: Failed to load player file: {player_file}", category="file_operations")
            else:
-               # Update conversation history with fresh data (same pattern as NPCs)
-               conversation_history[2]["content"] = f"Player Character:\n{json.dumps(filter_dynamic_fields(fresh_player_data), indent=2)}"
+               # Update conversation history with fresh data using compressed format
+               formatted_player = format_character_for_combat(fresh_player_data, char_type="player")
+               conversation_history[2]["content"] = f"Here's the player character data:\n\n{formatted_player}\n"
        except Exception as e:
            error(f"FAILURE: Failed to reload player file {player_file}", exception=e, category="file_operations")
        
