@@ -266,14 +266,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: -3px;  /* Reduce space at top */
+            margin-top: -6px;  /* Further reduce space at top */
         }
         
         .dice-label {
             position: relative;
             text-align: center;
-            margin-bottom: 4px;  /* Reduced from 8px */
-            padding: 5px 0;  /* Reduced from 10px */
+            margin-bottom: 2px;  /* Further reduced from 4px */
+            padding: 3px 0;  /* Further reduced from 5px */
             width: 100%;  /* Ensure full width */
         }
         
@@ -4796,7 +4796,7 @@
             if (!response || !response.active || !response.combatants || response.combatants.length === 0) {
                 container.style.display = 'none'; // Hide tracker if combat is not active
                 initiativeOrder = [];
-                headerLabel.textContent = 'Game Output'; // Reset label when not in combat
+                headerLabel.innerHTML = 'Game Output'; // Reset label when not in combat
                 return;
             }
 
@@ -4810,7 +4810,11 @@
             initiativeOrder = response.combatants; // Store the order for later use
             container.style.display = 'flex'; // Show the tracker
             container.innerHTML = ''; // Clear any old items
-            headerLabel.textContent = 'COMBAT:'; // Compact combat indicator
+            
+            // Create styled combat header with round number
+            const roundNum = response.round || 1;
+            headerLabel.innerHTML = '<span style="color: #FFA500; text-decoration: underline; font-weight: bold;">COMBAT</span> ' +
+                                   '<span style="color: #4CAF50; font-weight: bold;">ROUND ' + roundNum + '</span>';
 
             // Loop through the combatants and create a box for each one
             initiativeOrder.forEach(combatant => {
