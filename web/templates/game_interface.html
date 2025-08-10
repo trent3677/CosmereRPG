@@ -3690,6 +3690,7 @@
         let initiativeOrder = []; // Store the ordered list of combatants
         let playerName = '';      // Store the player's name for highlighting
         let hoverTimer = null;    // For managing hover delay on video preview
+        let isHoveringInitiative = false; // Track if we're hovering over an initiative item
         
         // Capitalize first letter of each word function
         function capitalizeWords(str) {
@@ -4799,6 +4800,13 @@
                 return;
             }
 
+            // Check if we're hovering or video is playing - if so, skip update
+            const videoPopup = document.getElementById('video-popup');
+            if (isHoveringInitiative || (videoPopup && videoPopup.style.display === 'block')) {
+                // Either hovering (might show video soon) or video is playing, don't update
+                return;
+            }
+
             initiativeOrder = response.combatants; // Store the order for later use
             container.style.display = 'flex'; // Show the tracker
             container.innerHTML = ''; // Clear any old items
@@ -4845,6 +4853,7 @@
                     
                     // Add hover for video (assume it exists if thumbnail exists)
                     item.addEventListener('mouseenter', (event) => {
+                        isHoveringInitiative = true;
                         clearTimeout(hoverTimer);
                         hoverTimer = setTimeout(() => {
                             showVideoPopup(event.currentTarget, monsterVideoUrl);
@@ -4852,6 +4861,7 @@
                     });
                     
                     item.addEventListener('mouseleave', () => {
+                        isHoveringInitiative = false;
                         clearTimeout(hoverTimer);
                         hideVideoPopup();
                     });
@@ -4945,12 +4955,14 @@
                         item.style.cursor = 'pointer';
                         const npcVideoUrl = `/static/media/npcs/${npcFilename}_video.mp4`;
                         item.addEventListener('mouseenter', (event) => {
+                            isHoveringInitiative = true;  // Prevent refresh while hovering
                             clearTimeout(hoverTimer);
                             hoverTimer = setTimeout(() => {
                                 showVideoPopup(event.currentTarget, npcVideoUrl);
                             }, 1000);
                         });
                         item.addEventListener('mouseleave', () => {
+                            isHoveringInitiative = false;  // Allow refresh after hover ends
                             clearTimeout(hoverTimer);
                             hideVideoPopup();
                         });
