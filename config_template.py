@@ -84,8 +84,9 @@ MAX_VALIDATION_RETRIES = 1                              # Retry with full model 
 
 # --- GPT-5 Model Configuration ---
 GPT5_MINI_MODEL = "gpt-5-mini-2025-08-07"              # GPT-5 mini model for testing
-GPT5_FULL_MODEL = "gpt-5-2025-08-07"                   # GPT-5 full model (fallback after failures)
+GPT5_FULL_MODEL = "gpt-5-2025-08-07"                   # GPT-5 full model (kept for compatibility, not used)
 USE_GPT5_MODELS = False                                 # Toggle for GPT-5 models (default: GPT-4.1)
+GPT5_USE_HIGH_REASONING_ON_RETRY = True                # Use high reasoning effort after first failure (instead of model switch)
 
 # --- Web Interface Configuration ---
 WEB_PORT = 8357                                         # Port for the web interface (changed from 5000 for security)

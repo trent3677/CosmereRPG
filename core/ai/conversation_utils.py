@@ -634,7 +634,7 @@ AC: {member_data['armorClass']} | SPD: {member_data['speed']}
 STATUS: {member_data['status']} | CONDITION: {member_data['condition']} | AFFECTED: {', '.join(member_data['condition_affected'])}
 STATS: STR {member_data['abilities']['strength']}, DEX {member_data['abilities']['dexterity']}, CON {member_data['abilities']['constitution']}, INT {member_data['abilities']['intelligence']}, WIS {member_data['abilities']['wisdom']}, CHA {member_data['abilities']['charisma']}
 SAVES: {', '.join(member_data['savingThrows'])}
-SKILLS: {', '.join(f"{skill} +{bonus}" for skill, bonus in member_data['skills'].items())}
+SKILLS: {', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" for skill, bonus in member_data['skills'].items())}
 PROF BONUS: +{member_data['proficiencyBonus']}
 SENSES: {', '.join(f"{sense} {value}" for sense, value in member_data['senses'].items())}
 LANGUAGES: {', '.join(member_data['languages'])}
@@ -705,7 +705,7 @@ AC: {npc_data['armorClass']} | SPD: {npc_data['speed']}
 STATUS: {npc_data['status']} | CONDITION: {npc_data['condition']} | AFFECTED: {', '.join(npc_data['condition_affected'])}
 STATS: STR {npc_data['abilities']['strength']}, DEX {npc_data['abilities']['dexterity']}, CON {npc_data['abilities']['constitution']}, INT {npc_data['abilities']['intelligence']}, WIS {npc_data['abilities']['wisdom']}, CHA {npc_data['abilities']['charisma']}
 SAVES: {', '.join(npc_data['savingThrows'])}
-SKILLS: {', '.join(f"{skill} +{bonus}" for skill, bonus in npc_data['skills'].items())}
+SKILLS: {', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" for skill, bonus in npc_data['skills'].items())}
 PROF BONUS: +{npc_data['proficiencyBonus']}
 SENSES: {', '.join(f"{sense} {value}" for sense, value in npc_data['senses'].items())}
 LANGUAGES: {', '.join(npc_data['languages'])}

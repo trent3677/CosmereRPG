@@ -1780,8 +1780,9 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
        # First, update the player character format
        for i in range(len(conversation_history)):
            msg = conversation_history[i]
-           if msg.get("role") == "system" and "Player Character:" in msg.get("content", "") and "json" in msg.get("content", "").lower():
-               # Found old player format - update it
+           # Check for either old format (with json) or new format (with "Here's the player character data")
+           if msg.get("role") == "system" and ("Player Character:" in msg.get("content", "") or "Here's the player character data:" in msg.get("content", "")):
+               # Found player format - update it to ensure it's current
                print(f"[COMBAT_MANAGER] Updating player character format at index {i}")
                formatted_player = format_character_for_combat(player_info, char_type="player")
                conversation_history[i]["content"] = f"Here's the player character data:\n\n{formatted_player}\n"
@@ -2328,21 +2329,27 @@ Do not narrate or process any actions from the next round in this response. The 
                    debug(f"Could not update status: {e}", category="status")
                
                # Import GPT-5 config
-               from config import USE_GPT5_MODELS, GPT5_MINI_MODEL, GPT5_FULL_MODEL
+               from config import USE_GPT5_MODELS, GPT5_MINI_MODEL, GPT5_USE_HIGH_REASONING_ON_RETRY
                
                if USE_GPT5_MODELS:
-                   # GPT-5: Use mini, fallback to full after 4 failures
-                   if attempt >= 4:
-                       combat_model = GPT5_FULL_MODEL
-                       print(f"DEBUG: [COMBAT] GPT-5 - Switching to FULL model after {attempt} attempts")
-                   else:
-                       combat_model = GPT5_MINI_MODEL
+                   # GPT-5: Always use mini model, but increase reasoning effort after first failure
+                   combat_model = GPT5_MINI_MODEL
                    
-                   print(f"DEBUG: [COMBAT] Using GPT-5 model: {combat_model}")
-                   response = client.chat.completions.create(
-                       model=combat_model,
-                       messages=conversation_history
-                   )
+                   # After first failure, use high reasoning effort
+                   if attempt >= 1 and GPT5_USE_HIGH_REASONING_ON_RETRY:
+                       print(f"DEBUG: [COMBAT] GPT-5 - Using HIGH reasoning effort after {attempt} attempts")
+                       response = client.chat.completions.create(
+                           model=combat_model,
+                           messages=conversation_history,
+                           reasoning={"effort": "high"}
+                       )
+                   else:
+                       # Default is medium reasoning (no need to specify)
+                       print(f"DEBUG: [COMBAT] Using GPT-5 model: {combat_model} (default medium reasoning)")
+                       response = client.chat.completions.create(
+                           model=combat_model,
+                           messages=conversation_history
+                       )
                else:
                    # GPT-4.1: Keep existing temperature escalation
                    temperature_used = get_combat_temperature(encounter_data, validation_attempt=attempt)
