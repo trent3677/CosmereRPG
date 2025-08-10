@@ -890,6 +890,83 @@ def handle_npc_inventory_request(data):
     except Exception as e:
         emit('npc_inventory_response', {'npcName': npc_name, 'data': None, 'error': str(e)})
 
+@socketio.on('request_party_data')
+def handle_party_data_request():
+    """Handle requests for party member display (non-combat)."""
+    try:
+        from utils.file_operations import safe_read_json
+        from utils.module_path_manager import ModulePathManager
+        from updates.update_character_info import normalize_character_name, find_character_file_fuzzy
+        
+        # Load party tracker
+        party_tracker = safe_read_json("party_tracker.json")
+        if not party_tracker:
+            emit('party_data_response', {'members': []})
+            return
+        
+        # Get module info for path resolution
+        current_module = party_tracker.get("module", "").replace(" ", "_")
+        path_manager = ModulePathManager(current_module)
+        
+        party_members = []
+        
+        # Add player first
+        if party_tracker.get('partyMembers') and len(party_tracker['partyMembers']) > 0:
+            player_name = normalize_character_name(party_tracker['partyMembers'][0])
+            
+            # Try to load player data for HP info
+            try:
+                player_file = path_manager.get_character_path(player_name)
+                if os.path.exists(player_file):
+                    player_data = safe_read_json(player_file)
+                    if player_data:
+                        party_members.append({
+                            'name': player_data.get('name', player_name),
+                            'type': 'player',
+                            'currentHp': player_data.get('currentHp', 0),
+                            'maxHp': player_data.get('maxHp', 0)
+                        })
+            except:
+                # Fallback if can't load player data
+                party_members.append({
+                    'name': player_name,
+                    'type': 'player'
+                })
+        
+        # Add NPCs in order
+        for npc_info in party_tracker.get('partyNPCs', []):
+            npc_name = npc_info['name']
+            
+            try:
+                # Use fuzzy matching to find NPC file
+                matched_name = find_character_file_fuzzy(npc_name)
+                if matched_name:
+                    npc_file = path_manager.get_character_path(matched_name)
+                    if os.path.exists(npc_file):
+                        npc_data = safe_read_json(npc_file)
+                        if npc_data:
+                            party_members.append({
+                                'name': npc_data.get('name', npc_name),
+                                'type': 'npc',
+                                'currentHp': npc_data.get('currentHp', 0),
+                                'maxHp': npc_data.get('maxHp', 0)
+                            })
+                            continue
+            except:
+                pass
+            
+            # Fallback if can't load NPC data
+            party_members.append({
+                'name': npc_name,
+                'type': 'npc'
+            })
+        
+        emit('party_data_response', {'members': party_members})
+        
+    except Exception as e:
+        error(f"Failed to get party data: {str(e)}", exception=e, category="web_interface")
+        emit('party_data_response', {'members': []})
+
 @socketio.on('request_initiative_data')
 def handle_initiative_data_request():
     """Handles requests for the current combat initiative order."""

@@ -174,7 +174,20 @@
             line-height: 1.1;
         }
         
-        /* Initiative Tracker Styles */
+        /* Party Display Styles (non-combat) */
+        .party-display-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;  /* Small gap between boxes for visual separation */
+            flex: 1;
+            min-width: 0; /* Critical for flexbox to allow shrinking */
+            justify-content: flex-start;
+            margin: 0 10px 0 0;
+            overflow-x: auto;
+            padding-bottom: 0;
+        }
+        
+        /* Initiative Tracker Styles (combat) */
         .initiative-tracker-container {
             display: flex;
             align-items: center;
@@ -193,6 +206,44 @@
             margin-right: 15px; /* Space between label and other elements */
         }
 
+        /* Party member boxes (non-combat) */
+        .party-member-item {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            border: 2px solid #555;
+            background-color: #1e1e1e;
+            color: #ccc;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 4px;
+            padding: 2px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .party-member-item.player {
+            border-color: #ff9800;  /* Orange for player */
+            box-shadow: 0 0 5px rgba(255, 152, 0, 0.3);
+        }
+        
+        .party-member-item.npc {
+            border-color: #4CAF50;  /* Green for NPCs */
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+        
+        .party-member-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+        }
+        
+        /* Initiative boxes (combat) */
         .initiative-item {
             flex-shrink: 0;
             width: 60px;  /* Increased from 55px (10% increase rounded) */
@@ -3637,7 +3688,10 @@
                     <div id="combat-round-number" class="combat-round-number">1</div>
                 </div>
                 
-                <!-- Initiative Tracker Container -->
+                <!-- Party Display Container (shown when not in combat) -->
+                <div id="party-display-container" class="party-display-container"></div>
+                
+                <!-- Initiative Tracker Container (shown during combat) -->
                 <div id="initiative-tracker-container" class="initiative-tracker-container" style="display: none;"></div>
                 
                 <!-- Dice Rolling Strip -->
@@ -3853,6 +3907,11 @@
             socket.emit('request_initiative_data');
         }
         
+        // Function to request party data
+        function requestPartyData() {
+            socket.emit('request_party_data');
+        }
+        
         // Video popup functions - hover-activated with requestAnimationFrame
         function showVideoPopup(targetElement, videoSrc) {
             const popup = document.getElementById('video-popup');
@@ -4058,6 +4117,7 @@
             document.getElementById('status-indicator').classList.add('connected');
             loadCharacterStats();
             requestPlotData(); // <--- ADD THIS
+            requestPartyData(); // Load party display on connect
         });
         
         socket.on('disconnect', () => {
@@ -4845,16 +4905,20 @@
         // Socket listener for initiative data
         socket.on('initiative_data_response', (response) => {
             const container = document.getElementById('initiative-tracker-container');
+            const partyContainer = document.getElementById('party-display-container');
             const headerLabel = document.getElementById('panel-header-label');
             const combatRoundBox = document.getElementById('combat-round-box');
             const combatRoundNumber = document.getElementById('combat-round-number');
             
             if (!response || !response.active || !response.combatants || response.combatants.length === 0) {
                 container.style.display = 'none'; // Hide tracker if combat is not active
+                partyContainer.style.display = 'flex'; // Show party display when not in combat
                 initiativeOrder = [];
                 // When not in combat, show the label and hide the box
                 headerLabel.style.display = 'inline';
                 if (combatRoundBox) combatRoundBox.style.display = 'none';
+                // Request party data to refresh display
+                requestPartyData();
                 headerLabel.innerHTML = 'Game Output';
                 return;
             }
@@ -4868,6 +4932,7 @@
 
             initiativeOrder = response.combatants; // Store the order for later use
             container.style.display = 'flex'; // Show the tracker
+            partyContainer.style.display = 'none'; // Hide party display during combat
             container.innerHTML = ''; // Clear any old items
             
             // When in combat, hide the label, show and update the box
@@ -5068,9 +5133,152 @@
             highlightCurrentTurn();
         });
         
+        // Socket listener for party data (non-combat display)
+        socket.on('party_data_response', (response) => {
+            const partyContainer = document.getElementById('party-display-container');
+            const initiativeContainer = document.getElementById('initiative-tracker-container');
+            
+            // Only show party display if not in combat
+            if (initiativeContainer.style.display === 'none' || !initiativeContainer.children.length) {
+                partyContainer.innerHTML = ''; // Clear existing content
+                partyContainer.style.display = 'flex'; // Show party display
+                
+                if (!response || !response.members || response.members.length === 0) {
+                    partyContainer.style.display = 'none';
+                    return;
+                }
+                
+                // Create party member boxes
+                response.members.forEach(member => {
+                    const item = document.createElement('div');
+                    item.classList.add('party-member-item', member.type);
+                    item.dataset.name = member.name;
+                    
+                    // Handle player portraits
+                    if (member.type === 'player') {
+                        const cleanName = member.name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                        const portraitUrl = `/static/portraits/${cleanName}.png`;
+                        
+                        item.style.backgroundImage = `url('${portraitUrl}')`;
+                        item.style.backgroundSize = 'cover';
+                        item.style.backgroundPosition = 'center';
+                        item.style.color = 'white';
+                        item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
+                        
+                        // Handle missing portrait
+                        const img = new Image();
+                        img.onerror = () => {
+                            item.style.backgroundImage = '';
+                        };
+                        img.src = portraitUrl;
+                    }
+                    
+                    // Handle NPC portraits and videos
+                    if (member.type === 'npc') {
+                        const npcFilename = member.name.toLowerCase().replace(/\s+/g, '_');
+                        const portraitUrl = `/static/media/npcs/${npcFilename}_thumb.jpg`;
+                        const videoUrl = `/static/media/npcs/${npcFilename}_video.mp4`;
+                        
+                        // Set thumbnail
+                        item.style.backgroundImage = `url('${portraitUrl}')`;
+                        item.style.backgroundSize = 'cover';
+                        item.style.backgroundPosition = 'center';
+                        item.style.color = 'white';
+                        item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
+                        
+                        // Check for video on hover
+                        item.addEventListener('mouseenter', function() {
+                            const video = document.createElement('video');
+                            video.src = videoUrl;
+                            video.onloadedmetadata = () => {
+                                showVideoPopup(item, videoUrl);
+                            };
+                        });
+                        
+                        item.addEventListener('mouseleave', function() {
+                            hideVideoPopup();
+                        });
+                        
+                        // Handle missing thumbnail
+                        const img = new Image();
+                        img.onerror = () => {
+                            // Use class-based fallback
+                            const nameLower = member.name.toLowerCase();
+                            let fallbackPortrait = '/static/media/class_portraits/default_npc.png';
+                            
+                            if (nameLower.includes('ranger')) {
+                                fallbackPortrait = '/static/media/class_portraits/ranger.png';
+                            } else if (nameLower.includes('scout') || nameLower.includes('rogue')) {
+                                fallbackPortrait = '/static/media/class_portraits/rogue.png';
+                            } else if (nameLower.includes('cleric')) {
+                                fallbackPortrait = '/static/media/class_portraits/cleric.png';
+                            }
+                            
+                            item.style.backgroundImage = `url('${fallbackPortrait}')`;
+                        };
+                        img.src = portraitUrl;
+                    }
+                    
+                    // Add name text
+                    const textSpan = document.createElement('span');
+                    textSpan.classList.add('initiative-item-text');
+                    textSpan.textContent = member.name;
+                    
+                    // Dynamic font sizing
+                    if (member.name.length <= 6) {
+                        textSpan.style.fontSize = '11px';
+                    } else if (member.name.length <= 10) {
+                        textSpan.style.fontSize = '9px';
+                    } else {
+                        textSpan.style.fontSize = '8px';
+                    }
+                    
+                    item.appendChild(textSpan);
+                    
+                    // Add tooltip with HP info
+                    let hpText = '';
+                    if (member.currentHp !== undefined && member.maxHp !== undefined) {
+                        hpText = ` - HP: ${member.currentHp}/${member.maxHp}`;
+                    }
+                    item.title = `${member.name}${hpText}`;
+                    
+                    // Add click handler to view character sheet
+                    item.addEventListener('click', function() {
+                        if (member.type === 'player') {
+                            // Switch to character tab
+                            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                            const charTab = Array.from(document.querySelectorAll('.tab-button')).find(btn => btn.textContent === 'Character');
+                            if (charTab) {
+                                charTab.classList.add('active');
+                                document.getElementById('character-tab').classList.add('active');
+                                loadCharacterStats();
+                            }
+                        } else if (member.type === 'npc') {
+                            // Switch to NPCs tab
+                            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                            const npcTab = Array.from(document.querySelectorAll('.tab-button')).find(btn => btn.textContent === 'NPCs');
+                            if (npcTab) {
+                                npcTab.classList.add('active');
+                                document.getElementById('npcs-tab').classList.add('active');
+                                loadNPCs();
+                            }
+                        }
+                    });
+                    
+                    partyContainer.appendChild(item);
+                });
+            } else {
+                // Hide party display during combat
+                partyContainer.style.display = 'none';
+            }
+        });
+        
         setInterval(() => {
             loadLocationData();
             requestInitiativeData(); // Refresh initiative tracker periodically
+            requestPartyData(); // Refresh party display periodically
             const activeTab = document.querySelector('.tab-button.active')?.textContent.toLowerCase();
             if (activeTab === 'inventory') loadInventory();
             else if (activeTab === 'character') loadCharacterStats();
@@ -5082,6 +5290,7 @@
             document.getElementById('user-input').focus();
             loadLocationData();
             requestInitiativeData(); // Load initiative tracker on page load
+            requestPartyData(); // Load party display on page load
             if (connected) {
                 loadCharacterStats();
             }
