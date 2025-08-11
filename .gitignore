@@ -110,6 +110,12 @@ test_objectives.json
 !web/static/media/monsters/*.mp4
 !web/static/media/class_portraits/*.png
 
+# Original uncompressed animation files (keep local only)
+*_animation.mp4
+
+# Generated monster portraits (AI-generated images, keep local only)
+monster_portraits/
+
 # OS files
 .DS_Store
 Thumbs.db
