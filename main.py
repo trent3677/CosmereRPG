@@ -81,77 +81,6 @@ from datetime import datetime, timedelta
 from termcolor import colored
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-# ============================================================================
-# CONFIG AUTO-PATCHING SYSTEM
-# This must run before ANY other local imports to prevent ImportError
-# ============================================================================
-def patch_config():
-    """Auto-patch config.py with missing values from config_template.py"""
-    if not os.path.exists('config.py'):
-        print("WARNING: config.py not found. Please copy config_template.py to config.py and add your API key.")
-        return False
-    
-    if not os.path.exists('config_template.py'):
-        print("WARNING: config_template.py not found. Cannot auto-patch config.")
-        return False
-    
-    # Import config module
-    import config
-    
-    # Parse config_template.py to get all default values
-    with open('config_template.py', 'r') as f:
-        template_content = f.read()
-    
-    patched_count = 0
-    # Extract all VARIABLE = value pairs from template
-    for line in template_content.split('\n'):
-        # Match lines like: VARIABLE_NAME = value
-        match = re.match(r'^([A-Z_]+)\s*=\s*(.+)$', line.strip())
-        if match and match.group(1) != 'OPENAI_API_KEY':
-            var_name = match.group(1)
-            var_value_str = match.group(2).strip()
-            
-            # Check if this variable is missing from config
-            if not hasattr(config, var_name):
-                try:
-                    # Safely evaluate the value
-                    # Handle common Python literals
-                    if var_value_str in ('True', 'False', 'None'):
-                        value = eval(var_value_str)
-                    elif var_value_str.startswith('"') or var_value_str.startswith("'"):
-                        # String value - evaluate it
-                        value = eval(var_value_str)
-                    elif var_value_str.isdigit() or (var_value_str[0] == '-' and var_value_str[1:].isdigit()):
-                        # Integer
-                        value = int(var_value_str)
-                    elif '.' in var_value_str:
-                        # Try float
-                        try:
-                            value = float(var_value_str)
-                        except:
-                            value = eval(var_value_str)
-                    else:
-                        # Try to evaluate as-is (for complex expressions)
-                        value = eval(var_value_str)
-                    
-                    # Add to config module
-                    setattr(config, var_name, value)
-                    if patched_count == 0:
-                        print("\n[Config Auto-Patch] Adding missing config values:")
-                    print(f"  + {var_name} = {value}")
-                    patched_count += 1
-                except Exception as e:
-                    # Skip values we can't evaluate (shouldn't happen with our template)
-                    pass
-    
-    if patched_count > 0:
-        print(f"[Config Auto-Patch] Successfully added {patched_count} missing config values.\n")
-    
-    return True
-
-# Run the config patcher BEFORE any other local imports
-patch_config()
-
 # Import encoding utilities
 from utils.encoding_utils import (
     sanitize_text,
@@ -162,7 +91,7 @@ from utils.encoding_utils import (
     setup_utf8_console
 )
 
-# Import other necessary modules
+# Import other necessary modules (config is now patched)
 from core.managers.combat_manager import run_combat_simulation
 from updates.plot_update import update_plot
 from utils.player_stats import get_player_stat
