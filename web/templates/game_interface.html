@@ -243,18 +243,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.85;
             z-index: 0;
         }
         
         .adventure-box-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6));
-            z-index: 1;
+            display: none; /* Removed overlay */
         }
         
         .adventure-box-title, .adventure-box-separator, .adventure-icon {
@@ -3788,7 +3781,6 @@
                 <!-- Adventure/Exploration Box (shown when not in combat) -->
                 <div id="adventure-box" class="adventure-box" style="display: flex;">
                     <img id="time-background" class="time-image" src="/static/media/environment/midday.jpg" alt="">
-                    <div class="adventure-box-overlay"></div>
                 </div>
                 
                 <!-- Party Display Container (shown when not in combat) -->
