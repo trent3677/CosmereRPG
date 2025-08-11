@@ -1585,8 +1585,14 @@ def get_ai_response(conversation_history, validation_retry_count=0):
     
     # Import action predictor and config
     from utils.action_predictor import predict_actions_required, extract_actual_actions, log_prediction_accuracy
-    from config import ENABLE_INTELLIGENT_ROUTING, DM_MINI_MODEL, DM_FULL_MODEL, MAX_VALIDATION_RETRIES
-    from config import USE_GPT5_MODELS, GPT5_MINI_MODEL, GPT5_FULL_MODEL
+    import config
+    ENABLE_INTELLIGENT_ROUTING = getattr(config, 'ENABLE_INTELLIGENT_ROUTING', True)
+    DM_MINI_MODEL = getattr(config, 'DM_MINI_MODEL', 'gpt-4.1-mini-2025-04-14')
+    DM_FULL_MODEL = getattr(config, 'DM_FULL_MODEL', 'gpt-4.1-2025-04-14')
+    MAX_VALIDATION_RETRIES = getattr(config, 'MAX_VALIDATION_RETRIES', 1)
+    USE_GPT5_MODELS = getattr(config, 'USE_GPT5_MODELS', False)
+    GPT5_MINI_MODEL = getattr(config, 'GPT5_MINI_MODEL', 'gpt-5-mini-2025-08-07')
+    GPT5_FULL_MODEL = getattr(config, 'GPT5_FULL_MODEL', 'gpt-5-2025-08-07')
     
     # Get the last user message for action prediction
     user_input = ""

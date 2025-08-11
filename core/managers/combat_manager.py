@@ -1910,8 +1910,10 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
        try:
            print("[COMBAT_MANAGER] Getting re-engagement narration from AI...")
            # Use base temperature for re-engagement (no validation failures)
-           # Import GPT-5 config
-           from config import USE_GPT5_MODELS, GPT5_MINI_MODEL
+           # Safe import of GPT-5 config (may not exist in older configs)
+           import config
+           USE_GPT5_MODELS = getattr(config, 'USE_GPT5_MODELS', False)
+           GPT5_MINI_MODEL = getattr(config, 'GPT5_MINI_MODEL', 'gpt-5-mini-2025-08-07')
            
            if USE_GPT5_MODELS:
                # GPT-5: Use mini model for re-engagement
@@ -2329,8 +2331,11 @@ Do not narrate or process any actions from the next round in this response. The 
                except Exception as e:
                    debug(f"Could not update status: {e}", category="status")
                
-               # Import GPT-5 config
-               from config import USE_GPT5_MODELS, GPT5_MINI_MODEL, GPT5_USE_HIGH_REASONING_ON_RETRY
+               # Safe import of GPT-5 config (may not exist in older configs)
+               import config
+               USE_GPT5_MODELS = getattr(config, 'USE_GPT5_MODELS', False)
+               GPT5_MINI_MODEL = getattr(config, 'GPT5_MINI_MODEL', 'gpt-5-mini-2025-08-07')
+               GPT5_USE_HIGH_REASONING_ON_RETRY = getattr(config, 'GPT5_USE_HIGH_REASONING_ON_RETRY', True)
                
                if USE_GPT5_MODELS:
                    # GPT-5: Always use mini model, but increase reasoning effort after first failure
