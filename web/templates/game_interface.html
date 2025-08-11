@@ -197,20 +197,18 @@
         /* Adventure/Exploration Box Styles (non-combat) */
         .adventure-box {
             flex-shrink: 0;
-            width: 85px;
+            width: 60px;
             height: 60px;
             background-color: #1e1e1e;
             border: 2px solid #555;
             position: relative;
             overflow: hidden;
             border-radius: 6px;
-            padding: 4px;
+            padding: 0;
             margin-right: 15px;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
             box-shadow: inset 0 0 8px rgba(0,0,0,0.6);
         }
         
@@ -245,7 +243,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.7;
+            opacity: 0.85;
             z-index: 0;
         }
         
@@ -3791,11 +3789,6 @@
                 <div id="adventure-box" class="adventure-box" style="display: flex;">
                     <img id="time-background" class="time-image" src="/static/media/environment/midday.jpg" alt="">
                     <div class="adventure-box-overlay"></div>
-                    <div class="adventure-box-title">EXPLORE</div>
-                    <div class="adventure-box-separator"></div>
-                    <div class="adventure-box-content">
-                        <div id="adventure-icon" class="adventure-icon">🧭</div>
-                    </div>
                 </div>
                 
                 <!-- Party Display Container (shown when not in combat) -->
