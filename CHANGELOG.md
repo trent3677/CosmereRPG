@@ -5,6 +5,64 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2025-08-11
+
+### Major UI and Media Update
+
+This release brings significant improvements to the user interface, combat experience, and visual feedback systems.
+
+#### Added
+- **Combat Initiative Tracker**: Visual real-time combat tracker with animated portraits
+  - Hover-activated video previews for monsters and NPCs
+  - Dynamic HP display with color-coded health status
+  - Automatic round tracking
+  - Support for 30+ monster animations
+
+- **Party Display System**: Persistent party member display outside combat
+  - Real-time HP tracking for all party members
+  - Character portraits with class-based defaults
+  - NPC companion tracking
+
+- **Time-of-Day System**: Dynamic environment visualization
+  - Four time periods (sunrise, midday, sunset, nightfall)
+  - Automatic image updates based on in-game time
+  - Clean 60x60 adventure box display
+
+- **Media Assets**: Comprehensive animation library
+  - 30+ compressed monster video animations
+  - NPC character animations
+  - Thumbnail generation for all creatures
+  - Class-based portrait defaults
+
+- **Token Usage Tracking**: OpenAI API monitoring
+  - Real-time tokens per minute (TPM) display
+  - Requests per minute (RPM) tracking
+  - Total token consumption monitoring
+
+#### Changed
+- **Skill System Refactor**: Improved skill handling with backward compatibility
+  - Skills now stored as arrays for better AI interaction
+  - Automatic proficiency bonus calculations
+  - Support for both legacy and new formats
+
+- **Combat Flow**: Fixed turn fragmentation issues
+  - Improved prompt system for seamless multi-turn processing
+  - Better handling of NPC and monster turns
+  - Clearer player turn prompts
+
+#### Fixed
+- Video reset issues during 5-second refresh cycles
+- Vertical scrollbar problems in initiative tracker
+- Portrait upload and positioning system
+- Combat conversation compression for character formatting
+- Saving throws layout optimization
+
+#### Technical
+- Added comprehensive video compression utility
+- Improved .gitignore for proper media tracking
+- GPT-5 model integration with reasoning effort levels
+- Enhanced file organization and import patterns
+
 ## [0.1.0] - 2025-01-20
 
 ### Initial Alpha Release
