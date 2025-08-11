@@ -32,8 +32,6 @@ import os
 import time
 
 def main():
-    # First, run the config updater to ensure config.py is up to date
-    from utils.config_updater import update_config
     import shutil
     
     # Check if config.py exists first
@@ -61,11 +59,6 @@ def main():
             print("Please manually copy config_template.py to config.py")
             input("\nPress Enter to exit...")
             return
-    
-    # Run config updater to sync with template (preserves API key)
-    print("[Config Check] Checking for config updates...")
-    update_config()
-    print("")  # Blank line for spacing
     
     # Initialize all required directories
     required_dirs = [
