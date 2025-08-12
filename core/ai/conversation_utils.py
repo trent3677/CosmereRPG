@@ -634,7 +634,7 @@ AC: {member_data['armorClass']} | SPD: {member_data['speed']}
 STATUS: {member_data['status']} | CONDITION: {member_data['condition']} | AFFECTED: {', '.join(member_data['condition_affected'])}
 STATS: STR {member_data['abilities']['strength']}, DEX {member_data['abilities']['dexterity']}, CON {member_data['abilities']['constitution']}, INT {member_data['abilities']['intelligence']}, WIS {member_data['abilities']['wisdom']}, CHA {member_data['abilities']['charisma']}
 SAVES: {', '.join(member_data['savingThrows'])}
-SKILLS: {', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" for skill, bonus in member_data['skills'].items())}
+SKILLS: {', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" for skill, bonus in member_data['skills'].items()) if isinstance(member_data['skills'], dict) else ', '.join(member_data['skills'])}
 PROF BONUS: +{member_data['proficiencyBonus']}
 SENSES: {', '.join(f"{sense} {value}" for sense, value in member_data['senses'].items())}
 LANGUAGES: {', '.join(member_data['languages'])}
