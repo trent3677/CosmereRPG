@@ -1230,6 +1230,45 @@ def format_character_for_combat(char_data, char_type="player", role=None):
         header = f"NPC: {char_data.get('name', 'Unknown')}"
         type_line = f"ROLE: {role if role else 'Adventurer'} | TYPE: {char_data.get('character_type', 'npc').capitalize()}"
     
+    # Calculate skill modifiers for display
+    skills_display = ""
+    skills_field = char_data.get('skills', {})
+    if isinstance(skills_field, dict):
+        # Legacy format - use pre-calculated values
+        skills_display = ', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" 
+                                 for skill, bonus in skills_field.items())
+    elif isinstance(skills_field, list):
+        # Array format - calculate modifiers for proficient skills
+        skill_abilities = {
+            'Acrobatics': 'dexterity', 'Animal Handling': 'wisdom', 
+            'Arcana': 'intelligence', 'Athletics': 'strength',
+            'Deception': 'charisma', 'History': 'intelligence',
+            'Insight': 'wisdom', 'Intimidation': 'charisma',
+            'Investigation': 'intelligence', 'Medicine': 'wisdom',
+            'Nature': 'intelligence', 'Perception': 'wisdom',
+            'Performance': 'charisma', 'Persuasion': 'charisma',
+            'Religion': 'intelligence', 'Sleight of Hand': 'dexterity',
+            'Stealth': 'dexterity', 'Survival': 'wisdom'
+        }
+        
+        skill_displays = []
+        abilities = char_data.get('abilities', {})
+        prof_bonus = char_data.get('proficiencyBonus', 2)
+        
+        for skill in skills_field:
+            if skill in skill_abilities:
+                ability_name = skill_abilities[skill]
+                ability_score = abilities.get(ability_name, 10)
+                ability_mod = (ability_score - 10) // 2
+                modifier = ability_mod + prof_bonus
+                if modifier >= 0:
+                    skill_displays.append(f"{skill} +{modifier}")
+                else:
+                    skill_displays.append(f"{skill} {modifier}")
+        skills_display = ', '.join(skill_displays) if skill_displays else 'none'
+    else:
+        skills_display = 'none'
+    
     # Build the formatted string (exactly matching conversation_utils format)
     formatted_data = f"""{header}
 {type_line} | LVL: {char_data.get('level', 1)} | RACE: {char_data.get('race', 'Unknown')} | CLASS: {char_data.get('class', 'Unknown')} | ALIGN: {char_data.get('alignment', 'neutral')[:2].upper()} | BG: {char_data.get('background', 'None')}
@@ -1237,7 +1276,7 @@ AC: {char_data.get('armorClass', 10)} | SPD: {char_data.get('speed', 30)}
 STATUS: {char_data.get('status', 'alive')} | CONDITION: {char_data.get('condition', 'none')} | AFFECTED: {', '.join(char_data.get('condition_affected', []))}
 STATS: STR {char_data.get('abilities', {}).get('strength', 10)}, DEX {char_data.get('abilities', {}).get('dexterity', 10)}, CON {char_data.get('abilities', {}).get('constitution', 10)}, INT {char_data.get('abilities', {}).get('intelligence', 10)}, WIS {char_data.get('abilities', {}).get('wisdom', 10)}, CHA {char_data.get('abilities', {}).get('charisma', 10)}
 SAVES: {', '.join(char_data.get('savingThrows', []))}
-SKILLS: {', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" for skill, bonus in char_data.get('skills', {}).items())}
+SKILLS: {skills_display}
 PROF BONUS: +{char_data.get('proficiencyBonus', 2)}
 SENSES: {', '.join(f"{sense} {value}" for sense, value in char_data.get('senses', {}).items())}
 LANGUAGES: {', '.join(char_data.get('languages', ['Common']))}
@@ -1319,6 +1358,45 @@ def format_npc_for_combat(npc_data, npc_role=None):
     if bg_feature and isinstance(bg_feature, dict):
         bg_feature_name = bg_feature.get('name', 'None')
     
+    # Calculate skill modifiers for NPC display
+    npc_skills_display = ""
+    skills_field = npc_data.get('skills', {})
+    if isinstance(skills_field, dict):
+        # NPCs typically use dict format with pre-calculated values
+        npc_skills_display = ', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" 
+                                     for skill, bonus in skills_field.items())
+    elif isinstance(skills_field, list):
+        # In case NPCs use array format, calculate modifiers
+        skill_abilities = {
+            'Acrobatics': 'dexterity', 'Animal Handling': 'wisdom', 
+            'Arcana': 'intelligence', 'Athletics': 'strength',
+            'Deception': 'charisma', 'History': 'intelligence',
+            'Insight': 'wisdom', 'Intimidation': 'charisma',
+            'Investigation': 'intelligence', 'Medicine': 'wisdom',
+            'Nature': 'intelligence', 'Perception': 'wisdom',
+            'Performance': 'charisma', 'Persuasion': 'charisma',
+            'Religion': 'intelligence', 'Sleight of Hand': 'dexterity',
+            'Stealth': 'dexterity', 'Survival': 'wisdom'
+        }
+        
+        skill_displays = []
+        abilities = npc_data.get('abilities', {})
+        prof_bonus = npc_data.get('proficiencyBonus', 2)
+        
+        for skill in skills_field:
+            if skill in skill_abilities:
+                ability_name = skill_abilities[skill]
+                ability_score = abilities.get(ability_name, 10)
+                ability_mod = (ability_score - 10) // 2
+                modifier = ability_mod + prof_bonus
+                if modifier >= 0:
+                    skill_displays.append(f"{skill} +{modifier}")
+                else:
+                    skill_displays.append(f"{skill} {modifier}")
+        npc_skills_display = ', '.join(skill_displays) if skill_displays else 'none'
+    else:
+        npc_skills_display = 'none'
+    
     # Build the formatted string (exactly matching conversation_utils format)
     formatted_data = f"""NPC: {npc_data.get('name', 'Unknown')}
 ROLE: {npc_role if npc_role else 'Adventurer'} | TYPE: {npc_data.get('character_type', 'npc').capitalize()} | LVL: {npc_data.get('level', 1)} | RACE: {npc_data.get('race', 'Unknown')} | CLASS: {npc_data.get('class', 'Unknown')} | ALIGN: {npc_data.get('alignment', 'neutral')[:2].upper()} | BG: {npc_data.get('background', 'None')}
@@ -1326,7 +1404,7 @@ AC: {npc_data.get('armorClass', 10)} | SPD: {npc_data.get('speed', 30)}
 STATUS: {npc_data.get('status', 'alive')} | CONDITION: {npc_data.get('condition', 'none')} | AFFECTED: {', '.join(npc_data.get('condition_affected', []))}
 STATS: STR {npc_data.get('abilities', {}).get('strength', 10)}, DEX {npc_data.get('abilities', {}).get('dexterity', 10)}, CON {npc_data.get('abilities', {}).get('constitution', 10)}, INT {npc_data.get('abilities', {}).get('intelligence', 10)}, WIS {npc_data.get('abilities', {}).get('wisdom', 10)}, CHA {npc_data.get('abilities', {}).get('charisma', 10)}
 SAVES: {', '.join(npc_data.get('savingThrows', []))}
-SKILLS: {', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" for skill, bonus in npc_data.get('skills', {}).items())}
+SKILLS: {npc_skills_display}
 PROF BONUS: +{npc_data.get('proficiencyBonus', 2)}
 SENSES: {', '.join(f"{sense} {value}" for sense, value in npc_data.get('senses', {}).items())}
 LANGUAGES: {', '.join(npc_data.get('languages', ['Common']))}

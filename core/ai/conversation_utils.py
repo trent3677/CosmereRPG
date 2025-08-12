@@ -626,6 +626,39 @@ def update_character_data(conversation_history, party_tracker_data):
                         bg_feature_name = bg_feature['name']
                     
                     
+                    # Calculate skill modifiers for display
+                    skills_display = ""
+                    if isinstance(member_data['skills'], dict):
+                        # Legacy format - use pre-calculated values
+                        skills_display = ', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" 
+                                                 for skill, bonus in member_data['skills'].items())
+                    else:
+                        # Array format - calculate modifiers for proficient skills
+                        skill_abilities = {
+                            'Acrobatics': 'dexterity', 'Animal Handling': 'wisdom', 
+                            'Arcana': 'intelligence', 'Athletics': 'strength',
+                            'Deception': 'charisma', 'History': 'intelligence',
+                            'Insight': 'wisdom', 'Intimidation': 'charisma',
+                            'Investigation': 'intelligence', 'Medicine': 'wisdom',
+                            'Nature': 'intelligence', 'Perception': 'wisdom',
+                            'Performance': 'charisma', 'Persuasion': 'charisma',
+                            'Religion': 'intelligence', 'Sleight of Hand': 'dexterity',
+                            'Stealth': 'dexterity', 'Survival': 'wisdom'
+                        }
+                        
+                        skill_displays = []
+                        for skill in member_data.get('skills', []):
+                            if skill in skill_abilities:
+                                ability_name = skill_abilities[skill]
+                                ability_score = member_data['abilities'].get(ability_name, 10)
+                                ability_mod = (ability_score - 10) // 2
+                                modifier = ability_mod + member_data['proficiencyBonus']
+                                if modifier >= 0:
+                                    skill_displays.append(f"{skill} +{modifier}")
+                                else:
+                                    skill_displays.append(f"{skill} {modifier}")
+                        skills_display = ', '.join(skill_displays) if skill_displays else 'none'
+                    
                     # Format character data
                     formatted_data = f"""
 CHAR: {member_data['name']}
@@ -634,7 +667,7 @@ AC: {member_data['armorClass']} | SPD: {member_data['speed']}
 STATUS: {member_data['status']} | CONDITION: {member_data['condition']} | AFFECTED: {', '.join(member_data['condition_affected'])}
 STATS: STR {member_data['abilities']['strength']}, DEX {member_data['abilities']['dexterity']}, CON {member_data['abilities']['constitution']}, INT {member_data['abilities']['intelligence']}, WIS {member_data['abilities']['wisdom']}, CHA {member_data['abilities']['charisma']}
 SAVES: {', '.join(member_data['savingThrows'])}
-SKILLS: {', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" for skill, bonus in member_data['skills'].items()) if isinstance(member_data['skills'], dict) else ', '.join(member_data['skills'])}
+SKILLS: {skills_display}
 PROF BONUS: +{member_data['proficiencyBonus']}
 SENSES: {', '.join(f"{sense} {value}" for sense, value in member_data['senses'].items())}
 LANGUAGES: {', '.join(member_data['languages'])}
@@ -696,6 +729,40 @@ FLAWS: {member_data['flaws']}
                     if isinstance(bg_feature, dict) and 'name' in bg_feature:
                         bg_feature_name = bg_feature['name']
 
+                    # Calculate skill modifiers for NPC display
+                    npc_skills_display = ""
+                    if isinstance(npc_data.get('skills', {}), dict):
+                        # NPCs typically use dict format with pre-calculated values
+                        npc_skills_display = ', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" 
+                                                     for skill, bonus in npc_data['skills'].items())
+                    elif isinstance(npc_data.get('skills', []), list):
+                        # In case NPCs use array format, calculate modifiers
+                        skill_abilities = {
+                            'Acrobatics': 'dexterity', 'Animal Handling': 'wisdom', 
+                            'Arcana': 'intelligence', 'Athletics': 'strength',
+                            'Deception': 'charisma', 'History': 'intelligence',
+                            'Insight': 'wisdom', 'Intimidation': 'charisma',
+                            'Investigation': 'intelligence', 'Medicine': 'wisdom',
+                            'Nature': 'intelligence', 'Perception': 'wisdom',
+                            'Performance': 'charisma', 'Persuasion': 'charisma',
+                            'Religion': 'intelligence', 'Sleight of Hand': 'dexterity',
+                            'Stealth': 'dexterity', 'Survival': 'wisdom'
+                        }
+                        
+                        skill_displays = []
+                        for skill in npc_data.get('skills', []):
+                            if skill in skill_abilities:
+                                ability_name = skill_abilities[skill]
+                                ability_score = npc_data['abilities'].get(ability_name, 10)
+                                ability_mod = (ability_score - 10) // 2
+                                modifier = ability_mod + npc_data.get('proficiencyBonus', 2)
+                                if modifier >= 0:
+                                    skill_displays.append(f"{skill} +{modifier}")
+                                else:
+                                    skill_displays.append(f"{skill} {modifier}")
+                        npc_skills_display = ', '.join(skill_displays) if skill_displays else 'none'
+                    else:
+                        npc_skills_display = 'none'
 
                     # Format NPC data (using same schema as players)
                     formatted_data = f"""
@@ -705,7 +772,7 @@ AC: {npc_data['armorClass']} | SPD: {npc_data['speed']}
 STATUS: {npc_data['status']} | CONDITION: {npc_data['condition']} | AFFECTED: {', '.join(npc_data['condition_affected'])}
 STATS: STR {npc_data['abilities']['strength']}, DEX {npc_data['abilities']['dexterity']}, CON {npc_data['abilities']['constitution']}, INT {npc_data['abilities']['intelligence']}, WIS {npc_data['abilities']['wisdom']}, CHA {npc_data['abilities']['charisma']}
 SAVES: {', '.join(npc_data['savingThrows'])}
-SKILLS: {', '.join(f"{skill} +{bonus}" if bonus >= 0 else f"{skill} {bonus}" for skill, bonus in npc_data['skills'].items())}
+SKILLS: {npc_skills_display}
 PROF BONUS: +{npc_data['proficiencyBonus']}
 SENSES: {', '.join(f"{sense} {value}" for sense, value in npc_data['senses'].items())}
 LANGUAGES: {', '.join(npc_data['languages'])}
