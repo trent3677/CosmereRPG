@@ -40,7 +40,7 @@ NeverEndingQuest solves the fundamental challenge of AI memory constraints throu
 3. **Launch the game**: `python run_web.py` - opens the web interface in your browser
 4. **Start your adventure**: The AI will guide you through character creation and module selection
 
-> **Note**: While a console mode exists (`python main.py`), the game is designed for the **web interface** which provides the optimal experience with real-time updates, character sheets, and enhanced UI.
+> **Note**: The game is designed for the **web interface** which provides the optimal experience with real-time updates, character sheets, and enhanced UI.
 
 ## 📄 **Licensing**
 

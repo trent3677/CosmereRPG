@@ -91,6 +91,14 @@ from utils.encoding_utils import (
     setup_utf8_console
 )
 
+# Import token tracking
+try:
+    from utils.openai_usage_tracker import track_response
+    USAGE_TRACKING_AVAILABLE = True
+except:
+    USAGE_TRACKING_AVAILABLE = False
+    def track_response(r): pass
+
 # Import other necessary modules (config is now patched)
 from core.managers.combat_manager import run_combat_simulation
 from updates.plot_update import update_plot
@@ -306,6 +314,14 @@ def generate_arrival_narration(departure_narration, party_tracker_data, conversa
             temperature=TEMPERATURE,
             messages=narration_request_messages
         )
+        
+        # Track token usage
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(response)
+            except:
+                pass
+        
         arrival_text = response.choices[0].message.content.strip()
         
         # Sometimes the AI will still wrap its response in a JSON object. We need to handle that.
@@ -368,6 +384,14 @@ Now, provide the rewritten, seamless narration.
                 {"role": "user", "content": stitching_prompt}
             ]
         )
+        
+        # Track token usage
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(response)
+            except:
+                pass
+        
         seamless_narration = response.choices[0].message.content.strip()
         debug("SUCCESS: Seamless narration generated successfully.", category="narrative_generation")
         return sanitize_text(seamless_narration)
@@ -756,6 +780,13 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
             temperature=TEMPERATURE,
             messages=validation_conversation
         )
+        
+        # Track token usage
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(validation_result)
+            except:
+                pass
 
         validation_response = validation_result.choices[0].message.content.strip()
 
@@ -1153,6 +1184,13 @@ Write a compelling chronicle of these actual events:"""
                     ],
                     temperature=0.7
                 )
+                
+                # Track token usage
+                if USAGE_TRACKING_AVAILABLE:
+                    try:
+                        track_response(response)
+                    except:
+                        pass
                 
                 ai_summary = response.choices[0].message.content.strip()
                 formatted_summary = f"=== MODULE SUMMARY ===\n\n{module_name}:\n------------------------------\n{ai_summary}"
@@ -1639,6 +1677,13 @@ def get_ai_response(conversation_history, validation_retry_count=0):
             model=selected_model,
             messages=conversation_history
         )
+        
+        # Track token usage
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(response)
+            except:
+                pass
     else:
         # GPT-4.1: Use existing logic with temperature
         print(f"DEBUG: [MAIN.PY] Using GPT-4.1 model: {selected_model}")
@@ -1647,6 +1692,13 @@ def get_ai_response(conversation_history, validation_retry_count=0):
             temperature=TEMPERATURE,
             messages=conversation_history
         )
+        
+        # Track token usage
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(response)
+            except:
+                pass
     content = response.choices[0].message.content.strip()
     
     # Extract actual actions from the response for accuracy tracking (only on initial attempt)

@@ -70,6 +70,14 @@ from utils.location_path_finder import LocationGraph
 from core.ai.conversation_utils import handle_module_conversation_segmentation
 from utils.enhanced_logger import debug, info, warning, error, set_script_name
 
+# Import token tracking
+try:
+    from utils.openai_usage_tracker import track_response
+    USAGE_TRACKING_AVAILABLE = True
+except:
+    USAGE_TRACKING_AVAILABLE = False
+    def track_response(r): pass
+
 # Set script name for logging
 set_script_name("action_handler")
 
@@ -370,6 +378,13 @@ Determine the most logical starting location based on adventure flow, area types
             ],
             temperature=0.1
         )
+        
+        # Track token usage
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(response)
+            except:
+                pass
         
         ai_response = response.choices[0].message.content.strip()
         debug(f"AI_CALL: Starting location analysis response: {ai_response}", category="ai_operations")
@@ -1734,6 +1749,13 @@ Remember: This is a background NPC management action, not party NPC management."
             ],
             temperature=0.7  # As specified by user
         )
+        
+        # Track token usage
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(response)
+            except:
+                pass
         
         ai_response = response.choices[0].message.content.strip()
         debug(f"AI_CALL: Movement decision response: {ai_response}", category="ai_operations")
