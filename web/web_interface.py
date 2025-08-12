@@ -1365,10 +1365,12 @@ def run_game_loop():
         except Exception:
             pass
     except Exception as e:
-        # Handle other errors
+        # Handle other errors with more detail
+        import traceback
         error_msg = f"Game error: {str(e)}"
         try:
             print(f"Game loop error: {error_msg}")
+            print(f"Traceback: {traceback.format_exc()}")
         except Exception:
             pass
         

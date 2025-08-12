@@ -19,6 +19,11 @@ def format_plot_for_ai(plot_data):
     Returns:
         str: Formatted plot status text for AI consumption
     """
+    # Handle case where plot_data might be a list or other non-dict type
+    if not isinstance(plot_data, dict):
+        print(f"WARNING: plot_data is not a dict, it's a {type(plot_data)}: {plot_data}")
+        return "=== ADVENTURE PLOT STATUS ===\n\nNo plot data available.\n"
+    
     if not plot_data or 'plotPoints' not in plot_data:
         return "=== ADVENTURE PLOT STATUS ===\n\nNo plot data available.\n"
     
