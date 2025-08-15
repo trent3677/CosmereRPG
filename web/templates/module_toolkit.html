@@ -213,7 +213,7 @@
 
         .pack-table-header, .pack-table-row {
             display: grid;
-            grid-template-columns: 60px 2fr 1fr 1fr; /* Defines our 4 columns */
+            grid-template-columns: 60px 1fr 200px 250px; /* Defines our 4 columns with better sizing */
             align-items: center;
             gap: 20px;
             padding: 10px 20px;
@@ -227,6 +227,15 @@
             border-bottom: 2px solid #444;
             padding-bottom: 15px;
             margin-bottom: 5px;
+        }
+
+        /* ADD these new rules for alignment */
+        .pack-table-header .pack-table-cell:nth-child(1),
+        .pack-table-header .pack-table-cell:nth-child(3) { /* Aligns 'Active' and 'Stats' headers to the center */
+            text-align: center;
+        }
+        .pack-table-header .pack-table-cell:nth-child(4) { /* Aligns 'Actions' header to the right */
+            text-align: right;
         }
 
         .pack-table-row {
@@ -300,6 +309,7 @@
         .pack-stats-cell {
             display: flex;
             gap: 20px;
+            justify-content: center; /* This will center the stats blocks */
         }
 
         .pack-stats-cell .stat {
@@ -972,12 +982,12 @@
                     <div class="column-left">
                         <div class="section">
                             <h2>Available Asset Packs</h2>
-                            <!-- ADD THIS HEADER STRUCTURE -->
+                            <!-- HEADER STRUCTURE -->
                             <div class="pack-table-header">
-                                <div class="pack-table-cell" style="text-align: center;">Active</div>
+                                <div class="pack-table-cell">Active</div>
                                 <div class="pack-table-cell">Pack Information</div>
                                 <div class="pack-table-cell">Stats</div>
-                                <div class="pack-table-cell" style="text-align: right;">Actions</div>
+                                <div class="pack-table-cell">Actions</div>
                             </div>
                             <!-- Note the class change here from pack-grid to pack-table -->
                             <div class="pack-table" id="packGrid">
@@ -1232,7 +1242,7 @@
                         >
                     </div>
                     <div class="pack-table-cell">
-                        <div class="pack-name">${pack.display_name || pack.name} ${isDefault ? '(Default)' : ''}</div>
+                        <div class="pack-name">${pack.display_name || pack.name}</div>
                         <div class="pack-meta">
                             Author: ${author} | Style: ${style} | Version: ${pack.version || '1.0.0'}
                         </div>
