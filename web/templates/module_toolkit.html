@@ -262,41 +262,23 @@
             justify-content: flex-end;
         }
 
-        /* Custom styling for the radio button */
-        .pack-list-cell input[type="radio"] {
-            appearance: none;
-            -webkit-appearance: none;
+        /* Custom styling for the active status indicator */
+        .pack-status-indicator {
             width: 22px;
             height: 22px;
             border: 2px solid #555;
             border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: grid;
-            place-content: center;
             margin: 0 auto;
+            transition: all 0.3s ease;
+            transform: scale(0.8); /* Make inactive ones slightly smaller */
+            background-color: transparent;
         }
 
-        .pack-list-cell input[type="radio"]:hover {
+        .pack-status-indicator.active {
             border-color: #4CAF50;
-        }
-
-        .pack-list-cell input[type="radio"]::before {
-            content: '';
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
             background-color: #4CAF50;
-            transform: scale(0);
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .pack-list-cell input[type="radio"]:checked {
-            border-color: #4CAF50;
-        }
-
-        .pack-list-cell input[type="radio"]:checked::before {
             transform: scale(1);
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
         }
 
         .pack-name-cell {
@@ -521,44 +503,6 @@
             margin-left: 15px;
         }
 
-        /* === 10. Modal Styling === */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-        }
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background-color: #2c2c2c;
-            border: 2px solid #444;
-            border-radius: 8px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        .modal-header h2 {
-            font-family: 'Cinzel', serif;
-            color: #4CAF50;
-        }
-        .modal-body { margin: 20px 0; }
-        .modal-footer {
-            margin-top: 20px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-        
         /* === 11. Status Indicator === */
         .status-indicator {
             display: inline-block;
@@ -1743,22 +1687,6 @@
         </div>
     </div>
     
-    <!-- Modal for confirmations -->
-    <div class="modal" id="confirmModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Confirm Action</h2>
-            </div>
-            <div class="modal-body">
-                <p id="modalMessage">Are you sure?</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-danger" id="modalConfirm">Confirm</button>
-            </div>
-        </div>
-    </div>
-    
     <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
     <script>
         // Socket.IO connection
@@ -1771,7 +1699,7 @@
         let videoQueue = [];
         let activePack = null;
         let fileToImport = null; // To hold the selected file
-        let isInitialLoad = true; // Flag to prevent confirmation on initial load
+        // Removed isInitialLoad flag - no longer needed with new event listener approach
         
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -1808,10 +1736,6 @@
                 availablePacks = await response.json();
                 renderPacks();
                 updatePackSelectors();
-                // After initial render, allow confirmations
-                setTimeout(() => {
-                    isInitialLoad = false;
-                }, 100);
             } catch (error) {
                 console.error('Failed to load packs:', error);
             }
@@ -1831,17 +1755,11 @@
                 const style = pack.style || pack.style_template || 'custom';
                 const isDefault = pack.name === 'photorealistic';
                 
-                // --- NEW 5-COLUMN, SINGLE-ROW HTML STRUCTURE ---
+                // --- NEW HTML STRUCTURE WITH BUTTONS ---
                 row.innerHTML = `
                     <div class="pack-list-cell">
-                        <input 
-                            type="radio" 
-                            name="active_pack_selector" 
-                            value="${pack.name}" 
-                            ${pack.is_active ? 'checked' : ''}
-                            onchange="showPackConfirmation('${pack.name}')"
-                            title="Set as active pack"
-                        >
+                        <!-- Replaced radio button with a non-interactive status indicator -->
+                        <div class="pack-status-indicator ${pack.is_active ? 'active' : ''}" title="${pack.is_active ? 'Currently Active' : 'Inactive'}"></div>
                     </div>
                     <div class="pack-list-cell pack-name-cell">
                         ${pack.display_name || pack.name}
@@ -1860,6 +1778,11 @@
                         </div>
                     </div>
                     <div class="pack-list-cell pack-actions-cell">
+                        <!-- Show Activate button only if pack is NOT active -->
+                        ${!pack.is_active
+                            ? `<button class="btn btn-success" onclick="showPackConfirmation('${pack.name}')">Activate</button>`
+                            : ''
+                        }
                         <button class="btn btn-secondary" onclick="exportPack('${pack.name}')">Export</button>
                         ${(!isDefault && !pack.is_active) ? 
                             `<button class="btn btn-danger" onclick="deletePack('${pack.name}')">Delete</button>` :
@@ -1923,14 +1846,8 @@
         
         // Global variables for pack confirmation
         let pendingPackActivation = null;
-        let previousRadioValue = null;
 
         function showPackConfirmation(packName) {
-            // Don't show confirmation if this is the initial load
-            if (isInitialLoad) {
-                return;
-            }
-            
             // Don't show confirmation if the pack is already active
             const currentPack = availablePacks.find(p => p.is_active);
             if (currentPack && currentPack.name === packName) {
@@ -1960,25 +1877,6 @@
         function cancelPackActivation() {
             // Hide modal
             document.getElementById('pack-confirm-modal').style.display = 'none';
-            
-            // Reset radio button to previous state
-            if (pendingPackActivation) {
-                // Find and uncheck the pending radio
-                const radio = document.querySelector(`input[name="active_pack_selector"][value="${pendingPackActivation}"]`);
-                if (radio) {
-                    radio.checked = false;
-                }
-                
-                // Re-check the currently active pack
-                const currentPack = availablePacks.find(p => p.is_active);
-                if (currentPack) {
-                    const activeRadio = document.querySelector(`input[name="active_pack_selector"][value="${currentPack.name}"]`);
-                    if (activeRadio) {
-                        activeRadio.checked = true;
-                    }
-                }
-            }
-            
             pendingPackActivation = null;
         }
 
@@ -2010,12 +1908,10 @@
                     loadPacks();
                 } else {
                     alert(`Failed to activate pack: ${result.error}`);
-                    cancelPackActivation(); // Reset radio buttons
                 }
             } catch (error) {
                 console.error('Failed to activate pack:', error);
                 alert('Failed to activate pack. Please check the console for details.');
-                cancelPackActivation(); // Reset radio buttons
             }
             
             pendingPackActivation = null;
@@ -2062,24 +1958,24 @@
         }
         
         async function deletePack(packName) {
-            if (!confirm(`Are you sure you want to delete the pack "${packName}"?`)) {
-                return;
-            }
-            
-            try {
-                const response = await fetch(`/api/toolkit/packs/${packName}`, {
-                    method: 'DELETE'
-                });
-                
-                const result = await response.json();
-                if (result.success) {
-                    addLog('genLog', `Deleted pack: ${packName}`, 'success');
-                    loadPacks();
-                } else {
-                    alert(`Failed to delete pack: ${result.error}`);
+            // This uses the standard browser confirmation dialog, which is guaranteed to work.
+            if (confirm(`Are you sure you want to permanently delete the pack "${packName}"? This action cannot be undone.`)) {
+                try {
+                    const response = await fetch(`/api/toolkit/packs/${packName}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    const result = await response.json();
+                    if (result.success) {
+                        addLog('genLog', `Deleted pack: ${packName}`, 'success');
+                        loadPacks();
+                    } else {
+                        alert(`Failed to delete pack: ${result.error}`);
+                    }
+                } catch (error) {
+                    console.error('Failed to delete pack:', error);
+                    alert('An error occurred while trying to delete the pack.');
                 }
-            } catch (error) {
-                console.error('Failed to delete pack:', error);
             }
         }
         
@@ -2622,10 +2518,6 @@
             container.scrollTop = container.scrollHeight;
         }
         
-        function closeModal() {
-            document.getElementById('confirmModal').classList.remove('active');
-        }
-
         // Media Popup Functions
         function showMediaPopup(event) {
             console.log('showMediaPopup called');

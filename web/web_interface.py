@@ -2110,6 +2110,135 @@ def open_browser():
     webbrowser.open(f'http://localhost:{port}')
 
 
+# ============================================================================
+# MODULE BUILDER SOCKET HANDLERS
+# ============================================================================
+
+# In-memory state for the build process to handle cancellation
+build_process_thread = None
+cancel_build_flag = threading.Event()
+
+@socketio.on('request_module_list')
+def handle_request_module_list():
+    """Scans the modules directory and returns a list of existing modules."""
+    try:
+        from utils.file_operations import safe_read_json
+        modules_dir = 'modules'
+        if not os.path.exists(modules_dir):
+            emit('module_list_response', [])
+            return
+
+        module_list = []
+        for item in os.listdir(modules_dir):
+            item_path = os.path.join(modules_dir, item)
+            if os.path.isdir(item_path):
+                # Try to get more details from a manifest or plot file
+                manifest_path = os.path.join(item_path, f"{item}_manifest.json")
+                plot_path = os.path.join(item_path, f"module_plot_{item}.json")
+                
+                module_data = {'moduleName': item}
+                
+                if os.path.exists(manifest_path):
+                    manifest = safe_read_json(manifest_path)
+                    if manifest:
+                        module_data['levelRange'] = manifest.get('level_range', {})
+                        module_data['areaCount'] = manifest.get('area_count')
+                        module_data['locationCount'] = manifest.get('location_count')
+                
+                if os.path.exists(plot_path):
+                    plot = safe_read_json(plot_path)
+                    if plot:
+                        module_data['plotPointCount'] = len(plot.get('plotPoints', []))
+
+                module_list.append(module_data)
+        
+        emit('module_list_response', module_list)
+    except Exception as e:
+        error(f"Error fetching module list: {e}")
+        emit('module_list_response', [])
+
+def simulate_build_process(params):
+    """A target function for a thread that simulates module creation."""
+    global cancel_build_flag
+    cancel_build_flag.clear()
+
+    stages = [
+        (0, "Initializing", "Starting module creation..."),
+        (1, "Base Structure", "Generating core module files..."),
+        (2, "NPCs", "Creating unique NPCs and factions..."),
+        (3, "Monsters", "Populating bestiary for the module..."),
+        (4, "Areas", "Designing distinct areas and environments..."),
+        (5, "Plots", "Weaving main and side quests..."),
+        (6, "Connections", "Building the location graph..."),
+        (7, "Finalizing", "Compiling all module data..."),
+        (8, "Saving", "Saving module to disk..."),
+    ]
+    total_stages = len(stages)
+
+    try:
+        for i, (stage_num, stage_name, message) in enumerate(stages):
+            if cancel_build_flag.is_set():
+                socketio.emit('build_cancelled', {'message': 'Build cancelled by user.'})
+                return
+
+            percentage = ((i + 1) / total_stages) * 100
+            socketio.emit('module_progress', {
+                'stage': stage_num,
+                'stage_name': stage_name,
+                'percentage': percentage,
+                'message': message
+            })
+            time.sleep(2) # Simulate work
+
+        # Simulate creating the folder
+        module_dir = os.path.join('modules', params['module_name'])
+        os.makedirs(module_dir, exist_ok=True)
+        # Create a dummy manifest
+        dummy_manifest = {
+            "name": params['module_name'],
+            "display_name": params['module_name'].replace('_', ' ').title(),
+            "description": params['narrative'][:150] + '...',
+            "level_range": {"min": 1, "max": 5},
+            "area_count": params['num_areas'],
+            "location_count": params['num_areas'] * params['locations_per_area']
+        }
+        with open(os.path.join(module_dir, f"{params['module_name']}_manifest.json"), 'w') as f:
+            json.dump(dummy_manifest, f, indent=4)
+
+        socketio.emit('module_complete', {
+            'module_name': params['module_name'],
+            'message': 'Module generation finished.'
+        })
+
+    except Exception as e:
+        error(f"Module build failed: {e}")
+        socketio.emit('module_error', {'error': str(e)})
+
+
+@socketio.on('start_build')
+def handle_start_build(data):
+    """Starts the module build process in a background thread."""
+    global build_process_thread
+    if build_process_thread and build_process_thread.is_alive():
+        emit('module_error', {'error': 'A build is already in progress.'})
+        return
+
+    info(f"Starting build for module: {data.get('module_name')}")
+    emit('build_started', {'message': 'Build process initiated...'})
+    
+    build_process_thread = threading.Thread(target=simulate_build_process, args=(data,))
+    build_process_thread.start()
+
+@socketio.on('cancel_build')
+def handle_cancel_build():
+    """Sets a flag to cancel the ongoing build process."""
+    global cancel_build_flag
+    if build_process_thread and build_process_thread.is_alive():
+        info("Cancellation request received for module build.")
+        cancel_build_flag.set()
+    else:
+        emit('module_error', {'error': 'No active build to cancel.'})
+
 if __name__ == '__main__':
     # Create templates directory if it doesn't exist
     os.makedirs('templates', exist_ok=True)
