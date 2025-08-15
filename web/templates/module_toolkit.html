@@ -1778,10 +1778,10 @@
                         </div>
                     </div>
                     <div class="pack-list-cell pack-actions-cell">
-                        <!-- Show Activate button only if pack is NOT active -->
-                        ${!pack.is_active
-                            ? `<button class="btn btn-success" onclick="showPackConfirmation('${pack.name}')">Activate</button>`
-                            : ''
+                        <!-- THIS IS THE CORRECTED LOGIC -->
+                        ${pack.is_active 
+                            ? `<button class="btn btn-secondary" disabled>Active</button>`
+                            : `<button class="btn btn-success" onclick="showPackConfirmation('${pack.name}')">Activate</button>`
                         }
                         <button class="btn btn-secondary" onclick="exportPack('${pack.name}')">Export</button>
                         ${(!isDefault && !pack.is_active) ? 
