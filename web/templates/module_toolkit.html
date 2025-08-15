@@ -1205,7 +1205,7 @@
                 const card = document.createElement('div');
                 card.className = `pack-card ${pack.is_active ? 'active' : ''}`;
                 
-                const monsterCount = pack.total_monsters || pack.monsters || 0;
+                const monsterCount = pack.total_monsters || pack.monsters_count || 0;
                 const videoCount = pack.total_videos || 0;
                 const author = pack.author || 'Unknown';
                 const style = pack.style || pack.style_template || 'custom';

@@ -411,7 +411,7 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                         "style_template": manifest.get("style_template", manifest.get("style", "unknown")),
                         "total_monsters": manifest.get("total_monsters", len(manifest.get("monsters", {}))),
                         "total_videos": manifest.get("total_videos", 0),
-                        "monsters": manifest.get("monsters", {}),
+                        "monsters_count": len(manifest.get("monsters", {})),
                         "size_mb": round(pack_size, 2),
                         "created": manifest.get("created_at", manifest.get("created_date", "Unknown")),
                         "is_active": pack_dir.name == self.active_pack
