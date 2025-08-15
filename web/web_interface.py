@@ -54,6 +54,7 @@ import time
 import webbrowser
 from datetime import datetime
 import io
+import zipfile
 from contextlib import redirect_stdout, redirect_stderr
 from openai import OpenAI
 from PIL import Image
@@ -585,13 +586,16 @@ def create_pack():
 
 @app.route('/api/toolkit/packs/<pack_name>/activate', methods=['POST'])
 def activate_pack(pack_name):
-    """Activate a graphic pack"""
+    """Activate a graphic pack with optional backup"""
     if not TOOLKIT_AVAILABLE:
         return jsonify({'success': False, 'error': 'Toolkit not available'})
     
     try:
+        # Check if backup should be created
+        create_backup = request.json.get('create_backup', False) if request.json else False
+        
         manager = PackManager()
-        result = manager.activate_pack(pack_name)
+        result = manager.activate_pack(pack_name, create_backup=create_backup)
         return jsonify(result)
     except Exception as e:
         error(f"TOOLKIT: Failed to activate pack: {e}")
@@ -644,6 +648,39 @@ def delete_pack(pack_name):
         error(f"TOOLKIT: Failed to delete pack: {e}")
         return jsonify({'success': False, 'error': str(e)})
 
+@app.route('/api/toolkit/packs/preview', methods=['POST'])
+def preview_pack():
+    """Reads the manifest from a ZIP file without saving it."""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    if 'pack' not in request.files:
+        return jsonify({'success': False, 'error': 'No file provided for preview'})
+    
+    file = request.files['pack']
+    if file.filename == '':
+        return jsonify({'success': False, 'error': 'No file selected'})
+
+    try:
+        # Read the file into memory
+        zip_in_memory = io.BytesIO(file.read())
+        
+        with zipfile.ZipFile(zip_in_memory, 'r') as zip_ref:
+            # Check for manifest file
+            if 'manifest.json' not in zip_ref.namelist():
+                return jsonify({'success': False, 'error': 'manifest.json not found in archive.'})
+            
+            # Read and parse the manifest
+            with zip_ref.open('manifest.json') as manifest_file:
+                manifest_data = json.load(manifest_file)
+                return jsonify({'success': True, 'data': manifest_data})
+
+    except zipfile.BadZipFile:
+        return jsonify({'success': False, 'error': 'Invalid .zip file.'})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to preview pack: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
 @app.route('/api/toolkit/packs/import', methods=['POST'])
 def import_pack():
     """Import a pack from ZIP file"""
@@ -655,18 +692,34 @@ def import_pack():
             return jsonify({'success': False, 'error': 'No file provided'})
         
         file = request.files['pack']
+        # Get the target folder name from the form data
+        target_folder_name = request.form.get('target_folder_name')
+
         if file.filename == '':
             return jsonify({'success': False, 'error': 'No file selected'})
         
         # Save to temp file
         import tempfile
-        with tempfile.NamedTemporaryFile(suffix='.zip', delete=False) as tmp:
-            file.save(tmp.name)
-            manager = PackManager()
-            result = manager.import_pack(tmp.name)
-            os.unlink(tmp.name)  # Clean up temp file
+        tmp_file = None
+        try:
+            with tempfile.NamedTemporaryFile(suffix='.zip', delete=False) as tmp:
+                tmp_file = tmp.name
+                file.save(tmp.name)
             
-        return jsonify(result)
+            # File is now closed, safe to process
+            manager = PackManager()
+            # Pass the target folder name to the manager
+            result = manager.import_pack(tmp_file, target_folder_name=target_folder_name)
+            
+            return jsonify(result)
+        finally:
+            # Clean up temp file in finally block to ensure it happens
+            if tmp_file and os.path.exists(tmp_file):
+                try:
+                    os.unlink(tmp_file)
+                except Exception as cleanup_error:
+                    # Log but don't fail if we can't delete temp file
+                    error(f"TOOLKIT: Could not delete temp file {tmp_file}: {cleanup_error}")
     except Exception as e:
         error(f"TOOLKIT: Failed to import pack: {e}")
         return jsonify({'success': False, 'error': str(e)})

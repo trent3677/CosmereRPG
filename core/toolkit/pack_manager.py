@@ -33,8 +33,8 @@ class PackManager:
         if active_file.exists():
             with open(active_file, 'r') as f:
                 data = json.load(f)
-                return data.get("active_pack", "default_photorealistic")
-        return "default_photorealistic"
+                return data.get("active_pack", "photorealistic")
+        return "photorealistic"
     
     def _save_active_pack(self, pack_name: str):
         """Save the active pack configuration"""
@@ -160,12 +160,13 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                 "error": str(e)
             }
     
-    def import_pack(self, zip_path: str) -> Dict:
+    def import_pack(self, zip_path: str, target_folder_name: Optional[str] = None) -> Dict:
         """
         Import a graphic pack from ZIP file
         
         Args:
             zip_path: Path to the ZIP file
+            target_folder_name: Optional custom folder name for the pack
             
         Returns:
             Import result dictionary
@@ -189,8 +190,14 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                 with zip_ref.open('manifest.json') as f:
                     manifest = json.load(f)
                 
-                pack_name = manifest.get('safe_name', manifest.get('name', 'imported_pack'))
-                pack_name = pack_name.replace(" ", "_").lower()
+                # Use target_folder_name if provided, otherwise use name from manifest
+                if target_folder_name:
+                    # Sanitize the target folder name to prevent directory traversal
+                    pack_name = target_folder_name.replace("..", "").replace("/", "").replace("\\", "")
+                    pack_name = pack_name.replace(" ", "_").lower()
+                else:
+                    pack_name = manifest.get('safe_name', manifest.get('name', 'imported_pack'))
+                    pack_name = pack_name.replace(" ", "_").lower()
                 
                 # Check if pack already exists
                 pack_dir = self.packs_dir / pack_name
@@ -299,7 +306,7 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                 "error": f"Export failed: {str(e)}"
             }
     
-    def activate_pack(self, pack_name: str) -> Dict:
+    def activate_pack(self, pack_name: str, create_backup: bool = False) -> Dict:
         """
         Activate a graphic pack for use in the game
         
@@ -326,14 +333,46 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
             else:
                 manifest = {"name": pack_name}
             
-            # Save current game assets as backup if different pack
-            game_assets_dir = Path("web/static/media/monsters")
-            backup_dir = Path("web/static/media/monsters_backup")
+            # Create backup of current pack if requested
+            backup_created = False
+            backup_name = None
             
-            if self.active_pack and self.active_pack != pack_name:
-                # Backup current assets if switching packs
-                if game_assets_dir.exists() and not backup_dir.exists():
-                    shutil.copytree(game_assets_dir, backup_dir)
+            if create_backup and self.active_pack and self.active_pack != pack_name:
+                # Generate backup name with timestamp
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                backup_name = f"{self.active_pack}_backup_{timestamp}"
+                backup_dir = self.packs_dir / backup_name
+                
+                # Copy current pack to backup
+                current_pack_dir = self.packs_dir / self.active_pack
+                if current_pack_dir.exists():
+                    try:
+                        shutil.copytree(current_pack_dir, backup_dir)
+                        
+                        # Update backup manifest
+                        backup_manifest_path = backup_dir / "manifest.json"
+                        if backup_manifest_path.exists():
+                            with open(backup_manifest_path, 'r') as f:
+                                backup_manifest = json.load(f)
+                            
+                            # Update manifest with backup info
+                            original_name = backup_manifest.get("display_name", backup_manifest.get("name", self.active_pack))
+                            backup_manifest["name"] = backup_name
+                            backup_manifest["display_name"] = f"{original_name} (Backup {datetime.now().strftime('%Y-%m-%d %H:%M')})"
+                            backup_manifest["is_backup"] = True
+                            backup_manifest["original_pack"] = self.active_pack
+                            backup_manifest["backup_date"] = datetime.now().isoformat()
+                            
+                            with open(backup_manifest_path, 'w') as f:
+                                json.dump(backup_manifest, f, indent=2)
+                        
+                        backup_created = True
+                        print(f"Created backup: {backup_name}")
+                    except Exception as e:
+                        print(f"Warning: Could not create backup: {e}")
+            
+            # Handle game assets directory
+            game_assets_dir = Path("web/static/media/monsters")
             
             # Copy pack assets to game directory
             pack_monsters_dir = pack_dir / "monsters"
@@ -341,6 +380,13 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                 # Ensure game assets directory exists
                 game_assets_dir.mkdir(parents=True, exist_ok=True)
                 
+                # Handle new structure: all files directly in monsters/ folder
+                for file in pack_monsters_dir.glob("*"):
+                    if file.is_file():
+                        if file.suffix in ['.png', '.jpg', '.jpeg', '.mp4']:
+                            shutil.copy2(file, game_assets_dir / file.name)
+                
+                # Handle old structure: separate subdirectories
                 # Copy thumbnails
                 thumb_source = pack_monsters_dir / "thumbnails"
                 if thumb_source.exists():
@@ -371,7 +417,9 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                 "pack_name": pack_name,
                 "manifest": manifest,
                 "previous_pack": self.active_pack,
-                "assets_copied": True
+                "assets_copied": True,
+                "backup_created": backup_created,
+                "backup_name": backup_name
             }
             
         except Exception as e:
@@ -402,6 +450,40 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                         f.stat().st_size for f in pack_dir.rglob('*') if f.is_file()
                     ) / (1024 * 1024)  # MB
                     
+                    # Count actual files (supporting both old and new structure)
+                    monsters_dir = pack_dir / "monsters"
+                    video_count = 0
+                    image_count = 0
+                    thumb_count = 0
+                    
+                    if monsters_dir.exists():
+                        # New structure: everything in monsters/ folder
+                        for file in monsters_dir.glob("*"):
+                            if file.is_file():
+                                if file.suffix == ".mp4":
+                                    video_count += 1
+                                elif file.suffix in [".png", ".jpg", ".jpeg"]:
+                                    if "_thumb" in file.stem or "_thumbnail" in file.stem:
+                                        thumb_count += 1
+                                    else:
+                                        image_count += 1
+                        
+                        # Old structure: separate subdirectories
+                        if (monsters_dir / "videos").exists():
+                            video_count += len(list((monsters_dir / "videos").glob("*.mp4")))
+                        if (monsters_dir / "images").exists():
+                            image_count += len(list((monsters_dir / "images").glob("*")))
+                        if (monsters_dir / "thumbnails").exists():
+                            thumb_count += len(list((monsters_dir / "thumbnails").glob("*")))
+                    
+                    # Determine total monsters (unique count)
+                    monster_count = max(
+                        manifest.get("total_monsters", 0),
+                        len(manifest.get("monsters", {})),
+                        len(manifest.get("monsters_included", [])),
+                        image_count  # Use image count as fallback
+                    )
+                    
                     packs.append({
                         "name": pack_dir.name,
                         "display_name": manifest.get("display_name", manifest.get("name", pack_dir.name)),
@@ -409,9 +491,9 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                         "author": manifest.get("author", "Unknown"),
                         "style": manifest.get("style", manifest.get("style_template", "unknown")),
                         "style_template": manifest.get("style_template", manifest.get("style", "unknown")),
-                        "total_monsters": manifest.get("total_monsters", len(manifest.get("monsters", {}))),
-                        "total_videos": manifest.get("total_videos", 0),
-                        "monsters_count": len(manifest.get("monsters", {})),
+                        "total_monsters": monster_count,
+                        "total_videos": video_count,
+                        "monsters_count": monster_count,
                         "size_mb": round(pack_size, 2),
                         "created": manifest.get("created_at", manifest.get("created_date", "Unknown")),
                         "is_active": pack_dir.name == self.active_pack
@@ -454,10 +536,31 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
         with open(manifest_path, 'r') as f:
             manifest = json.load(f)
         
-        # Count actual files
-        video_count = len(list((pack_dir / "monsters" / "videos").glob("*.mp4")))
-        image_count = len(list((pack_dir / "monsters" / "images").glob("*.png")))
-        thumb_count = len(list((pack_dir / "monsters" / "thumbnails").glob("*.jpg")))
+        # Count actual files (supporting both old and new structure)
+        monsters_dir = pack_dir / "monsters"
+        video_count = 0
+        image_count = 0
+        thumb_count = 0
+        
+        if monsters_dir.exists():
+            # New structure: everything in monsters/ folder
+            for file in monsters_dir.glob("*"):
+                if file.is_file():
+                    if file.suffix == ".mp4":
+                        video_count += 1
+                    elif file.suffix in [".png", ".jpg", ".jpeg"]:
+                        if "_thumb" in file.stem or "_thumbnail" in file.stem:
+                            thumb_count += 1
+                        else:
+                            image_count += 1
+            
+            # Old structure: check separate subdirectories too
+            if (monsters_dir / "videos").exists():
+                video_count = len(list((monsters_dir / "videos").glob("*.mp4")))
+            if (monsters_dir / "images").exists():
+                image_count = len(list((monsters_dir / "images").glob("*")))
+            if (monsters_dir / "thumbnails").exists():
+                thumb_count = len(list((monsters_dir / "thumbnails").glob("*")))
         
         # Calculate sizes
         total_size = sum(
@@ -486,7 +589,7 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
         Returns:
             Deletion result dictionary
         """
-        if pack_name == "default_photorealistic":
+        if pack_name == "photorealistic":
             return {
                 "success": False,
                 "error": "Cannot delete the default pack"

@@ -398,49 +398,50 @@ class MonsterGenerator:
     def get_monster_list(self, pack_name: Optional[str] = "photorealistic") -> List[Dict]:
         """Get list of all monsters from bestiary and pack"""
         monsters_dict = {}
+        pack_monster_ids = set()
         
-        # Add bestiary monsters
-        for monster_id, data in self.bestiary.get("monsters", {}).items():
-            monsters_dict[monster_id] = {
-                "id": monster_id,
-                "name": data.get("name", monster_id),
-                "type": data.get("type", "unknown"),
-                "tags": data.get("tags", []),
-                "source": "bestiary"
-            }
-        
-        # Scan pack folder for additional monsters
+        # First, scan pack folder to identify which monsters are in the pack
         if pack_name:
             pack_images_path = Path(f'graphic_packs/{pack_name}/monsters')
             if pack_images_path.exists():
                 # Check JPG files
                 for img_file in pack_images_path.glob('*.jpg'):
                     if not img_file.stem.endswith('_thumb'):
-                        monster_id = img_file.stem
-                        if monster_id not in monsters_dict:
-                            # Format name from ID
-                            name = monster_id.replace('_', ' ').title()
-                            monsters_dict[monster_id] = {
-                                "id": monster_id,
-                                "name": name,
-                                "type": "custom",
-                                "tags": ["pack_only"],
-                                "source": "pack_only"
-                            }
+                        pack_monster_ids.add(img_file.stem)
                 
                 # Check PNG files
                 for img_file in pack_images_path.glob('*.png'):
                     if not img_file.stem.endswith('_thumb'):
-                        monster_id = img_file.stem
-                        if monster_id not in monsters_dict:
-                            name = monster_id.replace('_', ' ').title()
-                            monsters_dict[monster_id] = {
-                                "id": monster_id,
-                                "name": name,
-                                "type": "custom",
-                                "tags": ["pack_only"],
-                                "source": "pack_only"
-                            }
+                        pack_monster_ids.add(img_file.stem)
+        
+        # Add bestiary monsters with correct source classification
+        for monster_id, data in self.bestiary.get("monsters", {}).items():
+            # Determine source based on whether monster is in pack
+            if monster_id in pack_monster_ids:
+                source = "bestiary"  # In both bestiary and pack (Green)
+            else:
+                source = "bestiary_only"  # In bestiary but not in pack (Red)
+            
+            monsters_dict[monster_id] = {
+                "id": monster_id,
+                "name": data.get("name", monster_id),
+                "type": data.get("type", "unknown"),
+                "tags": data.get("tags", []),
+                "source": source
+            }
+        
+        # Add pack-only monsters (not in bestiary)
+        for monster_id in pack_monster_ids:
+            if monster_id not in monsters_dict:
+                # Format name from ID
+                name = monster_id.replace('_', ' ').title()
+                monsters_dict[monster_id] = {
+                    "id": monster_id,
+                    "name": name,
+                    "type": "custom",
+                    "tags": ["pack_only"],
+                    "source": "pack_only"  # Only in pack, not in bestiary (Orange)
+                }
         
         return sorted(monsters_dict.values(), key=lambda x: x["name"])
 
