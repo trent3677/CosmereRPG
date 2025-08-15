@@ -1401,6 +1401,7 @@
         let videoQueue = [];
         let activePack = null;
         let fileToImport = null; // To hold the selected file
+        let isInitialLoad = true; // Flag to prevent confirmation on initial load
         
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -1552,6 +1553,17 @@
         let previousRadioValue = null;
 
         function showPackConfirmation(packName) {
+            // Don't show confirmation if this is the initial load
+            if (isInitialLoad) {
+                return;
+            }
+            
+            // Don't show confirmation if the pack is already active
+            const currentPack = availablePacks.find(p => p.is_active);
+            if (currentPack && currentPack.name === packName) {
+                return;
+            }
+            
             // Store the pending activation
             pendingPackActivation = packName;
             
