@@ -1149,6 +1149,292 @@
             border-radius: 4px;
         }
 
+        /* === 14. Module Builder Styles === */
+        #main-container {
+            display: flex;
+            flex: 1;
+            gap: 10px;
+            height: calc(100% + 60px);
+            margin: -30px;
+        }
+
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #444;
+            background-color: #1e1e1e;
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        .builder-panel {
+            flex: 2;
+        }
+
+        .modules-panel {
+            flex: 1;
+            max-width: 400px;
+            background-color: #2c2c2c;
+        }
+        
+        .panel-header {
+            color: #FFA500;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 1.1em;
+            background-color: #222;
+            border-bottom: 1px solid #444;
+            padding: 10px 15px;
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .intro-text {
+            color: #aaa;
+            font-style: italic;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .game-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #1a1a1a;
+            border: 1px solid #555;
+            color: #e0e0e0;
+            font-family: 'Crimson Text', serif;
+            font-size: 1em;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .game-input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+        
+        textarea.game-input {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .game-button {
+            padding: 12px 24px;
+            background-color: #333;
+            border: 1px solid #4CAF50;
+            color: #4CAF50;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            border-radius: 5px;
+            text-transform: uppercase;
+        }
+        
+        .game-button.primary {
+            background: linear-gradient(145deg, #4CAF50, #2E8B57);
+            color: white;
+        }
+        
+        .game-button.primary:hover:not(:disabled) {
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+        }
+        
+        .game-button:hover:not(:disabled) {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .game-button.cancel {
+            background: linear-gradient(145deg, #6c757d, #495057);
+            border-color: #6c757d;
+            color: white;
+            margin-top: 10px;
+        }
+        
+        #generation-progress {
+            margin-top: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        #progress-stages {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        #progress-stages li {
+            padding: 8px;
+            background-color: #2a2a2a;
+            border: 1px solid #555;
+            color: #777;
+            text-align: center;
+            font-size: 0.8em;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        #progress-stages li.stage-active {
+            color: #FFA500;
+            font-weight: bold;
+            border-color: #FFA500;
+            background-color: rgba(255, 165, 0, 0.1);
+            animation: pulse 1.5s infinite;
+        }
+        
+        #progress-stages li.stage-complete {
+            color: #4CAF50;
+            border-color: #4CAF50;
+            background-color: rgba(76, 175, 80, 0.05);
+        }
+        
+        #progress-bar-container {
+            width: 100%;
+            height: 25px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        #progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50 0%, #6faa5a 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 15px;
+        }
+        
+        #progress-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Share Tech Mono', monospace;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+        }
+        
+        #status-message {
+            text-align: center;
+            font-size: 1em;
+            color: #ccc;
+            margin-top: 15px;
+            min-height: 20px;
+            font-style: italic;
+        }
+        
+        #results-section {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        #module-output {
+            background-color: #1a1a1a;
+            border: 1px solid #4CAF50;
+            padding: 15px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9em;
+            color: #4CAF50;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+        
+        .error-message {
+            background-color: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff4444;
+            color: #ff6666;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .module-item {
+            background-color: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .module-item:hover {
+            border-color: #FFA500;
+        }
+        
+        .module-name {
+            color: #4CAF50;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .module-level {
+            color: #FFA500;
+            font-weight: bold;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .module-details {
+            border-top: 1px solid #444;
+            padding-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .module-detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            color: #aaa;
+        }
+
+        .module-detail-item span:last-child {
+            color: #e0e0e0;
+            font-weight: bold;
+        }
+
+        .no-modules {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+            padding: 20px;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #FFA500;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
     </style>
 </head>
 <body>
@@ -1163,6 +1449,7 @@
             <button class="tab active" onclick="switchTab('packs')">Monster Graphic Pack Management</button>
             <button class="tab" onclick="switchTab('generator')">Monster Management & Generator</button>
             <button class="tab" onclick="switchTab('videos')">Video Processor</button>
+            <button class="tab" onclick="switchTab('builder')">Module Builder</button>
         </div>
         
         <div class="content">
@@ -1369,6 +1656,89 @@
                 </div>
             </div>
             
+            <!-- Module Builder Tab -->
+            <div id="builder-tab" class="tab-content">
+                <div id="main-container">
+                    <!-- Left Panel: Builder -->
+                    <div class="panel builder-panel">
+                        <div class="panel-content">
+                            <p class="intro-text">
+                                This tool allows for the manual creation of a new adventure module. The AI will generate a complete, playable module based on your concept. The more detail you provide in the prompt, the richer and more tailored the adventure will be.
+                            </p>
+                    
+                            <!-- Input Form -->
+                            <form id="module-form">
+                                <label for="module-name">Module Name</label>
+                                <input type="text" id="module-name" name="module-name" class="game-input" 
+                                       placeholder="Enter a unique name for your module (e.g., Shadows_of_Eldoria)" required>
+                                
+                                <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+                                    <div style="flex: 1;">
+                                        <label for="num-areas">Number of Areas</label>
+                                        <input type="number" id="num-areas" name="num-areas" class="game-input" 
+                                               min="1" max="10" value="3" required>
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <label for="locations-per-area">Locations per Area</label>
+                                        <input type="number" id="locations-per-area" name="locations-per-area" class="game-input" 
+                                               min="1" max="30" value="5" required>
+                                    </div>
+                                </div>
+                                
+                                <label for="ai-narrative">Module Concept (AI Narrative Prompt)</label>
+                                <textarea id="ai-narrative" name="ai-narrative" class="game-input" rows="8" 
+                                          placeholder="Describe your module concept in detail. Include themes, settings, key NPCs, plot hooks, and any specific elements you want included..."
+                                          required></textarea>
+                                
+                                <button type="submit" class="game-button primary" id="generate-btn">Generate Module</button>
+                            </form>
+                            
+                            <!-- Progress Section -->
+                            <div id="generation-progress" style="display: none;">
+                                <h2>Generation in Progress<span class="spinner"></span></h2>
+                                <div id="progress-bar-container">
+                                    <div id="progress-bar" style="width: 0%;"></div>
+                                    <span id="progress-percentage">0%</span>
+                                </div>
+                                <ul id="progress-stages">
+                                    <li data-stage="0">Initializing</li>
+                                    <li data-stage="1">Base Structure</li>
+                                    <li data-stage="2">NPCs</li>
+                                    <li data-stage="3">Monsters</li>
+                                    <li data-stage="4">Areas</li>
+                                    <li data-stage="5">Plots</li>
+                                    <li data-stage="6">Connections</li>
+                                    <li data-stage="7">Finalizing</li>
+                                    <li data-stage="8">Saving</li>
+                                </ul>
+                                <p id="status-message">Initializing module builder...</p>
+                                <button class="game-button cancel" id="cancel-btn">Cancel Generation</button>
+                            </div>
+                            
+                            <!-- Results Section -->
+                            <div id="results-section" style="display: none;">
+                                <h2>Module Created Successfully!</h2>
+                                <pre id="module-output"></pre>
+                                <button class="game-button" id="new-module-btn">Create Another Module</button>
+                            </div>
+                            
+                            <!-- Error Section -->
+                            <div id="error-section" style="display: none;">
+                                <div class="error-message" id="error-message"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Panel: Existing Modules -->
+                    <div class="panel modules-panel">
+                        <div class="panel-header">Existing Modules</div>
+                        <div class="panel-content" id="modules-list">
+                            <div class="no-modules">Loading modules...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Settings Tab Removed - API key now from config.py -->
         </div>
     </div>
@@ -1425,6 +1795,9 @@
             if (tab === 'generator') {
                 loadStyles();
                 loadMonsters();
+            } else if (tab === 'builder') {
+                // Request module list when switching to builder tab
+                socket.emit('request_module_list');
             }
         }
         
@@ -1567,8 +1940,6 @@
             // Store the pending activation
             pendingPackActivation = packName;
             
-            // Find current active pack
-            const currentPack = availablePacks.find(p => p.is_active);
             const currentPackName = currentPack ? (currentPack.display_name || currentPack.name) : 'None';
             
             // Generate backup name with date
@@ -2655,12 +3026,159 @@
         }
         
         // Load styles and initialize on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            console.log('Page loaded, initializing...');
-            loadPacks();  // Load packs first
-            loadStyles(); // Load styles
-            loadMonsters(); // Load monster list
+        // Removed duplicate DOMContentLoaded listener - already handled above
+
+        // === MODULE BUILDER SCRIPT ===
+
+        // DOM Elements for Module Builder
+        const moduleForm = document.getElementById('module-form');
+        const generateBtn = document.getElementById('generate-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const newModuleBtn = document.getElementById('new-module-btn');
+        const progressSection = document.getElementById('generation-progress');
+        const resultsSection = document.getElementById('results-section');
+        const errorSection = document.getElementById('error-section');
+        const errorMessage = document.getElementById('error-message');
+        const statusMessage = document.getElementById('status-message');
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercentage = document.getElementById('progress-percentage');
+        const progressStages = document.querySelectorAll('#progress-stages li');
+        const modulesListContainer = document.getElementById('modules-list');
+
+        // Form submission
+        if (moduleForm) {
+            moduleForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const moduleName = document.getElementById('module-name').value.trim();
+                const numAreas = parseInt(document.getElementById('num-areas').value);
+                const locationsPerArea = parseInt(document.getElementById('locations-per-area').value);
+                const narrative = document.getElementById('ai-narrative').value.trim();
+                
+                if (!moduleName || !narrative) {
+                    showError('Please provide both module name and narrative');
+                    return;
+                }
+                
+                socket.emit('start_build', {
+                    module_name: moduleName,
+                    num_areas: numAreas,
+                    locations_per_area: locationsPerArea,
+                    narrative: narrative
+                });
+                
+                moduleForm.style.display = 'none';
+                progressSection.style.display = 'block';
+                errorSection.style.display = 'none';
+                resultsSection.style.display = 'none';
+            });
+        }
+
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to cancel the module generation?')) {
+                    socket.emit('cancel_build');
+                }
+            });
+        }
+
+        if (newModuleBtn) {
+            newModuleBtn.addEventListener('click', () => {
+                resetBuilderUI();
+            });
+        }
+
+        // Socket event handlers for builder
+        socket.on('module_list_response', (modules) => {
+            console.log('Received module list:', modules);
+            if (!modulesListContainer) return;
+            
+            modulesListContainer.innerHTML = ''; 
+
+            if (!modules || modules.length === 0) {
+                modulesListContainer.innerHTML = '<div class="no-modules">No modules found.</div>';
+                return;
+            }
+
+            modules.forEach(module => {
+                const moduleItem = document.createElement('div');
+                moduleItem.className = 'module-item';
+                const levelRange = module.levelRange || { min: '?', max: '?' };
+                
+                moduleItem.innerHTML = `
+                    <div class="module-name">${module.moduleName.replace(/_/g, ' ')}</div>
+                    <div class="module-level">Levels ${levelRange.min} - ${levelRange.max}</div>
+                    <div class="module-details">
+                        <div class="module-detail-item"><span>Areas:</span><span>${module.areaCount || 'N/A'}</span></div>
+                        <div class="module-detail-item"><span>Locations:</span><span>${module.locationCount || 'N/A'}</span></div>
+                        <div class="module-detail-item"><span>Plot Points:</span><span>${module.plotPointCount || 'N/A'}</span></div>
+                    </div>
+                `;
+                modulesListContainer.appendChild(moduleItem);
+            });
         });
+
+        socket.on('build_started', (data) => {
+            if (statusMessage) statusMessage.textContent = data.message;
+        });
+        
+        socket.on('module_progress', (data) => {
+            const percentage = Math.round(data.percentage || 0);
+            if (progressBar) progressBar.style.width = percentage + '%';
+            if (progressPercentage) progressPercentage.textContent = percentage + '%';
+            
+            progressStages.forEach((stage, index) => {
+                stage.classList.remove('stage-active', 'stage-complete');
+                if (index < data.stage) {
+                    stage.classList.add('stage-complete');
+                } else if (index === data.stage) {
+                    stage.classList.add('stage-active');
+                }
+            });
+            
+            if (statusMessage) statusMessage.textContent = data.message || `Processing: ${data.stage_name}`;
+        });
+        
+        socket.on('module_complete', (data) => {
+            if (progressSection) progressSection.style.display = 'none';
+            if (resultsSection) resultsSection.style.display = 'block';
+            const output = `Module Name: ${data.module_name}\n\n${data.message}\n\nThe module has been created successfully and is ready to use!`;
+            const moduleOutput = document.getElementById('module-output');
+            if (moduleOutput) moduleOutput.textContent = output;
+            socket.emit('request_module_list');
+        });
+        
+        socket.on('module_error', (data) => {
+            showError(data.error);
+            if (progressSection) progressSection.style.display = 'none';
+        });
+        
+        socket.on('build_cancelled', (data) => {
+            if (statusMessage) statusMessage.textContent = data.message;
+            setTimeout(() => {
+                resetBuilderUI();
+            }, 2000);
+        });
+        
+        function showError(message) {
+            if (errorSection) {
+                errorSection.style.display = 'block';
+                if (errorMessage) errorMessage.textContent = message;
+            }
+        }
+        
+        function resetBuilderUI() {
+            if(moduleForm) {
+                moduleForm.style.display = 'block';
+                if (progressSection) progressSection.style.display = 'none';
+                if (resultsSection) resultsSection.style.display = 'none';
+                if (errorSection) errorSection.style.display = 'none';
+                if (progressBar) progressBar.style.width = '0%';
+                if (progressPercentage) progressPercentage.textContent = '0%';
+                progressStages.forEach(stage => stage.classList.remove('stage-active', 'stage-complete'));
+                moduleForm.reset();
+            }
+        }
     </script>
 
     <!-- Media Popup Modal -->
