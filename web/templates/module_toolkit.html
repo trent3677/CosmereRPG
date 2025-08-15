@@ -204,125 +204,125 @@
 
         .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* === 7. Pack & Monster Grids - Updated List Layout === */
-        .pack-grid {
+        /* === 7. Pack Table Layout === */
+        .pack-table {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 5px; /* A small gap between rows */
         }
 
-        .pack-card {
-            border: 2px solid #444;
-            border-radius: 6px;
-            padding: 15px 25px;
-            background-color: #2c2c2c;
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-            display: flex;
+        .pack-table-header, .pack-table-row {
+            display: grid;
+            grid-template-columns: 60px 2fr 1fr 1fr; /* Defines our 4 columns */
             align-items: center;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .pack-card:hover {
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-            border-color: #666;
-        }
-
-        .pack-card.active {
-            border-color: #4CAF50;
-            box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
-        }
-
-        /* === REFINED Pack List Item Styles === */
-        .pack-info {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .pack-title-line {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 5px; /* Reduced space */
-        }
-        
-        .pack-card h3 {
-            font-family: 'Cinzel', serif;
-            color: #4CAF50;
-            margin: 0;
-            font-size: 1.4em; /* Reduced font size */
-            font-weight: 600;
-        }
-        
-        .pack-card .meta {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #999; /* Unified color for the whole line */
-            font-size: 0.85em; /* Reduced font size */
-            font-style: italic;
-        }
-        
-        .pack-card .meta-divider {
-            color: #555;
-        }
-        
-        .pack-stats {
-            display: flex;
             gap: 20px;
-            margin: 0 40px;
-            flex-shrink: 0;
+            padding: 10px 20px;
         }
-        
-        .pack-stats .stat {
-            text-align: center;
-            background-color: #1e1e1e;
-            padding: 5px 15px; /* Reduced padding */
-            border-radius: 4px;
-            border: 1px solid #3a3a3a;
-            min-width: 80px;
-        }
-        
-        .pack-stats .stat-value {
+
+        .pack-table-header {
             font-family: 'Cinzel', serif;
-            font-size: 1.6em; /* Reduced font size */
+            color: #aaa;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            border-bottom: 2px solid #444;
+            padding-bottom: 15px;
+            margin-bottom: 5px;
+        }
+
+        .pack-table-row {
+            background-color: #2c2c2c;
+            border-radius: 6px;
+            border: 1px solid #3a3a3a;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .pack-table-row:hover {
+            background-color: #333;
+            border-color: #555;
+        }
+
+        .pack-table-cell {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Custom styling for the radio button */
+        .pack-table-cell input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #555;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: grid;
+            place-content: center;
+            margin: 0 auto; /* Center the radio button */
+        }
+
+        .pack-table-cell input[type="radio"]:hover {
+            border-color: #4CAF50;
+        }
+
+        .pack-table-cell input[type="radio"]::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+            transform: scale(0);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .pack-table-cell input[type="radio"]:checked {
+            border-color: #4CAF50;
+        }
+
+        .pack-table-cell input[type="radio"]:checked::before {
+            transform: scale(1);
+        }
+
+        .pack-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4em;
             font-weight: 600;
             color: #e0e0e0;
-            line-height: 1.1;
+            margin-bottom: 3px;
         }
-        
-        .pack-stats .stat-label {
-            font-size: 0.7em; /* Reduced font size */
+
+        .pack-meta {
+            font-size: 0.9em;
+            color: #999;
+            font-style: italic;
+        }
+
+        .pack-stats-cell {
+            display: flex;
+            gap: 20px;
+        }
+
+        .pack-stats-cell .stat {
+            text-align: center;
+        }
+
+        .pack-stats-cell .stat-value {
+            font-family: 'Cinzel', serif;
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+
+        .pack-stats-cell .stat-label {
+            font-size: 0.7em;
             color: #888;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
-        
-        .pack-actions {
+
+        .pack-actions-cell {
             display: flex;
+            justify-content: flex-end; /* Align buttons to the right */
             gap: 10px;
-            flex-shrink: 0;
-            min-width: 310px;
-            justify-content: flex-end;
-        }
-        
-        .pack-actions button {
-            padding: 10px 20px;
-            font-size: 0.9em;
-        }
-        
-        .active-badge {
-            background-color: rgba(76, 175, 80, 0.2);
-            color: #66bb6a;
-            border: 1px solid rgba(76, 175, 80, 0.5);
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .monster-grid {
@@ -972,7 +972,15 @@
                     <div class="column-left">
                         <div class="section">
                             <h2>Available Asset Packs</h2>
-                            <div class="pack-grid" id="packGrid">
+                            <!-- ADD THIS HEADER STRUCTURE -->
+                            <div class="pack-table-header">
+                                <div class="pack-table-cell" style="text-align: center;">Active</div>
+                                <div class="pack-table-cell">Pack Information</div>
+                                <div class="pack-table-cell">Stats</div>
+                                <div class="pack-table-cell" style="text-align: right;">Actions</div>
+                            </div>
+                            <!-- Note the class change here from pack-grid to pack-table -->
+                            <div class="pack-table" id="packGrid">
                                 <!-- Packs will be loaded here -->
                             </div>
                         </div>
@@ -1202,30 +1210,34 @@
             grid.innerHTML = '';
             
             availablePacks.forEach(pack => {
-                const card = document.createElement('div');
-                card.className = `pack-card ${pack.is_active ? 'active' : ''}`;
+                const row = document.createElement('div');
+                row.className = 'pack-table-row';
                 
                 const monsterCount = pack.total_monsters || pack.monsters_count || 0;
                 const videoCount = pack.total_videos || 0;
                 const author = pack.author || 'Unknown';
                 const style = pack.style || pack.style_template || 'custom';
+                const isDefault = pack.name === 'photorealistic';
                 
-                // --- NEW PROFESSIONAL HTML STRUCTURE ---
-                card.innerHTML = `
-                    <div class="pack-info">
-                        <div class="pack-title-line">
-                            <h3>${pack.display_name || pack.name}</h3>
-                            ${pack.is_active ? '<span class="active-badge">Active</span>' : ''}
-                        </div>
-                        <div class="meta">
-                            <span>Author: ${author}</span>
-                            <span class="meta-divider">|</span>
-                            <span>Style: ${style}</span>
-                            <span class="meta-divider">|</span>
-                            <span>Version: ${pack.version || '1.0.0'}</span>
+                // --- NEW PROFESSIONAL TABLE ROW HTML STRUCTURE ---
+                row.innerHTML = `
+                    <div class="pack-table-cell">
+                        <input 
+                            type="radio" 
+                            name="active_pack_selector" 
+                            value="${pack.name}" 
+                            ${pack.is_active ? 'checked' : ''}
+                            onchange="activatePack('${pack.name}')"
+                            title="Set as active pack"
+                        >
+                    </div>
+                    <div class="pack-table-cell">
+                        <div class="pack-name">${pack.display_name || pack.name} ${isDefault ? '(Default)' : ''}</div>
+                        <div class="pack-meta">
+                            Author: ${author} | Style: ${style} | Version: ${pack.version || '1.0.0'}
                         </div>
                     </div>
-                    <div class="pack-stats">
+                    <div class="pack-table-cell pack-stats-cell">
                         <div class="stat">
                             <div class="stat-value">${monsterCount}</div>
                             <div class="stat-label">Monsters</div>
@@ -1235,19 +1247,15 @@
                             <div class="stat-label">Videos</div>
                         </div>
                     </div>
-                    <div class="pack-actions">
-                        ${pack.is_active ? 
-                            '<button class="btn btn-secondary" disabled>Currently Active</button>' :
-                            `<button class="btn btn-success" onclick="activatePack('${pack.name}')">Activate</button>`
-                        }
+                    <div class="pack-table-cell pack-actions-cell">
                         <button class="btn btn-secondary" onclick="exportPack('${pack.name}')">Export</button>
-                        ${(pack.name !== 'photorealistic' && !pack.is_active) ? 
+                        ${(!isDefault && !pack.is_active) ? 
                             `<button class="btn btn-danger" onclick="deletePack('${pack.name}')">Delete</button>` :
                             ''
                         }
                     </div>
                 `;
-                grid.appendChild(card);
+                grid.appendChild(row);
             });
         }
         
