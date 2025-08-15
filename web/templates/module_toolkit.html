@@ -205,58 +205,65 @@
         .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
         /* === 7. Pack Table Layout === */
-        .pack-table {
-            display: flex;
-            flex-direction: column;
-            gap: 5px; /* A small gap between rows */
+        .pack-list-container {
+            border: 1px solid #444;
+            border-radius: 6px;
+            background-color: #2c2c2c;
+            overflow: hidden; /* This keeps the rounded corners nice */
         }
 
-        .pack-table-header, .pack-table-row {
+        .pack-list-header, .pack-list-row {
             display: grid;
-            grid-template-columns: 60px 1fr 200px 250px; /* Defines our 4 columns with better sizing */
+            /* Defines our 5 columns: Active, Name, Details, Stats, Actions */
+            grid-template-columns: 60px 1.5fr 2fr 180px 220px;
             align-items: center;
             gap: 20px;
-            padding: 10px 20px;
+            padding: 12px 20px;
         }
 
-        .pack-table-header {
+        .pack-list-header {
             font-family: 'Cinzel', serif;
             color: #aaa;
             text-transform: uppercase;
-            font-size: 0.9em;
+            font-size: 0.8em;
+            background-color: #1e1e1e;
             border-bottom: 2px solid #444;
-            padding-bottom: 15px;
-            margin-bottom: 5px;
         }
 
-        /* ADD these new rules for alignment */
-        .pack-table-header .pack-table-cell:nth-child(1),
-        .pack-table-header .pack-table-cell:nth-child(3) { /* Aligns 'Active' and 'Stats' headers to the center */
-            text-align: center;
-        }
-        .pack-table-header .pack-table-cell:nth-child(4) { /* Aligns 'Actions' header to the right */
-            text-align: right;
-        }
-
-        .pack-table-row {
-            background-color: #2c2c2c;
-            border-radius: 6px;
-            border: 1px solid #3a3a3a;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-
-        .pack-table-row:hover {
-            background-color: #333;
-            border-color: #555;
-        }
-
-        .pack-table-cell {
+        .pack-list-body {
             display: flex;
             flex-direction: column;
         }
 
+        .pack-list-row {
+            border-bottom: 1px solid #3a3a3a;
+            transition: background-color 0.2s;
+        }
+
+        .pack-list-row:last-child {
+            border-bottom: none; /* No border on the last item */
+        }
+
+        .pack-list-row:hover {
+            background-color: #333;
+        }
+
+        .pack-list-cell {
+            display: flex;
+            align-items: center; /* Vertically center content in the cell */
+        }
+
+        /* Center-align specific header titles */
+        .pack-list-header .pack-list-cell:nth-child(1),
+        .pack-list-header .pack-list-cell:nth-child(4) {
+            justify-content: center;
+        }
+        .pack-list-header .pack-list-cell:last-child {
+            justify-content: flex-end;
+        }
+
         /* Custom styling for the radio button */
-        .pack-table-cell input[type="radio"] {
+        .pack-list-cell input[type="radio"] {
             appearance: none;
             -webkit-appearance: none;
             width: 22px;
@@ -267,14 +274,14 @@
             transition: all 0.2s;
             display: grid;
             place-content: center;
-            margin: 0 auto; /* Center the radio button */
+            margin: 0 auto;
         }
 
-        .pack-table-cell input[type="radio"]:hover {
+        .pack-list-cell input[type="radio"]:hover {
             border-color: #4CAF50;
         }
 
-        .pack-table-cell input[type="radio"]::before {
+        .pack-list-cell input[type="radio"]::before {
             content: '';
             width: 12px;
             height: 12px;
@@ -284,32 +291,31 @@
             transition: transform 0.2s ease-in-out;
         }
 
-        .pack-table-cell input[type="radio"]:checked {
+        .pack-list-cell input[type="radio"]:checked {
             border-color: #4CAF50;
         }
 
-        .pack-table-cell input[type="radio"]:checked::before {
+        .pack-list-cell input[type="radio"]:checked::before {
             transform: scale(1);
         }
 
-        .pack-name {
+        .pack-name-cell {
             font-family: 'Cinzel', serif;
-            font-size: 1.4em;
+            font-size: 1.3em;
             font-weight: 600;
             color: #e0e0e0;
-            margin-bottom: 3px;
         }
 
-        .pack-meta {
+        .pack-meta-cell {
             font-size: 0.9em;
             color: #999;
             font-style: italic;
+            white-space: nowrap; /* Prevents text from wrapping */
         }
 
         .pack-stats-cell {
-            display: flex;
-            gap: 20px;
-            justify-content: center; /* This will center the stats blocks */
+            justify-content: center;
+            gap: 30px;
         }
 
         .pack-stats-cell .stat {
@@ -318,7 +324,7 @@
 
         .pack-stats-cell .stat-value {
             font-family: 'Cinzel', serif;
-            font-size: 1.6em;
+            font-size: 1.5em;
             font-weight: 600;
             color: #e0e0e0;
         }
@@ -330,8 +336,7 @@
         }
 
         .pack-actions-cell {
-            display: flex;
-            justify-content: flex-end; /* Align buttons to the right */
+            justify-content: flex-end;
             gap: 10px;
         }
 
@@ -975,34 +980,31 @@
         </div>
         
         <div class="content">
-            <!-- Pack Management Tab - UPDATED LAYOUT -->
+            <!-- Pack Management Tab - SINGLE COLUMN LAYOUT -->
             <div id="packs-tab" class="tab-content active">
-                <div class="two-column-layout">
-                    <!-- Left Column -->
-                    <div class="column-left">
-                        <div class="section">
-                            <h2>Available Asset Packs</h2>
-                            <!-- HEADER STRUCTURE -->
-                            <div class="pack-table-header">
-                                <div class="pack-table-cell">Active</div>
-                                <div class="pack-table-cell">Pack Information</div>
-                                <div class="pack-table-cell">Stats</div>
-                                <div class="pack-table-cell">Actions</div>
-                            </div>
-                            <!-- Note the class change here from pack-grid to pack-table -->
-                            <div class="pack-table" id="packGrid">
-                                <!-- Packs will be loaded here -->
-                            </div>
-                        </div>
+                <!-- NEW SINGLE-COLUMN LAYOUT -->
+                <div class="section">
+                    <h2>Import Pack</h2>
+                    <div class="upload-area" id="importArea" onclick="document.getElementById('importFile').click()">
+                        <p>Click or drag a pack .zip file here to import</p>
+                        <input type="file" id="importFile" accept=".zip" style="display:none" onchange="importPack(this.files[0])">
                     </div>
-                    <!-- Right Column -->
-                    <div class="column-right">
-                        <div class="section">
-                            <h2>Import Pack</h2>
-                            <div class="upload-area" id="importArea" onclick="document.getElementById('importFile').click()">
-                                <p>Click or drag a pack .zip file here to import</p>
-                                <input type="file" id="importFile" accept=".zip" style="display:none" onchange="importPack(this.files[0])">
-                            </div>
+                </div>
+
+                <div class="section">
+                    <h2>Available Asset Packs</h2>
+                    <div class="pack-list-container">
+                        <!-- The Header for our table will go here -->
+                        <div class="pack-list-header">
+                            <div class="pack-list-cell">Active</div>
+                            <div class="pack-list-cell">Pack Name</div>
+                            <div class="pack-list-cell">Details</div>
+                            <div class="pack-list-cell">Stats</div>
+                            <div class="pack-list-cell">Actions</div>
+                        </div>
+                        <!-- The list of packs will be dynamically inserted here -->
+                        <div class="pack-list-body" id="packGrid">
+                            <!-- Packs will be loaded here -->
                         </div>
                     </div>
                 </div>
@@ -1221,7 +1223,7 @@
             
             availablePacks.forEach(pack => {
                 const row = document.createElement('div');
-                row.className = 'pack-table-row';
+                row.className = 'pack-list-row';
                 
                 const monsterCount = pack.total_monsters || pack.monsters_count || 0;
                 const videoCount = pack.total_videos || 0;
@@ -1229,9 +1231,9 @@
                 const style = pack.style || pack.style_template || 'custom';
                 const isDefault = pack.name === 'photorealistic';
                 
-                // --- NEW PROFESSIONAL TABLE ROW HTML STRUCTURE ---
+                // --- NEW 5-COLUMN, SINGLE-ROW HTML STRUCTURE ---
                 row.innerHTML = `
-                    <div class="pack-table-cell">
+                    <div class="pack-list-cell">
                         <input 
                             type="radio" 
                             name="active_pack_selector" 
@@ -1241,13 +1243,13 @@
                             title="Set as active pack"
                         >
                     </div>
-                    <div class="pack-table-cell">
-                        <div class="pack-name">${pack.display_name || pack.name}</div>
-                        <div class="pack-meta">
-                            Author: ${author} | Style: ${style} | Version: ${pack.version || '1.0.0'}
-                        </div>
+                    <div class="pack-list-cell pack-name-cell">
+                        ${pack.display_name || pack.name} ${isDefault ? '(Default)' : ''}
                     </div>
-                    <div class="pack-table-cell pack-stats-cell">
+                    <div class="pack-list-cell pack-meta-cell">
+                        Author: ${author} | Style: ${style} | Version: ${pack.version || '1.0.0'}
+                    </div>
+                    <div class="pack-list-cell pack-stats-cell">
                         <div class="stat">
                             <div class="stat-value">${monsterCount}</div>
                             <div class="stat-label">Monsters</div>
@@ -1257,7 +1259,7 @@
                             <div class="stat-label">Videos</div>
                         </div>
                     </div>
-                    <div class="pack-table-cell pack-actions-cell">
+                    <div class="pack-list-cell pack-actions-cell">
                         <button class="btn btn-secondary" onclick="exportPack('${pack.name}')">Export</button>
                         ${(!isDefault && !pack.is_active) ? 
                             `<button class="btn btn-danger" onclick="deletePack('${pack.name}')">Delete</button>` :
