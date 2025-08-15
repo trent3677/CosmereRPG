@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module Toolkit - Theme Comparison</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+        
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        .version {
+            border: 2px solid #444;
+            border-radius: 8px;
+            padding: 20px;
+            background: #1a1a1a;
+        }
+        
+        .version h2 {
+            color: #FFA500;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .preview-frame {
+            width: 100%;
+            height: 800px;
+            border: 1px solid #555;
+            border-radius: 4px;
+            background: white;
+        }
+        
+        .features {
+            margin-top: 20px;
+            padding: 15px;
+            background: #2c2c2c;
+            border-radius: 5px;
+        }
+        
+        .features h3 {
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .features li {
+            padding: 5px 0;
+            color: #e0e0e0;
+        }
+        
+        .features li:before {
+            content: "-> ";
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .note {
+            background: #2c2c2c;
+            border-left: 4px solid #FFA500;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Module Toolkit Theme Refactoring</h1>
+    
+    <div class="note">
+        <strong>Note:</strong> The Module Toolkit interface has been successfully refactored to match the dark fantasy aesthetic of the main game interface.
+    </div>
+    
+    <div class="comparison-container">
+        <div class="version">
+            <h2>Original Bright Theme</h2>
+            <div class="features">
+                <h3>Original Features:</h3>
+                <ul>
+                    <li>Bright purple gradient background</li>
+                    <li>White container with light colors</li>
+                    <li>Modern, clean aesthetic</li>
+                    <li>Standard form elements</li>
+                    <li>Simple button styles</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="version">
+            <h2>New Dark Fantasy Theme</h2>
+            <div class="features">
+                <h3>Enhanced Features:</h3>
+                <ul>
+                    <li>Dark #1a1a1a background matching game</li>
+                    <li>Emerald shimmer animated title</li>
+                    <li>Glass-like button effects with gradients</li>
+                    <li>Green (#4CAF50) accent colors</li>
+                    <li>Orange (#FFA500) highlights for important elements</li>
+                    <li>Inset shadows for depth</li>
+                    <li>Consistent border and panel styling</li>
+                    <li>Monospace fonts for logs</li>
+                    <li>Custom scrollbar styling</li>
+                    <li>Cinzel fantasy font for headers</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="note">
+        <h3>Key Changes Applied:</h3>
+        <ul style="color: #e0e0e0; padding-left: 20px;">
+            <li>Background: Bright gradient -> Dark #1a1a1a</li>
+            <li>Container: White -> Dark #2c2c2c with borders</li>
+            <li>Header: Static purple -> Animated emerald shimmer</li>
+            <li>Tabs: Light gray -> Dark with green active state</li>
+            <li>Buttons: Simple gradient -> Glass-like with shine effect</li>
+            <li>Forms: Light inputs -> Dark with green focus glow</li>
+            <li>Cards: White cards -> Dark with inset shadows</li>
+            <li>Progress bars: Purple -> Green gradient</li>
+            <li>Modals: White -> Dark theme</li>
+            <li>Typography: Added Cinzel font for fantasy feel</li>
+        </ul>
+    </div>
+</body>
+</html>

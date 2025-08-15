@@ -75,16 +75,14 @@ class VideoProcessor:
                 "error": f"Input file not found: {input_path}"
             }
         
-        # Prepare output paths
+        # Prepare output paths - simplified structure with all files in monsters folder
         pack_dir = Path(f"graphic_packs/{pack_name}")
-        video_dir = pack_dir / "monsters" / "videos"
-        thumb_dir = pack_dir / "monsters" / "thumbnails"
+        monsters_dir = pack_dir / "monsters"
         
-        video_dir.mkdir(parents=True, exist_ok=True)
-        thumb_dir.mkdir(parents=True, exist_ok=True)
+        monsters_dir.mkdir(parents=True, exist_ok=True)
         
-        output_video = video_dir / f"{monster_id}_video.mp4"
-        output_thumb = thumb_dir / f"{monster_id}_thumb.jpg"
+        output_video = monsters_dir / f"{monster_id}_video.mp4"
+        output_thumb = monsters_dir / f"{monster_id}_thumb.jpg"
         
         print(f"\nProcessing video for {monster_id}...")
         print(f"Input: {input_path}")
@@ -445,7 +443,7 @@ class VideoProcessor:
     
     def get_pack_video_stats(self, pack_name: str) -> Dict:
         """Get statistics about videos in a pack"""
-        pack_dir = Path(f"graphic_packs/{pack_name}/monsters/videos")
+        pack_dir = Path(f"graphic_packs/{pack_name}/monsters")
         
         if not pack_dir.exists():
             return {

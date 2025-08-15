@@ -589,6 +589,36 @@
             background-color: #da190b;
         }
         
+        /* Module Toolkit Button */
+        .toolkit-button {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+            margin-right: 15px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .toolkit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+        
+        .toolkit-button svg {
+            width: 20px;
+            height: 20px;
+        }
+        
         .dice-results {
             background-color: #1a1a1a;
             border-bottom: 1px solid #444;
@@ -3731,6 +3761,50 @@
             border-left: 3px solid #d8cdaa;
             background: rgba(0,0,0,0.03);
         }
+        
+        /* --- NEW STYLES for Header Control Refactor --- */
+        
+        /* New container to stack the toggles vertically */
+        .toggle-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 4px; /* Creates a small space between the two toggles */
+            justify-content: center;
+        }
+        
+        /* Remove the default left margin from toggles now that they are stacked */
+        .toggle-stack .image-generation-toggle {
+            margin-left: 0;
+        }
+        
+        /* Shrink the toggle slider */
+        .toggle-stack .toggle-slider {
+            width: 34px;
+            height: 18px;
+        }
+        
+        /* Shrink the sliding circle inside the toggle */
+        .toggle-stack .toggle-slider::after {
+            width: 14px;
+            height: 14px;
+        }
+        
+        /* Adjust the sliding distance for the smaller toggle */
+        .toggle-stack input:checked + .toggle-slider::after {
+            transform: translateX(16px);
+        }
+        
+        /* Shrink the text next to the toggle */
+        .toggle-stack .toggle-text {
+            font-size: 12px;
+        }
+        
+        /* Adjust the Toolkit button's position to fit next to the new toggle stack */
+        .header .toolkit-button {
+            margin-left: 10px;
+            margin-right: 0;
+            padding: 8px 12px; /* Make it slightly more compact */
+        }
     </style>
 </head>
 <body>
@@ -3749,20 +3823,31 @@
                 <button class="load-button" id="load-button" onclick="openLoadDialog()" disabled title="Load Game">Load</button>
                 <button class="reset-button" id="reset-button" onclick="openResetDialog()" disabled title="Reset Campaign">Reset</button>
             </div>
-            <div class="image-generation-toggle">
-                <label class="toggle-label">
-                    <input type="checkbox" id="image-generation-toggle" checked>
-                    <span class="toggle-slider"></span>
-                    <span class="toggle-text">AI Images</span>
-                </label>
+            <div class="toggle-stack">
+                <div class="image-generation-toggle">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="image-generation-toggle" checked>
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-text">AI Images</span>
+                    </label>
+                </div>
+                <div class="image-generation-toggle">
+                    <label class="toggle-label" id="model-toggle-label">
+                        <input type="checkbox" id="model-toggle" unchecked>
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-text" id="model-toggle-text">GPT-4.1</span>
+                    </label>
+                </div>
             </div>
-            <div class="image-generation-toggle" style="margin-left: 15px;">
-                <label class="toggle-label" id="model-toggle-label">
-                    <input type="checkbox" id="model-toggle" unchecked>
-                    <span class="toggle-slider"></span>
-                    <span class="toggle-text" id="model-toggle-text">GPT-4.1</span>
-                </label>
-            </div>
+            
+            <!-- The relocated and modified Toolkit Button -->
+            <button class="toolkit-button" onclick="openToolkit()" title="Open Module Toolkit">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"></path>
+                </svg>
+                <span>Toolkit</span>
+            </button>
+            
             <button class="exit-button" id="exit-button" onclick="exitGame()" title="Exit Game">× Exit</button>
         </div>
     </div>
@@ -3805,6 +3890,7 @@
                             <button class="dice-clear-button" onclick="clearDiceResults()" title="Clear results">Clear</button>
                         </div>
                     </div>
+                    <!-- Module Toolkit Button moved to main header -->
                 </div>
             </div>
             
@@ -5704,6 +5790,11 @@
 
         function closeNPCSpells() {
             document.getElementById('npc-spells-modal').style.display = 'none';
+        }
+        
+        // Open Module Toolkit in new window
+        function openToolkit() {
+            window.open('/toolkit', 'ModuleToolkit', 'width=1400,height=900');
         }
         
         let diceRolls = { d20: [], damage: [] };

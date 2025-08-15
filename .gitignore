@@ -311,3 +311,4 @@ modules/*/
 # Game state files - should NOT be tracked
 # modules/campaign.json
 # modules/world_registry.json
+.claude/

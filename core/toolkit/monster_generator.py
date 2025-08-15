@@ -249,9 +249,9 @@ class MonsterGenerator:
     ) -> Path:
         """Save generated image to appropriate pack directory"""
         if pack_name:
-            base_dir = Path(f"graphic_packs/{pack_name}/monsters/images")
+            base_dir = Path(f"graphic_packs/{pack_name}/monsters")
         else:
-            base_dir = Path(f"graphic_packs/temp_{style}/monsters/images")
+            base_dir = Path(f"graphic_packs/temp_{style}/monsters")
         
         base_dir.mkdir(parents=True, exist_ok=True)
         
@@ -269,9 +269,9 @@ class MonsterGenerator:
     ) -> Path:
         """Generate and save thumbnail"""
         if pack_name:
-            base_dir = Path(f"graphic_packs/{pack_name}/monsters/thumbnails")
+            base_dir = Path(f"graphic_packs/{pack_name}/monsters")
         else:
-            base_dir = Path(f"graphic_packs/temp_{style}/monsters/thumbnails")
+            base_dir = Path(f"graphic_packs/temp_{style}/monsters")
         
         base_dir.mkdir(parents=True, exist_ok=True)
         
@@ -411,7 +411,7 @@ class MonsterGenerator:
         
         # Scan pack folder for additional monsters
         if pack_name:
-            pack_images_path = Path(f'graphic_packs/{pack_name}/monsters/images')
+            pack_images_path = Path(f'graphic_packs/{pack_name}/monsters')
             if pack_images_path.exists():
                 # Check JPG files
                 for img_file in pack_images_path.glob('*.jpg'):

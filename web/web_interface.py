@@ -696,8 +696,8 @@ def serve_pack_image(pack_name, filename):
     from flask import send_from_directory
     import os
     
-    # Construct the absolute path to the image
-    pack_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'monsters', 'images'))
+    # Construct the absolute path to the image - all files in monsters folder now
+    pack_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'monsters'))
     
     # Check if file exists
     file_path = os.path.join(pack_dir, filename)
@@ -719,8 +719,8 @@ def serve_pack_video(pack_name, filename):
     from flask import send_from_directory
     import os
     
-    # Construct the absolute path to the video
-    pack_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'monsters', 'videos'))
+    # Construct the absolute path to the video - all files in monsters folder now
+    pack_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'monsters'))
     
     # Check if file exists
     file_path = os.path.join(pack_dir, filename)
