@@ -1,0 +1,24 @@
+============================================================
+Run 1 Output:
+============================================================
+{
+  "narration": "You set the map between you and your companions, the hearthlight throwing warm bands across the worn parchment. Thane folds his arms, gaze steady. \"We need to know what we face before we throw ourselves at the lighthouse,\" he says. \"Traps and cultists are likely. Numbers matter.\" Elen taps a finger on the ruined abbey marked on the map. \"Scouting the approach and spotting likely ambushes will save lives. If the beacon is part of the curse, we should see how the light is defended and where the cult moves at night.\" Kira grins and drums her knuckles on the table. \"Or we push now and fetch Miralda's locket to the beacon. The quicker we act, the fewer innocents get taken.\"\n\nElder Dorun, seated nearby, lifts his head at your planning. \"If you go, speak with Captain Merek first. The garrison keeps watch of the approaches and may spare a hand or two. And stock up on iron and blessed water -- the folk swear by it against the things that crawl from the marsh.\" Grimjaw, polishing a mug, gives a curt nod from behind the bar. \"Supplies, then stealth. Dont be fools.\"\n\nOn the table lie the items you recovered: the brittle prayer book, the silver locket with the lighthouse crest, black ritual candles, and the sanctified bowl. Those pieces match the abbess's instructions--heart, flame, and sanctified water--which point directly at the lighthouse and the Briny Gate beneath it. Your quest list still reads: find Abbess Miralda, investigate the lighthouse beacon and its wards, and probe the catacombs beneath the abbey for the Briny Gate and the relic.\n\nWhat would you like to prioritize right now? Would you like to gather supplies and speak with Captain Merek and Elder Dorun, send Elen or Kira to scout the abbey approaches, prepare your spells and ritual components here, or move toward the Tideworn Gate while you still have daylight? Tell me which course you choose, and I will set it in motion.",
+  "actions": []
+}
+
+============================================================
+Run 2 Output:
+============================================================
+{
+  "narration": "You unroll the battered map and the list of concerns the party has collected so far. The morning light catches on the map's creases as your companions lean in.\n\nKira bounces on her heels, eyes bright. \"The abbey and that lighthouse are the heart of this mess. If we put a stop to the beacon, the rest should quiet down. I can slip ahead and see what the cultists are up to.\"\n\nElen wipes her blade and speaks softly, measured. \"We should not rush blindly. The ruins will be trapped and watched. I can scout the perimeter and find a safe approach, or we can set up an ambush and pick them off quietly.\"\n\nThane folds his arms, steady as a tree. \"We should also think of Marrow's Rest. If the cult spreads, the village suffers. We can secure the gates and speak with Captain Merek to coordinate a defense while we press the attack.\"\n\nYou recall the threads of your quest: the Sanctum and its crypts have yielded ritual tools and a locket tied to Abbess Miralda (PP004 through PP006); the Drowned Catacombs below the lighthouse still lie unexplored (PP007 through PP010); and the fate of the beacon and the Briny Gate will shape the isle's future (PP011). The objectives are clear in your mind, but the means are many.\n\nWhat will you decide, Eirik? Will you concentrate on the lighthouse and abbey now, send scouts to recon and disarm traps, return to the village to fortify and gather allies, or prepare the ritual and supplies needed to confront whatever waits beneath the waves? Tell the party your plan and who you want to take which role.",
+  "actions": []
+}
+
+============================================================
+Run 3 Output:
+============================================================
+{
+  "narration": "Eirik, you gather the others around the table and spread the worn map and the brittle prayer book between you. The sanctified bowl, the silver lighthouse locket, and the ritual instructions lie where everyone can see them — reminders that the next steps tie directly to the abbey and the lighthouse beacon. Sister Hela's warnings still echo in your mind, and the villagers' fear has not yet fully eased.\n\nYour party is rested, gear checked, and in possession of the ritual components that might break the beacon's corruption. The active threads on your quest are still tied to Marrow's Rest and the Cursed Cliffs: follow the clues beneath the abbey, confront Miralda if you can find her, and decide what to do about the lighthouse beacon and the Briny Gate below.\n\nWhat would you like to do next?",
+  "actions": []
+}
+

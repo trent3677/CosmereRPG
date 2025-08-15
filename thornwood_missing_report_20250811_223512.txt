@@ -1,0 +1,12 @@
+THORNWOOD WATCH MISSING MONSTER PORTRAIT GENERATION REPORT
+============================================================
+Generated on: 2025-08-11 22:35:12
+Model: gpt-image-1
+Quality: auto
+Size: 1024x1024
+
+Whispering Ashling: SUCCESS - monster_portraits/whispering_ashling_20250811_223207.png (61.75s)
+Ashbound Bandit: SUCCESS - monster_portraits/ashbound_bandit_20250811_223254.png (40.40s)
+Tainted Stirge: FAILED - Error code: 400 - {'error': {'message': 'Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID req_fb51cfa006d703b6c642839dec633627. safety_violations=[sexual].', 'type': 'image_generation_user_error', 'param': None, 'code': 'moderation_blocked'}}
+Elite Bandit Bodyguard: SUCCESS - monster_portraits/elite_bandit_bodyguard_20250811_223400.png (46.51s)
+Bandit Sentry: SUCCESS - monster_portraits/bandit_sentry_20250811_223505.png (58.23s)

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Portrait Display Test</title>
+    <style>
+        body {
+            background: #222;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .test-case {
+            background: #333;
+            border: 1px solid #555;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .test-case h3 {
+            margin: 0 0 10px 0;
+            color: #FFA500;
+            font-size: 14px;
+        }
+        
+        .portrait-test {
+            width: 150px;
+            height: 150px;
+            border: 2px solid #666;
+            margin: 10px auto;
+            background: #111;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .portrait-test img {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .test-info {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+        
+        .highlight {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        /* Different object-fit options */
+        .cover img { object-fit: cover; }
+        .contain img { object-fit: contain; }
+        .fill img { object-fit: fill; }
+        .none img { object-fit: none; }
+        .scale-down img { object-fit: scale-down; }
+        
+        /* Different object-position options */
+        .center-center img { object-position: center center; }
+        .top-center img { object-position: top center; }
+        .bottom-center img { object-position: bottom center; }
+        .center-top img { object-position: center top; }
+        .fifty-fifty img { object-position: 50% 50%; }
+        
+        /* Grid overlay to see positioning */
+        .with-grid {
+            background-image: 
+                linear-gradient(0deg, rgba(255,255,255,0.1) 50%, transparent 50%),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 50%, transparent 50%);
+            background-size: 20px 20px;
+        }
+        
+        .controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        #image-url {
+            width: 400px;
+            padding: 5px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Portrait Display Test</h1>
+    
+    <div class="controls">
+        <input type="text" id="image-url" value="/static/portraits/eirik_hearthwise.png" placeholder="Enter image URL">
+        <button onclick="updateImages()">Load Image</button>
+        <button onclick="addTimestamp()">Add Timestamp</button>
+        <button onclick="clearCache()">Clear Cache</button>
+    </div>
+    
+    <h2>Object-fit Tests (with center-center position)</h2>
+    <div class="test-grid">
+        <div class="test-case">
+            <h3>1. Cover (Current Setting)</h3>
+            <div class="portrait-test cover center-center with-grid">
+                <img class="test-img" src="/static/portraits/eirik_hearthwise.png" alt="Portrait">
+            </div>
+            <div class="test-info">
+                object-fit: <span class="highlight">cover</span><br>
+                Scales to cover entire box, may crop
+            </div>
+        </div>
+        
+        <div class="test-case">
+            <h3>2. Contain</h3>
+            <div class="portrait-test contain center-center with-grid">
+                <img class="test-img" src="/static/portraits/eirik_hearthwise.png" alt="Portrait">
+            </div>
+            <div class="test-info">
+                object-fit: <span class="highlight">contain</span><br>
+                Scales to fit, may have bars
+            </div>
+        </div>
+        
+        <div class="test-case">
+            <h3>3. Fill</h3>
+            <div class="portrait-test fill center-center with-grid">
+                <img class="test-img" src="/static/portraits/eirik_hearthwise.png" alt="Portrait">
+            </div>
+            <div class="test-info">
+                object-fit: <span class="highlight">fill</span><br>
+                Stretches to fill exactly
+            </div>
+        </div>
+        
+        <div class="test-case">
+            <h3>4. None</h3>
+            <div class="portrait-test none center-center with-grid">
+                <img class="test-img" src="/static/portraits/eirik_hearthwise.png" alt="Portrait">
+            </div>
+            <div class="test-info">
+                object-fit: <span class="highlight">none</span><br>
+                No resize, natural size
+            </div>
+        </div>
+    </div>
+    
+    <h2>Object-position Tests (with cover)</h2>
+    <div class="test-grid">
+        <div class="test-case">
+            <h3>5. Center Center</h3>
+            <div class="portrait-test cover center-center with-grid">
+                <img class="test-img" src="/static/portraits/eirik_hearthwise.png" alt="Portrait">
+            </div>
+            <div class="test-info">
+                object-position: <span class="highlight">center center</span><br>
+                Should center the image
+            </div>
+        </div>
+        
+        <div class="test-case">
+            <h3>6. Top Center</h3>
+            <div class="portrait-test cover top-center with-grid">
+                <img class="test-img" src="/static/portraits/eirik_hearthwise.png" alt="Portrait">
+            </div>
+            <div class="test-info">
+                object-position: <span class="highlight">top center</span><br>
+                Aligns to top
+            </div>
+        </div>
+        
+        <div class="test-case">
+            <h3>7. Bottom Center</h3>
+            <div class="portrait-test cover bottom-center with-grid">
+                <img class="test-img" src="/static/portraits/eirik_hearthwise.png" alt="Portrait">
+            </div>
+            <div class="test-info">
+                object-position: <span class="highlight">bottom center</span><br>
+                Aligns to bottom
+            </div>
+        </div>
+        
+        <div class="test-case">
+            <h3>8. 50% 50%</h3>
+            <div class="portrait-test cover fifty-fifty with-grid">
+                <img class="test-img" src="/static/portraits/eirik_hearthwise.png" alt="Portrait">
+            </div>
+            <div class="test-info">
+                object-position: <span class="highlight">50% 50%</span><br>
+                Percentage-based center
+            </div>
+        </div>
+    </div>
+    
+    <h2>Raw Image Analysis</h2>
+    <div style="background: white; padding: 20px; margin: 20px 0; color: black;">
+        <h3>Original Image (no styling)</h3>
+        <img id="raw-img" src="/static/portraits/eirik_hearthwise.png" alt="Portrait" style="border: 1px solid red;">
+        <div id="image-info"></div>
+    </div>
+    
+    <script>
+        function updateImages() {
+            const url = document.getElementById('image-url').value;
+            const images = document.querySelectorAll('.test-img');
+            images.forEach(img => {
+                img.src = url;
+            });
+            document.getElementById('raw-img').src = url;
+            analyzeImage();
+        }
+        
+        function addTimestamp() {
+            const url = document.getElementById('image-url').value;
+            const timestampUrl = url.includes('?') ? 
+                url + '&t=' + Date.now() : 
+                url + '?t=' + Date.now();
+            document.getElementById('image-url').value = timestampUrl;
+            updateImages();
+        }
+        
+        function clearCache() {
+            // Force reload by adding unique timestamp
+            addTimestamp();
+        }
+        
+        function analyzeImage() {
+            const img = document.getElementById('raw-img');
+            img.onload = function() {
+                const info = document.getElementById('image-info');
+                info.innerHTML = `
+                    <p>Natural dimensions: ${img.naturalWidth} x ${img.naturalHeight}</p>
+                    <p>Display dimensions: ${img.width} x ${img.height}</p>
+                    <p>Aspect ratio: ${(img.naturalWidth / img.naturalHeight).toFixed(2)}</p>
+                    <p>${img.naturalWidth === img.naturalHeight ? '✓ Image is square' : '✗ Image is not square'}</p>
+                `;
+                
+                // Check if image appears cropped
+                if (img.naturalWidth === 256 && img.naturalHeight === 256) {
+                    info.innerHTML += '<p style="color: green;">✓ Image is 256x256 as expected</p>';
+                } else {
+                    info.innerHTML += '<p style="color: red;">✗ Image is not 256x256!</p>';
+                }
+            };
+        }
+        
+        // Initial analysis
+        window.onload = function() {
+            analyzeImage();
+        };
+    </script>
+</body>
+</html>

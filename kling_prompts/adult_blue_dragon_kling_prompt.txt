@@ -1,0 +1,11 @@
+MONSTER: Adult Blue Dragon
+IMAGE: monster_portraits/adult_blue_dragon_20250810_153903.png
+============================================================
+
+KLING AI PROMPT:
+Colossal blue dragon atop desert mesa during lightning storm, electricity crackling between its massive horn and frilled ears. Its sapphire scales shimmer as it spreads its 100-foot wingspan wide. The dragon's mouth opens revealing sword-like teeth as lightning builds in its throat. Sand swirls in cyclones around its claws, lightning courses through wing membranes. The tail blade sweeps menacingly. Photorealistic detail with smooth consistent motion, dynamic lightning effects, and overwhelming elemental fury.
+
+SETTINGS:
+- Model: Kling 2.1
+- Duration: 5 seconds
+- Mode: Image-to-Video

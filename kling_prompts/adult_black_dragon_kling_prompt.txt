@@ -1,0 +1,11 @@
+MONSTER: Adult Black Dragon
+IMAGE: monster_portraits/adult_black_dragon_20250810_153808.png
+============================================================
+
+KLING AI PROMPT:
+Massive black dragon emerging from fetid swamp water, acidic green vapor hissing from its jaws and dissolving the ground beneath. Its obsidian scales gleam with dark purple highlights as it spreads its 80-foot wingspan. The dragon rears up, skull-like head with forward-swept horns raised high, mouth opening wide as acid builds in its throat. Dead trees crack under its weight, bones scatter. Photorealistic detail with smooth consistent motion, realistic acid effects, and terrifying draconic power.
+
+SETTINGS:
+- Model: Kling 2.1
+- Duration: 5 seconds
+- Mode: Image-to-Video

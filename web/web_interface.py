@@ -71,9 +71,21 @@ import utils.reset_campaign as reset_campaign
 from core.managers.status_manager import set_status_callback
 from utils.enhanced_logger import debug, info, warning, error, set_script_name
 
+# Import toolkit components for API support
+try:
+    from core.toolkit.pack_manager import PackManager
+    from core.toolkit.monster_generator import MonsterGenerator
+    from core.toolkit.video_processor import VideoProcessor
+    TOOLKIT_AVAILABLE = True
+except ImportError:
+    TOOLKIT_AVAILABLE = False
+    print("Module Toolkit not available - toolkit endpoints disabled")
+
 # Set script name for logging
 set_script_name("web_interface")
 
+# Set up Flask with correct template and static paths
+# Templates are in both web/templates (for game) and root templates (for toolkit)
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dungeon-master-secret-key'
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -525,6 +537,533 @@ def get_spell_data():
         return jsonify(spell_data)
     except FileNotFoundError:
         return jsonify({})
+
+# ============================================================================
+# MODULE TOOLKIT API ENDPOINTS
+# ============================================================================
+
+@app.route('/toolkit')
+def toolkit_interface():
+    """Serve the module toolkit interface"""
+    if not TOOLKIT_AVAILABLE:
+        return "Module Toolkit not available", 503
+    return render_template('module_toolkit.html')
+
+@app.route('/api/toolkit/packs')
+def get_packs():
+    """Get list of available graphic packs"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify([])
+    
+    try:
+        manager = PackManager()
+        packs = manager.list_available_packs()
+        return jsonify(packs)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to list packs: {e}")
+        return jsonify([])
+
+@app.route('/api/toolkit/packs/create', methods=['POST'])
+def create_pack():
+    """Create a new graphic pack"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        manager = PackManager()
+        result = manager.create_pack(
+            name=data.get('name'),
+            style_template=data.get('style', 'photorealistic'),
+            author=data.get('author', 'Module Toolkit'),
+            description=data.get('description', '')
+        )
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to create pack: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/packs/<pack_name>/activate', methods=['POST'])
+def activate_pack(pack_name):
+    """Activate a graphic pack"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        manager = PackManager()
+        result = manager.activate_pack(pack_name)
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to activate pack: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/packs/<pack_name>/export')
+def export_pack(pack_name):
+    """Export a pack as ZIP file"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        import tempfile
+        manager = PackManager()
+        
+        # Export to temp directory
+        with tempfile.TemporaryDirectory() as temp_dir:
+            result = manager.export_pack(pack_name, temp_dir)
+            if result['success']:
+                # Send the ZIP file
+                zip_path = result['zip_path']
+                with open(zip_path, 'rb') as f:
+                    zip_data = f.read()
+                
+                response = Response(
+                    zip_data,
+                    mimetype='application/zip',
+                    headers={
+                        'Content-Disposition': f'attachment; filename={os.path.basename(zip_path)}'
+                    }
+                )
+                return response
+            else:
+                return jsonify(result), 400
+    except Exception as e:
+        error(f"TOOLKIT: Failed to export pack: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/toolkit/packs/<pack_name>', methods=['DELETE'])
+def delete_pack(pack_name):
+    """Delete a graphic pack"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        manager = PackManager()
+        result = manager.delete_pack(pack_name)
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to delete pack: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/packs/import', methods=['POST'])
+def import_pack():
+    """Import a pack from ZIP file"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        if 'pack' not in request.files:
+            return jsonify({'success': False, 'error': 'No file provided'})
+        
+        file = request.files['pack']
+        if file.filename == '':
+            return jsonify({'success': False, 'error': 'No file selected'})
+        
+        # Save to temp file
+        import tempfile
+        with tempfile.NamedTemporaryFile(suffix='.zip', delete=False) as tmp:
+            file.save(tmp.name)
+            manager = PackManager()
+            result = manager.import_pack(tmp.name)
+            os.unlink(tmp.name)  # Clean up temp file
+            
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to import pack: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/monsters')
+def get_monsters():
+    """Get list of available monsters"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify([])
+    
+    try:
+        # Get pack parameter from query string
+        pack_name = request.args.get('pack', 'photorealistic')
+        
+        # Use a temporary generator instance to get monster list
+        from config import OPENAI_API_KEY
+        generator = MonsterGenerator(api_key=OPENAI_API_KEY)
+        monsters = generator.get_monster_list(pack_name=pack_name)
+        return jsonify(monsters)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get monster list: {e}")
+        return jsonify([])
+
+@app.route('/toolkit/pack_image/<pack_name>/<filename>')
+def serve_pack_image(pack_name, filename):
+    """Serve an image from a graphic pack"""
+    from flask import send_from_directory
+    import os
+    
+    # Construct the absolute path to the image
+    pack_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'monsters', 'images'))
+    
+    # Check if file exists
+    file_path = os.path.join(pack_dir, filename)
+    if os.path.exists(file_path):
+        return send_from_directory(pack_dir, filename)
+    
+    # Fallback to web/static/media/monsters if not in pack
+    fallback_dir = os.path.abspath(os.path.join('web', 'static', 'media', 'monsters'))
+    fallback_path = os.path.join(fallback_dir, filename)
+    if os.path.exists(fallback_path):
+        return send_from_directory(fallback_dir, filename)
+    
+    # Return 404 if not found
+    return '', 404
+
+@app.route('/toolkit/pack_video/<pack_name>/<filename>')
+def serve_pack_video(pack_name, filename):
+    """Serve a video from a graphic pack"""
+    from flask import send_from_directory
+    import os
+    
+    # Construct the absolute path to the video
+    pack_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'monsters', 'videos'))
+    
+    # Check if file exists
+    file_path = os.path.join(pack_dir, filename)
+    if os.path.exists(file_path):
+        return send_from_directory(pack_dir, filename)
+    
+    # Fallback to web/static/media/monsters if not in pack
+    fallback_dir = os.path.abspath(os.path.join('web', 'static', 'media', 'monsters'))
+    fallback_path = os.path.join(fallback_dir, filename)
+    if os.path.exists(fallback_path):
+        return send_from_directory(fallback_dir, filename)
+    
+    # Return 404 if not found
+    return '', 404
+
+@app.route('/api/toolkit/generate', methods=['POST'])
+def generate_monsters():
+    """Start monster generation task"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        pack_name = data.get('pack_name')
+        style = data.get('style', 'photorealistic')
+        model = data.get('model', 'auto')
+        monsters = data.get('monsters', [])
+        
+        # Start generation in background thread
+        import uuid
+        import asyncio
+        task_id = str(uuid.uuid4())
+        
+        def run_generation():
+            try:
+                from config import OPENAI_API_KEY
+                generator = MonsterGenerator(api_key=OPENAI_API_KEY)
+                
+                # Create progress callback
+                def progress_callback(progress_data):
+                    socketio.emit('generation_progress', progress_data)
+                
+                # Run the async function
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                result = loop.run_until_complete(
+                    generator.batch_generate_pack(
+                        pack_name=pack_name,
+                        style=style,
+                        monsters=monsters,
+                        model=model,
+                        progress_callback=progress_callback
+                    )
+                )
+                
+                socketio.emit('generation_complete', result)
+            except Exception as e:
+                error(f"TOOLKIT: Generation failed: {e}")
+                socketio.emit('generation_error', {'error': str(e)})
+        
+        # Start in background thread
+        thread = threading.Thread(target=run_generation)
+        thread.daemon = True
+        thread.start()
+        
+        return jsonify({'success': True, 'task_id': task_id})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to start generation: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/process-video', methods=['POST'])
+def process_video():
+    """Process a monster video"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        if 'video' not in request.files:
+            return jsonify({'success': False, 'error': 'No video file provided'})
+        
+        file = request.files['video']
+        monster_id = request.form.get('monster_id')
+        pack_name = request.form.get('pack_name')
+        
+        if not monster_id or not pack_name:
+            return jsonify({'success': False, 'error': 'Missing monster_id or pack_name'})
+        
+        # Save to temp file
+        import tempfile
+        import time
+        
+        tmp_file = None
+        result = {'success': False, 'error': 'Unknown error'}  # Initialize result
+        
+        try:
+            with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as tmp:
+                tmp_file = tmp.name
+                file.save(tmp_file)
+            
+            print(f"[INFO] Processing video for {monster_id}")
+            print(f"[INFO] Temp file: {tmp_file}")
+            print(f"[INFO] File size: {os.path.getsize(tmp_file)} bytes")
+            
+            processor = VideoProcessor()
+            result = processor.process_monster_video(
+                input_path=tmp_file,
+                monster_id=monster_id,
+                pack_name=pack_name,
+                skip_compression=False  # Enable compression
+            )
+            
+            # Try to clean up temp file with retries for Windows
+            for attempt in range(5):
+                try:
+                    if tmp_file and os.path.exists(tmp_file):
+                        os.unlink(tmp_file)
+                    break
+                except PermissionError:
+                    if attempt < 4:  # Don't sleep on last attempt
+                        time.sleep(0.5)  # Wait half a second and retry
+                    else:
+                        # Log warning but don't fail the request
+                        print(f"Warning: Could not delete temp file {tmp_file}")
+                        
+        except Exception as process_error:
+            # Capture the actual error in result
+            error(f"TOOLKIT: Video processing error: {process_error}")
+            result = {'success': False, 'error': str(process_error)}
+            
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to process video: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/toolkit/get_style_prompt/<style_id>')
+def get_style_prompt(style_id):
+    """Get the prompt for a specific style"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'prompt': ''})
+    
+    try:
+        from core.toolkit.style_manager import StyleManager
+        manager = StyleManager()
+        prompt = manager.get_style_prompt(style_id)
+        return jsonify({'prompt': prompt or ''})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get style prompt: {e}")
+        return jsonify({'prompt': ''})
+
+@app.route('/toolkit/get_styles')
+def get_all_styles():
+    """Get all available style templates"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'builtin': {}, 'custom': {}})
+    
+    try:
+        from core.toolkit.style_manager import StyleManager
+        manager = StyleManager()
+        styles = manager.get_all_styles()
+        
+        # Organize by type
+        builtin = {k: v for k, v in styles.items() if v['type'] == 'builtin'}
+        custom = {k: v for k, v in styles.items() if v['type'] == 'custom'}
+        
+        return jsonify({'builtin': builtin, 'custom': custom})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get styles: {e}")
+        return jsonify({'builtin': {}, 'custom': {}})
+
+@app.route('/toolkit/save_style_template', methods=['POST'])
+def save_style_template():
+    """Save a custom style template"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        name = data.get('name')
+        prompt = data.get('prompt')
+        
+        if not name or not prompt:
+            return jsonify({'success': False, 'error': 'Name and prompt are required'})
+        
+        from core.toolkit.style_manager import StyleManager
+        manager = StyleManager()
+        result = manager.save_custom_style(name, prompt)
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to save style: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/toolkit/update_style_prompt', methods=['POST'])
+def update_style_prompt():
+    """Update an existing style's prompt"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        style_id = data.get('style_id')
+        prompt = data.get('prompt')
+        
+        if not style_id or not prompt:
+            return jsonify({'success': False, 'error': 'Style ID and prompt are required'})
+        
+        from core.toolkit.style_manager import StyleManager
+        manager = StyleManager()
+        result = manager.update_custom_style(style_id, prompt)
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to update style: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/toolkit/get_monster_description/<monster_id>')
+def get_monster_description(monster_id):
+    """Get the description for a specific monster"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'description': '', 'name': monster_id})
+    
+    try:
+        # Load monster compendium
+        import json
+        compendium_path = 'data/bestiary/monster_compendium.json'
+        with open(compendium_path, 'r') as f:
+            compendium = json.load(f)
+        
+        # Look for monster in compendium
+        monsters = compendium.get('monsters', {})
+        if monster_id in monsters:
+            monster_data = monsters[monster_id]
+            return jsonify({
+                'description': monster_data.get('description', ''),
+                'name': monster_data.get('name', monster_id)
+            })
+        else:
+            # Try with underscores replaced by spaces
+            monster_id_alt = monster_id.replace('_', ' ').lower()
+            for mid, mdata in monsters.items():
+                if mid.lower() == monster_id_alt or mdata.get('name', '').lower() == monster_id_alt:
+                    return jsonify({
+                        'description': mdata.get('description', ''),
+                        'name': mdata.get('name', monster_id)
+                    })
+        
+        return jsonify({'description': '', 'name': monster_id})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get monster description: {e}")
+        return jsonify({'description': '', 'name': monster_id})
+
+@app.route('/toolkit/update_monster_description', methods=['POST'])
+def update_monster_description():
+    """Update a monster's description"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        monster_id = data.get('monster_id')
+        description = data.get('description')
+        
+        if not monster_id or not description:
+            return jsonify({'success': False, 'error': 'Monster ID and description are required'})
+        
+        # Load and update monster compendium
+        import json
+        compendium_path = 'data/bestiary/monster_compendium.json'
+        with open(compendium_path, 'r') as f:
+            compendium = json.load(f)
+        
+        monsters = compendium.get('monsters', {})
+        if monster_id in monsters:
+            monsters[monster_id]['description'] = description
+        else:
+            # Try to find by alternative ID
+            monster_id_alt = monster_id.replace('_', ' ').lower()
+            found = False
+            for mid, mdata in monsters.items():
+                if mid.lower() == monster_id_alt or mdata.get('name', '').lower() == monster_id_alt:
+                    monsters[mid]['description'] = description
+                    found = True
+                    break
+            
+            if not found:
+                # Add new monster entry
+                monsters[monster_id] = {
+                    'name': monster_id.replace('_', ' ').title(),
+                    'description': description,
+                    'type': 'unknown',
+                    'tags': []
+                }
+        
+        # Save updated compendium
+        with open(compendium_path, 'w') as f:
+            json.dump(compendium, f, indent=2)
+        
+        return jsonify({'success': True, 'message': 'Monster description updated'})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to update monster description: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/toolkit/create_pack', methods=['POST'])
+def create_pack_toolkit():
+    """Create a new graphic pack from toolkit"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        manager = PackManager()
+        result = manager.create_pack(
+            name=data.get('name'),
+            style_template=data.get('style_template', 'photorealistic'),
+            author=data.get('author', 'Module Toolkit'),
+            description=data.get('description', '')
+        )
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to create pack: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/settings', methods=['POST'])
+def save_toolkit_settings():
+    """Save toolkit settings"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        active_pack = data.get('active_pack')
+        api_key = data.get('api_key')
+        
+        # Save active pack
+        if active_pack:
+            manager = PackManager()
+            manager.activate_pack(active_pack)
+        
+        # API key would be saved to config if provided
+        # For now, just acknowledge
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to save settings: {e}")
+        return jsonify({'success': False, 'error': str(e)})
 
 @socketio.on('connect')
 def handle_connect():
@@ -1516,6 +2055,7 @@ def open_browser():
     except ImportError:
         port = 8357
     webbrowser.open(f'http://localhost:{port}')
+
 
 if __name__ == '__main__':
     # Create templates directory if it doesn't exist

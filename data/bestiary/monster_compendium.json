@@ -1,0 +1,1249 @@
+{
+  "version": "1.0.0",
+  "created": "2025-08-13",
+  "total_monsters": 126,
+  "monsters": {
+    "bandit_sentry": {
+      "name": "Bandit Sentry",
+      "type": "giant",
+      "description": "A lean, alert human rogue in worn leather armor, constantly scanning for threats. The figure has sharp, hawkish features with keen eyes that miss nothing. Wears a hooded cloak in forest colors for camouflage, with the hood partially drawn. Light leather armor reinforced with metal studs at vital points allows for quick movement. A well-used shortbow is held ready with an arrow nocked but not drawn. A quiver of arrows hangs at the hip alongside a short sword. Their stance shows readiness to either shoot or sound an alarm horn hanging from their belt. Face paint in dark patterns helps break up their features for better concealment. Several small pouches and tools for setting simple alarms and traps hang from their belt. They stand on elevated ground or a wooden watchtower platform, eyes constantly moving, embodying the perfect lookout. The background shows a forest path they're watching. Photorealistic detail capturing the alert tension and readiness, with careful attention to the weathered equipment and camouflage elements, dramatic forest lighting.",
+      "tags": [
+        "tiny"
+      ],
+      "source_file": "generate_thornwood_missing.py"
+    },
+    "aboleth": {
+      "name": "Aboleth",
+      "type": "aberration",
+      "description": "Ancient fish-like horror floating in dark underwater cavern, its three red eyes pulsing with alien intelligence. Four massive tentacles writhe and coil through murky water, dripping thick mucus. The creature's rubbery gray-green skin glistens as bioluminescent fungi cast eerie light across its bulk. It moves forward slowly, tentacles reaching toward viewer, mouth opening to reveal rows of needle teeth. Water ripples around its massive form. Photorealistic detail with smooth consistent motion, underwater lighting effects, and overwhelming sense of ancient alien menace.",
+      "tags": [
+        "ancient",
+        "aquatic",
+        "large"
+      ],
+      "source_file": "generate_kling_videos_batch1.py"
+    },
+    "adult_black_dragon": {
+      "name": "Adult Black Dragon",
+      "type": "dragon",
+      "description": "Massive black dragon emerging from fetid swamp water, acidic green vapor hissing from its jaws and dissolving the ground beneath. Its obsidian scales gleam with dark purple highlights as it spreads its 80-foot wingspan. The dragon rears up, skull-like head with forward-swept horns raised high, mouth opening wide as acid builds in its throat. Dead trees crack under its weight, bones scatter. Photorealistic detail with smooth consistent motion, realistic acid effects, and terrifying draconic power.",
+      "tags": [
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_kling_videos_batch1.py"
+    },
+    "adult_blue_dragon": {
+      "name": "Adult Blue Dragon",
+      "type": "dragon",
+      "description": "Colossal blue dragon atop desert mesa during lightning storm, electricity crackling between its massive horn and frilled ears. Its sapphire scales shimmer as it spreads its 100-foot wingspan wide. The dragon's mouth opens revealing sword-like teeth as lightning builds in its throat. Sand swirls in cyclones around its claws, lightning courses through wing membranes. The tail blade sweeps menacingly. Photorealistic detail with smooth consistent motion, dynamic lightning effects, and overwhelming elemental fury.",
+      "tags": [
+        "large",
+        "flying",
+        "psychic"
+      ],
+      "source_file": "generate_kling_videos_batch1.py"
+    },
+    "adult_red_dragon": {
+      "name": "Adult Red Dragon",
+      "type": "dragon",
+      "description": "Titanic red dragon perched on volcanic mountain, smoke and embers constantly rising from its ruby-scaled body. The dragon spreads its 120-foot wingspan casting enormous shadows as lava flows below. Its mouth opens in mighty roar, showing massive fangs with inferno building in throat. Heat distortion ripples around its form, volcanic fire backlights the scene. Wings beat once sending waves of superheated air. Photorealistic detail with smooth consistent motion, realistic fire effects, and legendary draconic presence.",
+      "tags": [
+        "legendary",
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_kling_videos_batch1.py"
+    },
+    "air_elemental": {
+      "name": "Air Elemental",
+      "type": "elemental",
+      "description": "Swirling tornado of living wind rising from ground, debris and leaves caught in its vortex making its shape visible. Lightning flashes within cloudy form as two brilliant white points of light serve as eyes. The cyclone arms extend and retract, whirling at different speeds. Dust devils spin off from main body. The elemental surges forward, growing taller, air pressure changes visible as ripples. Photorealistic detail with smooth consistent motion, realistic wind effects, and raw power of unleashed storm.",
+      "tags": [
+        "psychic"
+      ],
+      "source_file": "generate_kling_videos_batch1.py"
+    },
+    "ankheg": {
+      "name": "Ankheg",
+      "type": "aberration",
+      "description": "Monstrous insectoid predator erupting from underground tunnel, dirt cascading off brown and yellow chitinous armor. Its massive mandibles spread wide, dripping acidic green fluid that sizzles on ground. Six serrated legs scramble for purchase as it emerges. Compound eyes with hundreds of facets reflect light in alien manner. Antennae twitch sensing vibrations. The creature lurches forward aggressively. Photorealistic detail with smooth consistent motion, realistic acid effects, and predatory insectoid horror.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_kling_videos_batch1.py"
+    },
+    "banshee": {
+      "name": "Banshee",
+      "type": "elemental",
+      "description": "Translucent elven spirit floating above graveyard ground, long white hair flowing as if underwater. Her gaunt skeletal face with glowing blue eyes opens in endless silent scream. Tattered gown billows around ghostly form, ectoplasmic wisps trailing behind. She drifts forward, elongated claw fingers reaching desperately. Blue-white glow intensifies, tombstones visible through translucent body. Photorealistic detail with smooth consistent motion, ethereal transparency effects, and overwhelming supernatural anguish.",
+      "tags": [
+        "incorporeal",
+        "aquatic"
+      ],
+      "source_file": "generate_kling_videos_batch1.py"
+    },
+    "basilisk": {
+      "name": "Basilisk",
+      "type": "monstrosity",
+      "description": "Eight-legged reptilian monster advancing with unsettling spider-like gait, dark green scales with brown mottling. Its pale yellow eyes glow with sickly light - the deadly gaze that turns victims to stone. The creature's broad flat head sways as it moves, crown of small horns catching light. Mouth opens slightly showing rows of sharp teeth. Behind it, partially petrified victims frozen mid-scream. Heavy tail drags leaving furrows. Photorealistic detail with smooth consistent motion, hypnotic eye glow, and deadly reptilian menace.",
+      "tags": [
+        "tiny"
+      ],
+      "source_file": "generate_kling_videos_batch1.py"
+    },
+    "behir": {
+      "name": "Behir",
+      "type": "dragon",
+      "description": "Massive 40-foot serpentine monster undulating forward, brilliant blue scales crackling with electrical energy. Lightning arcs between its two curved horns and courses down entire length. Twelve legs move in rippling sequence allowing shocking speed. The dragon-like head rears up, mouth opening as electrical breath weapon builds, throat glowing blue-white. Electricity arcs to nearby surfaces. The creature coils and strikes with serpentine grace. Photorealistic detail with smooth consistent motion, dynamic lightning effects, and unique horror of snake with legs.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_kling_videos_batch1.py"
+    },
+    "beholder": {
+      "name": "Beholder",
+      "type": "aberration",
+      "description": "Floating spherical aberration hovering forward, massive central eye projecting antimagic cone. Ten eyestalks writhe like serpents atop sphere, each different colored eye tracking independently - red, green, blue, yellow rays ready to fire. Massive mouth below central eye opens showing hundreds of needle teeth. The creature rotates slowly, paranoid gaze sweeping area. Chitinous purple hide pulses with veins. Drool drips from maw. Photorealistic detail with smooth consistent motion, multiple independent eye movements, and overwhelming alien paranoia.",
+      "tags": [
+        "swarm",
+        "large"
+      ],
+      "source_file": "generate_kling_videos_batch1.py"
+    },
+    "rakshasa": {
+      "name": "Rakshasa",
+      "type": "beast",
+      "description": "A fiendish shapeshifter appearing as a well-dressed humanoid with the disturbing feature of backwards hands - palms where the backs should be. Its true head is that of a tiger with intelligent, malevolent eyes. The rakshasa wears fine silk robes and jewelry befitting nobility. Orange and black striped fur covers its tiger head while the body appears human. Its backwards hands gesture in unnatural ways that unsettle viewers. Sharp fangs show when it smiles. The creature stands in an opulent palace setting, surrounded by illusions and luxury. Magic crackles around its reversed hands. Its expression shows cruel intelligence and contempt for lesser beings. The blend of tiger and human is both regal and wrong. Photorealistic rendering of the shapeshifting fiend, the backwards hands, and the deceptive demon of desire.",
+      "tags": [],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "remorhaz": {
+      "name": "Remorhaz",
+      "type": "elemental",
+      "description": "A 30-foot long arctic predator resembling a massive centipede with a super-heated body. Its segmented form is covered in white and blue chitinous plates, but its back glows red-hot, melting snow and ice around it. The head features massive mandibles and multiple eyes. Steam constantly rises from its heated segments. The creature burrows through glaciers, its body heat creating tunnels. It emerges from ice and snow, the contrast between its frozen environment and burning body creating clouds of steam. Ice melts and refreezes around its form. The mandibles drip with caustic saliva. Its many legs end in claws that grip ice. Photorealistic rendering of the ice and fire paradox, the thermal predator, and the terror of the frozen wastes.",
+      "tags": [
+        "swarm",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "roc": {
+      "name": "Roc",
+      "type": "plant",
+      "description": "A gargantuan eagle of legendary proportions, with a 200-foot wingspan and standing 30 feet tall. Its feathers are golden-brown with white tips, each primary feather the size of a tree. The beak could swallow an elephant whole. Its talons are like curved swords capable of carrying off whales. The roc perches on a mountain peak that seems small beneath it, with entire trees visible as tiny shrubs far below. Its eyes show the fierce intelligence of an apex predator. Wind from its wings creates storms. The creature holds a mammoth in one talon like a mouse. Clouds part around its massive form. Photorealistic rendering emphasizing the impossible scale, the majesty, and the primal power of the largest bird in existence.",
+      "tags": [
+        "tiny",
+        "legendary",
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "rust_monster": {
+      "name": "Rust Monster",
+      "type": "monstrosity",
+      "description": "A bizarre insectoid creature the size of a large dog with a body covered in rusty- brown chitinous plates. Most distinctive are its two long, feathery antennae that corrode metal on contact. The creature has four legs and a long tail ending in a paddle-like protrusion. Its head features compound eyes and a mouth designed for eating rust. The rust monster is shown approaching a terrified warrior, its antennae reaching for the metal armor which already shows spots of rust spreading. Flakes of corroded metal fall from its mouth. The creature's body has a metallic sheen from its diet. It moves with insect-like quickness. Photorealistic detail showing the unique threat to adventurers, the metal-eater, and the dungeon pest that destroys equipment.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "sahuagin": {
+      "name": "Sahuagin",
+      "type": "elemental",
+      "description": "A 7-foot tall aquatic humanoid with the features of a predatory fish. Green scales cover its muscular body, with a lighter belly and darker back. The head is fish-like with large black eyes adapted for deep water, gill slits on the neck, and a mouth full of needle-sharp teeth. Webbed hands and feet end in sharp claws. A fin runs down its spine and tail. The sahuagin carries a trident and net, wearing minimal armor made from shark hide and shells. It stands in shallow water in an underwater cave, bioluminescent algae providing eerie light. Its expression shows cold predatory intelligence. Scars from battles with other sea creatures mark its body. Photorealistic rendering of the sea devil, the underwater raider, and the shark-like humanoid predator.",
+      "tags": [
+        "aquatic",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "salamander": {
+      "name": "Salamander",
+      "type": "elemental",
+      "description": "A 12-foot long creature from the Elemental Plane of Fire, with the upper body of a muscular humanoid and the lower body of a snake, all wreathed in flames. Its skin is like cooling lava - black with cracks showing molten fire beneath. The humanoid portion wields a superheated metal spear that glows white-hot. Its eyes are pools of liquid flame. The snake portion coils and uncoils, leaving scorch marks. Fire constantly dances along its entire form. The salamander rises from a lava pool in a volcanic forge, working metal with its bare hands. Heat distortion surrounds it. Its expression shows the joy of creation through fire. Photorealistic rendering of the fire elemental smith, the living forge, and the serpent of flame.",
+      "tags": [
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "satyr": {
+      "name": "Satyr",
+      "type": "beast",
+      "description": "A fey creature with the upper body of a handsome human male and the legs of a goat. Standing 5 feet tall with curly brown hair adorned with vine wreaths and small horns protruding from the forehead. The human portion is lean and athletic with sun-bronzed skin. From the waist down, brown fur covers digitigrade goat legs ending in cloven hooves. The satyr plays pan pipes, its fingers dancing over the reeds. Its expression is mischievous and lustful, with a perpetual smirk. It dances in a forest glade during a celebration, wine jug nearby. Flowers bloom where its hooves touch. The blend between human and goat is natural for this fey being. Photorealistic rendering of the party animal, the fey musician, and the embodiment of wild celebration.",
+      "tags": [
+        "tiny"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "shadow": {
+      "name": "Shadow",
+      "type": "construct",
+      "description": "An undead creature of living darkness, vaguely humanoid in shape but made entirely of animated shadow. Its form constantly shifts and wavers like smoke, with no definite edges. Where eyes should be, two points of darker void seem to draw in light. The shadow glides across surfaces, sometimes three-dimensional, sometimes flat against walls. Its touch drains strength, leaving victims weak. The creature is shown reaching out with elongated fingers of darkness, partly on a wall, partly standing free. Light seems to bend away from it. Other shadows in the area seem drawn to it. Its presence makes the area colder and darker. Photorealistic rendering of animated darkness, the strength-draining undead, and the horror of one's shadow coming to life.",
+      "tags": [],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "shambling_mound": {
+      "name": "Shambling Mound",
+      "type": "construct",
+      "description": "A 9-foot tall mass of rotting vegetation animated into a vaguely humanoid form. Composed of vines, moss, roots, and compost, constantly dripping with swamp water and decay. Two arm-like appendages of tangled vines extend from the main mass. What might be a head is just a denser collection of vegetation with two dim points of light for eyes. The creature moves with a shuffling gait, leaving a trail of mulch. Insects and small creatures live within its form. Mushrooms and flowers randomly bloom and die on its surface. The shambling mound emerges from a swamp, algae and pond scum draping from it. The smell of decay is almost visible. Photorealistic rendering of animated plant matter, the swamp horror, and the compost heap come to life.",
+      "tags": [
+        "tiny"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "shield_guardian": {
+      "name": "Shield Guardian",
+      "type": "beast",
+      "description": "A 9-foot tall magical construct built to protect a specific master. Its body is made of wood, metal, and stone combined into a humanoid form. The head is stylized and expressionless with glowing eyes matching the amulet worn by its master. Runic symbols cover its body, glowing when it absorbs spells meant for its ward. The guardian's body shows master craftsmanship - articulated joints, reinforced plating, and magical crystals at power points. It stands in eternal vigil, one arm extended as a shield, the other ready to strike. Despite being a construct, there's something noble in its bearing. It shows battle damage from protecting its master, each dent a badge of service. Photorealistic rendering of the magical bodyguard, the constructed protector, and the ultimate defensive companion.",
+      "tags": [
+        "boss",
+        "magical"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "skeleton": {
+      "name": "Skeleton",
+      "type": "construct",
+      "description": "An animated human skeleton, yellowed bones held together by necromantic magic. Dark energy glows in its empty eye sockets. The bones show signs of age - cracks, chips, and weathering. It moves with unnatural precision, every motion mechanical. The skeleton carries a rusty sword and wears the tattered remains of ancient armor. Its jaw hangs open in a perpetual grin of death. The creature stands in a dark crypt, other skeletons visible rising from their graves. Dust falls from its joints as it moves. Despite having no muscles, it moves with surprising speed. The absence of flesh makes it more terrifying, a reminder of mortality. Photorealistic rendering of animated bones, the basic undead, and death's foot soldier.",
+      "tags": [
+        "ancient",
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "specter": {
+      "name": "Specter",
+      "type": "humanoid",
+      "description": "A translucent undead spirit of someone who died violently, bound to the material plane by dark emotions. The specter appears as it did at the moment of death - wounds visible, expression frozen in final terror or rage. Its form is ethereal, allowing the background to show through. A pale blue-green glow emanates from it. The specter's touch passes through armor to drain life force directly. It floats above the ground, tethered to the site of its death. Ectoplasmic wisps trail from its form. Its mouth opens in a silent scream of anguish. The area around it grows cold and lights dim. Photorealistic rendering of ethereal undeath, the life-draining ghost, and the soul trapped by violence.",
+      "tags": [
+        "incorporeal"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "sphinx": {
+      "name": "Sphinx",
+      "type": "beast",
+      "description": "A majestic creature with a human head on a lion's body and eagle wings. The gynosphinx shown has the head of a beautiful woman with intelligence and wisdom in her eyes. Her human features are perfectly proportioned with dark skin and Egyptian styling. The lion body is powerful and golden, with muscles rippling beneath the fur. Eagle wings spread 20 feet wide, each feather perfectly detailed. She reclines on ancient stone steps before a temple, surrounded by hieroglyphs and riddles carved in stone. Her expression is enigmatic, holding secrets of ages. A golden headdress adorns her human head. The blend of human, lion, and eagle is seamless and divine. Photorealistic rendering of the riddle-keeper, the guardian of mysteries, and the test of wisdom.",
+      "tags": [
+        "ancient",
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "stirge": {
+      "name": "Stirge",
+      "type": "elemental",
+      "description": "A flying pest the size of a housecat with a mosquito-like proboscis and bat wings. Its body is covered in coarse fur with a rusty red color from dried blood. Four legs end in sharp pincers for gripping victims. The wings are leathery and allow surprising agility. Most disturbing is its proboscis - a foot-long needle designed to pierce flesh and drain blood. Multiple stirges swarm together, attacking from above. Their eyes glow red with hunger. The creatures are shown latched onto victims, their bodies swelling with blood. The buzzing of their wings fills the air. Despite their small size, they're terrifying in groups. Photorealistic detail of the blood-drinking pest, the flying parasite, and the dungeon mosquito.",
+      "tags": [
+        "swarm",
+        "tiny",
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "stone_giant": {
+      "name": "Stone Giant",
+      "type": "elemental",
+      "description": "An 18-foot tall giant with skin like gray granite, perfectly adapted to mountain life. Its features are carved and angular like a statue come to life. The giant's body is lean and athletic rather than bulky, built for climbing and throwing. Its hair is dark gray like slate. The giant wears simple clothing of stone-gray cloth and leather. It carries perfectly balanced throwing rocks and a massive stone club. The creature stands on a mountain ledge, blending with the rocky environment. Its expression is stoic and contemplative. Despite its size, it moves with surprising grace. Stone dust falls from its skin. Photorealistic rendering of the mountain giant, the stone-thrower, and the reclusive artist of the peaks.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "stone_golem": {
+      "name": "Stone Golem",
+      "type": "construct",
+      "description": "A 10-foot tall humanoid carved from a single block of stone, animated by powerful magic. Its features are roughly hewn, giving it a primitive appearance. The golem's body shows the chisel marks of its creation. Runes of power are carved into its chest and forehead, glowing faintly. Its movements are slow but unstoppable. The massive fists could pulverize bones. Cracks run through its body from age and battle, some repaired with different colored stone. The golem stands guard in an ancient temple, covered in dust and cobwebs from centuries of vigil. Its eyes are just indentations that somehow convey awareness. Each step shakes the ground. Photorealistic rendering of animated stone, the tireless guardian, and the strength of the earth given form.",
+      "tags": [
+        "ancient",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "succubus": {
+      "name": "Succubus",
+      "type": "fiend",
+      "description": "A fiendish temptress appearing as a woman of supernatural beauty with demonic features. Her skin is perfect alabaster or deep crimson, flawless and alluring. Bat-like wings spread from her back, and small horns curve from her forehead. A spaded tail curves behind her. Her eyes shift color based on her target's desires. She wears revealing clothing that seems to be made of shadows and sin. Her expression promises pleasure while hiding deadly intent. She stands in a boudoir of illusion, everything designed to seduce. Despite her beauty, there's something fundamentally wrong - too perfect, too alluring. Her smile shows slightly too-sharp teeth. Photorealistic rendering of supernatural beauty, the corruptor through desire, and the demon of temptation.",
+      "tags": [
+        "tiny",
+        "flying",
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "tarrasque": {
+      "name": "Tarrasque",
+      "type": "dragon",
+      "description": "The legendary 50-foot tall, 70-foot long titan of destruction. Its body combines the worst aspects of dragon, dinosaur, and demon. Massive armored plates cover its back, impervious to magic and weapons. The head is dragon-like with horns and a mouth that could swallow buildings. Six legs like tree trunks end in claws that crack stone. A massive tail can level city walls. The tarrasque rampages through a city, buildings crumbling beneath it. Its roar shatters glass for miles. The creature is shown at the moment of emerging from underground, the earth exploding around it. Its eyes burn with mindless hunger. This is destruction incarnate, the ender of civilizations. Photorealistic rendering emphasizing the impossible scale, the unstoppable force, and the ultimate monster of legend.",
+      "tags": [
+        "large",
+        "legendary",
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "treant": {
+      "name": "Treant",
+      "type": "construct",
+      "description": "A 30-foot tall animated oak tree with a vaguely humanoid shape. Its trunk forms the body with a wise, ancient face in the bark. Branch-arms can manipulate objects or strike with crushing force. The roots form legs that can plant into earth or walk. Leaves crown its head like hair, changing with seasons. Birds and squirrels live in its branches. Moss and vines drape from its form. The treant stands in an ancient forest it protects, other trees seeming to lean toward it in reverence. Its expression shows centuries of wisdom and patience. When it moves, the ground trembles and leaves fall like rain. Despite being wood, it's impossibly alive and aware. Photorealistic rendering of the forest guardian, the animated tree, and the protector of nature.",
+      "tags": [
+        "ancient"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "troll": {
+      "name": "Troll",
+      "type": "elemental",
+      "description": "A 9-foot tall giant with rubbery green skin, long gangly limbs, and the disturbing ability to regenerate from almost any wound. Its body is thin but wiry with unnatural strength. The face is hideous with a long warty nose, small eyes, and a mouth full of jagged teeth. Coarse black hair hangs in greasy strands. Its fingers and toes end in black claws. The troll's most terrifying feature is visible regeneration - wounds closing, severed parts regrowing. It wears minimal clothing of uncured hides. The creature stands in its lair under a bridge, bones scattered about. Its skin shows countless scars that healed wrong. The expression is both stupid and cunning. Only fire stops its regeneration, making it nearly unkillable. Photorealistic rendering of the regenerating horror, the bridge guardian, and the monster that won't stay dead.",
+      "tags": [
+        "tiny",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "vampire": {
+      "name": "Vampire",
+      "type": "humanoid",
+      "description": "An undead predator that appears as an aristocratic human of haunting beauty but with subtle wrongness. Pale skin like marble, too perfect to be alive. Eyes that shift from normal to red when hungry. Fangs that extend when feeding. The vampire wears fine clothing from its era, immaculate despite age. No reflection appears in mirrors behind it. It stands in a gothic castle chamber, moonlight streaming through windows but not touching it. Shadows seem to gather around its form. Its expression shows predatory charm and ancient intelligence. A wine glass of blood sits nearby. Bats gather in the rafters above. Despite its beauty, there's a corpse-like stillness when it doesn't consciously move. Photorealistic rendering of undead nobility, the blood drinker, and the seductive predator of the night.",
+      "tags": [
+        "ancient"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "water_elemental": {
+      "name": "Water Elemental",
+      "type": "elemental",
+      "description": "A 12-foot tall vortex of living water in a vaguely humanoid shape. Its body is pure liquid, constantly flowing and reshaping. Light refracts through its form creating rainbow effects. Two whirlpools serve as eyes. Arms of compressed water extend from the main mass. The elemental can shift from calm pool to raging torrent instantly. Fish and debris swirl within its body. It rises from a river, water constantly cycling through its form. Waves and currents are visible within. Droplets constantly break away and return. The sound of rushing water accompanies its movements. Photorealistic rendering of living water, the fluid warrior, and the consciousness of the sea.",
+      "tags": [
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "wight": {
+      "name": "Wight",
+      "type": "undead",
+      "description": "An undead warrior raised from death to serve evil, retaining its intelligence and martial skill. The wight appears as a desiccated corpse in ancient armor, skin pulled tight over bones. Its eyes burn with blue flame. Unlike zombies, it moves with deadly precision and tactical awareness. The creature wears the armor it died in, now rusted and damaged. It wields weapons with remembered skill. The wight's touch drains life energy, creating new undead servants. It stands in a barrow tomb, surrounded by lesser undead it commands. Its expression shows malevolent intelligence and hatred for the living. Cold radiates from its form. Photorealistic rendering of the undead commander, the life-draining warrior, and death's general.",
+      "tags": [
+        "ancient"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "wraith": {
+      "name": "Wraith",
+      "type": "elemental",
+      "description": "An incorporeal undead of pure darkness and negative energy. The wraith appears as a hovering shadow in a tattered black robe, with no visible body within. Red points of light burn where eyes should be. Its form constantly shifts between solid-looking and completely ethereal. The wraith passes through walls and armor, its touch draining life force directly from the soul. It hovers in a darkened chamber, other shadows seeming to reach toward it. Light dims in its presence. Frost forms on nearby surfaces. Its mere presence causes despair. The creature exists partially in the Shadowfell, making it hard to truly destroy. Photorealistic rendering of incorporeal evil, the soul-drainer, and the shadow of death itself.",
+      "tags": [
+        "incorporeal"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "wyvern": {
+      "name": "Wyvern",
+      "type": "beast",
+      "description": "A dragon-like creature but with only two legs and a venomous stinger tail. Standing 15 feet long with a 20-foot wingspan, its scales are dark green to brown. The head is draconic but more bestial, lacking a true dragon's intelligence. Its wings are its primary limbs when on ground, folding to walk on wing-knuckles. The tail is its most dangerous feature - long and flexible ending in a scorpion-like stinger dripping venom. The wyvern perches on a cliff, wings spread for balance. Its mouth shows rows of teeth but no breath weapon. The creature is more animal than intelligent, a lesser cousin to true dragons. Scars show territorial battles. Photorealistic rendering of the two-legged dragon, the venomous flyer, and the mount of evil riders.",
+      "tags": [
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "zombie": {
+      "name": "Zombie",
+      "type": "construct",
+      "description": "A reanimated corpse in various stages of decay, moving with jerky, unnatural motions. Its skin is gray-green with patches missing, showing muscle and bone beneath. The eyes are clouded white, unseeing but somehow aware. Its clothes are whatever it died in, now tattered and stained. The zombie moves relentlessly forward, arms outstretched, seeking living flesh. Wounds that killed it are still visible. It shows no emotion, no pain, no fatigue. Multiple zombies shamble together in a mindless horde. The smell of decay surrounds them. Flies buzz around their forms. Despite slowness, their relentlessness makes them terrifying. Photorealistic rendering of the walking dead, the mindless undead, and the horror of corpses that won't stay buried.",
+      "tags": [
+        "swarm",
+        "flying",
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch10.py"
+    },
+    "black_pudding": {
+      "name": "Black Pudding",
+      "type": "humanoid",
+      "description": "A massive amorphous blob of living acid, 15 feet across and 2 feet thick, resembling tar come to life. Its surface is glossy black and constantly rippling with internal movement. The ooze has no features except for the disturbing way it moves with purpose. Its surface occasionally bubbles and pops, releasing wisps of acidic vapor. Where it touches stone floor, the rock dissolves and smokes. Bits of half-dissolved armor, bones, and weapons are visible suspended within its translucent black mass. The creature is shown spreading across a dungeon corridor, squeezing under a door and dissolving the metal hinges. Its body reflects torchlight with an oily rainbow sheen. The edges of the pudding show pseudopods forming and retracting as it moves. Photorealistic rendering emphasizing the viscous, liquid nature of the creature, the way light plays on its surface, and the horrifying implication of a thinking, hunting pool of acid.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch2.py"
+    },
+    "bone_devil": {
+      "name": "Bone Devil",
+      "type": "elemental",
+      "description": "A 9-foot tall skeletal fiend with dried, mummified flesh stretched over its bones. Its skull-like head features glowing red eyes and a fanged maw. Most distinctive is its long, scorpion-like tail ending in a venomous stinger dripping with green poison. The devil's body is humanoid but emaciated, ribs visible through papery skin. Four arms extend from its torso, each ending in razor-sharp claws. Tattered wings of skin and bone spread from its back. The creature stands in a hellish landscape of brimstone and flame. Its bones show through translucent flesh, creating a horrifying skeletal appearance while still being covered in skin. Chains and hooks dangle from its body. The tail arches over its head like a scorpion, stinger poised to strike. Hellfire reflects off its pale flesh. Photorealistic detail showing the texture of dried flesh, exposed bone, and the sadistic intelligence burning in its eyes.",
+      "tags": [
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch2.py"
+    },
+    "bugbear": {
+      "name": "Bugbear",
+      "type": "beast",
+      "description": "A massive 7-foot tall goblinoid brute with the features of a bear and goblin combined. Thick, matted brown fur covers its muscular body. Its face is bestial with a pronounced snout, sharp yellowed teeth, and small cruel eyes that gleam with cunning. Large pointed ears stick up through tangled hair. The bugbear's arms are disproportionately long, reaching nearly to its knees, ending in massive hands with dirty claws. It wears piecemeal armor of leather and chain, with various weapons hanging from its belt. The creature stands in ambush position behind dungeon pillars, its stealth belying its size. Scars crisscross its exposed skin. A massive morningstar is gripped in one hand. Despite its bulk, there's a predatory grace to its posture. Photorealistic rendering showing the coarse fur texture, the blend of bear and goblinoid features, and the surprising stealth of this brutal ambush predator.",
+      "tags": [
+        "tiny",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch2.py"
+    },
+    "bulette": {
+      "name": "Bulette",
+      "type": "monstrosity",
+      "description": "A massive armored predator known as a land shark, 10 feet tall and 15 feet long. Its body is covered in thick, overlapping plates of blue-gray armor that can deflect swords. The head is wedge-shaped with a massive jaw filled with rows of triangular teeth. Four powerful legs with enormous claws are built for digging through solid rock. A distinctive dorsal fin of armored plates runs along its back. The creature is shown erupting from underground, dirt and rocks flying everywhere, mouth open to reveal its terrifying array of teeth. Its small, beady black eyes show primitive hunger. The armor plates have scratches and battle damage from years of tunneling. Muscles bulge beneath the armored hide. Its front claws are extended, each the size of swords. Photorealistic detail emphasizing the tank-like armor, the powerful musculature, and the terrifying moment of a bulette breaching from underground like a nightmare shark.",
+      "tags": [
+        "tiny",
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch2.py"
+    },
+    "centaur": {
+      "name": "Centaur",
+      "type": "elemental",
+      "description": "A noble creature with the upper body of a athletic human warrior and the lower body of a powerful horse. Standing 7 feet tall at the human head, with the horse body adding another 4 feet of height at the withers. The human torso is muscular and sun-bronzed, with long flowing hair adorned with feathers and beads. The horse body is a glossy chestnut brown with white markings on the legs. The centaur holds a masterfully crafted longbow with arrows in a quiver across the human back. Leather bracers protect the human arms. The horse body shows defined muscles beneath the gleaming coat. The centaur stands in a forest clearing, one front hoof pawing the ground. The face shows wisdom and nobility with intense eyes scanning for danger. The blend between human and horse is seamless and natural. Photorealistic rendering capturing both the wild, free nature of the horse and the intelligence and dignity of the human portion.",
+      "tags": [
+        "boss"
+      ],
+      "source_file": "generate_bestiary_batch2.py"
+    },
+    "chimera": {
+      "name": "Chimera",
+      "type": "beast",
+      "description": "A terrifying amalgamation of three creatures - lion, goat, and dragon. The main body is that of a massive lion, 12 feet long with golden-brown fur and rippling muscles. From the center of its back sprouts a goat's head on a long neck, with curved horns and horizontal pupils filled with madness. The tail is replaced by a living dragon's head, scales of deep red, constantly hissing and dripping with acidic saliva. The lion head roars with triple rows of teeth. Dragon wings spread from the shoulders, membrane stretched between bone fingers. All three heads are alert and aggressive, each moving independently. The creature stands on a rocky outcrop, wings spread wide. Fire flickers in the dragon head's throat while the goat head bleats unnaturally. The lion's mane flows in the wind. Each part of the creature is perfectly detailed yet wrongly fused together. Photorealistic horror showing the unnatural fusion of three predators into one monstrous form.",
+      "tags": [
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch2.py"
+    },
+    "clay_golem": {
+      "name": "Clay Golem",
+      "type": "construct",
+      "description": "A 8-foot tall humanoid figure sculpted from dark clay, its surface showing the texture of worked earth. The golem's features are roughly formed - a basic humanoid shape with thick limbs and a featureless face except for two glowing indentations for eyes. Ancient Hebrew runes are carved into its forehead and chest, glowing with soft golden light. Its massive fists are the size of anvils. The clay shows fingerprints and tool marks from its creation. Cracks run through its body, some repaired with fresh clay. The golem moves with surprising speed despite its bulk. It stands in an ancient workshop surrounded by potter's tools and mystical symbols. Its surface is uneven, showing both smooth and rough textures. Dust falls from its joints as it moves. Photorealistic rendering emphasizing the earthen texture, the mystical runes, and the uncanny valley effect of something humanoid but clearly not alive.",
+      "tags": [
+        "ancient",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch2.py"
+    },
+    "cloaker": {
+      "name": "Cloaker",
+      "type": "aberration",
+      "description": "A bizarre aberration resembling a massive manta ray made of living shadow, 12 feet across. Its body is a black leathery cloak with a texture like bat wings. The underside reveals a horrific face with glowing red eyes and rows of needle teeth in a vertical maw. Its wing-like body has barbed edges and a long whip-like tail ending in a stinger. The creature is shown attached to a dungeon ceiling, spreading its wings to drop on unsuspecting prey. When spread, it perfectly mimics a black cloak hanging on a wall. The edges of its body undulate hypnotically. Bone-white claws extend from what would be the cloak's shoulders. Its mouth splits open impossibly wide showing multiple rows of teeth. The texture shows both the leather-like quality and the living flesh beneath. Photorealistic rendering capturing the disturbing blend of clothing and creature, the perfect camouflage, and the moment of horrible revelation when it attacks.",
+      "tags": [
+        "swarm",
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch2.py"
+    },
+    "cockatrice": {
+      "name": "Cockatrice",
+      "type": "dragon",
+      "description": "A disturbing hybrid of rooster and dragon, the size of a large turkey but infinitely more dangerous. Its body is that of a golden-feathered rooster with scales instead of feathers on its belly and legs. The wings are leathery like a bat's but edged with colorful feathers. The rooster head has a bright red crest and wattles, but the eyes glow with supernatural menace. Most terrifying is its tail - a long, scaled serpent ending in a barbed stinger. The creature's touch turns victims to stone. It stands among several petrified victims - a warrior frozen mid-swing, a rat turned to granite. Its beak is open in an aggressive crow. The scaled portions shimmer with an iridescent sheen. Its talons are razor sharp. The blend of bird and reptile is seamless yet wrong. Photorealistic detail showing individual feathers transitioning to scales, the deadly grace of its movements, and the supernatural threat it poses.",
+      "tags": [
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch2.py"
+    },
+    "couatl": {
+      "name": "Couatl",
+      "type": "plant",
+      "description": "A magnificent feathered serpent, 12 feet long with brilliantly colored plumage. Its serpentine body is covered in scales that shimmer with rainbow iridescence, while magnificent wings of tropical bird feathers spread 15 feet wide. The feathers are brilliant emerald green, sapphire blue, and gold. The head is serpentine but noble, with intelligent golden eyes showing ancient wisdom. A crown of longer feathers adorns its head like a headdress. The creature radiates divine light, with a subtle golden aura surrounding its form. It hovers in a jungle temple, sunlight streaming through ancient stone windows highlighting its colors. Its wings move gracefully, each feather perfectly defined. The scales catch light like precious gems. Its expression is benevolent but powerful. Photorealistic rendering emphasizing the brilliant colors, the divine nature of the creature, and the seamless blend of serpent and bird into something transcendent.",
+      "tags": [
+        "ancient",
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch2.py"
+    },
+    "cyclops": {
+      "name": "Cyclops",
+      "type": "elemental",
+      "description": "A massive 13-foot tall giant with a single enormous eye in the center of its forehead. Its muscular body is covered in grimy, sun-weathered skin with coarse dark hair. The single eye is the size of a dinner plate with a yellow iris and red veins visible. Its face is brutish with a heavy brow ridge above the eye, a flat nose, and a mouth full of yellowed, uneven teeth. Massive hands grip a tree trunk club studded with rocks. The cyclops wears primitive hide clothing and a belt of skulls. Its arms and chest show old battle scars. The creature stands at the entrance to its cave, bones and broken weapons scattered at its feet. Muscles ripple beneath its scarred skin. The single eye focuses with disturbing intelligence despite its primitive appearance. Photorealistic detail showing the weathered skin texture, the unsettling single eye, and the raw physical power of this one-eyed giant.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch3.py"
+    },
+    "darkmantle": {
+      "name": "Darkmantle",
+      "type": "humanoid",
+      "description": "A cave-dwelling creature resembling a living stalactite crossed with an octopus. Its body is a cone-shaped mass of dark gray flesh, textured to perfectly mimic cave rock. When unfurled, it reveals a membranous underside with eight muscular tentacles radiating from a central mouth filled with crushing teeth. Each tentacle has hundreds of small suckers that grip prey. Two small red eyes peer from beneath the rock-like exterior. The creature is shown both hanging from a cave ceiling disguised as a stalactite and dropping with tentacles spread wide. Its skin texture perfectly matches limestone with mineral deposits and moisture. When attacking, the underside reveals pale, translucent flesh with visible veins. The tentacles wrap around prey with crushing force. A magical darkness emanates from its body. Photorealistic rendering showing the perfect camouflage, the transformation from rock to predator, and the suffocating embrace of its attack.",
+      "tags": [
+        "tiny",
+        "magical"
+      ],
+      "source_file": "generate_bestiary_batch3.py"
+    },
+    "death_knight": {
+      "name": "Death Knight",
+      "type": "elemental",
+      "description": "An undead warrior in blackened full plate armor, standing 6 feet tall wreathed in green hellfire. Through the helmet's visor, two pinpoints of red light burn where eyes should be. The armor is ornate but corrupted - once-noble designs now twisted into skulls and screaming faces. Green flames lick from every joint and gap in the armor. A massive two-handed sword wreathed in necrotic energy is held with practiced ease. The cloak is tattered and burns at the edges with supernatural fire. Where the armor is damaged, glimpses of bone and withered flesh are visible. The death knight stands on a battlefield of the slain, green fire reflecting off pools of blood. Frost forms on the ground beneath its feet while hellfire burns above. The presence of undeath is palpable. Photorealistic rendering of the cursed armor, the supernatural flames, and the overwhelming aura of a fallen paladin cursed to eternal undeath.",
+      "tags": [
+        "corrupted",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch3.py"
+    },
+    "demilich": {
+      "name": "Demilich",
+      "type": "undead",
+      "description": "A floating skull wreathed in purple magical energy, all that remains of a powerful lich. The skull is ancient yellowed bone with intricate runes carved into every surface. Two gems serve as eyes - a ruby and an emerald - each glowing with malevolent intelligence. Six teeth remain, each replaced with a different precious gemstone that pulses with power. Purple energy constantly flows from the empty sockets and jaw, forming ethereal shapes of screaming souls. The skull floats surrounded by orbiting motes of magical energy. Dust and bone fragments orbit it like planets around a sun. The jaw hangs open in an eternal scream. Ancient spider webs still cling to parts of the skull. The bone shows thousands of years of age with cracks sealed by magical energy. Photorealistic detail of ancient bone, glowing gems, and the terrifying implication of consciousness trapped in a single skull.",
+      "tags": [
+        "ancient",
+        "incorporeal",
+        "magical"
+      ],
+      "source_file": "generate_bestiary_batch3.py"
+    },
+    "deva": {
+      "name": "Deva",
+      "type": "celestial",
+      "description": "A celestial being of divine beauty, 7 feet tall with perfect alabaster skin that seems to glow with inner light. Massive white wings spread 15 feet wide, each feather pristine and luminous. Long golden hair flows as if perpetually in a gentle breeze. The face is impossibly beautiful yet stern, with silver eyes that see into souls. The deva wears flowing robes of white and gold that seem to be made of condensed light. A silver circlet rests on its brow with a star sapphire at the center. In one hand, a flaming sword of pure radiance, in the other, a golden trumpet. A subtle halo of light surrounds its head. The being floats slightly above ground, too pure to touch mortal earth. Rays of divine light stream from behind it. Photorealistic rendering capturing otherworldly beauty, the divine radiance, and the awesome presence of a messenger from the heavens.",
+      "tags": [
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch3.py"
+    },
+    "dire_wolf": {
+      "name": "Dire Wolf",
+      "type": "beast",
+      "description": "A massive wolf standing 5 feet at the shoulder and 9 feet long, with thick black fur streaked with gray. Its head is enormous with a muzzle full of teeth like daggers. Yellow eyes burn with primal hunger and intelligence beyond a normal wolf. The fur is coarse and matted in places, with old battle scars visible through the coat. Muscles ripple beneath the fur with every movement. Its paws are the size of dinner plates with claws like curved knives. The dire wolf stands in a snowy forest, breath steaming in the cold air. Blood stains its muzzle from a recent kill. Other dire wolves are visible in the background as part of the pack. Its lips are pulled back in a snarl revealing the full array of teeth. The tail is held high in dominance. Photorealistic detail showing individual fur strands, the predatory intensity, and the size that makes this apex predator so feared.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch3.py"
+    },
+    "displacer_beast": {
+      "name": "Displacer Beast",
+      "type": "aberration",
+      "description": "A panther-like predator with six legs and two tentacles growing from its shoulders, each ending in a pad covered with razor spikes. The creature is 10 feet long with blue-black fur that seems to shimmer and shift. Most disturbing is its displacement ability - the creature appears to be several feet from where it actually is, creating a blurred, shifting afterimage. The tentacles are 8 feet long and whip through the air. Its eyes glow green with an alien intelligence. The six legs allow for incredible speed and agility. The main body shows lean, powerful muscles. The creature is shown mid-leap, its image displaced and duplicated showing where it appears to be versus where it is. The tentacles are spread wide, spikes gleaming. Its mouth is open showing rows of teeth. Photorealistic rendering with the displacement effect creating multiple overlapping images, the alien six-legged form, and the deadly tentacles that make this predator unique.",
+      "tags": [
+        "swarm"
+      ],
+      "source_file": "generate_bestiary_batch3.py"
+    },
+    "djinni": {
+      "name": "Djinni",
+      "type": "beast",
+      "description": "A powerful air elemental being, 10 feet tall with blue-tinted skin and a muscular build. The lower body transforms into a whirlwind of clouds and wind. The upper body is humanoid with perfect musculature, adorned with golden jewelry - arm bands, earrings, and a turban with a massive sapphire. The face is noble with a well-groomed beard and eyes that crackle with lightning. Wisps of cloud constantly flow from its form. The djinni holds a massive scimitar that gleams with magical power. Golden silk pants billow before transforming into the whirlwind base. Lightning occasionally arcs across its body. The air around it shimmers with heat distortion and small objects orbit in its wind. It hovers in a palace of clouds with arabic architecture visible. Photorealistic rendering of the muscular form, the transition from flesh to wind, and the overwhelming magical presence of this elemental noble.",
+      "tags": [
+        "large",
+        "tiny",
+        "magical",
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch3.py"
+    },
+    "doppelganger": {
+      "name": "Doppelganger",
+      "type": "humanoid",
+      "description": "A shapeshifter shown in its true form - a gray-skinned humanoid with a featureless face except for large, bulbous white eyes with no pupils. The body is thin and gangly with elongated limbs. Its skin has a rubbery, unnatural texture. The creature is caught mid-transformation, with parts of its body shifting between its true form and a human disguise. One arm is gray and featureless while the other shows human skin forming. The face is particularly disturbing - half blank gray flesh, half forming into a specific person's features. Its fingers are too long with too many joints. The creature wears simple dark clothing that shifts with its form. Standing in front of a mirror, multiple reflections show different faces it has stolen. Photorealistic horror emphasizing the uncanny valley effect, the disturbing transformation, and the paranoia of never knowing who to trust.",
+      "tags": [
+        "swarm",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch3.py"
+    },
+    "dragon_turtle": {
+      "name": "Dragon Turtle",
+      "type": "dragon",
+      "description": "A colossal sea monster combining dragon and turtle, 30 feet long with a shell 15 feet across. The head is draconic with green scales, fierce golden eyes, and a mouth full of sword-length teeth. Steam constantly rises from its nostrils. The shell is dark green with golden patterns and covered in algae and barnacles from centuries in the ocean. Four massive flippers end in webbed claws. The long tail ends in a rudder-like fin. The creature breaches from ocean waves, water cascading off its shell. Its mouth is open, about to release a blast of scalding steam. The shell shows battle scars and harpoons still embedded from failed hunting attempts. Seaweed drapes from its form. The neck extends showing the blend of turtle and dragon features. Photorealistic rendering of wet scales, the massive shell, and the terrifying combination of dragon power with turtle endurance in an aquatic nightmare.",
+      "tags": [
+        "aquatic",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch3.py"
+    },
+    "dretch": {
+      "name": "Dretch",
+      "type": "fiend",
+      "description": "A pathetic 4-foot tall demon, the lowest form of demonic life. Its body is bloated and corpulent with sickly green-gray skin covered in oozing pustules and boils. The head is too small for its body with piggy eyes, no nose, and a mouth full of broken teeth. Two spindly arms end in clawed hands that constantly grasp and clutch. Its legs are short and bowed, barely supporting its bloated weight. The creature's skin constantly weeps pus and slime. Its belly distends grotesquely, showing signs of disease and rot. Small useless wings sprout from its back, too weak to lift its bulk. The dretch stands in the filth of the Abyss, surrounded by refuse and decay. Flies buzz around its form. Its expression shows both stupidity and endless suffering. Photorealistic rendering of diseased flesh, the pathetic nature of the lowest demon, and the horror of eternal torment given form.",
+      "tags": [
+        "tiny",
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch4.py"
+    },
+    "drider": {
+      "name": "Drider",
+      "type": "elemental",
+      "description": "A horrifying fusion of dark elf and giant spider, cursed by their goddess. The upper body is that of a dark elf - obsidian black skin, white hair, and red eyes filled with madness and pain. From the waist down, the body of a massive black spider with eight segmented legs covered in coarse hair. The transition point where elf meets spider is disturbing, flesh melding into chitin. The dark elf torso emerges from where the spider's head would be. Eight spider eyes dot the spider body's front. The elf portion wears tattered remnants of once-fine clothing. In its hands, a cruel sword dripping with poison. The spider legs end in sharp points that click on stone. Spinnerets at the rear trail silk. The creature is in an underdark cavern surrounded by webs and cocooned victims. Photorealistic horror showing the curse of transformation, the blend of elf and arachnid, and the tragic monstrosity of a fallen race.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch4.py"
+    },
+    "dryad": {
+      "name": "Dryad",
+      "type": "elemental",
+      "description": "A nature spirit of ethereal beauty, appearing as a woman made partially of living wood and leaves. Her skin has the texture of smooth bark in some places, soft flesh in others, with the transition seamless and natural. Long hair appears to be made of willow branches and autumn leaves that change color as they cascade down. Her eyes are deep green like forest pools. Delicate features show both human beauty and plant-like qualities. Her body is modestly covered by living vines and leaves that grow from her form. Small flowers bloom along her arms and in her hair. She stands merged partially with an ancient oak tree, her lower body blending into its trunk. Butterflies and birds perch on her outstretched hands. Dappled sunlight filters through forest canopy highlighting her form. Photorealistic rendering of the blend between woman and nature, the ethereal beauty, and the deep connection to the forest.",
+      "tags": [
+        "ancient",
+        "incorporeal",
+        "tiny",
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch4.py"
+    },
+    "earth_elemental": {
+      "name": "Earth Elemental",
+      "type": "construct",
+      "description": "A 12-foot tall humanoid form made entirely of animated earth and stone. Its body consists of compacted dirt, rocks, and boulders held together by elemental force. The head is a rough boulder with two glowing amber eyes like molten gems. No other features mark the face. Its arms are massive, ending in club-like fists of solid granite. The legs are thick pillars of compressed earth. Grass and small plants grow from cracks in its form. Veins of precious metals and crystals run through its body, catching light. As it moves, dirt and pebbles constantly fall from its form only to be pulled back by magical force. The elemental rises from disturbed ground, earth and stones swirling up to form its body. Its footsteps leave deep impressions. Photorealistic rendering of living earth, the raw power of animated stone, and the primal force of the elemental plane of earth.",
+      "tags": [
+        "large",
+        "tiny",
+        "magical",
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch4.py"
+    },
+    "efreeti": {
+      "name": "Efreeti",
+      "type": "beast",
+      "description": "A massive 12-foot tall genie of fire, its muscular form wreathed in flames. The skin is dark red like cooling lava with cracks showing molten fire beneath. Horns of obsidian curve from its head, and its eyes burn with orange flame. A beard of fire flows from its chin. The lower body transforms into a pillar of flame and smoke. Brass armor adorned with rubies covers its chest and arms. In one hand, a massive scimitar that glows white-hot. Golden chains and jewelry melt and reform constantly from the heat. The air around it shimmers with heat waves. It stands in a palace of brass and flame, with lava fountains in the background. Smoke rises from its entire form. The flames that comprise its lower body swirl in a hypnotic pattern. Photorealistic rendering of a being of living flame, the overwhelming heat presence, and the cruel nobility of the fire genies.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch4.py"
+    },
+    "ettin": {
+      "name": "Ettin",
+      "type": "elemental",
+      "description": "A 13-foot tall two-headed giant, each head having its own personality and awareness. The body is massively muscled but filthy, covered in dirt, scars, and crude tattoos. The left head is brutish with a broken nose and missing teeth, while the right head is slightly more cunning with a perpetual sneer. Both heads argue constantly with each other. Each head controls one arm, leading to uncoordinated movements. The giant wears piecemeal armor made from various sources, nothing matching. One hand holds a massive spiked club, the other a rusted battle axe. Its skin is grayish-brown and covered in warts. The creature stands in its filthy lair surrounded by gnawed bones and refuse. Both mouths drool constantly. The eyes show different emotions - one head angry, one suspicious. Photorealistic detail showing the grotesque two-headed nature, the constant internal conflict, and the crude brutality of this giant.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch4.py"
+    },
+    "fire_elemental": {
+      "name": "Fire Elemental",
+      "type": "elemental",
+      "description": "A living inferno in vaguely humanoid form, 15 feet tall and constantly burning. Its body is made of roaring flames that shift from white-hot at the core to deep red at the edges. Two points of blinding white light serve as eyes within the conflagration. Arms of concentrated fire extend from the central mass, leaving trails of flame with every movement. The core shows different temperatures - blue-white heart, yellow body, orange extremities. Smoke and embers constantly rise from its form. The air around it ripples with extreme heat. Everything flammable near it immediately ignites. The creature moves like a living wildfire, expanding and contracting. Standing on scorched earth with glass formed from melted sand beneath it. Photorealistic rendering of living flame, the hypnotic dance of fire, and the terrifying beauty of pure elemental destruction.",
+      "tags": [
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch4.py"
+    },
+    "fire_giant": {
+      "name": "Fire Giant",
+      "type": "beast",
+      "description": "A 16-foot tall giant with coal-black skin and orange eyes that glow like embers. Its hair and beard are bright orange-red like flames. The giant's body is massively muscled from working forges. Its skin shows the texture of cooled lava with cracks revealing inner heat. The giant wears elaborate plate armor of blackened steel with gold trim. A massive two-handed sword rests on its shoulder, the blade still glowing from the forge. Its hands show centuries of smithing work. The giant stands in a volcanic forge, lava flows providing light, anvils and weapons visible. Steam rises from its body. A necklace of dragon teeth shows its prowess. The face shows cruel intelligence and mastery of metallurgy. Photorealistic detail of the volcanic giant, the master craftsman of evil, and the overwhelming physical presence.",
+      "tags": [
+        "boss",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch4.py"
+    },
+    "flesh_golem": {
+      "name": "Flesh Golem",
+      "type": "construct",
+      "description": "A grotesque 8-foot tall humanoid stitched together from parts of multiple corpses. The skin is a patchwork of different flesh tones badly sewn with thick black thread. One arm is noticeably larger than the other, taken from different bodies. The face is the most disturbing - features that don't match, one blue eye and one brown, scars where parts were attached. Metal bolts protrude from its neck and joints. The creature moves with unnatural, jerky motions. Electricity occasionally arcs between the metal bolts. Its expression is blank but somehow sad. The body shows signs of decay in places with preservative fluid leaking from seams. It wears tattered rags. The hands are massive and scarred. Standing in a laboratory with surgical equipment visible. Photorealistic body horror emphasizing the unnatural assembly, the tragic existence, and the abomination of reanimated flesh.",
+      "tags": [
+        "swarm",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch4.py"
+    },
+    "frost_giant": {
+      "name": "Frost Giant",
+      "type": "beast",
+      "description": "A 15-foot tall giant with pale blue-white skin and a beard of icicles. Its hair is white as fresh snow, braided with frozen leather. Eyes are pale blue like glacier ice. The giant's body is muscular and scarred from countless battles. It wears armor made from white dragon scales and fur from arctic beasts. A massive greataxe of enchanted ice is held in one hand. Its breath forms clouds of freezing mist. Frost constantly forms on its skin and armor. The giant stands in a frozen wasteland, snow swirling around its form. Ice crystals form in the air near it. Its expression is harsh and merciless like winter itself. Tribal tattoos in blue mark its arms. A necklace of polar bear claws shows its hunting prowess. Photorealistic rendering of the ice giant, the harsh beauty of the frozen north, and the primal power of winter's warriors.",
+      "tags": [
+        "magical",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch4.py"
+    },
+    "gargoyle": {
+      "name": "Gargoyle",
+      "type": "construct",
+      "description": "A 6-foot tall statue come to life, carved from gray stone with demonic features. Its body is humanoid but hunched, with a grotesque face featuring a jutting jaw, sharp fangs, and hollow eyes that glow with malevolent red light. Stone wings spread from its back, each wing membrane showing carved detail. Its hands and feet end in sharp talons perfect for clinging to cathedral walls. The stone skin shows weathering from centuries of rain and wind, with patches of lichen and moss. Cracks run through its form but don't weaken it. The gargoyle perches on a gothic cathedral ledge at night, rain streaming off its form. Its mouth is open in a silent roar. The texture shows both carved stone detail and living movement. Photorealistic rendering of animated stone, the gothic horror aesthetic, and the guardian turned predator.",
+      "tags": [
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch5.py"
+    },
+    "gelatinous_cube": {
+      "name": "Gelatinous Cube",
+      "type": "ooze",
+      "description": "A 10-foot transparent cube of living acidic gel, nearly invisible except for the slight distortion it creates. The cube's surface ripples and undulates as it moves. Suspended within its transparent mass are the partially dissolved remains of victims - bones, armor, weapons, and coins float at different depths. The edges of the cube are slightly more visible, showing the geometric perfection of its shape. Bubbles of digestive gases rise through its body. Where it touches the dungeon floor, stone slowly dissolves. The cube fills an entire corridor perfectly, its transparency making it a nearly invisible death trap. Light refracts through its body creating rainbow patterns. Photorealistic rendering emphasizing transparency, the suspended victims and treasures within, and the deadly nature of this mindless dungeon cleaner.",
+      "tags": [
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch5.py"
+    },
+    "ghast": {
+      "name": "Ghast",
+      "type": "undead",
+      "description": "A more powerful undead ghoul, 6 feet tall with elongated limbs and a hunched posture. Its skin is gray-green and rotting, pulled tight over bones with patches missing entirely. The face is gaunt with sunken eyes that burn with unholy green light. Its mouth is too wide with rows of sharp teeth and a long purple tongue. Claws like rusty knives extend from its fingers. The creature emanates a supernatural stench of death so powerful it causes paralysis. Grave dirt clings to its form. It wears the tattered remains of burial clothes. The ghast crouches in a cemetery crypt, surrounded by gnawed bones. Maggots visibly crawl through holes in its flesh. Its muscles are visible through tears in the skin. Photorealistic undead horror showing advanced decay, predatory hunger, and the supernatural evil of an intelligent undead.",
+      "tags": [],
+      "source_file": "generate_bestiary_batch5.py"
+    },
+    "ghost": {
+      "name": "Ghost",
+      "type": "elemental",
+      "description": "A translucent spirit of a deceased humanoid, floating ethereally above the ground. The ghost appears as it did in life but aged and withered, with a transparency that allows the background to show through. Its form constantly shifts between solid-looking and nearly invisible. The face shows the anguish of unfinished business, with hollow eyes that weep spectral tears. It wears the clothing from its death, flowing and billowing as if underwater. A pale blue-white glow emanates from its entire form. Wisps of ectoplasm trail from its body. The ghost phases partially through a wall, showing its incorporeal nature. Its mouth opens in a silent scream. Chains or other symbols of its unfinished business may be visible. Photorealistic rendering of transparency, ethereal effects, and the tragic horror of a soul unable to rest.",
+      "tags": [
+        "incorporeal",
+        "aquatic"
+      ],
+      "source_file": "generate_bestiary_batch5.py"
+    },
+    "ghoul": {
+      "name": "Ghoul",
+      "type": "humanoid",
+      "description": "A 5-foot tall undead humanoid with gray, rubbery skin stretched over a gaunt frame. Its limbs are elongated and joints bend at unnatural angles. The face is bestial with a dog-like muzzle filled with sharp teeth. Red eyes glow with constant hunger. Long, black claws extend from its fingers, caked with grave dirt and dried blood. The ghoul moves in a disturbing crouch, sometimes on all fours. Its body shows signs of its undead nature - wounds that don't bleed, missing chunks of flesh. It wears the shredded remains of burial shrouds. The creature is shown in a graveyard, digging into a fresh grave. Bones and torn flesh hang from its mouth. The skin has a wet, diseased appearance. Photorealistic rendering of undead flesh, the feral hunger, and the horror of humanity transformed into a corpse-eating monster.",
+      "tags": [],
+      "source_file": "generate_bestiary_batch5.py"
+    },
+    "giant_eagle": {
+      "name": "Giant Eagle",
+      "type": "beast",
+      "description": "A majestic bird of prey standing 10 feet tall with a 20-foot wingspan. Its feathers are golden-brown with white head plumage like a bald eagle but massively enlarged. The eyes are fierce and intelligent, showing wisdom beyond a normal animal. The beak is sharp and curved, large enough to snap a human in half. Talons like curved swords grip a mountain ledge. Each feather is perfectly detailed, from the soft down underneath to the strong flight feathers. The eagle stands on a mountain peak with wings partially spread, wind ruffling its feathers. Its head is turned in a noble profile. The size is emphasized by trees visible far below. Storm clouds gather behind it with lightning in the distance. Photorealistic detail showing individual feather barbs, the fierce nobility, and the awe-inspiring presence of this giant avian.",
+      "tags": [
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch5.py"
+    },
+    "giant_spider": {
+      "name": "Giant Spider",
+      "type": "aberration",
+      "description": "An 8-foot wide arachnid nightmare with a dark brown carapace marked with red patterns. Eight hairy legs span 12 feet, each ending in sharp hooks for climbing. Eight eyes arranged on its head gleam with alien intelligence - two large main eyes and six smaller ones. Massive fangs drip with paralyzing venom that sizzles when it hits the ground. The abdomen is bloated with a red hourglass marking. Coarse black hair covers its body and legs. Spinnerets at the rear produce silk as thick as rope. The spider hangs in an enormous web in a dark forest, with cocooned victims visible. Its pedipalps twitch as it senses vibrations. Web strands glisten with dew and poison. Photorealistic detail showing the hair on each leg, the multiple eyes, and the terrifying size of this web-spinning predator.",
+      "tags": [
+        "swarm",
+        "tiny",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch5.py"
+    },
+    "gibbering_mouther": {
+      "name": "Gibbering Mouther",
+      "type": "aberration",
+      "description": "A 5-foot wide amorphous mass of flesh covered entirely in mouths and eyes. The body constantly shifts and changes shape, mouths opening and closing randomly, each speaking gibberish in different voices. Eyes of various sizes and colors blink independently across its surface - human, animal, and alien eyes mixed together. Teeth of all types protrude from the mouths. The flesh is pink and gray, constantly forming and absorbing pseudopods. A pool of saliva and drool surrounds it. The cacophony of voices creates a maddening sound. The creature flows across the ground like a flesh-colored ooze. Some mouths laugh while others scream. Eyes focus on different targets. The ground beneath it becomes soft and muddy from its presence. Photorealistic body horror showing the insanity-inducing appearance, the constant movement, and the nightmare of too many mouths and eyes.",
+      "tags": [],
+      "source_file": "generate_bestiary_batch5.py"
+    },
+    "gnoll": {
+      "name": "Gnoll",
+      "type": "beast",
+      "description": "A 7-foot tall hyena-humanoid with a hunched posture and digitigrade legs. The head is that of a spotted hyena with powerful jaws, yellow eyes, and ears constantly twitching. Coarse spotted fur covers its body. The creature combines the worst of human cunning with hyena savagery. It wears primitive armor of leather and bone trophies. A crude flail made from chains and skulls is gripped in clawed hands. The gnoll's muzzle is stained with blood. Its laugh is a terrifying cackle. Muscles ripple beneath the fur. The creature stands in a wasteland camp decorated with skulls on spikes. Flies buzz around it. Its posture shows both animal instinct and humanoid intelligence. Scars crisscross its body from constant fighting. Photorealistic rendering of the hyena features, the savage tribal appearance, and the pack hunter mentality.",
+      "tags": [
+        "flying",
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch5.py"
+    },
+    "goblin": {
+      "name": "Goblin",
+      "type": "elemental",
+      "description": "A 3-foot tall humanoid with green-gray skin and a oversized head for its body. Large pointed ears stick out horizontally. The face features a flat nose, sharp teeth in a wide mouth, and yellow eyes that gleam with mischief and malice. Its body is scrawny but wiry with surprising strength. The goblin wears cobbled-together armor from various sources - a helmet too big, mismatched leather pieces. It carries a rusty short sword and a small wooden shield. The creature has a ratlike quality to its movements. It stands in a cramped cave lair surrounded by stolen goods and trash. Its expression shows cunning and cowardice in equal measure. Dirt and grime cover its skin. Small scars show a life of constant skirmishes. Photorealistic detail showing the small but dangerous nature, the scavenged equipment, and the pest-like quality of these common monsters.",
+      "tags": [
+        "tiny",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch5.py"
+    },
+    "gold_dragon": {
+      "name": "Gold Dragon",
+      "type": "dragon",
+      "description": "The most majestic of all dragons, 20 feet tall with scales like liquid gold that shimmer with inner light. Each scale is perfectly formed, creating an armor of precious metal. Its head is noble and wise with backward-swept horns like a crown. Golden whiskers flow from its snout like those of an oriental dragon. Eyes of molten gold show ancient wisdom and benevolence. The dragon's wings spread 120 feet, membrane glowing with golden translucence when backlit. Its body is perfectly proportioned, showing immense power with graceful lines. The dragon stands on a mountain peak at sunrise, golden light making its scales blaze like the sun itself. Clouds part around its form. Its expression is serene but powerful. A faint aura of divine light surrounds it. Photorealistic rendering capturing the ultimate majesty, the divine nature, and the overwhelming presence of the most powerful force for good.",
+      "tags": [
+        "ancient",
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch6.py"
+    },
+    "gorgon": {
+      "name": "Gorgon",
+      "type": "construct",
+      "description": "A massive bull-like creature 8 feet tall and 12 feet long, but covered entirely in metal plates instead of hide. Its body is made of dark iron that shows rust in places like blood. The head is bovine but more angular, with glowing red eyes and metal horns. Most terrifying is its breath - a green poisonous cloud that turns living creatures to stone. Its hooves strike sparks on stone. The metal plates shift and grind as it moves, creating an awful sound. Steam rises from its nostrils. The gorgon stands among the petrified statues of its victims - warriors frozen mid-charge, their faces showing final terror. Its mouth is open, releasing the deadly green vapor. Muscles of iron cable are visible between the plates. Photorealistic rendering of living metal, the mechanical bull horror, and the deadly petrification it brings.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch6.py"
+    },
+    "gray_ooze": {
+      "name": "Gray Ooze",
+      "type": "humanoid",
+      "description": "A 10-foot wide puddle of thick gray slime that looks like wet cement come to life. Its surface constantly ripples and bubbles as it moves with surprising speed. The ooze is semi-transparent, showing partially dissolved metal and organic matter within its mass. Where it touches metal, the material corrodes and dissolves instantly, creating wisps of acidic smoke. The creature has no features, just an amorphous mass of gray death. It spreads across dungeon stones, seeping through cracks. The surface has an oily sheen that reflects torchlight. Bones float within it at various stages of dissolution. The ooze leaves a trail of corroded stone behind it. Photorealistic rendering of viscous slime, the corrosive nature, and the mindless hunger of this dungeon hazard.",
+      "tags": [
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch6.py"
+    },
+    "green_hag": {
+      "name": "Green Hag",
+      "type": "elemental",
+      "description": "A hideous crone standing 6 feet tall with sickly green skin like pond scum. Her face is a nightmare of warts, boils, and twisted features with one eye larger than the other. Stringy black hair like seaweed hangs to her waist, dripping with swamp water. Her fingers are elongated with black claws like iron. She wears tattered robes of moss and marsh plants. Her mouth shows blackened teeth with gaps, and her breath is visible as toxic green vapor. The hag stands in her swamp lair, surrounded by hanging skulls and bottled horrors. Her hunched back gives her a predatory stance. Leeches and bog worms crawl on her skin. Her orange eyes glow with malevolent intelligence and cruel humor. Photorealistic rendering of the corrupted fey, the swamp witch aesthetic, and the supernatural evil of hag-kind.",
+      "tags": [
+        "corrupted",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch6.py"
+    },
+    "griffon": {
+      "name": "Griffon",
+      "type": "beast",
+      "description": "A magnificent creature with the head and wings of a golden eagle and the body of a lion. Standing 8 feet tall at the shoulder with a 25-foot wingspan. The eagle head is noble with fierce golden eyes and a sharp curved beak. Golden-brown feathers cover the head, neck, and wings. The lion body is muscular with tawny fur and powerful legs ending in both talons (front) and paws (rear). The creature perches on a mountain cliff, wings partially spread for balance. Its feathers and fur ripple in mountain winds. The tail is leonine with a tuft at the end. Pride and nobility radiate from its bearing. The blend between bird and beast is seamless and natural. Sunlight catches on its feathers creating golden highlights. Photorealistic detail showing the perfect fusion of eagle and lion, the majestic bearing, and the power of this legendary guardian.",
+      "tags": [
+        "legendary",
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch6.py"
+    },
+    "grimlock": {
+      "name": "Grimlock",
+      "type": "humanoid",
+      "description": "A 5-foot tall humanoid that evolved in absolute darkness, with gray, almost translucent skin. Most disturbing is its face - where eyes should be, there's only smooth skin. The nose is almost nonexistent, just two small slits. Its ears are enlarged and constantly moving. The mouth is wide with sharp teeth adapted for raw meat. Its body is muscular but hunched from living in caves. Long arms end in powerful hands with thick fingers. The grimlock uses echolocation, its head constantly tilting to listen. It wears crude hide clothing and carries a stone axe. The creature stands in complete darkness, yet moves with confidence. Its skin shows a network of visible veins. The blank face where eyes should be is deeply unsettling. Photorealistic rendering of the blind cave dweller, the evolutionary adaptation to darkness, and the primal horror of the eyeless.",
+      "tags": [
+        "tiny",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch6.py"
+    },
+    "half_dragon": {
+      "name": "Half Dragon",
+      "type": "dragon",
+      "description": "A humanoid warrior with draconic features, standing 7 feet tall. Half the body shows human characteristics while dragon traits dominate the other - scales cover portions of skin, transitioning from flesh to scales. One eye is human, the other reptilian with a vertical pupil. Small horns protrude from the skull. Wings capable of flight spread from the back. The skin shifts from human tones to colored scales (red, blue, green, black, or gold depending on dragon ancestry). Sharp teeth and an elongated face show the dragon heritage. Clawed hands grip a sword with expertise. The half-dragon wears armor modified for its wings and tail. Its expression shows both human intelligence and draconic pride. A tail extends behind for balance. Photorealistic rendering of the hybrid nature, the blend of human and dragon, and the power of draconic bloodline.",
+      "tags": [
+        "tiny",
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch6.py"
+    },
+    "harpy": {
+      "name": "Harpy",
+      "type": "elemental",
+      "description": "A vile creature with the upper body of a haggard woman and the lower body, wings, and talons of a vulture. Standing 6 feet tall with a 10-foot wingspan of dirty, molting feathers. The human portion is filthy with matted hair, cruel features, and arms that end in wing joints. The face shows a horrible beauty, alluring yet repulsive. Its mouth opens to reveal sharp teeth and to emit its enchanting song. The bird portions are those of a carrion bird - dark feathers, powerful talons caked with dried blood. The harpy perches on a rocky outcrop littered with bones. Its feathers are ragged and missing in patches. Flies buzz around it. The blend between human and bird is grotesque. Its expression shows hunger and cruelty. Photorealistic rendering of the cursed fusion, the corrupted beauty, and the deadly song of the harpy.",
+      "tags": [
+        "corrupted",
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch6.py"
+    },
+    "hell_hound": {
+      "name": "Hell Hound",
+      "type": "elemental",
+      "description": "A massive 5-foot tall dog from the infernal planes, with coal-black fur that smolders and smokes. Its eyes burn with orange-red fire. The mouth glows from within with hellfire, and when it barks, flames shoot forth. The body is powerfully muscled like a mastiff but larger and more menacing. Its fur appears to be made of shadow and smoke. Claws of obsidian click on stone. The hell hound's breath creates heat distortion in the air. It stands at the gates of a hellish fortress, chains of red-hot iron around its neck. The ground beneath its paws shows scorch marks. Its teeth are like white-hot metal. An aura of sulfur and brimstone surrounds it. Photorealistic rendering of the infernal canine, the living fire within, and the loyal guardian of the damned.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch6.py"
+    },
+    "hill_giant": {
+      "name": "Hill Giant",
+      "type": "elemental",
+      "description": "A 16-foot tall giant with a bulbous, misshapen head and a slovenly appearance. Its skin is ruddy brown and covered in dirt, scars, and crude tattoos. The face is stupid and cruel with small, deep-set eyes, a bulbous nose, and thick lips. Its body is massively fat but with powerful muscles beneath. The giant wears rough hides and furs, poorly stitched together. A massive wooden club reinforced with metal bands is its weapon. Its hair is greasy and unkempt. The giant stands in its crude hill fort made of boulders and logs. Bones and refuse litter the ground. Its expression shows dim intelligence and constant hunger. Flies circle its unwashed form. The hands are massive and dirty with broken nails. Photorealistic detail showing the slovenly nature, the crude strength, and the bullying mentality of the weakest true giant.",
+      "tags": [
+        "large",
+        "tiny",
+        "flying",
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch6.py"
+    },
+    "hippogriff": {
+      "name": "Hippogriff",
+      "type": "beast",
+      "description": "A magical beast with the front half of a giant eagle and the rear half of a horse. Standing 9 feet long and 5 feet tall at the shoulder. The eagle portion has a noble head with fierce amber eyes and a sharp golden beak. Brown and white feathers cover the head, neck, chest, and wings which span 20 feet. The front legs are powerful eagle talons. The rear half transitions seamlessly to a horse with chestnut brown coat and powerful equine legs ending in hooves. The creature stands on a mountain meadow, wings partially spread. Its bearing is proud and wild. The feathers gleam in sunlight while the horse hair has a healthy sheen. The tail is that of a horse, flowing in the wind. Photorealistic rendering showing the magical blend of eagle and horse, the noble bearing, and the freedom of this flying mount.",
+      "tags": [
+        "flying",
+        "magical",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch7.py"
+    },
+    "hobgoblin": {
+      "name": "Hobgoblin",
+      "type": "beast",
+      "description": "A 6-foot tall militaristic goblinoid with dark orange-red skin and a disciplined bearing. Unlike its smaller goblin cousins, the hobgoblin stands straight and proud. Its face is harsh with a prominent nose, dark eyes that show intelligence and cruelty, and a mouth with small tusks. Black hair is kept in a military style. The hobgoblin wears well-maintained chain mail and carries quality weapons - a longsword and shield with military insignia. Its body is lean and muscular from constant training. Scars show a lifetime of warfare but they're worn with pride. The creature stands at attention in a military camp, other hobgoblins visible in formation behind. Its expression is stern and disciplined. Photorealistic detail showing the military precision, the warrior culture, and the organized evil of hobgoblin society.",
+      "tags": [
+        "tiny"
+      ],
+      "source_file": "generate_bestiary_batch7.py"
+    },
+    "homunculus": {
+      "name": "Homunculus",
+      "type": "humanoid",
+      "description": "A tiny 1-foot tall artificial creature created through alchemy, with a grotesque appearance. Its body is vaguely humanoid but misshapen, with gray-green skin that looks like preserved flesh. The head is oversized for its body with bulging eyes that never blink. Bat-like wings sprout from its back, allowing it to fly. Its mouth is filled with needle teeth, and a scorpion-like tail curves over its back with a venomous stinger. The creature's limbs are spindly but end in clever hands. It perches on an alchemist's table surrounded by bubbling beakers and arcane equipment. Stitches and scars show where it was assembled. Its expression shows unnatural intelligence and absolute loyalty to its creator. Photorealistic rendering of the artificial life, the alchemical abomination, and the uncanny valley of created consciousness.",
+      "tags": [
+        "tiny",
+        "flying",
+        "magical"
+      ],
+      "source_file": "generate_bestiary_batch7.py"
+    },
+    "hydra": {
+      "name": "Hydra",
+      "type": "dragon",
+      "description": "A massive reptilian monster with multiple serpentine heads - starting with five but capable of growing more. The body is 20 feet long, similar to a dragon but without wings. Each head is on a long, flexible neck that moves independently. The heads have crocodilian features with rows of sharp teeth and yellow eyes. Dark green scales cover the entire creature. When a head is severed, two grow back from the stump in moments. The hydra stands in a fetid swamp, multiple heads striking in different directions. Some necks show scarring where heads have regrown. Acidic saliva drips from multiple mouths. The body is muscular with four powerful legs ending in webbed claws. Its tail thrashes in murky water. Photorealistic horror showing multiple heads, the regenerative nature, and the mythological terror of the hydra.",
+      "tags": [
+        "swarm",
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch7.py"
+    },
+    "imp": {
+      "name": "Imp",
+      "type": "fiend",
+      "description": "A tiny 2-foot tall devil with dark red skin and a mischievous, evil expression. Small horns protrude from its forehead, and its eyes glow with infernal cunning. Bat-like wings allow it to fly silently. Its tail is long and ends in a venomous barb like a scorpion's. The imp's face is impish with a pointed nose and chin, constantly smirking. Its hands and feet end in small but sharp claws. The creature wears no clothing, its diabolic nature evident. It perches on a warlock's shoulder or hides in shadows, ready to cause mischief. Small flames occasionally flicker around its form. Its teeth are needle-sharp when it grins. Despite its small size, malevolent intelligence burns in its eyes. Photorealistic rendering of the miniature devil, the servant of evil, and the corruptor in small packages.",
+      "tags": [
+        "tiny",
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch7.py"
+    },
+    "invisible_stalker": {
+      "name": "Invisible Stalker",
+      "type": "elemental",
+      "description": "An air elemental assassin that's naturally invisible, shown here as a barely visible distortion in the air. The creature is vaguely humanoid, 8 feet tall, made entirely of compressed air currents. Its form is only visible as a shimmer, like heat distortion, showing the outline of a muscular humanoid shape. Dust and debris swirl within its form, giving hints to its shape. When it moves, papers flutter and curtains billow. Its eyes are two points of concentrated air pressure that create slight vortexes. The stalker is shown in a library, books flying off shelves in its wake, dust motes spinning in the air currents that form its body. Footprints appear in dust on the floor. Photorealistic rendering of near-invisibility, the presence of absence, and the terror of an unseen hunter.",
+      "tags": [
+        "flying",
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch7.py"
+    },
+    "iron_golem": {
+      "name": "Iron Golem",
+      "type": "construct",
+      "description": "A 12-foot tall humanoid construct made entirely of iron plates and gears. Its body is assembled from massive iron pieces riveted together, showing the craftsmanship of its creation. The head is a featureless iron helm with two glowing red slits for eyes. Steam occasionally vents from joints. The golem's limbs are proportionally thick, ending in massive iron fists capable of crushing stone. Gears and pistons are visible at joint points. Mystical runes are etched into its chest plate, glowing faintly with magic. The golem moves with mechanical precision, each step causing the ground to shake. It stands in a wizard's workshop, tools and half-finished constructs visible. Rust streaks parts of its body like blood. The sound of grinding metal accompanies every movement. Photorealistic rendering of animated metal, the mechanical servant, and the unstoppable force of magical automation.",
+      "tags": [
+        "magical",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch7.py"
+    },
+    "kobold": {
+      "name": "Kobold",
+      "type": "dragon",
+      "description": "A small 2-foot tall reptilian humanoid with scales ranging from rusty brown to black. Its head is dragon-like with small horns, orange eyes, and a snout filled with small sharp teeth. The kobold's body is scrawny but wiry, with a long tail for balance. Its hands are clever despite having claws. The creature wears makeshift armor from scavenged materials and carries mining tools as weapons. Despite its small size, it shows cunning intelligence. The kobold stands in a warren tunnel, trap mechanisms visible. Its scales catch torchlight. The expression shows a mix of cowardice and sneaky intelligence. Years of living underground have made its eyes sensitive to light. Small scars and mining dust cover its body. Photorealistic detail showing the small dragon-kin, the trap-maker, and the weak but clever underdog of monsters.",
+      "tags": [
+        "tiny"
+      ],
+      "source_file": "generate_bestiary_batch7.py"
+    },
+    "kraken": {
+      "name": "Kraken",
+      "type": "aberration",
+      "description": "A colossal sea monster of legendary proportions, its main body alone 100 feet long. Eight massive tentacles, each 120 feet long and 10 feet thick, writhe from its body. Two even longer tentacles serve as primary weapons. The head is elongated like a giant squid's with two enormous eyes, each 10 feet across, showing alien intelligence. Its beak could swallow ships whole. The skin is dark purple-black with a rubbery texture, covered in barnacles and scars from ancient battles. Each tentacle is lined with suckers the size of shields, each containing teeth-like hooks. The kraken rises from a storm-tossed ocean, tentacles wrapped around a sailing ship, crushing it like a toy. Lightning illuminates its massive form. Water cascades off its body. The eyes glow with malevolent intelligence. Photorealistic rendering of the ultimate sea monster, the ship-destroyer, and the terror from the depths.",
+      "tags": [
+        "ancient",
+        "legendary",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch7.py"
+    },
+    "lamia": {
+      "name": "Lamia",
+      "type": "beast",
+      "description": "A creature with the upper body of a beautiful woman and the lower body of a lion. The human portion is alluring with bronze skin, long dark hair adorned with gold jewelry, and captivating eyes that shift between human and feline. The transition at the waist blends smooth skin into golden-brown fur. The lion body is powerful and sleek with muscular legs ending in massive paws with retractable claws. A long leonine tail swishes behind. She wears ornate jewelry and silks on her human half. Her expression is seductive but predatory. She reclines in desert ruins, ancient pillars and sand surrounding her. Her hands gesture hypnotically. Despite her beauty, there's something unsettling about the blend of human and beast. Photorealistic rendering of the seductive predator, the desert enchantress, and the dangerous beauty of the lamia.",
+      "tags": [
+        "ancient",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch7.py"
+    },
+    "lich": {
+      "name": "Lich",
+      "type": "humanoid",
+      "description": "An undead wizard of immense power, once human but now a skeletal horror wreathed in dark magic. The skull is intact but yellowed with age, eye sockets burning with pinpoints of red light that pierce the soul. Tattered robes of once-fine material hang from its skeletal frame, embroidered with arcane symbols that still glow with power. Skeletal hands clutch an ornate staff topped with a skull. A golden crown sits upon its skull, and numerous magical rings adorn its finger bones. Dark energy crackles around its form. The lich floats slightly above the ground in its tomb laboratory, surrounded by spell books, magical artifacts, and failed experiments. Its jaw hangs open in an eternal grin of death. Wisps of negative energy flow from its form. The phylactery containing its soul glows somewhere nearby. Photorealistic rendering of undead majesty, arcane power, and the horror of eternal unlife.",
+      "tags": [
+        "corrupted",
+        "magical"
+      ],
+      "source_file": "generate_bestiary_batch8.py"
+    },
+    "lizardfolk": {
+      "name": "Lizardfolk",
+      "type": "elemental",
+      "description": "A 6-foot tall reptilian humanoid with green and brown scales covering its entire body. The head is distinctly lizard-like with a long snout filled with sharp teeth, yellow reptilian eyes with vertical pupils, and a crest of spines running from head to tail. Its body is lean and muscular with a long tail used for swimming and balance. Webbed fingers and toes aid in aquatic movement. The lizardfolk carries primitive weapons - a spear and shield made from turtle shell and bone. Its scales glisten with moisture. The creature stands in a swamp setting, partially in water. Its expression is cold and emotionless, showing reptilian indifference. Tribal scarification marks its scales. A necklace of teeth and claws shows hunting prowess. Photorealistic detail of scales, the amphibious adaptation, and the primitive yet dangerous nature of these swamp dwellers.",
+      "tags": [
+        "aquatic"
+      ],
+      "source_file": "generate_bestiary_batch8.py"
+    },
+    "manticore": {
+      "name": "Manticore",
+      "type": "beast",
+      "description": "A horrifying fusion of lion, human, and scorpion, 10 feet long with a muscular lion's body covered in reddish-brown fur. The face is disturbingly human but stretched over a lion's skull, with three rows of sharp teeth and mad eyes that show cruel intelligence. A thick mane surrounds the human-like face. Most terrifying is its tail - long and segmented like a scorpion's but covered in hundreds of foot-long spikes that it can launch like arrows. Bat-like wings spread from its shoulders, allowing flight. The creature stands on a rocky outcrop, tail arched over its back ready to fire spikes. Its mouth is open showing all three rows of teeth. The human face on the beast body is deeply unsettling. Blood stains its muzzle and claws. Photorealistic horror showing the unnatural fusion, the spike-throwing tail, and the sadistic intelligence.",
+      "tags": [
+        "flying"
+      ],
+      "source_file": "generate_bestiary_batch8.py"
+    },
+    "medusa": {
+      "name": "Medusa",
+      "type": "elemental",
+      "description": "Once a beautiful woman, now a cursed creature with living snakes for hair. Her face retains traces of former beauty but is now gaunt with scales patches on her cheeks. Her eyes glow with a sickly green light - meeting her gaze turns victims to stone. Hundreds of snakes writhe where hair should be, each one alive and hissing. Her skin has a greenish tint with patches of scales. She wears tattered Greek-style robes. Her hands end in claw-like nails. The medusa stands in a garden of petrified victims - warriors frozen mid-scream, their faces showing final terror. Some statues are ancient and weathered, others fresh. Her expression shows both tragedy and malevolence. Tears of poison run down her cheeks. The snakes constantly move, each with its own awareness. Photorealistic rendering of cursed beauty, the living snake hair, and the tragic monster who kills with a glance.",
+      "tags": [
+        "ancient"
+      ],
+      "source_file": "generate_bestiary_batch8.py"
+    },
+    "mimic": {
+      "name": "Mimic",
+      "type": "monstrosity",
+      "description": "A shapeshifter shown in its true form - an amorphous mass of gray flesh covered in a sticky adhesive. In this image, it's partially transformed into a treasure chest, with parts of its body still showing. The 'lid' of the chest opens to reveal rows of sharp teeth and a massive purple tongue. Multiple eyes appear randomly on its surface. Pseudopods extend from the mass, some shaped like treasure chest hardware, others reaching for prey. The texture is wet and organic despite mimicking wood and metal. The creature is in a dungeon room, having perfectly imitated a chest until disturbed. Gold coins are stuck to its adhesive surface. Parts of previous victims' equipment are partially absorbed into its mass. Photorealistic body horror showing the perfect camouflage predator, the transformation between object and monster.",
+      "tags": [
+        "swarm",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch8.py"
+    },
+    "minotaur": {
+      "name": "Minotaur",
+      "type": "humanoid",
+      "description": "An 8-foot tall muscular humanoid with the head of a massive bull. Its body is that of a powerfully built human covered in short brown fur. The bull head features long curved horns, a ring through its nose, and eyes that burn with rage and maze-madness. Its hands are humanoid but end in thick, hard nails. Hooved feet provide powerful charges. The minotaur wields a massive double-headed axe with deadly skill. Scars crisscross its body from countless battles. It stands in a stone labyrinth, walls marked with claw scratches from its victims' attempts to escape. Its nostrils flare with hot breath. The expression shows bestial fury combined with human cunning. Greek armor pieces partially cover its form. Photorealistic rendering of the bull-man hybrid, the labyrinth guardian, and the classical monster of Greek mythology.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch8.py"
+    },
+    "mummy": {
+      "name": "Mummy",
+      "type": "construct",
+      "description": "An ancient preserved corpse animated by dark magic, wrapped in yellowed linen bandages that trail and unravel. Parts of desiccated flesh are visible through gaps - leathery brown skin pulled tight over bones. The face is partially exposed showing hollow eye sockets with pinpoints of red light, a lipless mouth with yellowed teeth, and skin like ancient parchment. Hieroglyphs on the wrappings glow with cursed energy. The mummy moves with jerky, unnatural motions. Dust and sand fall from its form with every step. It carries an ancient Egyptian staff and wears golden amulets. The creature stands in a torch-lit tomb surrounded by canopic jars and hieroglyph-covered walls. A supernatural dread emanates from it. The smell of preservatives and death follows it. Photorealistic rendering of preserved death, ancient curses, and the horror of the walking dead from Egypt's tombs.",
+      "tags": [
+        "ancient",
+        "corrupted"
+      ],
+      "source_file": "generate_bestiary_batch8.py"
+    },
+    "naga": {
+      "name": "Naga",
+      "type": "humanoid",
+      "description": "A serpentine creature with a human upper body and a 20-foot long snake lower body. The human portion is beautiful and regal, with bronze skin, elegant features, and eyes showing ancient wisdom. The snake portion has emerald green scales with golden patterns. The transition from human to snake at the waist is seamless and natural. The naga wears golden jewelry - arm bands, necklaces, and a ornate headdress with a cobra hood design. Its hands gesture in spellcasting motions. The creature is coiled in an ancient temple, stone serpent carvings surrounding it. Its expression is serene but powerful. The snake body shows incredible muscle control. A forked tongue occasionally flicks out. Photorealistic rendering of the snake-human hybrid, the temple guardian, and the mystical presence of this ancient race.",
+      "tags": [
+        "ancient",
+        "magical"
+      ],
+      "source_file": "generate_bestiary_batch8.py"
+    },
+    "nightmare": {
+      "name": "Nightmare",
+      "type": "elemental",
+      "description": "A massive horse from the lower planes, standing 6 feet at the shoulder with a coat of pure black that seems to absorb light. Its mane and tail are made of shadowstuff that flows like smoke. The eyes burn with orange hellfire. Most terrifying are its hooves - they burn with infernal flame, leaving flaming hoofprints. When it breathes, smoke and embers emerge from its nostrils. The nightmare's teeth are sharp like a predator's rather than a normal horse. Its body is powerfully muscled for both speed and combat. The creature rears on a battlefield at night, flames surrounding its hooves. Its mouth is open in a terrifying whinny. The contrast between its shadow-black coat and burning hooves creates a striking image. An aura of fear surrounds it. Photorealistic rendering of the infernal steed, the mount of evil, and the horse that gallops through nightmares.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch8.py"
+    },
+    "ochre_jelly": {
+      "name": "Ochre Jelly",
+      "type": "humanoid",
+      "description": "A massive 10-foot wide amoeba-like ooze of mustard-yellow color with the consistency of thick pudding. Its surface constantly undulates and bubbles as it moves. The jelly is semi-transparent, showing partially dissolved organic matter within - bones, armor, and other indigestible materials float in its mass. When it moves, it leaves a trail of acidic slime that etches stone. The creature can squeeze through incredibly small spaces and split when struck. It spreads across a dungeon corridor, seeping through cracks in the walls. The surface has an oily sheen that reflects torchlight. Acidic vapors rise from its form. Where it touches organic material, it immediately begins dissolving. Photorealistic rendering of living acid, the mindless consumer, and the dungeon hazard that dissolves everything organic.",
+      "tags": [
+        "large",
+        "tiny",
+        "psychic"
+      ],
+      "source_file": "generate_bestiary_batch8.py"
+    },
+    "ogre": {
+      "name": "Ogre",
+      "type": "beast",
+      "description": "A 10-foot tall giant humanoid with a massive, corpulent body covered in warty, greenish-gray hide. Its head is disproportionately large with a jutting jaw filled with yellowed, broken tusks. Small, pig-like eyes show dim intelligence and cruel hunger. The ogre's arms are thick as tree trunks ending in massive hands with dirty, broken nails. Its belly hangs over a crude belt made of skulls. The creature wears poorly stitched animal hides and carries a massive wooden club studded with nails and teeth. Its hair is greasy and matted with filth. The ogre stands in its crude lair, gnawed bones and refuse scattered about. Flies buzz around its unwashed form. Its mouth drools constantly. The expression shows stupid cruelty and endless hunger. Photorealistic rendering of the brutish giant, the dim-witted bully, and the raw physical threat of ogre-kind.",
+      "tags": [
+        "tiny",
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch9.py"
+    },
+    "oni": {
+      "name": "Oni",
+      "type": "elemental",
+      "description": "An 8-foot tall demonic ogre mage from Eastern mythology with blue or red skin and a terrifying visage. Two or three horns protrude from its forehead, and its face features a massive mouth with prominent tusks. Wild black hair flows like flames. The oni's body is powerfully muscled and covered in mystical tattoos that glow with magic. It wears samurai-style armor plates over traditional Japanese clothing. In one hand it carries a massive iron-studded club (kanabo), in the other mystical flames dance. The creature can shapeshift and cast spells. Its eyes burn with malevolent intelligence far greater than a common ogre. The oni stands in a Japanese temple it has defiled, sake jars and gold scattered about. Storm clouds gather overhead at its command. Photorealistic rendering of the Japanese demon, the ogre mage, and the blend of physical and magical power.",
+      "tags": [
+        "magical",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch9.py"
+    },
+    "orc": {
+      "name": "Orc",
+      "type": "elemental",
+      "description": "A 6-foot tall humanoid warrior with gray-green skin and a muscular, scarred body. Its face is pig-like with a snout nose, prominent lower tusks, and small red eyes that burn with hatred. Coarse black hair is tied in warrior braids. The orc's body shows the harsh life of constant warfare - scars, burns, and old wounds. It wears piecemeal armor scavenged from various sources, decorated with teeth and finger bones of enemies. A massive battle axe, notched from use, is gripped in calloused hands. War paint marks its face. The orc stands in a war camp, other orcs visible preparing for raid. Its expression shows savage joy at the prospect of battle. Blood stains its armor and weapons. Photorealistic detail showing the warrior culture, the savage nature, and the endless aggression of orc-kind.",
+      "tags": [
+        "tiny",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch9.py"
+    },
+    "otyugh": {
+      "name": "Otyugh",
+      "type": "aberration",
+      "description": "A grotesque 8-foot wide aberration that dwells in filth and waste. Its body is a bloated, oval mass of diseased flesh covered in rock-hard patches and oozing pustules. Three thick legs support its bulk. Two long tentacles covered in thorny ridges extend 10 feet from its body, used to grab prey. A third tentacle ending in two eyes on stalks rises above. Its mouth is a massive vertical maw in the center of its body, filled with rows of teeth designed to grind anything. The creature wallows in sewage and refuse, feeding on waste and carrion. Flies swarm around it. Its hide is stained with filth and dried blood. Partially eaten corpses lie nearby. The stench is visible as wavy air. Photorealistic horror showing the living garbage disposal, the disease- ridden scavenger, and the nightmare of the sewers.",
+      "tags": [
+        "swarm",
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch9.py"
+    },
+    "owlbear": {
+      "name": "Owlbear",
+      "type": "beast",
+      "description": "A massive terrifying hybrid creature with the body of a huge grizzly bear and the head of a giant owl. Its muscular frame stands 8 feet tall, covered in thick brown fur with patches of dark feathers transitioning around the neck and shoulders. The owl head features enormous amber eyes that glow with predatory intelligence, and a sharp curved beak powerful enough to snap bones. Its massive bear paws end in razor- sharp talons. The creature is shown in a forest clearing, standing on its hind legs in an aggressive posture, with one paw raised showing its deadly claws. Dramatic lighting filters through the forest canopy, highlighting the creature's intimidating presence. The scene captures the owlbear mid-roar, its beak open revealing a terrifying maw. Photorealistic detail showing individual feathers and fur texture, with bright vivid colors emphasizing the creature's primal ferocity and unnatural hybrid nature.",
+      "tags": [
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch9.py"
+    },
+    "pegasus": {
+      "name": "Pegasus",
+      "type": "beast",
+      "description": "A magnificent winged horse of pure white, standing 5 feet at the shoulder with a 20-foot wingspan. Its coat gleams like fresh snow, perfectly groomed and lustrous. The wings are those of a giant eagle but covered in pristine white feathers that catch sunlight with an almost divine radiance. Its mane and tail flow like silk in an ethereal breeze. The eyes show intelligence beyond a normal horse, deep brown and knowing. The pegasus stands on a mountain peak above the clouds, wings spread majestically. Its bearing is noble and proud. Golden light halos its form. The hooves are polished silver. Muscles ripple beneath the perfect coat. The expression is both gentle and fierce. Photorealistic rendering of the celestial mount, the symbol of freedom, and the divine flying horse of legend.",
+      "tags": [
+        "incorporeal",
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch9.py"
+    },
+    "phase_spider": {
+      "name": "Phase Spider",
+      "type": "undead",
+      "description": "A 10-foot wide spider with the terrifying ability to phase between dimensions. Its body is pale blue-white with a translucent quality, as if not fully in this reality. Eight long legs shimmer and phase in and out of visibility. The spider's body constantly shifts between solid and ethereal states. Eight eyes glow with otherworldly blue light. Its fangs drip with venom that exists in multiple dimensions simultaneously. The creature is shown partially phased - half its body translucent and ghostly, half solid and threatening. Web strands stretch between dimensions, visible in some places, fading to nothing in others. The spider hunts in a darkened ruin where reality seems thin. Photorealistic rendering of the dimensional predator, the phase-shifting horror, and the spider that attacks from nowhere.",
+      "tags": [
+        "swarm",
+        "incorporeal"
+      ],
+      "source_file": "generate_bestiary_batch9.py"
+    },
+    "pit_fiend": {
+      "name": "Pit Fiend",
+      "type": "elemental",
+      "description": "A 12-foot tall devil general, the most powerful of Hell's warriors. Its body is massively muscled and covered in scales of deep crimson. Huge bat wings spread 20 feet wide, membrane scarred from countless battles. The head is bestial with horns like a ram, eyes that burn with infernal fire, and a mouth full of fangs. Its hands end in terrible claws, and its tail is long and powerful. The pit fiend wears elaborate hell-forged armor decorated with screaming faces. It carries a massive flaming sword and a whip of fire. An aura of fear and flame surrounds it. The devil stands at the gates of a hellish fortress, armies of lesser devils behind it. Lava flows and flames provide backdrop. Its expression shows absolute authority and cruelty. Photorealistic rendering of infernal might, diabolic leadership, and the ultimate devil warrior.",
+      "tags": [
+        "boss",
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch9.py"
+    },
+    "planetar": {
+      "name": "Planetar",
+      "type": "celestial",
+      "description": "A 9-foot tall angel warrior with emerald skin that seems to glow with inner light. Massive white wings span 15 feet, each feather perfect and radiant. Its face is impossibly beautiful yet stern, with silver eyes that see all sin and virtue. Long silver hair flows like liquid metal. The planetar wears gleaming plate armor that seems made of condensed starlight. In one hand, a flaming greatsword of pure radiance, in the other, divine light ready to heal or harm. A golden halo of pure energy surrounds its head. The angel hovers above a battlefield between good and evil, ready to smite the wicked. Light bends around its form creating rainbow effects. Its expression shows divine justice tempered with mercy. Photorealistic rendering of celestial power, angelic beauty, and the warrior of heaven.",
+      "tags": [
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch9.py"
+    },
+    "purple_worm": {
+      "name": "Purple Worm",
+      "type": "elemental",
+      "description": "A colossal 80-foot long worm, 10 feet in diameter, burrowing through solid rock. Its body is segmented like an earthworm but covered in thick purple plates that can deflect weapons. The head is mostly a massive circular maw filled with grinding teeth arranged in concentric rings, capable of swallowing creatures whole. A massive stinger at its tail end drips with deadly poison. The worm erupts from underground, rocks and dirt flying everywhere. Its body shows scars from battles with other underground horrors. Acidic saliva drips from its maw, dissolving stone. The segments pulse with muscular contractions as it moves. The ground trembles with its approach. Photorealistic rendering of the underground terror, the tunnel maker, and the apex predator of the deep earth.",
+      "tags": [
+        "flying",
+        "large"
+      ],
+      "source_file": "generate_bestiary_batch9.py"
+    },
+    "bandit_captain_gorvek": {
+      "name": "Bandit Captain Gorvek",
+      "type": "beast",
+      "description": "BANDIT CAPTAIN GORVEK - An imposing and battle-scarred HALF-ORC warrior who commands the Thornwood bandits with brutal efficiency. This is a BOSS character with intimidating presence. PHYSICAL APPEARANCE: Gorvek is a massive, muscular HALF-ORC male in his early 40s, standing 6'5\" tall with a powerful, intimidating build. His skin is a grayish-green tone typical of half-orcs. His face bears multiple battle scars, including a prominent scar running from his left eyebrow down across his eye (which is milky white and blind) to his jaw. His good right eye burns with an UNNATURAL GREEN LIGHT (corrupted by dark magic) and cunning intelligence. He has prominent lower tusks jutting from his jaw, filed to sharp points. His black hair is pulled back in a warrior's topknot, with the sides of his head shaved and tattooed with tribal orcish war patterns. A thick black beard is braided with small bone trophies. ARMOR AND EQUIPMENT: He wears piecemeal plate armor - a mix of stolen knight's armor pieces and reinforced leather, all painted black and adorned with spikes and fur pelts. The chest plate bears the symbol of a blood-red axe crossed with a thorn branch. His massive shoulders are protected by spiked pauldrons made from bear skulls. A tattered crimson cloak made from the banners of defeated enemies hangs from his shoulders. WEAPONS: In his right hand, he wields a massive two-handed battle axe with a wickedly curved blade that gleams with a dark red tint (from dried blood). The axe handle is wrapped in leather and studded with iron. A heavy crossbow hangs on his back, and multiple daggers are visible sheathed across his chest. A coiled whip hangs from his belt. POSE AND SETTING: Gorvek stands on a raised wooden platform in his forest stronghold, one foot planted on a chest overflowing with stolen gold. Behind him, bandit banners hang from rough wooden walls. He's captured mid-battle cry, mouth open showing filed teeth, raising his battle axe overhead with both hands. His pose radiates dominance and savage leadership. The lighting is dramatic - firelight from torches casts harsh shadows across his scarred HALF-ORC face and armor. His corrupted eye glows with an eerie green light while his tusks gleam menacingly. The overall impression is of a dangerous, cunning half-orc warlord who has been touched by dark magic and commands through violence and supernatural intimidation. Photorealistic detail, ultra detailed, 8K quality, cinematic lighting, intimidating boss character portrait, dark fantasy atmosphere, menacing and powerful appearance.",
+      "tags": [
+        "large",
+        "tiny",
+        "boss",
+        "corrupted",
+        "swarm"
+      ],
+      "source_file": "generate_gorvek_boss.py"
+    },
+    "phantom_servant": {
+      "name": "Phantom Servant",
+      "type": "humanoid",
+      "description": "A translucent, ghostly humanoid figure in tattered servant's clothing. The phantom appears as a semi-transparent specter with glowing pale blue eyes, wearing the decayed remnants of a butler or maid's uniform from centuries past. Its form flickers and wavers like smoke, with wisps of ectoplasmic energy trailing from its ethereal body. The face is gaunt and hollow, with an expression of eternal servitude. Ghostly chains or keys may hang from its belt, and it carries spectral cleaning implements or serving trays that phase in and out of visibility. Photorealistic detail, ultra detailed, 8K quality, cinematic lighting, dark fantasy atmosphere.",
+      "tags": [
+        "incorporeal"
+      ],
+      "source_file": "generate_keep_missing.py"
+    },
+    "shadow_manifestations": {
+      "name": "Shadow Manifestations",
+      "type": "humanoid",
+      "description": "Multiple writhing shadows coalescing into vaguely humanoid shapes. These living shadows appear as a swirling mass of pure darkness that constantly shifts and changes form. Multiple shadowy figures seem to emerge and merge within the mass, with glowing red or purple eyes appearing and disappearing throughout the shadow cloud. The edges of the manifestation blur into wisps of dark smoke, and occasionally ghostly hands or faces press outward from within the mass as if trying to escape. The shadows seem to absorb light around them, creating an aura of supernatural darkness. Photorealistic detail, ultra detailed, 8K quality, cinematic lighting, dark fantasy atmosphere.",
+      "tags": [
+        "swarm",
+        "incorporeal"
+      ],
+      "source_file": "generate_keep_missing.py"
+    },
+    "shadow_relic": {
+      "name": "Shadow Relic",
+      "type": "humanoid",
+      "description": "An ancient corrupted artifact wreathed in living shadows. The relic appears as an ornate obsidian or dark metal object (such as a crown, amulet, or crystalline orb) that pulses with malevolent energy. Tendrils of pure shadow emanate from the relic, writhing and reaching outward like living tentacles. The artifact itself is covered in sinister runes that glow with a dim purple or green light. Dark energy crackles around it like black lightning, and the shadows it casts seem to move independently of any light source. The relic hovers slightly above the ground, surrounded by a vortex of swirling darkness and shadow fragments. Photorealistic detail, ultra detailed, 8K quality, cinematic lighting, dark fantasy atmosphere.",
+      "tags": [
+        "ancient",
+        "corrupted"
+      ],
+      "source_file": "generate_shadow_relic.py"
+    },
+    "shadow_manifestation": {
+      "name": "Shadow Manifestation",
+      "type": "giant",
+      "description": "A terrifying shadow creature manifesting as a single, monstrous entity of pure black darkness, standing in the Relic Chamber of an ancient keep dungeon. SETTING: The creature stands in a circular ritual chamber with glowing purple arcane symbols on the domed ceiling above. Seven stone pillars carved with ancient scenes form a circle around the room, lit by flickering torchlight. The floor has concentric circles carved into gray stone, and purple magical energy emanates from a floating shadow relic on a raised dais behind the creature. The chamber is illuminated by torches on the pillars and the purple glow of the relic, providing dramatic contrast against the pure black shadow creature. THE CREATURE: This living shadow appears as a tall, imposing humanoid shape made entirely of pure black darkness that stands out starkly against the lit stone chamber. It is 8 feet tall with elongated, razor-sharp shadow claws. Its body is absolute black - darker than the darkest night - making it appear as a void in reality. Two intensely burning RED EYES glow like hot coals in its featureless black face, the only features visible in its shadow form. The shadow manifestation's pure black body creates a striking silhouette against the torch-lit stone pillars and glowing purple runes. Tendrils of black shadow writhe from its form like tentacles. Its lower body dissolves into a mass of writhing black shadow tentacles that spread across the gray stone floor. Black shadow energy crackles around its form. IMPORTANT: The creature itself is PURE BLACK shadow, but the BACKGROUND provides contrast: - Gray stone pillars with orange torchlight - Purple glowing arcane symbols on the ceiling - The floating purple shadow relic glowing behind it - Torch flames casting warm light on the stone walls - The creature's black form stands out dramatically against these lit elements Photorealistic detail, ultra detailed, 8K quality, dramatic dungeon lighting with torches and magical purple glow, the pure black shadow creature contrasting against the illuminated ritual chamber, menacing and frightening appearance.",
+      "tags": [
+        "ancient",
+        "magical"
+      ],
+      "source_file": "generate_shadow_manifestation.py"
+    },
+    "tainted_stirge": {
+      "name": "Tainted Stirge",
+      "type": "undead",
+      "description": "A fantasy bat-like creature corrupted by shadow magic, about 1 foot long with a 3-foot wingspan. Its body resembles a fusion of bat and large insect, covered in patchy gray fur and hardened plates. The fur is mottled with dark purple patterns showing magical corruption. Four leathery wings spread wide, the membranes showing tears and dark purple energy. It has a long sharp beak-like mouth structure for feeding. Eight thin legs end in tiny hooked claws for gripping. Multiple glowing red eyes arranged across its head, some clouded with purple shadow energy. Dark purple veins pulse with magical energy beneath semi-transparent wing membranes. The creature hovers in flight, wings beating rapidly, surrounded by wisps of purple shadow magic. Set against a dark cave background with purple magical ambient lighting. Photorealistic detail emphasizing the fantasy creature design, with translucent wing membranes showing magical corruption, creating a menacing flying predator.",
+      "tags": [
+        "large",
+        "tiny",
+        "magical",
+        "corrupted",
+        "flying",
+        "swarm"
+      ],
+      "source_file": "generate_thornwood_missing.py"
+    },
+    "whispering_ashling": {
+      "name": "Whispering Ashling",
+      "type": "elemental",
+      "description": "A small fey creature corrupted by shadow magic, standing 3 feet tall with an ethereal, wraithlike appearance. Its body is made of swirling ash and shadow that constantly shifts and reforms, barely maintaining a humanoid shape. Two glowing ember-like eyes burn within a featureless face of smoke. Wisps of dark mist trail from its form like tattered robes. Its fingers are elongated and claw-like, formed from condensed ash. The creature hovers slightly above the ground, leaving small piles of ash in its wake. Dark purple energy crackles occasionally through its form. Set in a twisted forest with dead trees, the ashling emanates an aura of decay and whispers that seem to come from everywhere at once. The air around it shimmers with heat distortion despite the cold presence it radiates. Photorealistic detail capturing the ethereal nature of living ash and shadow, with dramatic lighting emphasizing the supernatural horror of this corrupted fey spirit.",
+      "tags": [
+        "incorporeal",
+        "tiny",
+        "corrupted"
+      ],
+      "source_file": "generate_thornwood_missing.py"
+    },
+    "ashbound_bandit": {
+      "name": "Ashbound Bandit",
+      "type": "elemental",
+      "description": "A human bandit warrior corrupted by exposure to magical ash and shadow energy. The figure wears tattered leather armor partially fused with their ash-gray skin. Black veins of corruption spread across exposed flesh like a spider web. Their eyes glow with a dull orange light, like dying embers. Ash constantly falls from their body like dandruff, leaving a trail wherever they move. They wield a crude sword that appears to be partially made of compressed ash and shadow. Their face is gaunt and hollow, with cracked lips and hair that moves like smoke. Dark energy occasionally pulses through the black veins. They stand in an aggressive combat stance, ready to strike. The background shows a burned forest clearing with ash drifting through the air like snow. Photorealistic rendering showing the disturbing fusion of human and ash, with detailed texture work on the corrupted flesh and dramatic lighting highlighting the ember glow.",
+      "tags": [
+        "corrupted",
+        "magical"
+      ],
+      "source_file": "generate_thornwood_missing.py"
+    },
+    "elite_bandit_bodyguard": {
+      "name": "Elite Bandit Bodyguard",
+      "type": "beast",
+      "description": "A massive, heavily armored human warrior, standing 6'5\" tall with an imposing muscular build. Wears a combination of stolen plate armor pieces over chain mail, all bearing different insignias from various victims. The armor is well-maintained but mismatched, creating an intimidating patchwork appearance. A thick beard frames a scarred face with cold, calculating eyes and a permanent scowl. Wields a large two-handed sword in one hand and a spiked shield in the other, both weapons showing signs of frequent deadly use. Multiple daggers and throwing axes hang from their belt. Scars crisscross exposed skin, telling stories of countless battles survived. They wear a dark cloak with a hood pulled back, revealing a shaved head with ritual scarring. The warrior stands in a protective stance, muscles tensed and ready to intercept any threat. Behind them, a bandit camp is visible with other bandits looking on with respect and fear. Photorealistic rendering with incredible detail on the mismatched armor pieces, battle scars, and weathered weapons, dramatic lighting creating an intimidating presence.",
+      "tags": [
+        "swarm",
+        "large"
+      ],
+      "source_file": "generate_thornwood_missing.py"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+============================================================
+Run 1 Output:
+============================================================
+{
+  "narration": "As you gather around a table near the hearth, the morning sunlight filtering in through the leaded glass, you lay out your notes and the battered map of the region. Kira leans in, pointing to the jagged coastline and the symbol marking the cursed lighthouse. \"We've still got the mystery of the lighthouse and those cultists to deal with,\" she reminds the group, her tone both eager and focused. \"Abbess Miralda was last seen near the beacon, and the unnatural light hasn't faded.\"\n\nElen nods, her keen gaze sweeping the notes. \"The villagers are still uneasy, and it sounds like something is stirring near the abbey ruins. We could try to learn more from Elder Dorun or Captain Merek before we leave. Or,\" she continues, tapping the map, \"we could go straight to the cliffs and see for ourselves.\"\n\nThane crosses his arms, his voice low and steady. \"If we want to keep Marrow's Rest safe, we should move soon. The longer we wait, the more time the cultists have to strengthen their hold.\"\n\nThe plan is clear before you: investigate the lighthouse and abbey ruins, search for Abbess Miralda, confront the cultists, and break the curse threatening the region. The choice of where to begin is yours.\n\nWould you like to gather more information in the village, set out for the cliffs now, or make any last preparations before you depart?",
+  "actions": []
+}
+
+============================================================
+Run 2 Output:
+============================================================
+{
+  "narration": "The four of you gather at your usual table in the Black Lantern Hearth, the morning sun streaming through the windows and casting lively patterns across the worn wood. Kira sips from her mug and leans forward with a half-smile. \"Well, Trouble Magnet, we’ve got a few threads left to pull. The villagers are still uneasy, and the lighthouse is still burning with that cursed light. If we want answers about the abbey or Miralda, we’ll probably find them near the ruins or at the cliffs.\"\n\nElen spreads out the patched map, her finger tracing routes between the village, the abbey ruins, and the distant lighthouse. \"We could check the village for rumors or clues. There’s still the question of the cult’s activities, and some of the villagers might know more than they let on. Or we could make straight for the sanctum or the cliffs to see what’s changed since we lifted the curse.\"\n\nThane folds his arms, gaze steady. \"Whatever we do, we should be ready for trouble. The cultists haven’t vanished, and neither has the darkness they brought with them. Supplies, information, and a solid plan will make the difference.\"\n\nA gentle breeze drifts in, stirring the papers and bringing the scent of the salt air. The sense of anticipation in your companions is clear--each looking to you for the next step.\n\nWould you like to gather more information from the villagers or your contacts, prepare supplies, or set out immediately toward the abbey ruins or the corrupted lighthouse?",
+  "actions": []
+}
+
+============================================================
+Run 3 Output:
+============================================================
+{
+  "narration": "You gather your companions around one of the Black Lantern Hearth's sturdy tables, the morning bustle of the tavern a gentle backdrop to your planning. Kira leans forward, her eyes bright with anticipation. \"Well, Trouble Magnet, we've got a few threads to follow. The villagers are still uneasy about the lighthouse--that unnatural light hasn't faded, and the cultists might still be active in the abbey ruins.\"\n\nElen unfurls the worn map, pointing to the coastline. \"The last clues we found in the sanctum's crypts mentioned Abbess Miralda and a ritual tied to the lighthouse. If we want to break the curse for good, we should investigate the abbey ruins and see if we can reach the beacon.\"\n\nThane crosses his arms, his expression thoughtful. \"There's also the matter of the missing villagers. Elder Dorun said a few have vanished near the old paths by the cliffs. We could ask around for more details or track those trails ourselves.\"\n\nKira grins. \"And let's not forget, I'm still hoping for a chance to show off my archery against whatever's lurking in those mists.\"\n\nYour companions look to you for a decision, their trust in your leadership clear. Will you focus on the lighthouse and abbey, investigate the disappearances, or gather more information from the villagers before heading out?",
+  "actions": []
+}
+

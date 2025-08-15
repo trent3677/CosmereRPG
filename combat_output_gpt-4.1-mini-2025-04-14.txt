@@ -1,0 +1,18 @@
+Model: gpt-4.1-mini-2025-04-14
+Response time: 5.31s
+Tokens: 33,882 in, 408 out
+============================================================
+{
+  "plan": "Round 4 in progress. Ranger Thane (initiative 17) acts first, followed by Eirik Hearthwise (initiative 16), then Shadow Relic (initiative 2). Ranger Thane will use his Longbow attack twice on the Shadow Relic using prerolled attack dice [17] and [5]. Afterward, it will be Eirik's turn. Player declared casting Sacred Flame at the nearest enemy (Shadow Relic). Player will roll damage after saving throw. Sacred Flame requires the target to make a DC 14 Dexterity saving throw. After Eirik's turn, Shadow Relic will act. Round remains 4.",
+  "narration": "Ranger Thane nocks an arrow with practiced ease, letting it fly at the Shadow Relic. The first shot finds its mark, the bolt striking the dark, swirling form with a sharp crack. The second arrow whistles through the air but glances off the shifting shadows.\n\nNow, Eirik steps forward, invoking the radiant power of his faith. He raises his hand and calls forth Sacred Flame, a burst of searing light aimed at the nearest enemy—the sinister Shadow Relic itself. The shadows around it flicker as it braces against the incoming radiant assault.\n\nThe Shadow Relic must now resist the Sacred Flame's searing light. It must make a Dexterity saving throw (DC 14) to avoid some of the damage. Please roll a d20 and add the Shadow Relic's Dexterity saving throw modifier (+5) to see if it succeeds or fails. What is your roll?",
+  "combat_round": 4,
+  "actions": [
+    {
+      "action": "updateEncounter",
+      "parameters": {
+        "encounterId": "E07-E2",
+        "changes": "Ranger Thane fires his longbow twice at the Shadow Relic, hitting once for 9 piercing damage and missing once."
+      }
+    }
+  ]
+}

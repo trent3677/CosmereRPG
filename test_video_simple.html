@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Video Popup Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #222;
+            color: white;
+            padding: 50px;
+        }
+        
+        .skeleton-box {
+            width: 100px;
+            height: 100px;
+            background: #f44336;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin: 20px;
+            border-radius: 8px;
+        }
+        
+        .skeleton-box:hover {
+            background: #d32f2f;
+        }
+        
+        #video-popup {
+            position: fixed;
+            width: 400px;
+            height: 300px;
+            background: black;
+            border: 3px solid orange;
+            border-radius: 8px;
+            display: none;
+            z-index: 9999;
+            padding: 10px;
+        }
+        
+        #video-popup.show {
+            display: block;
+        }
+        
+        #test-video {
+            width: 100%;
+            height: 100%;
+            background: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+        
+        .status {
+            margin: 20px 0;
+            padding: 10px;
+            background: #333;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Video Popup Test</h1>
+    
+    <div class="status" id="status">Status: Ready</div>
+    
+    <div class="skeleton-box" id="skeleton">
+        Hover Me<br>for 1 second
+    </div>
+    
+    <button onclick="testPopup()">Test Popup Directly</button>
+    
+    <div id="video-popup">
+        <div id="test-video">
+            [Video Would Play Here]<br>
+            <small>Using placeholder since video file may not exist</small>
+        </div>
+    </div>
+    
+    <script>
+        let hoverTimer = null;
+        const status = document.getElementById('status');
+        const popup = document.getElementById('video-popup');
+        const skeleton = document.getElementById('skeleton');
+        
+        function updateStatus(msg) {
+            status.textContent = 'Status: ' + msg;
+            console.log(msg);
+        }
+        
+        function showPopup(element) {
+            updateStatus('Showing popup');
+            
+            const rect = element.getBoundingClientRect();
+            
+            // Position above the element
+            let top = rect.top - 320; // 300px height + 20px margin
+            let left = rect.left + (rect.width / 2) - 200; // Center it (400px width / 2)
+            
+            // Adjust if off screen
+            if (top < 10) {
+                top = rect.bottom + 10;
+                updateStatus('Positioning below (no room above)');
+            }
+            
+            if (left < 10) left = 10;
+            if (left > window.innerWidth - 410) left = window.innerWidth - 410;
+            
+            popup.style.top = top + 'px';
+            popup.style.left = left + 'px';
+            popup.classList.add('show');
+            
+            updateStatus(`Popup shown at: top=${top}, left=${left}`);
+        }
+        
+        function hidePopup() {
+            updateStatus('Hiding popup');
+            clearTimeout(hoverTimer);
+            popup.classList.remove('show');
+        }
+        
+        function testPopup() {
+            updateStatus('Direct test triggered');
+            showPopup(skeleton);
+            setTimeout(hidePopup, 2000);
+        }
+        
+        // Hover events
+        skeleton.addEventListener('mouseenter', (e) => {
+            updateStatus('Mouse entered - starting 1 second timer');
+            clearTimeout(hoverTimer);
+            
+            hoverTimer = setTimeout(() => {
+                updateStatus('Timer completed - showing popup');
+                showPopup(e.currentTarget);
+            }, 1000);
+        });
+        
+        skeleton.addEventListener('mouseleave', () => {
+            updateStatus('Mouse left - canceling timer and hiding');
+            hidePopup();
+        });
+        
+        updateStatus('Ready - hover over the red box');
+    </script>
+</body>
+</html>

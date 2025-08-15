@@ -1,0 +1,15 @@
+BATCH 1 KLING PROMPT GENERATION REPORT
+============================================================
+
+Aboleth: Found - monster_portraits/aboleth_20250810_153718.png
+Adult Black Dragon: Found - monster_portraits/adult_black_dragon_20250810_153808.png
+Adult Blue Dragon: Found - monster_portraits/adult_blue_dragon_20250810_153903.png
+Adult Red Dragon: Found - monster_portraits/adult_red_dragon_20250810_153955.png
+Air Elemental: Found - monster_portraits/air_elemental_20250810_154041.png
+Ankheg: Found - monster_portraits/ankheg_20250810_154125.png
+Banshee: Found - monster_portraits/banshee_20250810_154212.png
+Basilisk: Found - monster_portraits/basilisk_20250810_154301.png
+Behir: Found - monster_portraits/behir_20250810_154352.png
+Beholder: Found - monster_portraits/beholder_20250810_154441.png
+
+Total: 10, Found: 10, Missing: 0

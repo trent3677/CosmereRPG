@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portrait Upload Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            padding: 20px;
+        }
+        
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .portrait-box {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border: 2px solid #444;
+            border-radius: 4px;
+            background-color: #111;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .portrait-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+        }
+        
+        .upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .portrait-box:hover .upload-overlay {
+            opacity: 1;
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        .log {
+            background-color: #222;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 20px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .log-entry {
+            margin: 2px 0;
+            padding: 2px;
+        }
+        
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .info { color: #2196F3; }
+        
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Portrait Upload Test</h1>
+        
+        <h2>Test 1: Basic File Input</h2>
+        <input type="file" id="test-input-1" accept="image/*" onchange="testBasicUpload(event)">
+        <div id="test1-result"></div>
+        
+        <h2>Test 2: Hidden Input with Label</h2>
+        <div class="portrait-box">
+            <img id="test-portrait-2" src="/static/icons/default_portrait.png" onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';">
+            <label for="test-input-2" class="upload-overlay">
+                <span>Click to Upload</span>
+            </label>
+            <input type="file" id="test-input-2" accept="image/*" onchange="testHiddenUpload(event)">
+        </div>
+        
+        <h2>Test 3: Programmatic Click</h2>
+        <button onclick="testProgrammaticClick()">Trigger File Dialog</button>
+        <input type="file" id="test-input-3" accept="image/*" onchange="testProgrammaticUpload(event)" style="display: none;">
+        
+        <h2>Test 4: Dynamic Recreation</h2>
+        <div id="dynamic-container"></div>
+        <button onclick="recreateInput()">Recreate Input</button>
+        <button onclick="triggerDynamicUpload()">Upload to Dynamic Input</button>
+        
+        <h2>Console Log</h2>
+        <div id="log" class="log"></div>
+        
+        <h2>Test Server Upload</h2>
+        <button onclick="testServerUpload()">Test Upload to Server</button>
+    </div>
+    
+    <script>
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry ' + type;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+        
+        function testBasicUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                log(`Test 1: File selected - ${file.name} (${file.size} bytes)`, 'success');
+                document.getElementById('test1-result').textContent = `Selected: ${file.name}`;
+            } else {
+                log('Test 1: No file selected', 'error');
+            }
+        }
+        
+        function testHiddenUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                log(`Test 2: Hidden input file selected - ${file.name}`, 'success');
+                // Preview the image
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('test-portrait-2').src = e.target.result;
+                    log('Test 2: Image preview updated', 'success');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                log('Test 2: No file selected', 'error');
+            }
+        }
+        
+        function testProgrammaticClick() {
+            log('Test 3: Triggering file input programmatically', 'info');
+            document.getElementById('test-input-3').click();
+        }
+        
+        function testProgrammaticUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                log(`Test 3: Programmatic trigger successful - ${file.name}`, 'success');
+            } else {
+                log('Test 3: No file selected', 'error');
+            }
+        }
+        
+        let inputCounter = 0;
+        function recreateInput() {
+            inputCounter++;
+            const container = document.getElementById('dynamic-container');
+            container.innerHTML = `
+                <div class="portrait-box">
+                    <img id="dynamic-portrait" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==">
+                    <label for="dynamic-input-${inputCounter}" class="upload-overlay">
+                        <span>Dynamic Input #${inputCounter}</span>
+                    </label>
+                    <input type="file" id="dynamic-input-${inputCounter}" accept="image/*" onchange="testDynamicUpload(event)">
+                </div>
+            `;
+            log(`Test 4: Created dynamic input #${inputCounter}`, 'info');
+        }
+        
+        function testDynamicUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                log(`Test 4: Dynamic input file selected - ${file.name}`, 'success');
+                // Reset the input to allow re-selection
+                event.target.value = '';
+                log('Test 4: Input value reset for re-selection', 'info');
+            } else {
+                log('Test 4: No file selected', 'error');
+            }
+        }
+        
+        function triggerDynamicUpload() {
+            const input = document.querySelector('[id^="dynamic-input-"]');
+            if (input) {
+                log(`Test 4: Clicking dynamic input ${input.id}`, 'info');
+                input.click();
+            } else {
+                log('Test 4: No dynamic input found - create one first', 'error');
+            }
+        }
+        
+        function testServerUpload() {
+            // Create a test file
+            const testData = new FormData();
+            testData.append('characterName', 'test_character');
+            
+            // Create a blob as a test "image"
+            const blob = new Blob(['test'], {type: 'image/png'});
+            testData.append('portrait', blob, 'test.png');
+            
+            log('Test Server: Sending upload request...', 'info');
+            
+            fetch('/upload-portrait', {
+                method: 'POST',
+                body: testData
+            })
+            .then(response => {
+                log(`Test Server: Response status ${response.status}`, response.ok ? 'success' : 'error');
+                return response.json();
+            })
+            .then(data => {
+                log(`Test Server: ${JSON.stringify(data)}`, data.success ? 'success' : 'error');
+            })
+            .catch(error => {
+                log(`Test Server: Error - ${error}`, 'error');
+            });
+        }
+        
+        // Initialize first dynamic input
+        recreateInput();
+        
+        // Log page load
+        log('Portrait upload test page loaded', 'info');
+        
+        // Test if functions are accessible
+        log(`uploadPortrait function exists: ${typeof uploadPortrait !== 'undefined'}`, 'info');
+        log(`window.uploadPortrait exists: ${typeof window.uploadPortrait !== 'undefined'}`, 'info');
+    </script>
+</body>
+</html>

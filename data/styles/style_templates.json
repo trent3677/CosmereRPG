@@ -1,0 +1,180 @@
+{
+  "version": "1.0.0",
+  "created": "2025-08-13",
+  "styles": {
+    "photorealistic": {
+      "name": "Photorealistic",
+      "description": "Ultra-realistic, highly detailed monster portraits with cinematic lighting",
+      "base_prompt": "Create an ultra detailed photorealistic Dungeons and Dragons monster portrait",
+      "modifiers": [
+        "Photorealistic detail",
+        "Ultra detailed",
+        "8K quality",
+        "Cinematic lighting",
+        "Dramatic shadows",
+        "Professional digital art quality",
+        "Hyper realistic rendering",
+        "RAW photo quality"
+      ],
+      "suffix": "Square format 1:1 aspect ratio for game interface",
+      "model_preference": "gpt-image-1",
+      "model_settings": {
+        "quality": "auto",
+        "size": "1024x1024"
+      }
+    },
+    "anime": {
+      "name": "Anime Style",
+      "description": "Japanese anime and manga inspired artwork with vibrant colors",
+      "base_prompt": "Create an anime-style fantasy monster illustration",
+      "modifiers": [
+        "Anime art style",
+        "Cel-shaded",
+        "Vibrant colors",
+        "Dynamic action pose",
+        "Manga-inspired",
+        "Clean line art",
+        "Dramatic anime lighting",
+        "Japanese fantasy aesthetic"
+      ],
+      "suffix": "Square format 1:1 aspect ratio, anime key visual style",
+      "model_preference": "dall-e-3",
+      "model_settings": {
+        "quality": "standard",
+        "size": "1024x1024",
+        "style": "vivid"
+      }
+    },
+    "studio_ghibli": {
+      "name": "Studio Ghibli",
+      "description": "Whimsical, painterly style inspired by Studio Ghibli films",
+      "base_prompt": "Create a Studio Ghibli inspired fantasy creature artwork",
+      "modifiers": [
+        "Studio Ghibli art style",
+        "Watercolor painting aesthetic",
+        "Soft, dreamy atmosphere",
+        "Whimsical and magical",
+        "Hand-painted texture",
+        "Miyazaki-inspired",
+        "Gentle color palette",
+        "Storybook illustration quality"
+      ],
+      "suffix": "Square format 1:1 aspect ratio, painted illustration style",
+      "model_preference": "dall-e-3",
+      "model_settings": {
+        "quality": "standard",
+        "size": "1024x1024",
+        "style": "vivid"
+      }
+    },
+    "dark_fantasy": {
+      "name": "Dark Fantasy",
+      "description": "Gothic, dark, and atmospheric artwork with horror elements",
+      "base_prompt": "Create a dark fantasy horror monster portrait",
+      "modifiers": [
+        "Dark gothic atmosphere",
+        "Horror aesthetic",
+        "Dramatic chiaroscuro lighting",
+        "Gritty and menacing",
+        "Dark medieval fantasy",
+        "Atmospheric fog and shadows",
+        "Sinister and foreboding",
+        "Bloodborne/Dark Souls inspired"
+      ],
+      "suffix": "Square format 1:1 aspect ratio, dark and atmospheric",
+      "model_preference": "gpt-image-1",
+      "model_settings": {
+        "quality": "auto",
+        "size": "1024x1024"
+      }
+    },
+    "comic_book": {
+      "name": "Comic Book",
+      "description": "Bold comic book and graphic novel style artwork",
+      "base_prompt": "Create a comic book style monster illustration",
+      "modifiers": [
+        "Comic book art style",
+        "Bold ink lines",
+        "Dynamic comic shading",
+        "Vibrant comic colors",
+        "Dramatic perspective",
+        "Action-packed pose",
+        "Graphic novel aesthetic",
+        "Ben Day dots texture"
+      ],
+      "suffix": "Square format 1:1 aspect ratio, comic panel style",
+      "model_preference": "dall-e-3",
+      "model_settings": {
+        "quality": "standard",
+        "size": "1024x1024",
+        "style": "vivid"
+      }
+    },
+    "watercolor": {
+      "name": "Watercolor",
+      "description": "Traditional watercolor painting style with soft edges and flowing colors",
+      "base_prompt": "Create a watercolor painting of a fantasy monster",
+      "modifiers": [
+        "Watercolor painting",
+        "Soft brush strokes",
+        "Fluid color blending",
+        "Paper texture visible",
+        "Traditional art medium",
+        "Impressionistic style",
+        "Gentle color washes",
+        "Artistic and painterly"
+      ],
+      "suffix": "Square format 1:1 aspect ratio, traditional watercolor on paper",
+      "model_preference": "dall-e-3",
+      "model_settings": {
+        "quality": "standard",
+        "size": "1024x1024",
+        "style": "natural"
+      }
+    },
+    "pixel_art": {
+      "name": "Pixel Art",
+      "description": "Retro pixel art style reminiscent of classic video games",
+      "base_prompt": "Create a pixel art sprite of a fantasy monster",
+      "modifiers": [
+        "16-bit pixel art style",
+        "Retro video game aesthetic",
+        "Limited color palette",
+        "Clear pixel grid",
+        "Classic RPG sprite",
+        "No anti-aliasing",
+        "Crisp pixelated edges",
+        "SNES/Genesis era inspired"
+      ],
+      "suffix": "Square format 1:1 aspect ratio, pixel perfect at 64x64 scaled up",
+      "model_preference": "dall-e-3",
+      "model_settings": {
+        "quality": "standard",
+        "size": "1024x1024",
+        "style": "vivid"
+      }
+    },
+    "minimalist": {
+      "name": "Minimalist",
+      "description": "Simple, clean designs with minimal details and bold shapes",
+      "base_prompt": "Create a minimalist geometric representation of a fantasy monster",
+      "modifiers": [
+        "Minimalist design",
+        "Geometric shapes",
+        "Limited color palette",
+        "Clean vector art",
+        "Flat design",
+        "Bold silhouette",
+        "Modern graphic design",
+        "Negative space usage"
+      ],
+      "suffix": "Square format 1:1 aspect ratio, clean minimalist design",
+      "model_preference": "dall-e-3",
+      "model_settings": {
+        "quality": "standard",
+        "size": "1024x1024",
+        "style": "natural"
+      }
+    }
+  }
+}

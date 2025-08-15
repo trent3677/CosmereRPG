@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dwarf Blacksmith Animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(ellipse at center, #2c1810 0%, #1a0f08 50%, #0d0704 100%);
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Forge background elements */
+        .forge {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .forge-fire {
+            position: absolute;
+            bottom: 80px;
+            right: 150px;
+            width: 120px;
+            height: 80px;
+            background: radial-gradient(circle, #ff4500 0%, #ff6b00 30%, #ff8c00 70%, #ffaa00 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: fireFlicker 0.5s ease-in-out infinite alternate;
+            filter: blur(2px);
+            opacity: 0.8;
+        }
+
+        .forge-fire::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 40px;
+            background: radial-gradient(circle, #ff6b00 0%, #ff8c00 50%, transparent 100%);
+            border-radius: 50%;
+            animation: fireFlicker 0.3s ease-in-out infinite alternate;
+        }
+
+        @keyframes fireFlicker {
+            0% { transform: scaleY(1) scaleX(1); opacity: 0.8; }
+            100% { transform: scaleY(1.1) scaleX(0.95); opacity: 1; }
+        }
+
+        /* Anvil */
+        .anvil {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .anvil-base {
+            width: 100px;
+            height: 40px;
+            background: linear-gradient(135deg, #4a4a4a 0%, #2d2d2d 100%);
+            border-radius: 10px 10px 5px 5px;
+            position: relative;
+        }
+
+        .anvil-top {
+            width: 120px;
+            height: 25px;
+            background: linear-gradient(135deg, #666 0%, #444 50%, #222 100%);
+            border-radius: 5px;
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .anvil-horn {
+            width: 30px;
+            height: 15px;
+            background: linear-gradient(135deg, #666 0%, #333 100%);
+            border-radius: 15px 5px 5px 15px;
+            position: absolute;
+            top: -25px;
+            right: -25px;
+        }
+
+        /* Dwarf character */
+        .dwarf {
+            position: absolute;
+            bottom: 120px;
+            left: calc(50% - 80px);
+            z-index: 3;
+            transform-origin: bottom center;
+        }
+
+        .dwarf-body {
+            width: 60px;
+            height: 80px;
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #654321 100%);
+            border-radius: 30px 30px 10px 10px;
+            position: relative;
+            animation: bodyMove 1.2s ease-in-out infinite;
+        }
+
+        @keyframes bodyMove {
+            0%, 20% { transform: rotate(0deg) translateY(0px); }
+            10% { transform: rotate(-2deg) translateY(-3px); }
+            30%, 100% { transform: rotate(0deg) translateY(0px); }
+        }
+
+        .dwarf-head {
+            width: 45px;
+            height: 45px;
+            background: radial-gradient(circle at 30% 30%, #DDBEA9 0%, #CB997E 50%, #A68A64 100%);
+            border-radius: 50%;
+            position: absolute;
+            top: -35px;
+            left: 7.5px;
+            animation: headBob 1.2s ease-in-out infinite;
+        }
+
+        @keyframes headBob {
+            0%, 20% { transform: rotate(0deg) translateY(0px); }
+            10% { transform: rotate(-1deg) translateY(-2px); }
+            30%, 100% { transform: rotate(0deg) translateY(0px); }
+        }
+
+        /* Beard */
+        .dwarf-beard {
+            width: 40px;
+            height: 50px;
+            background: linear-gradient(135deg, #8B7355 0%, #6F5A44 50%, #5D4E37 100%);
+            border-radius: 20px 20px 40px 40px;
+            position: absolute;
+            bottom: -30px;
+            left: 2.5px;
+            animation: beardSway 1.2s ease-in-out infinite;
+        }
+
+        @keyframes beardSway {
+            0%, 20% { transform: rotate(0deg); }
+            10% { transform: rotate(-1deg); }
+            30%, 100% { transform: rotate(0deg); }
+        }
+
+        .dwarf-beard::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 8px;
+            width: 24px;
+            height: 35px;
+            background: linear-gradient(135deg, #A0826D 0%, #8B7355 100%);
+            border-radius: 12px 12px 25px 25px;
+        }
+
+        /* Eyes */
+        .dwarf-eye {
+            width: 6px;
+            height: 6px;
+            background: #2F4F2F;
+            border-radius: 50%;
+            position: absolute;
+            top: 15px;
+            animation: eyeBlink 3s ease-in-out infinite;
+        }
+
+        .dwarf-eye.left { left: 12px; }
+        .dwarf-eye.right { right: 12px; }
+
+        @keyframes eyeBlink {
+            0%, 95% { transform: scaleY(1); }
+            97% { transform: scaleY(0.1); }
+            100% { transform: scaleY(1); }
+        }
+
+        /* Arms */
+        .dwarf-arm {
+            width: 25px;
+            height: 50px;
+            background: linear-gradient(135deg, #DDBEA9 0%, #CB997E 100%);
+            border-radius: 12px;
+            position: absolute;
+            top: 10px;
+            transform-origin: top center;
+        }
+
+        .dwarf-arm.left {
+            left: -20px;
+            animation: leftArmMove 1.2s ease-in-out infinite;
+        }
+
+        .dwarf-arm.right {
+            right: -20px;
+            animation: rightArmMove 1.2s ease-in-out infinite;
+        }
+
+        @keyframes leftArmMove {
+            0%, 20% { transform: rotate(45deg); }
+            10% { transform: rotate(60deg); }
+            30%, 100% { transform: rotate(45deg); }
+        }
+
+        @keyframes rightArmMove {
+            0%, 20% { transform: rotate(-30deg) translateX(10px); }
+            10% { transform: rotate(-80deg) translateX(20px) translateY(-10px); }
+            30%, 100% { transform: rotate(-30deg) translateX(10px); }
+        }
+
+        /* Hands */
+        .dwarf-hand {
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle, #DDBEA9 0%, #CB997E 100%);
+            border-radius: 50%;
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Hammer */
+        .hammer {
+            position: absolute;
+            right: -35px;
+            top: -5px;
+            transform-origin: bottom left;
+            animation: hammerSwing 1.2s ease-in-out infinite;
+        }
+
+        @keyframes hammerSwing {
+            0%, 20% { transform: rotate(-30deg); }
+            10% { 
+                transform: rotate(-120deg) translateX(-5px) translateY(-10px);
+            }
+            30%, 100% { transform: rotate(-30deg); }
+        }
+
+        .hammer-handle {
+            width: 4px;
+            height: 40px;
+            background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
+            border-radius: 2px;
+        }
+
+        .hammer-head {
+            width: 20px;
+            height: 12px;
+            background: linear-gradient(135deg, #C0C0C0 0%, #808080 50%, #404040 100%);
+            border-radius: 2px;
+            position: absolute;
+            top: -6px;
+            left: -8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        /* Legs */
+        .dwarf-leg {
+            width: 20px;
+            height: 40px;
+            background: linear-gradient(135deg, #4169E1 0%, #1E90FF 50%, #0000CD 100%);
+            border-radius: 10px 10px 5px 5px;
+            position: absolute;
+            bottom: -40px;
+        }
+
+        .dwarf-leg.left { left: 10px; }
+        .dwarf-leg.right { right: 10px; }
+
+        .dwarf-boot {
+            width: 22px;
+            height: 12px;
+            background: linear-gradient(135deg, #654321 0%, #3e2715 100%);
+            border-radius: 5px 8px 2px 2px;
+            position: absolute;
+            bottom: -10px;
+            left: -1px;
+        }
+
+        /* Sparks */
+        .spark {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #FFD700;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkFly 0.8s ease-out forwards;
+        }
+
+        @keyframes sparkFly {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+                background: #FFD700;
+                box-shadow: 0 0 10px #FFD700;
+            }
+            50% {
+                background: #FF6B00;
+                box-shadow: 0 0 15px #FF6B00;
+            }
+            100% {
+                transform: translate(var(--spark-x), var(--spark-y)) scale(0);
+                opacity: 0;
+                background: #FF4500;
+            }
+        }
+
+        /* Metal glow effect */
+        .metal-glow {
+            position: absolute;
+            bottom: 145px;
+            left: calc(50% - 15px);
+            width: 30px;
+            height: 8px;
+            background: radial-gradient(ellipse, #FFD700 0%, #FF8C00 50%, transparent 100%);
+            border-radius: 50%;
+            animation: metalGlow 1.2s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        @keyframes metalGlow {
+            0%, 20% { 
+                opacity: 0.3;
+                transform: scale(1);
+                filter: blur(2px);
+            }
+            10% { 
+                opacity: 1;
+                transform: scale(1.5);
+                filter: blur(1px);
+            }
+            30%, 100% { 
+                opacity: 0.3;
+                transform: scale(1);
+                filter: blur(2px);
+            }
+        }
+
+        /* Ambient lighting */
+        .ambient-light {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 70% 80%, rgba(255, 140, 0, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            animation: ambientPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes ambientPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Sound effect indicators */
+        .sound-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #FFD700;
+            font-weight: bold;
+            opacity: 0;
+            pointer-events: none;
+            font-size: 14px;
+            animation: soundPulse 1.2s ease-in-out infinite;
+        }
+
+        @keyframes soundPulse {
+            0%, 90% { opacity: 0; transform: scale(1); }
+            10%, 20% { opacity: 1; transform: scale(1.1); }
+        }
+
+        /* Title */
+        .title {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #FFD700;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            font-family: serif;
+        }
+
+        /* Controls */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: #FFD700;
+            font-size: 12px;
+        }
+
+        .controls button {
+            background: rgba(139, 69, 19, 0.8);
+            color: #FFD700;
+            border: 1px solid #FFD700;
+            padding: 5px 10px;
+            margin: 2px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .controls button:hover {
+            background: rgba(139, 69, 19, 1);
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="title">Dwarven Forge</div>
+    
+    <div class="ambient-light"></div>
+    
+    <div class="forge">
+        <div class="forge-fire"></div>
+    </div>
+    
+    <div class="anvil">
+        <div class="anvil-base"></div>
+        <div class="anvil-top"></div>
+        <div class="anvil-horn"></div>
+    </div>
+    
+    <div class="metal-glow"></div>
+    
+    <div class="dwarf">
+        <div class="dwarf-body">
+            <div class="dwarf-head">
+                <div class="dwarf-eye left"></div>
+                <div class="dwarf-eye right"></div>
+                <div class="dwarf-beard"></div>
+            </div>
+            
+            <div class="dwarf-arm left">
+                <div class="dwarf-hand"></div>
+            </div>
+            
+            <div class="dwarf-arm right">
+                <div class="dwarf-hand"></div>
+                <div class="hammer">
+                    <div class="hammer-handle"></div>
+                    <div class="hammer-head"></div>
+                </div>
+            </div>
+            
+            <div class="dwarf-leg left">
+                <div class="dwarf-boot"></div>
+            </div>
+            <div class="dwarf-leg right">
+                <div class="dwarf-boot"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="sound-indicator">*CLANG*</div>
+    
+    <div class="controls">
+        <button onclick="toggleAnimation()">Pause/Resume</button>
+        <button onclick="addSparks()">More Sparks!</button>
+        <button onclick="playSound()">[Sound Effect]</button>
+        <div>Click for manual hammer strikes</div>
+    </div>
+
+    <script>
+        let animationPaused = false;
+        let sparkCount = 0;
+        
+        // Create sparks on hammer impact
+        function createSpark() {
+            const spark = document.createElement('div');
+            spark.className = 'spark';
+            
+            // Position sparks at anvil location
+            const anvilRect = document.querySelector('.anvil-top').getBoundingClientRect();
+            const bodyRect = document.body.getBoundingClientRect();
+            
+            spark.style.left = (anvilRect.left - bodyRect.left + anvilRect.width/2) + 'px';
+            spark.style.bottom = (window.innerHeight - anvilRect.top + bodyRect.top + 20) + 'px';
+            
+            // Random spark trajectory
+            const angle = Math.random() * Math.PI - Math.PI/2; // -90 to 90 degrees
+            const velocity = 30 + Math.random() * 40; // 30-70px distance
+            
+            const deltaX = Math.cos(angle) * velocity;
+            const deltaY = Math.sin(angle) * velocity;
+            
+            spark.style.setProperty('--spark-x', deltaX + 'px');
+            spark.style.setProperty('--spark-y', deltaY + 'px');
+            
+            document.body.appendChild(spark);
+            
+            // Remove spark after animation
+            setTimeout(() => {
+                if (spark.parentNode) {
+                    spark.parentNode.removeChild(spark);
+                }
+            }, 800);
+        }
+        
+        // Create multiple sparks
+        function createSparkBurst() {
+            const numSparks = 5 + Math.random() * 10; // 5-15 sparks
+            for (let i = 0; i < numSparks; i++) {
+                setTimeout(() => createSpark(), i * 10); // Stagger spark creation
+            }
+        }
+        
+        // Hammer impact detection
+        let lastHammerTime = 0;
+        const hammerInterval = 1200; // Match animation duration
+        
+        function checkHammerImpact() {
+            const currentTime = Date.now();
+            if (currentTime - lastHammerTime >= hammerInterval) {
+                lastHammerTime = currentTime;
+                createSparkBurst();
+                
+                // Flash the metal glow
+                const metalGlow = document.querySelector('.metal-glow');
+                metalGlow.style.animation = 'none';
+                setTimeout(() => {
+                    metalGlow.style.animation = 'metalGlow 1.2s ease-in-out infinite';
+                }, 50);
+            }
+        }
+        
+        // Start the hammer impact timer
+        setInterval(checkHammerImpact, 100);
+        
+        // Toggle animation
+        function toggleAnimation() {
+            const body = document.body;
+            if (animationPaused) {
+                body.style.animationPlayState = 'running';
+                body.style.setProperty('animation-play-state', 'running');
+                // Resume all child animations
+                const allAnimated = document.querySelectorAll('*');
+                allAnimated.forEach(el => {
+                    el.style.animationPlayState = 'running';
+                });
+            } else {
+                body.style.animationPlayState = 'paused';
+                body.style.setProperty('animation-play-state', 'paused');
+                // Pause all child animations
+                const allAnimated = document.querySelectorAll('*');
+                allAnimated.forEach(el => {
+                    el.style.animationPlayState = 'paused';
+                });
+            }
+            animationPaused = !animationPaused;
+        }
+        
+        // Manual spark creation
+        function addSparks() {
+            createSparkBurst();
+            createSparkBurst(); // Double burst for dramatic effect
+        }
+        
+        // Sound effect placeholder
+        function playSound() {
+            console.log('CLANG! (Sound effect would play here)');
+            // Flash sound indicator
+            const soundIndicator = document.querySelector('.sound-indicator');
+            soundIndicator.style.animation = 'none';
+            setTimeout(() => {
+                soundIndicator.style.animation = 'soundPulse 1.2s ease-in-out infinite';
+            }, 50);
+        }
+        
+        // Click anywhere to create sparks
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.controls')) {
+                createSparkBurst();
+                playSound();
+            }
+        });
+        
+        // Add some random environmental effects
+        function addRandomSpark() {
+            if (Math.random() < 0.1 && !animationPaused) { // 10% chance every interval
+                createSpark();
+            }
+        }
+        
+        // Random spark generation
+        setInterval(addRandomSpark, 500);
+        
+        // Forge fire intensity variation
+        function varyForgeIntensity() {
+            const fire = document.querySelector('.forge-fire');
+            const intensity = 0.6 + Math.random() * 0.4; // 0.6 to 1.0
+            fire.style.opacity = intensity;
+            fire.style.transform = `scale(${0.9 + intensity * 0.2})`;
+        }
+        
+        setInterval(varyForgeIntensity, 200);
+        
+        // Ambient lighting variation
+        function varyAmbientLight() {
+            const light = document.querySelector('.ambient-light');
+            const intensity = 0.3 + Math.random() * 0.3; // 0.3 to 0.6
+            light.style.opacity = intensity;
+        }
+        
+        setInterval(varyAmbientLight, 1000);
+        
+        console.log('Dwarven Forge Animation Loaded!');
+        console.log('- Click anywhere for manual hammer strikes');
+        console.log('- Use controls to pause/resume or add effects');
+        console.log('- Watch for automatic sparks on hammer impacts');
+    </script>
+</body>
+</html>

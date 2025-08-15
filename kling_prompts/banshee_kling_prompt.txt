@@ -1,0 +1,11 @@
+MONSTER: Banshee
+IMAGE: monster_portraits/banshee_20250810_154212.png
+============================================================
+
+KLING AI PROMPT:
+Translucent elven spirit floating above graveyard ground, long white hair flowing as if underwater. Her gaunt skeletal face with glowing blue eyes opens in endless silent scream. Tattered gown billows around ghostly form, ectoplasmic wisps trailing behind. She drifts forward, elongated claw fingers reaching desperately. Blue-white glow intensifies, tombstones visible through translucent body. Photorealistic detail with smooth consistent motion, ethereal transparency effects, and overwhelming supernatural anguish.
+
+SETTINGS:
+- Model: Kling 2.1
+- Duration: 5 seconds
+- Mode: Image-to-Video

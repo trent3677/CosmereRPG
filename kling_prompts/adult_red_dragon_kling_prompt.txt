@@ -1,0 +1,11 @@
+MONSTER: Adult Red Dragon
+IMAGE: monster_portraits/adult_red_dragon_20250810_153955.png
+============================================================
+
+KLING AI PROMPT:
+Titanic red dragon perched on volcanic mountain, smoke and embers constantly rising from its ruby-scaled body. The dragon spreads its 120-foot wingspan casting enormous shadows as lava flows below. Its mouth opens in mighty roar, showing massive fangs with inferno building in throat. Heat distortion ripples around its form, volcanic fire backlights the scene. Wings beat once sending waves of superheated air. Photorealistic detail with smooth consistent motion, realistic fire effects, and legendary draconic presence.
+
+SETTINGS:
+- Model: Kling 2.1
+- Duration: 5 seconds
+- Mode: Image-to-Video

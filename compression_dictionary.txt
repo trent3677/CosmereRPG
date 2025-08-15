@@ -1,0 +1,54 @@
+# Domain-Specific Language Compression Dictionary
+
+## Replacement Mappings
+
+─ := { " action ": "  # Saves 400 tokens
+━ := ", " parameters ": {  # Saves 400 tokens
+│ := " parameters ": { "  # Saves 388 tokens
+═ := " action ": "  # Saves 318 tokens
+║ := ", " parameters ":  # Saves 306 tokens
+╗ := { " action ":  # Saves 300 tokens
+╝ := " parameters ": {  # Saves 300 tokens
+█ := parameters ": { "  # Saves 291 tokens
+░ := ": "  # Saves 286 tokens
+■ := { "  # Saves 270 tokens
+► := " action ":  # Saves 212 tokens
+● := action ": "  # Saves 212 tokens
+★ := ", " parameters  # Saves 204 tokens
+☆ := " parameters ":  # Saves 204 tokens
+☴ := { " action  # Saves 200 tokens
+♀ := parameters ": {  # Saves 200 tokens
+✔ := ", "  # Saves 199 tokens
+← := ": { "  # Saves 196 tokens
+↑ := " actions ": [ {  # Saves 188 tokens
+→ := actions ": [ { "  # Saves 188 tokens
+↓ := ": [ { " action  # Saves 180 tokens
+− := [ { " action ":  # Saves 180 tokens
+あ := narration  # Saves 176 tokens
+い := } }, { " action  # Saves 168 tokens
+う := }, { " action ":  # Saves 168 tokens
+え := " action ": " updatetime  # Saves 165 tokens
+お := action ": " updatetime ",  # Saves 165 tokens
+か := ": " updatetime ", "  # Saves 165 tokens
+が := " updatetime ", " parameters  # Saves 165 tokens
+き := updatetime ", " parameters ":  # Saves 165 tokens
+く := parameters ": { " timeestimate  # Saves 165 tokens
+け := ": { " timeestimate ":  # Saves 165 tokens
+こ := " action ": " updatecharacterinfo  # Saves 162 tokens
+ご := action ": " updatecharacterinfo ",  # Saves 162 tokens
+さ := ": " updatecharacterinfo ", "  # Saves 162 tokens
+ざ := " updatecharacterinfo ", " parameters  # Saves 162 tokens
+し := updatecharacterinfo ", " parameters ":  # Saves 162 tokens
+じ := narration ": "  # Saves 160 tokens
+す := { " narration ": "  # Saves 160 tokens
+せ := " actions ": [  # Saves 141 tokens
+そ := actions ": [ {  # Saves 141 tokens
+た := ": [ { "  # Saves 141 tokens
+だ := ( e . g .,  # Saves 140 tokens
+ち := [ { " action  # Saves 135 tokens
+っ := action ": " updatecharacterinfo  # Saves 135 tokens
+つ := ": " updatecharacterinfo ",  # Saves 135 tokens
+て := " updatecharacterinfo ", "  # Saves 135 tokens
+で := updatecharacterinfo ", " parameters  # Saves 135 tokens
+と := parameters ": { " charactername  # Saves 135 tokens
+ど := ": { " charactername ":  # Saves 135 tokens

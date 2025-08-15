@@ -1,0 +1,11 @@
+MONSTER: Air Elemental
+IMAGE: monster_portraits/air_elemental_20250810_154041.png
+============================================================
+
+KLING AI PROMPT:
+Swirling tornado of living wind rising from ground, debris and leaves caught in its vortex making its shape visible. Lightning flashes within cloudy form as two brilliant white points of light serve as eyes. The cyclone arms extend and retract, whirling at different speeds. Dust devils spin off from main body. The elemental surges forward, growing taller, air pressure changes visible as ripples. Photorealistic detail with smooth consistent motion, realistic wind effects, and raw power of unleashed storm.
+
+SETTINGS:
+- Model: Kling 2.1
+- Duration: 5 seconds
+- Mode: Image-to-Video

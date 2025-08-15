@@ -1,0 +1,37 @@
+{
+  "builtin": {
+    "photorealistic": {
+      "name": "Photorealistic",
+      "prompt": "ultra-realistic, professional photography, detailed textures, natural lighting, high resolution, cinematic quality"
+    },
+    "anime": {
+      "name": "Anime",
+      "prompt": "anime art style, vibrant colors, cel-shaded, manga inspired, dynamic poses, expressive features"
+    },
+    "studio_ghibli": {
+      "name": "Studio Ghibli",
+      "prompt": "Studio Ghibli art style, soft watercolor textures, whimsical, hand-painted feel, pastoral fantasy aesthetic"
+    },
+    "dark_fantasy": {
+      "name": "Dark Fantasy",
+      "prompt": "dark fantasy art, gothic atmosphere, dramatic shadows, ominous mood, detailed armor and weapons, gritty textures"
+    },
+    "comic_book": {
+      "name": "Comic Book",
+      "prompt": "comic book art style, bold ink lines, dynamic action poses, halftone shading, vibrant colors, superhero aesthetic"
+    },
+    "watercolor": {
+      "name": "Watercolor",
+      "prompt": "watercolor painting, soft blended colors, fluid brushstrokes, artistic texture, traditional media feel"
+    },
+    "pixel_art": {
+      "name": "Pixel Art",
+      "prompt": "pixel art style, 16-bit aesthetic, retro gaming inspired, limited color palette, crisp pixelated details"
+    },
+    "minimalist": {
+      "name": "Minimalist",
+      "prompt": "minimalist design, simple shapes, clean lines, limited color palette, geometric forms, negative space"
+    }
+  },
+  "custom": {}
+}

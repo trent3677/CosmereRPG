@@ -1,0 +1,24 @@
+============================================================
+Run 1 Output:
+============================================================
+{
+  "narration": "Kira props an elbow on the table, grin tugging at one corner. \"Next? We follow the trail while the sun is on our side. The abbey and that lighthouse are the heart of this mess.\"\n\nElen taps the worn map, finger circling the cliffs above the sanctum. \"We have the pieces for the rite: the locket, black candles, sanctified bowl, and blessed water. If Miralda is bound to the beacon, moving in daylight gives us the best chance. We could stop by Sister Hela on the way for any last guidance.\" \n\nThane shoulders his pack with a quiet nod. \"Noise draws hunters. We move light and fast. Tideworn Gate, then up to the abbey ruins. I will scout ahead unless you want Kira on point.\"\n\nYour companions look to you. Do you want to set out now through the Tideworn Gate toward the abbey, check in with Sister Hela at the sanctum first, or speak with Elder Dorun for any fresh sightings before you go?",
+  "actions": []
+}
+
+============================================================
+Run 2 Output:
+============================================================
+{
+  "narration": "Kira leans forward, elbows on the table, a playful spark in her eyes. \"Next? We take the fight to the cliffs. I can slip ahead and get eyes on the abbey paths and the lighthouse stairs before anyone knows we are coming. Quiet feet, quiet bows.\"\n\nElen taps the corner of the worn map, where the cliff path curls toward the abbey. \"The beacon has been pulsing harder since yesterday. That usually means movement at the lighthouse. If we move in daylight, we have the mist at our backs but better visibility. I can scout a vantage, then guide us in. If we want to move like ghosts, I can help mask our trail.\" She gives Thane a knowing look.\n\nThane nods once. \"Two needs. One, fresh rumors. See if Elder Dorun or Captain Merek heard of night activity near the cliffs. Two, approach routes. Tideworn Gate to the Sanctum puts us under cover fast. If we are committed, we should leave soon and keep the pace steady.\" He checks his bowstring, satisfied. \"If we expect a stand-up fight, we should be ready with blessing and light.\" \n\nKira glances to you with a half-smile. \"Your call, Trouble Magnet. Do we move now for the abbey and lighthouse, send one of us ahead to scout and report back, or take a few minutes to fish for news before we go? If you want me to ghost ahead, say the word.\" \n\nYour gear is ready, the late morning light holds, and the path to the Tideworn Gate is clear. How do you want to proceed?",
+  "actions": []
+}
+
+============================================================
+Run 3 Output:
+============================================================
+{
+  "narration": "Kira leans over the scarred tabletop and taps the edge of your weathered map, a quick smile tugging at her lips. \"Next? We follow the trail to the cliffs and the old abbey. The lighthouse is still throwing that wrong kind of light. If we move now, we can reach the ruins before the mists thicken.\"\n\nElen folds her arms, eyes sharp. \"Stealth first. I can scout the approach and look for sentries or sigils. If the cult left wards, we will want to spot them before they spot us.\" She glances to your pack. \"Bring the ritual pieces. We may need them sooner than we think.\"\n\nThane nods once, voice low and steady. \"Sister Hela asked us to find Abbess Miralda. The clues say heart, flame, and sanctified water. We have the locket, candles, bowl, and blessed water. If we mean to confront whatever binds the beacon, we should carry all of it. We could also speak to Elder Dorun or Captain Merek for any new word on disappearances or activity near the cliffs.\" He pauses. \"Your call, Eirik.\"\n\nThe hearth pops softly. Outside, gulls cry over the surf, and a salt breeze slips through the shutters. The path to the Tideworn Gate waits, and with it the storm-lashed cliffs and the abbey ruins crouched beneath the lighthouse.\n\nHow do you want to proceed? Head out now toward the Tideworn Gate and make for the abbey, send Elen ahead to scout, or ask around here for fresh rumors and guidance before you go?",
+  "actions": []
+}
+
