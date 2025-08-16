@@ -2295,7 +2295,7 @@
         }
         
         // Enhanced thumbnail loader with video detection
-        function loadMonsterThumbnail(monsterId) {
+        function loadMonsterThumbnail(monsterId, forceRefresh = false) {
             const thumbContainer = document.getElementById(`thumb-${monsterId}`);
             if (!thumbContainer) {
                 console.error(`Thumbnail container not found for ${monsterId}`);
@@ -2310,16 +2310,15 @@
             }
             console.log(`Loading thumbnail for ${monsterId} from pack ${packName}`);
 
-            // Load from graphic pack folder with cache busting
-            const timestamp = new Date().getTime(); // Cache buster
-            const thumbUrl = `/toolkit/pack_image/${packName}/${monsterId}_thumb.jpg?t=${timestamp}`;
-            const fullImageUrl = `/toolkit/pack_image/${packName}/${monsterId}.jpg?t=${timestamp}`;
-            const videoUrl = `/toolkit/pack_video/${packName}/${monsterId}_video.mp4?t=${timestamp}`;
+            // Only use cache busting when explicitly refreshing
+            const cacheBuster = forceRefresh ? `?t=${new Date().getTime()}` : '';
+            const thumbUrl = `/toolkit/pack_image/${packName}/${monsterId}_thumb.jpg${cacheBuster}`;
+            const fullImageUrl = `/toolkit/pack_image/${packName}/${monsterId}.jpg${cacheBuster}`;
+            const videoUrl = `/toolkit/pack_video/${packName}/${monsterId}_video.mp4${cacheBuster}`;
             
             console.log(`Thumbnail URL: ${thumbUrl}`);
             
             const img = new Image();
-            img.src = thumbUrl;
             
             img.onload = () => {
                 console.log(`Thumbnail loaded for ${monsterId}`);
@@ -2365,6 +2364,9 @@
                     monsterItem.dataset.missingImage = "true";
                 }
             };
+            
+            // Set the source after handlers are attached
+            img.src = thumbUrl;
         }
         
         // Select all monsters without images
@@ -2380,9 +2382,12 @@
         
         // Refresh thumbnails when pack changes
         function refreshMonsterThumbnails() {
-            // Re-render all monsters to reload thumbnails from new pack
+            // Re-render all monsters to reload thumbnails with cache busting
             if (monsterList && monsterList.length > 0) {
-                renderMonsters();
+                // Force refresh all thumbnails
+                monsterList.forEach(monster => {
+                    loadMonsterThumbnail(monster.id, true); // true = force refresh
+                });
             }
         }
         
