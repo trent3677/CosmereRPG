@@ -1172,32 +1172,54 @@ def get_module_monsters_api(module_name):
         return jsonify([]), 503
     
     try:
-        # --- Your Implementation Logic ---
         from utils.module_path_manager import ModulePathManager
         from utils.file_operations import safe_read_json
         import os
+        import re
 
         path_manager = ModulePathManager(module_name)
-        areas_dir = path_manager.get_areas_dir()
         monster_ids = set()
 
+        # Build areas directory path
+        areas_dir = os.path.join('modules', module_name, 'areas')
+        
+        # Scan area backup files (_BU.json) for monsters in locations
         if os.path.exists(areas_dir):
             for filename in os.listdir(areas_dir):
-                if filename.endswith('.json'):
+                # Only check backup files which contain original unmodified data
+                if filename.endswith('_BU.json'):
                     area_path = os.path.join(areas_dir, filename)
                     area_data = safe_read_json(area_path)
                     if area_data and 'locations' in area_data:
                         for location in area_data.get('locations', []):
                             if 'monsters' in location and location['monsters']:
                                 for monster in location['monsters']:
-                                    if 'name' in monster:
+                                    if isinstance(monster, dict) and 'name' in monster:
                                         # Normalize the name to match our monster IDs:
-                                        # "Adult Red Dragon" -> "adult_red_dragon"
+                                        # "Bandit Captain Gorvek" -> "bandit_captain_gorvek"
                                         monster_id = monster['name'].lower().replace(' ', '_')
                                         monster_ids.add(monster_id)
+                                    elif isinstance(monster, str):
+                                        # Handle string format like "1 Tainted Naiad"
+                                        # Extract just the monster name
+                                        match = re.search(r'\d*\s*(.+?)(?:\s*\(|$)', monster)
+                                        if match:
+                                            monster_name = match.group(1).strip()
+                                            monster_id = monster_name.lower().replace(' ', '_')
+                                            monster_ids.add(monster_id)
+        
+        # Also scan the monsters folder for this module
+        monsters_dir = os.path.join('modules', module_name, 'monsters')
+        if os.path.exists(monsters_dir):
+            for filename in os.listdir(monsters_dir):
+                if filename.endswith('.json'):
+                    # Extract monster ID from filename
+                    # e.g., "bandit_captain_gorvek.json" -> "bandit_captain_gorvek"
+                    monster_id = filename[:-5]  # Remove .json extension
+                    monster_ids.add(monster_id)
 
+        info(f"TOOLKIT: Found {len(monster_ids)} unique monsters in module {module_name}: {list(monster_ids)[:5]}...")
         return jsonify(list(monster_ids))
-        # --- End of Implementation ---
         
     except Exception as e:
         error(f"TOOLKIT: Failed to get monsters for module {module_name}: {e}")
@@ -2205,42 +2227,20 @@ cancel_build_flag = threading.Event()
 
 @socketio.on('request_module_list')
 def handle_request_module_list():
-    """Scans the modules directory and returns a list of existing modules."""
+    """Scans for modules using the ModuleStitcher and returns a detailed list."""
     try:
-        from utils.file_operations import safe_read_json
-        modules_dir = 'modules'
-        if not os.path.exists(modules_dir):
-            emit('module_list_response', [])
-            return
-
-        module_list = []
-        for item in os.listdir(modules_dir):
-            item_path = os.path.join(modules_dir, item)
-            if os.path.isdir(item_path):
-                # Try to get more details from a manifest or plot file
-                manifest_path = os.path.join(item_path, f"{item}_manifest.json")
-                plot_path = os.path.join(item_path, f"module_plot_{item}.json")
-                
-                module_data = {'moduleName': item}
-                
-                if os.path.exists(manifest_path):
-                    manifest = safe_read_json(manifest_path)
-                    if manifest:
-                        module_data['levelRange'] = manifest.get('level_range', {})
-                        module_data['areaCount'] = manifest.get('area_count')
-                        module_data['locationCount'] = manifest.get('location_count')
-                
-                if os.path.exists(plot_path):
-                    plot = safe_read_json(plot_path)
-                    if plot:
-                        module_data['plotPointCount'] = len(plot.get('plotPoints', []))
-
-                module_list.append(module_data)
+        # This function provides all the necessary details: level, areas, locations, etc.
+        from core.generators.module_stitcher import list_available_modules
         
-        emit('module_list_response', module_list)
+        detailed_modules = list_available_modules()
+        info(f"MODULE_BUILDER: Found {len(detailed_modules)} modules to display.")
+        
+        # The frontend is already set up to handle this detailed data structure.
+        emit('module_list_response', detailed_modules)
+        
     except Exception as e:
-        error(f"Error fetching module list: {e}")
-        emit('module_list_response', [])
+        error(f"Error fetching detailed module list: {e}")
+        emit('module_list_response', [])  # Send an empty list on error
 
 def simulate_build_process(params):
     """A target function for a thread that simulates module creation."""

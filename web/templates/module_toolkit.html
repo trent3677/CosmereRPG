@@ -955,11 +955,25 @@
             background-color: #2196F3;
         }
 
+        /* Shared style for all top option boxes for consistent padding/radius */
+        .option-box {
+            border-radius: 6px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* The specific outline colors */
+        .orange-outline {
+            border: 2px solid #FFA500; /* Orange */
+        }
+
+        .purple-outline {
+            border: 2px solid #9c27b0; /* Purple */
+        }
+
         /* Blue outline for module selector */
         .module-cross-reference-box {
             border: 2px solid #2196F3; /* Blue border */
-            border-radius: 6px;
-            padding: 15px;
             background-color: rgba(33, 150, 243, 0.05); /* Faint blue background */
         }
         
@@ -1587,19 +1601,19 @@
                     <div class="generator-controls">
                         <!-- Part 1: All the dropdown options -->
                         <div class="generator-options">
-                            <div class="form-group">
+                            <div class="form-group option-box orange-outline">
                                 <label for="genPack">Target Pack:</label>
                                 <select id="genPack" onchange="loadMonsters(); refreshMonsterThumbnails();">
                                     <option value="__new__">+ Create New Pack...</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group option-box orange-outline">
                                 <label for="genStyle">Style Template:</label>
                                 <select id="genStyle" onchange="loadStylePrompt()">
                                     <!-- Styles will be loaded from JSON -->
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group option-box purple-outline">
                                 <label for="genModel">AI Model:</label>
                                 <select id="genModel" onchange="checkModelWarning()">
                                     <option value="dall-e-3">DALL-E 3 (Default)</option>
@@ -1609,7 +1623,7 @@
                                     Warning: GPT-Image requires a validated OpenAI account with higher tier access.
                                 </div>
                             </div>
-                            <div class="form-group module-cross-reference-box">
+                            <div class="form-group module-cross-reference-box option-box">
                                 <label for="genModule">Module Cross-Reference:</label>
                                 <div style="display: flex; gap: 10px;">
                                     <select id="genModule" onchange="crossReferenceModuleMonsters()" style="flex-grow: 1;">
@@ -1861,6 +1875,15 @@
             loadModules(); // Load available modules for cross-reference
             setupDragDrop();
             setupSocketHandlers();
+            initializeModuleBuilderElements(); // Initialize module builder DOM elements
+            setupModuleBuilderEventListeners(); // Set up module builder event listeners
+            
+            // If builder tab is active on load, request modules
+            const activeTab = document.querySelector('.tab.active');
+            if (activeTab && activeTab.textContent.includes('Module Builder')) {
+                console.log('Module Builder tab is active on load, requesting modules...');
+                socket.emit('request_module_list');
+            }
         });
         
         // Tab switching
@@ -1878,6 +1901,7 @@
                 loadMonsters();
             } else if (tab === 'builder') {
                 // Request module list when switching to builder tab
+                console.log('Switching to builder tab, requesting module list...');
                 socket.emit('request_module_list');
             }
         }
@@ -2710,6 +2734,7 @@
         // Socket handlers
         function setupSocketHandlers() {
             socket.on('connect', () => {
+                console.log('Socket connected successfully');
                 document.getElementById('connectionStatus')?.classList.add('online');
             });
             
@@ -3156,77 +3181,116 @@
 
         // === MODULE BUILDER SCRIPT ===
 
-        // DOM Elements for Module Builder
-        const moduleForm = document.getElementById('module-form');
-        const generateBtn = document.getElementById('generate-btn');
-        const cancelBtn = document.getElementById('cancel-btn');
-        const newModuleBtn = document.getElementById('new-module-btn');
-        const progressSection = document.getElementById('generation-progress');
-        const resultsSection = document.getElementById('results-section');
-        const errorSection = document.getElementById('error-section');
-        const errorMessage = document.getElementById('error-message');
-        const statusMessage = document.getElementById('status-message');
-        const progressBar = document.getElementById('progress-bar');
-        const progressPercentage = document.getElementById('progress-percentage');
-        const progressStages = document.querySelectorAll('#progress-stages li');
-        const modulesListContainer = document.getElementById('modules-list');
-
-        // Form submission
-        if (moduleForm) {
-            moduleForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                const moduleName = document.getElementById('module-name').value.trim();
-                const numAreas = parseInt(document.getElementById('num-areas').value);
-                const locationsPerArea = parseInt(document.getElementById('locations-per-area').value);
-                const narrative = document.getElementById('ai-narrative').value.trim();
-                
-                if (!moduleName || !narrative) {
-                    showError('Please provide both module name and narrative');
-                    return;
-                }
-                
-                socket.emit('start_build', {
-                    module_name: moduleName,
-                    num_areas: numAreas,
-                    locations_per_area: locationsPerArea,
-                    narrative: narrative
+        // DOM Elements for Module Builder - Initialize as null, will be set after DOM loads
+        let moduleForm = null;
+        let generateBtn = null;
+        let cancelBtn = null;
+        let newModuleBtn = null;
+        let progressSection = null;
+        let resultsSection = null;
+        let errorSection = null;
+        let errorMessage = null;
+        let statusMessage = null;
+        let progressBar = null;
+        let progressPercentage = null;
+        let progressStages = null;
+        let modulesListContainer = null;
+        
+        // Initialize module builder elements after DOM is ready
+        function initializeModuleBuilderElements() {
+            moduleForm = document.getElementById('module-form');
+            generateBtn = document.getElementById('generate-btn');
+            cancelBtn = document.getElementById('cancel-btn');
+            newModuleBtn = document.getElementById('new-module-btn');
+            progressSection = document.getElementById('generation-progress');
+            resultsSection = document.getElementById('results-section');
+            errorSection = document.getElementById('error-section');
+            errorMessage = document.getElementById('error-message');
+            statusMessage = document.getElementById('status-message');
+            progressBar = document.getElementById('progress-bar');
+            progressPercentage = document.getElementById('progress-percentage');
+            progressStages = document.querySelectorAll('#progress-stages li');
+            modulesListContainer = document.getElementById('modules-list');
+        }
+        
+        // Set up module builder event listeners
+        function setupModuleBuilderEventListeners() {
+            // Form submission
+            if (moduleForm) {
+                moduleForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    const moduleName = document.getElementById('module-name').value.trim();
+                    const numAreas = parseInt(document.getElementById('num-areas').value);
+                    const locationsPerArea = parseInt(document.getElementById('locations-per-area').value);
+                    const narrative = document.getElementById('ai-narrative').value.trim();
+                    
+                    if (!moduleName || !narrative) {
+                        showError('Please provide both module name and narrative');
+                        return;
+                    }
+                    
+                    socket.emit('start_build', {
+                        module_name: moduleName,
+                        num_areas: numAreas,
+                        locations_per_area: locationsPerArea,
+                        narrative: narrative
+                    });
+                    
+                    moduleForm.style.display = 'none';
+                    progressSection.style.display = 'block';
+                    errorSection.style.display = 'none';
+                    resultsSection.style.display = 'none';
                 });
-                
-                moduleForm.style.display = 'none';
-                progressSection.style.display = 'block';
-                errorSection.style.display = 'none';
-                resultsSection.style.display = 'none';
-            });
-        }
+            }
 
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => {
-                if (confirm('Are you sure you want to cancel the module generation?')) {
-                    socket.emit('cancel_build');
-                }
-            });
-        }
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', () => {
+                    if (confirm('Are you sure you want to cancel the module generation?')) {
+                        socket.emit('cancel_build');
+                    }
+                });
+            }
 
-        if (newModuleBtn) {
-            newModuleBtn.addEventListener('click', () => {
-                resetBuilderUI();
-            });
+            if (newModuleBtn) {
+                newModuleBtn.addEventListener('click', () => {
+                    resetBuilderUI();
+                });
+            }
         }
 
         // Socket event handlers for builder
         socket.on('module_list_response', (modules) => {
-            console.log('Received module list:', modules);
-            if (!modulesListContainer) return;
+            console.log('Received module list for builder:', modules);
+            if (!modulesListContainer) {
+                console.error('modulesListContainer is not initialized!');
+                // Try to get it again
+                modulesListContainer = document.getElementById('modules-list');
+                if (!modulesListContainer) {
+                    console.error('Could not find modules-list element!');
+                    return;
+                }
+            }
             
-            modulesListContainer.innerHTML = ''; 
+            modulesListContainer.innerHTML = ''; // Clear the "Loading..." message
 
             if (!modules || modules.length === 0) {
                 modulesListContainer.innerHTML = '<div class="no-modules">No modules found.</div>';
                 return;
             }
 
-            modules.forEach(module => {
+            // Filter out system directories that might have been picked up
+            const validModules = modules.filter(module => 
+                !['campaign_archives', 'campaign_summaries', 'backups', 'conversation_history', 
+                  'default', 'encounters', 'logs'].includes(module.moduleName)
+            );
+
+            if (validModules.length === 0) {
+                modulesListContainer.innerHTML = '<div class="no-modules">No adventure modules found.</div>';
+                return;
+            }
+
+            validModules.forEach(module => {
                 const moduleItem = document.createElement('div');
                 moduleItem.className = 'module-item';
                 const levelRange = module.levelRange || { min: '?', max: '?' };
