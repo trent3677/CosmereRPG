@@ -686,7 +686,7 @@
     "ghost": {
       "name": "Ghost",
       "type": "elemental",
-      "description": "A translucent spirit of a deceased humanoid, floating ethereally above the ground. The ghost appears as it did in life but aged and withered, with a transparency that allows the background to show through. Its form constantly shifts between solid-looking and nearly invisible. The face shows the anguish of unfinished business, with hollow eyes that weep spectral tears. It wears the clothing from its death, flowing and billowing as if underwater. A pale blue-white glow emanates from its entire form. Wisps of ectoplasm trail from its body. The ghost phases partially through a wall, showing its incorporeal nature. Its mouth opens in a silent scream. Chains or other symbols of its unfinished business may be visible. Photorealistic rendering of transparency, ethereal effects, and the tragic horror of a soul unable to rest.",
+      "description": "A translucent spirit of a fantasy character floats ethereally above the ground. The ghost appears aged and withered, its form semi-transparent so the background shows through. Its body shifts between nearly solid and almost invisible. The face is filled with anguish, hollow eyes weeping glowing spectral tears. It wears the same flowing, tattered clothing it died in, drifting as if underwater. A pale blue-white glow radiates from its entire form, with wisps of ectoplasm trailing off. Part of its body phases through a wall, revealing its incorporeal nature. Its mouth is open in a silent scream, and faint chains or other symbolic bindings of unfinished business hang from its form.",
       "tags": [
         "incorporeal",
         "aquatic"

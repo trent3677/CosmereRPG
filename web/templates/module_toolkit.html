@@ -269,6 +269,18 @@
             background-color: var(--color-destructive-hover);
             border-color: var(--color-destructive-hover);
         }
+        
+        /* --- Warning Button (Amber/Yellow) --- */
+        /* Use for: Add to Bestiary */
+        .btn.btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #1a1a1a; /* Dark text for better contrast */
+        }
+        .btn.btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #e0a800;
+        }
 
         .btn:disabled { 
             opacity: 0.5; 
@@ -1735,6 +1747,11 @@
                                     <span class="legend-color-box in-module"></span> In Selected Module <span id="count-in-module">(0)</span>
                                 </label>
                             </div>
+                            <!-- Special mode for missing bestiary entries -->
+                            <div class="legend-item" title="Show only monsters from the selected module that are missing from the Bestiary.">
+                                <input type="checkbox" id="filter-missing-bestiary" onchange="toggleBestiaryMissingMode()">
+                                <label for="filter-missing-bestiary">Show Missing from Bestiary</label>
+                            </div>
                             <!-- Refresh button remains the same -->
                             <button class="btn btn-success" style="margin-left: auto; padding: 5px 10px; display: flex; align-items: center; gap: 5px;" onclick="loadMonsters(); refreshMonsterThumbnails();" title="Refresh monster list">
                                 <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1749,6 +1766,7 @@
                         </div>
                     </div>
                     <button class="btn btn-primary" style="margin-top: 20px;" onclick="startGeneration()">Generate Selected Images to Current Pack</button>
+                    <button class="btn btn-warning" style="margin-top: 20px; display: none;" id="add-to-bestiary-btn" onclick="addSelectedToBestiary()">Add to Bestiary</button>
                 </div>
 
                 <div class="section">
@@ -2321,6 +2339,12 @@
         
         // Monster Generation
         async function loadMonsters() {
+            // Reset missing bestiary mode when loading new monsters
+            if (document.getElementById('filter-missing-bestiary')) {
+                document.getElementById('filter-missing-bestiary').checked = false;
+                toggleBestiaryMissingMode();
+            }
+            
             try {
                 // Get current pack to scan for additional monsters
                 const packName = document.getElementById('genPack').value || 'photorealistic';
@@ -2375,6 +2399,7 @@
                 if (monster.isPlaceholder) {
                     // This is a monster from the module that doesn't exist in the pack.
                     // Render a disabled-looking placeholder.
+                    item.classList.add('placeholder-monster');
                     item.innerHTML = `
                         <label class="monster-label" style="opacity: 0.6;">
                             <input type="checkbox" value="${monster.id}" name="monster" disabled>
@@ -2557,6 +2582,12 @@
         }
 
         async function crossReferenceModuleMonsters() {
+            // Reset missing bestiary mode when changing module reference
+            if (document.getElementById('filter-missing-bestiary')) {
+                document.getElementById('filter-missing-bestiary').checked = false;
+                toggleBestiaryMissingMode();
+            }
+            
             const moduleName = document.getElementById('genModule').value;
 
             // If the user deselects the module, revert to the standard monster list
@@ -3078,14 +3109,27 @@
         // Update the status to show how many monsters are selected
         function updateSelectionStatus() {
             const selectedMonsters = Array.from(document.querySelectorAll('input[name="monster"]:checked'));
-            const button = document.querySelector('button[onclick="startGeneration()"]');
+            const generateBtn = document.querySelector('button[onclick="startGeneration()"]');
+            const addToBestiaryBtn = document.getElementById('add-to-bestiary-btn');
             
-            if (selectedMonsters.length === 0) {
-                button.textContent = 'Generate Selected Images to Current Pack';
-            } else if (selectedMonsters.length === 1) {
-                button.textContent = 'Generate 1 Selected Image to Current Pack';
-            } else {
-                button.textContent = `Generate ${selectedMonsters.length} Selected Images to Current Pack`;
+            // Update Generate Button Text
+            if (generateBtn && generateBtn.style.display !== 'none') {
+                if (selectedMonsters.length === 0) {
+                    generateBtn.textContent = 'Generate Selected Images to Current Pack';
+                } else if (selectedMonsters.length === 1) {
+                    generateBtn.textContent = 'Generate 1 Selected Image to Current Pack';
+                } else {
+                    generateBtn.textContent = `Generate ${selectedMonsters.length} Selected Images to Current Pack`;
+                }
+            }
+            
+            // Update Add to Bestiary Button Text
+            if (addToBestiaryBtn && addToBestiaryBtn.style.display !== 'none') {
+                if (selectedMonsters.length === 0) {
+                    addToBestiaryBtn.textContent = 'Add to Bestiary';
+                } else {
+                    addToBestiaryBtn.textContent = `Add ${selectedMonsters.length} to Bestiary`;
+                }
             }
         }
         
@@ -3128,6 +3172,74 @@
                 // Set the final display style based on the AND logic checks
                 item.style.display = shouldShow ? 'flex' : 'none';
             });
+        }
+        
+        // Toggle special mode for showing only missing bestiary entries
+        function toggleBestiaryMissingMode() {
+            const isMissingMode = document.getElementById('filter-missing-bestiary').checked;
+            const legendFilters = document.querySelectorAll('.legend-filter');
+            const monsterItems = document.querySelectorAll('.monster-item');
+            const generateBtn = document.querySelector('button[onclick="startGeneration()"]');
+            const addToBestiaryBtn = document.getElementById('add-to-bestiary-btn');
+
+            if (isMissingMode) {
+                // --- ENTERING MISSING MODE ---
+                // 1. Disable and uncheck other filters
+                legendFilters.forEach(filter => {
+                    filter.checked = false;
+                    filter.disabled = true;
+                });
+
+                // 2. Show only placeholder monsters and enable their checkboxes
+                monsterItems.forEach(item => {
+                    if (item.classList.contains('placeholder-monster')) {
+                        item.style.display = 'flex';
+                        const checkbox = item.querySelector('input[name="monster"]');
+                        if (checkbox) checkbox.disabled = false;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                // 3. Toggle button visibility
+                generateBtn.style.display = 'none';
+                addToBestiaryBtn.style.display = 'inline-block';
+
+            } else {
+                // --- EXITING MISSING MODE ---
+                // 1. Re-enable other filters
+                legendFilters.forEach(filter => {
+                    filter.disabled = false;
+                });
+
+                // 2. Disable placeholder checkboxes and re-apply normal filters
+                monsterItems.forEach(item => {
+                    if (item.classList.contains('placeholder-monster')) {
+                        const checkbox = item.querySelector('input[name="monster"]');
+                        if (checkbox) checkbox.disabled = true;
+                    }
+                });
+                applyLegendFilters(); // This will restore the correct view
+
+                // 3. Toggle button visibility
+                generateBtn.style.display = 'inline-block';
+                addToBestiaryBtn.style.display = 'none';
+            }
+            updateSelectionStatus(); // Update button text/state
+        }
+        
+        // Placeholder function for adding monsters to bestiary
+        function addSelectedToBestiary() {
+            const selectedMonsters = Array.from(document.querySelectorAll('.monster-item.placeholder-monster input[name="monster"]:checked'))
+                .map(cb => cb.value);
+            
+            if (selectedMonsters.length === 0) {
+                alert('Please select one or more monsters that are missing from the bestiary.');
+                return;
+            }
+
+            alert(`(Placeholder) Functionality to add the following ${selectedMonsters.length} monster(s) to the bestiary will be implemented here:\n\n- ${selectedMonsters.join('\n- ')}`);
+            // The backend call will be added later.
         }
         
         // Load monster description when selected
