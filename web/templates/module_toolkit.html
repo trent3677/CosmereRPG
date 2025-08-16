@@ -177,32 +177,103 @@
             min-height: 120px;
         }
 
+        /* === Modern Button Styles with Color-Coded Actions === */
+        :root {
+            /* Button Action Colors */
+            --color-primary: #3b82f6;      /* Bright Blue - for main "Save" actions */
+            --color-primary-hover: #2563eb; /* Darker blue for hover */
+
+            --color-secondary: #cccccc;     /* Light Grey - for "Select" and "Save As New" */
+            --color-secondary-hover: #ffffff; /* White for hover */
+            
+            --color-neutral: #555555;       /* Dark Grey - for "Deselect" */
+            --color-neutral-hover: #6c6c6c; /* Lighter grey for hover */
+
+            --color-special: #28a745;       /* Green - for "Refresh" */
+            --color-special-hover: #218838; /* Darker green for hover */
+
+            --color-destructive: #dc3545;  /* Red - for any future "Delete" buttons */
+            --color-destructive-hover: #c82333; /* Darker red for hover */
+        }
+
+        /* --- Base Button Style --- */
         .btn {
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            font-size: 1em;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s;
+            text-align: center;
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         
-        .btn.btn-primary { background: linear-gradient(145deg, #4CAF50, #2E8B57); }
-        .btn.btn-primary:hover { box-shadow: 0 0 15px rgba(76, 175, 80, 0.5); transform: translateY(-2px); }
-        
-        .btn.btn-secondary { background: linear-gradient(145deg, #6c757d, #495057); }
-        .btn.btn-secondary:hover { box-shadow: 0 0 15px rgba(108, 117, 125, 0.5); transform: translateY(-2px); }
+        /* --- Primary Action Button (Blue) --- */
+        /* Use for: SAVE (OVERWRITE STYLE), SAVE (Description) */
+        .btn.btn-primary {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+            color: white;
+        }
+        .btn.btn-primary:hover {
+            background-color: var(--color-primary-hover);
+            border-color: var(--color-primary-hover);
+        }
 
-        .btn.btn-danger { background: linear-gradient(145deg, #f44336, #c62828); }
-        .btn.btn-danger:hover { box-shadow: 0 0 15px rgba(244, 67, 54, 0.5); transform: translateY(-2px); }
+        /* --- Secondary/Ghost Button (White) --- */
+        /* Use for: SELECT ALL, SELECT MISSING, SAVE AS NEW */
+        .btn.btn-light {
+            background-color: transparent;
+            color: var(--color-secondary);
+            border-color: var(--color-secondary);
+        }
+        .btn.btn-light:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--color-secondary-hover);
+            border-color: var(--color-secondary-hover);
+        }
 
-        .btn.btn-success { background: linear-gradient(145deg, #4CAF50, #2E8B57); }
-        .btn.btn-success:hover { box-shadow: 0 0 15px rgba(76, 175, 80, 0.5); transform: translateY(-2px); }
+        /* --- Neutral Button (Dark Grey) --- */
+        /* Use for: DESELECT ALL */
+        .btn.btn-secondary {
+            background-color: var(--color-neutral);
+            color: #e0e0e0;
+            border-color: var(--color-neutral);
+        }
+        .btn.btn-secondary:hover {
+            background-color: var(--color-neutral-hover);
+            border-color: var(--color-neutral-hover);
+        }
 
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        /* --- Special/Success Button (Green) --- */
+        /* Use for: REFRESH */
+        .btn.btn-success {
+            background-color: var(--color-special);
+            color: white;
+            border-color: var(--color-special);
+        }
+        .btn.btn-success:hover {
+            background-color: var(--color-special-hover);
+            border-color: var(--color-special-hover);
+        }
+
+        /* --- Destructive Button (Red) --- */
+        .btn.btn-danger {
+            background-color: var(--color-destructive);
+            color: white;
+            border-color: var(--color-destructive);
+        }
+        .btn.btn-danger:hover {
+            background-color: var(--color-destructive-hover);
+            border-color: var(--color-destructive-hover);
+        }
+
+        .btn:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+        }
 
         /* === 7. Pack Table Layout === */
         .pack-list-container {
@@ -1530,12 +1601,12 @@
                             <div class="prompt-editor">
                                 <div class="prompt-editor-header">
                                     <h4>Style Prompt</h4>
-                                    <button class="btn btn-small btn-secondary" onclick="saveStylePrompt()">Save</button>
+                                    <button class="btn btn-small btn-primary" onclick="saveStylePrompt()">Save (Overwrite Style)</button>
                                 </div>
                                 <textarea id="stylePromptBox" class="preview-textarea" placeholder="Select a style template to see its prompt..."></textarea>
                                 <div class="save-as-new">
                                     <input type="text" id="newStyleName" placeholder="Save as new style name...">
-                                    <button class="btn btn-secondary btn-small" onclick="saveAsNewStyle()">Save as New</button>
+                                    <button class="btn btn-light btn-small" onclick="saveAsNewStyle()">Save as New</button>
                                 </div>
                             </div>
                             
@@ -1546,7 +1617,7 @@
                             <div class="prompt-editor">
                                 <div class="prompt-editor-header">
                                     <h4>Monster Description</h4>
-                                    <button class="btn btn-small btn-secondary" onclick="saveMonsterDescription()">Save</button>
+                                    <button class="btn btn-small btn-primary" onclick="saveMonsterDescription()">Save</button>
                                 </div>
                                 <textarea id="monsterDescriptionBox" class="preview-textarea" placeholder="Select a monster from the list below..."></textarea>
                                 <div class="selected-monster-info">
@@ -1561,8 +1632,8 @@
                         <div class="monster-list-header">
                             <h4>Available Monsters in Pack</h4>
                             <div class="monster-buttons">
-                                <button class="btn btn-secondary btn-small" onclick="selectAllMonsters()">Select All</button>
-                                <button class="btn btn-secondary btn-small" onclick="selectMissingImages()">Select Missing</button>
+                                <button class="btn btn-light btn-small" onclick="selectAllMonsters()">Select All</button>
+                                <button class="btn btn-light btn-small" onclick="selectMissingImages()">Select Missing</button>
                                 <button class="btn btn-secondary btn-small" onclick="deselectAllMonsters()">Deselect All</button>
                             </div>
                         </div>
@@ -1579,8 +1650,8 @@
                             <div class="legend-item">
                                 <span class="legend-color-box missing-from-pack"></span> Missing from Pack <span id="count-missing">(0)</span>
                             </div>
-                            <!-- Refresh button with circular arrow icon -->
-                            <button class="btn btn-secondary" style="margin-left: auto; padding: 5px 10px; display: flex; align-items: center; gap: 5px;" onclick="loadMonsters(); refreshMonsterThumbnails();" title="Refresh monster list">
+                            <!-- Refresh button with circular arrow icon (green for positive/refresh action) -->
+                            <button class="btn btn-success" style="margin-left: auto; padding: 5px 10px; display: flex; align-items: center; gap: 5px;" onclick="loadMonsters(); refreshMonsterThumbnails();" title="Refresh monster list">
                                 <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
                                 </svg>
@@ -1849,15 +1920,26 @@
             selectors.forEach(id => {
                 const select = document.getElementById(id);
                 if (select) {
+                    // Save current selection before updating
+                    const currentValue = select.value;
+                    
                     select.innerHTML = '';
                     
                     availablePacks.forEach(pack => {
                         const option = document.createElement('option');
                         option.value = pack.name;
                         option.textContent = pack.display_name || pack.name;
-                        if (pack.is_active) option.selected = true;
                         select.appendChild(option);
                     });
+                    
+                    // Restore previous selection if it still exists
+                    if (currentValue && availablePacks.some(p => p.name === currentValue)) {
+                        select.value = currentValue;
+                    } else if (availablePacks.some(p => p.is_active)) {
+                        // Only fall back to active pack if previous selection doesn't exist
+                        const activePack = availablePacks.find(p => p.is_active);
+                        select.value = activePack.name;
+                    }
                 }
             });
         }
@@ -2544,10 +2626,12 @@
             socket.on('generation_complete', (data) => {
                 document.getElementById('genProgress').style.display = 'none'; // Use style.display
                 addLog('genLog', `Generation complete: ${data.successful.length} successful, ${data.failed.length} failed`, 'info');
-                loadPacks();
                 
-                // Refresh the monster list to show newly generated images
+                // Only refresh the monster list, don't reload packs (which would reset the dropdown)
                 loadMonsters();
+                
+                // Optionally update pack statistics without resetting selections
+                // loadPacks() was causing the target pack to reset
             });
             
             socket.on('video_progress', (data) => {

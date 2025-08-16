@@ -203,6 +203,65 @@ class StyleManager:
             "success": True,
             "message": f"Style '{style_id}' updated"
         }
+    
+    def overwrite_style(self, style_id: str, prompt: str) -> Dict:
+        """
+        Overwrite any style (builtin or custom) by saving as custom
+        
+        Args:
+            style_id: The style identifier to overwrite
+            prompt: New prompt text
+            
+        Returns:
+            Result dictionary with success status
+        """
+        # If it's a builtin style, save as custom with same ID
+        if style_id in self.templates.get("builtin", {}):
+            # Get the original style name
+            original = self.templates["builtin"][style_id]
+            
+            # Save as custom style with same ID
+            if "custom" not in self.templates:
+                self.templates["custom"] = {}
+            
+            self.templates["custom"][style_id] = {
+                "name": original["name"] + " (Modified)",
+                "prompt": prompt
+            }
+            
+            self._save_templates()
+            
+            return {
+                "success": True,
+                "message": f"Builtin style '{style_id}' overwritten as custom"
+            }
+        
+        # If it's already custom, just update it
+        elif style_id in self.templates.get("custom", {}):
+            self.templates["custom"][style_id]["prompt"] = prompt
+            self._save_templates()
+            
+            return {
+                "success": True,
+                "message": f"Custom style '{style_id}' updated"
+            }
+        
+        # If it doesn't exist, create new custom
+        else:
+            if "custom" not in self.templates:
+                self.templates["custom"] = {}
+            
+            self.templates["custom"][style_id] = {
+                "name": style_id.replace("_", " ").title(),
+                "prompt": prompt
+            }
+            
+            self._save_templates()
+            
+            return {
+                "success": True,
+                "message": f"New custom style '{style_id}' created"
+            }
 
 
 # CLI interface for testing

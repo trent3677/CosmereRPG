@@ -1012,7 +1012,8 @@ def update_style_prompt():
         
         from core.toolkit.style_manager import StyleManager
         manager = StyleManager()
-        result = manager.update_custom_style(style_id, prompt)
+        # Use overwrite_style which handles both builtin and custom styles
+        result = manager.overwrite_style(style_id, prompt)
         return jsonify(result)
     except Exception as e:
         error(f"TOOLKIT: Failed to update style: {e}")

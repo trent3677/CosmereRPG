@@ -33,5 +33,10 @@
       "prompt": "minimalist design, simple shapes, clean lines, limited color palette, geometric forms, negative space"
     }
   },
-  "custom": {}
+  "custom": {
+    "anime": {
+      "name": "Anime (Modified)",
+      "prompt": "Anime art style, vibrant colors, cel-shaded, manga-inspired, bold outlines, dynamic pose, expressive features"
+    }
+  }
 }
