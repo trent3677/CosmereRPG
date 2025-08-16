@@ -957,10 +957,11 @@
         
         /* Checkbox styling for legend filters */
         .legend-item input[type="checkbox"] {
-            margin-right: 8px;
+            margin-right: 6px;      /* Tighter spacing */
             vertical-align: middle;
-            width: 16px;
-            height: 16px;
+            width: 14px;            /* Smaller checkbox */
+            height: 14px;           /* Smaller checkbox */
+            flex-shrink: 0;         /* Prevent checkbox from shrinking on smaller screens */
         }
         
         .legend-item label {
@@ -3087,7 +3088,7 @@
             }
         }
         
-        // Apply legend filters to show/hide monsters based on selected categories
+        // Apply legend filters to show/hide monsters based on selected categories (AND logic)
         function applyLegendFilters() {
             const filters = {
                 bestiary: document.getElementById('filter-bestiary').checked,
@@ -3101,18 +3102,29 @@
 
             monsterItems.forEach(item => {
                 if (!isAnyFilterActive) {
-                    // If no filters are checked, show everything
+                    // If no filters are active, show all items
                     item.style.display = 'flex';
                     return;
                 }
 
-                // Check if the item matches any of the active filters
-                let shouldShow = false;
-                if (filters.bestiary && item.classList.contains('monster-bestiary')) shouldShow = true;
-                if (filters.packOnly && item.classList.contains('monster-pack-only')) shouldShow = true;
-                if (filters.missing && item.classList.contains('monster-bestiary-only')) shouldShow = true;
-                if (filters.inModule && item.classList.contains('monster-in-module')) shouldShow = true;
+                // Start by assuming the item should be shown
+                let shouldShow = true; 
+                
+                // Check each active filter. If the item fails ANY check, it gets hidden (AND logic)
+                if (filters.bestiary && !item.classList.contains('monster-bestiary')) {
+                    shouldShow = false;
+                }
+                if (filters.packOnly && !item.classList.contains('monster-pack-only')) {
+                    shouldShow = false;
+                }
+                if (filters.missing && !item.classList.contains('monster-bestiary-only')) {
+                    shouldShow = false;
+                }
+                if (filters.inModule && !item.classList.contains('monster-in-module')) {
+                    shouldShow = false;
+                }
 
+                // Set the final display style based on the AND logic checks
                 item.style.display = shouldShow ? 'flex' : 'none';
             });
         }
