@@ -1919,12 +1919,12 @@ def handle_generate_image(data):
         
         # Try to generate image
         try:
-            # Generate image using DALL-E 3 with high quality settings
+            # Generate image using DALL-E 3 with standard quality settings
             response = client.images.generate(
                 model="dall-e-3",
                 prompt=prompt,
                 size="1024x1024",
-                quality="hd",
+                quality="standard",
                 n=1,
             )
             # Get the image URL
@@ -1941,7 +1941,7 @@ def handle_generate_image(data):
                     model="dall-e-3",
                     prompt=sanitized_prompt,
                     size="1024x1024",
-                    quality="hd",
+                    quality="standard",
                     n=1,
                 )
                 image_url = response.data[0].url
