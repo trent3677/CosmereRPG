@@ -554,15 +554,20 @@ def toolkit_interface():
 def get_packs():
     """Get list of available graphic packs"""
     if not TOOLKIT_AVAILABLE:
-        return jsonify([])
-    
+        # Return an error if the toolkit isn't available, so the frontend knows why it's empty.
+        return jsonify({'error': 'Module Toolkit components are not available on the server.'}), 503
+
     try:
         manager = PackManager()
         packs = manager.list_available_packs()
         return jsonify(packs)
     except Exception as e:
-        error(f"TOOLKIT: Failed to list packs: {e}")
-        return jsonify([])
+        # This is the most important change.
+        # Instead of failing silently, we now send the actual error back to the browser.
+        error_message = f"TOOLKIT: Failed to list packs: {e}"
+        error(error_message) # Log the error to the server console
+        # Return a JSON object with the error and a 500 Internal Server Error status.
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/api/toolkit/packs/create', methods=['POST'])
 def create_pack():
@@ -754,18 +759,12 @@ def serve_pack_image(pack_name, filename):
     # Construct the absolute path to the image - all files in monsters folder now
     pack_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'monsters'))
     
-    # Check if file exists
+    # Check if file exists - NO FALLBACK
     file_path = os.path.join(pack_dir, filename)
     if os.path.exists(file_path):
         return send_from_directory(pack_dir, filename)
     
-    # Fallback to web/static/media/monsters if not in pack
-    fallback_dir = os.path.abspath(os.path.join('web', 'static', 'media', 'monsters'))
-    fallback_path = os.path.join(fallback_dir, filename)
-    if os.path.exists(fallback_path):
-        return send_from_directory(fallback_dir, filename)
-    
-    # Return 404 if not found
+    # Return 404 if not found - no fallback to other directories
     return '', 404
 
 @app.route('/toolkit/pack_video/<pack_name>/<filename>')
@@ -777,19 +776,49 @@ def serve_pack_video(pack_name, filename):
     # Construct the absolute path to the video - all files in monsters folder now
     pack_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'monsters'))
     
-    # Check if file exists
+    # Check if file exists - NO FALLBACK
     file_path = os.path.join(pack_dir, filename)
     if os.path.exists(file_path):
         return send_from_directory(pack_dir, filename)
     
-    # Fallback to web/static/media/monsters if not in pack
-    fallback_dir = os.path.abspath(os.path.join('web', 'static', 'media', 'monsters'))
-    fallback_path = os.path.join(fallback_dir, filename)
-    if os.path.exists(fallback_path):
-        return send_from_directory(fallback_dir, filename)
-    
-    # Return 404 if not found
+    # Return 404 if not found - no fallback to other directories
     return '', 404
+
+@app.route('/api/toolkit/check_existing_images', methods=['POST'])
+def check_existing_images():
+    """Check if images already exist for the given monsters in a pack"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        pack_name = data.get('pack_name')
+        monster_ids = data.get('monster_ids', [])
+        
+        if not pack_name or not monster_ids:
+            return jsonify({'success': False, 'error': 'Missing pack_name or monster_ids'})
+        
+        # Check which files exist
+        pack_dir = Path(f"graphic_packs/{pack_name}/monsters")
+        existing = []
+        
+        if pack_dir.exists():
+            for monster_id in monster_ids:
+                # Check for .jpg files only (the correct format)
+                jpg_path = pack_dir / f"{monster_id}.jpg"
+                
+                if jpg_path.exists():
+                    existing.append(monster_id)
+        
+        return jsonify({
+            'success': True,
+            'existing': existing,
+            'total_checked': len(monster_ids)
+        })
+    
+    except Exception as e:
+        error(f"TOOLKIT: Error checking existing images: {e}")
+        return jsonify({'success': False, 'error': str(e)})
 
 @app.route('/api/toolkit/generate', methods=['POST'])
 def generate_monsters():

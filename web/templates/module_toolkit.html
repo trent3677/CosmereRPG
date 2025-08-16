@@ -609,7 +609,7 @@
         
         .preview-layout {
             display: grid;
-            grid-template-columns: 1fr auto 1fr; /* This is the new layout */
+            grid-template-columns: 1fr auto 1.5fr; /* Gives the right column 50% more space than the left */
             gap: 20px;
             align-items: stretch; /* CHANGED from 'center' */
         }
@@ -920,6 +920,7 @@
         .preview-textarea {
             min-height: 80px;
             max-height: 300px;
+            flex-grow: 1; /* Ensure vertical alignment */
         }
         
         .preview-textarea:focus {
@@ -1499,7 +1500,7 @@
                         <div class="generator-options">
                             <div class="form-group">
                                 <label for="genPack">Target Pack:</label>
-                                <select id="genPack" onchange="checkPackSelection(); loadMonsters(); refreshMonsterThumbnails();">
+                                <select id="genPack" onchange="loadMonsters(); refreshMonsterThumbnails();">
                                     <option value="__new__">+ Create New Pack...</option>
                                 </select>
                             </div>
@@ -1578,13 +1579,20 @@
                             <div class="legend-item">
                                 <span class="legend-color-box missing-from-pack"></span> Missing from Pack <span id="count-missing">(0)</span>
                             </div>
+                            <!-- Refresh button with circular arrow icon -->
+                            <button class="btn btn-secondary" style="margin-left: auto; padding: 5px 10px; display: flex; align-items: center; gap: 5px;" onclick="loadMonsters(); refreshMonsterThumbnails();" title="Refresh monster list">
+                                <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                </svg>
+                                Refresh
+                            </button>
                         </div>
 
                         <div class="monster-grid" id="monsterGrid">
                             <!-- Monsters will be loaded here -->
                         </div>
                     </div>
-                    <button class="btn btn-primary" style="margin-top: 20px;" onclick="generateMonsters()">Generate Selected</button>
+                    <button class="btn btn-primary" style="margin-top: 20px;" onclick="startGeneration()">Generate Selected</button>
                 </div>
 
                 <div class="section">
@@ -1745,11 +1753,11 @@
         
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            loadStyles();
             loadPacks();
             loadMonsters();
             setupDragDrop();
             setupSocketHandlers();
-            loadPackOverview();
         });
         
         // Tab switching
@@ -1837,7 +1845,7 @@
         }
         
         function updatePackSelectors() {
-            const selectors = ['genPack', 'videoPack'];  // Removed activePackSetting
+            const selectors = ['genPack', 'videoPack'];
             selectors.forEach(id => {
                 const select = document.getElementById(id);
                 if (select) {
@@ -1853,6 +1861,8 @@
                 }
             });
         }
+        
+        // Removed the complex style auto-selection functions that were causing issues
         
         async function createNewPack() {
             const name = document.getElementById('new-pack-name').value.trim();
@@ -2210,8 +2220,12 @@
                 return;
             }
             
-            // Get current pack from dropdown
-            const packName = document.getElementById('genPack').value || 'photorealistic';
+            // Get current pack from dropdown - NO HARDCODED FALLBACK
+            const packName = document.getElementById('genPack').value;
+            if (!packName || packName === '__new__') {
+                console.log(`No valid pack selected for loading thumbnail of ${monsterId}`);
+                return;
+            }
             console.log(`Loading thumbnail for ${monsterId} from pack ${packName}`);
 
             // Load from graphic pack folder
@@ -2288,85 +2302,61 @@
             }
         }
         
-        async function generateMonsters() {
-            const createNew = document.getElementById('createNewPack').checked;
-            let packName;
-            
-            if (createNew) {
-                // Create new pack first
-                const newPackName = document.getElementById('newPackName').value;
-                const newPackAuthor = document.getElementById('newPackAuthor').value || 'Module Toolkit';
-                const newPackDescription = document.getElementById('newPackDescription').value;
-                
-                if (!newPackName) {
-                    alert('Please enter a pack name');
-                    return;
-                }
-                
-                // Create the pack
-                const createResponse = await fetch('/toolkit/create_pack', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: newPackName,
-                        author: newPackAuthor,
-                        description: newPackDescription,
-                        style_template: document.getElementById('genStyle').value
-                    })
-                });
-                
-                const createResult = await createResponse.json();
-                if (!createResult.success) {
-                    alert('Failed to create pack: ' + (createResult.error || 'Unknown error'));
-                    return;
-                }
-                
-                packName = createResult.pack_name;
-                // Reload packs to include the new one
-                await loadPacks();
-            } else {
-                packName = document.getElementById('genPack').value;
-                if (!packName) {
-                    alert('Please select a target pack');
-                    return;
-                }
-            }
-            
+        // This new function replaces the old generateMonsters()
+        async function startGeneration() {
+            const packName = document.getElementById('genPack').value;
             const style = document.getElementById('genStyle').value;
             const model = document.getElementById('genModel').value;
             
-            const selected = Array.from(document.querySelectorAll('input[name="monster"]:checked'))
+            const selectedMonsters = Array.from(document.querySelectorAll('input[name="monster"]:checked'))
                 .map(cb => cb.value);
-            
-            if (selected.length === 0) {
-                alert('Please select at least one monster');
+
+            if (!packName || packName === '__new__') {
+                alert('Please select a valid Target Pack.');
                 return;
             }
-            
-            // Show progress
+
+            if (selectedMonsters.length === 0) {
+                alert('Please select at least one monster to generate.');
+                return;
+            }
+
+            // Check if any of the selected monsters already have images in the pack
+            try {
+                const checkResponse = await fetch('/api/toolkit/check_existing_images', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        pack_name: packName,
+                        monster_ids: selectedMonsters
+                    })
+                });
+
+                if (checkResponse.ok) {
+                    const checkResult = await checkResponse.json();
+                    if (checkResult.existing && checkResult.existing.length > 0) {
+                        const existingList = checkResult.existing.join(', ');
+                        const confirmMessage = `The following monsters already have images in the ${packName} pack:\n\n${existingList}\n\nDo you want to overwrite them?`;
+                        
+                        if (!confirm(confirmMessage)) {
+                            return; // User cancelled
+                        }
+                    }
+                }
+            } catch (error) {
+                console.warn('Could not check for existing images:', error);
+                // Continue anyway if check fails
+            }
+
             const progressContainer = document.getElementById('genProgress');
             const logContainer = document.getElementById('genLog');
-            if (progressContainer) {
-                progressContainer.style.display = 'block';
-            }
-            if (logContainer) {
-                logContainer.style.display = 'block';
-            }
-            
-            // Update progress status
             const statusEl = document.getElementById('genStatus');
-            if (statusEl) {
-                statusEl.textContent = 'Starting generation...';
-            }
-            
+
+            if (progressContainer) progressContainer.style.display = 'block';
+            if (logContainer) logContainer.style.display = 'block';
+            if (statusEl) statusEl.textContent = 'Starting generation...';
+
             try {
-                console.log('Sending generation request:', {
-                    pack_name: packName,
-                    style: style,
-                    model: model,
-                    monsters: selected
-                });
-                
                 const response = await fetch('/api/toolkit/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -2374,41 +2364,28 @@
                         pack_name: packName,
                         style: style,
                         model: model,
-                        monsters: selected
+                        monsters: selectedMonsters
                     })
                 });
-                
-                console.log('Response status:', response.status);
-                
+
                 if (!response.ok) {
                     const errorText = await response.text();
-                    console.error('Server error:', errorText);
                     throw new Error(`Server error: ${response.status} - ${errorText}`);
                 }
-                
+
                 const result = await response.json();
-                console.log('Generation result:', result);
-                
                 if (result.success && result.task_id) {
-                    // Generation started, will receive updates via socket
                     addLog('genLog', `Started generation task: ${result.task_id}`, 'info');
-                    addLog('genLog', `Generating ${selected.length} monsters with ${style} style`, 'info');
+                    addLog('genLog', `Generating ${selectedMonsters.length} monsters using the '${style}' style.`, 'info');
                 } else {
                     const errorMsg = result.error || 'Unknown error';
-                    console.error('Generation failed:', errorMsg);
                     addLog('genLog', `Failed to start generation: ${errorMsg}`, 'error');
-                    alert('Failed to start generation: ' + errorMsg);
-                    if (progressContainer) {
-                        progressContainer.style.display = 'none';
-                    }
+                    if (progressContainer) progressContainer.style.display = 'none';
                 }
             } catch (error) {
-                console.error('Failed to generate monsters:', error);
+                console.error('Failed to start generation task:', error);
                 addLog('genLog', `Error: ${error.message}`, 'error');
-                alert('Error starting generation: ' + error.message);
-                if (progressContainer) {
-                    progressContainer.style.display = 'none';
-                }
+                if (progressContainer) progressContainer.style.display = 'none';
             }
         }
         
@@ -2565,9 +2542,12 @@
             });
             
             socket.on('generation_complete', (data) => {
-                document.getElementById('genProgress').classList.remove('active');
+                document.getElementById('genProgress').style.display = 'none'; // Use style.display
                 addLog('genLog', `Generation complete: ${data.successful.length} successful, ${data.failed.length} failed`, 'info');
-                loadPacks(); // Refresh pack list
+                loadPacks();
+                
+                // Refresh the monster list to show newly generated images
+                loadMonsters();
             });
             
             socket.on('video_progress', (data) => {
@@ -2920,7 +2900,6 @@
         }
         
         function loadStyles() {
-            console.log('Loading styles from server...');
             fetch('/toolkit/get_styles')
             .then(response => response.json())
             .then(data => {
@@ -2955,7 +2934,6 @@
             })
             .catch(error => {
                 console.error('Error loading styles:', error);
-                alert('Failed to load style templates. Please check the server.');
             });
         }
         

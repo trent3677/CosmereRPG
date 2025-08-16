@@ -255,8 +255,8 @@ class MonsterGenerator:
         
         base_dir.mkdir(parents=True, exist_ok=True)
         
-        file_path = base_dir / f"{monster_id}.png"
-        img.save(file_path, "PNG")
+        file_path = base_dir / f"{monster_id}.jpg"
+        img.save(file_path, "JPEG", quality=95)
         
         return file_path
     
