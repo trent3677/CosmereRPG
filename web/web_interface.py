@@ -939,6 +939,74 @@ def process_video():
         error(f"TOOLKIT: Failed to process video: {e}")
         return jsonify({'success': False, 'error': str(e)})
 
+@app.route('/api/toolkit/add-to-bestiary', methods=['POST'])
+def add_to_bestiary():
+    """Add missing monsters to the bestiary using GPT-4o-mini"""
+    try:
+        data = request.json
+        module_name = data.get('module_name')
+        monster_names = data.get('monster_names', [])
+        
+        if not module_name or not monster_names:
+            return jsonify({'success': False, 'error': 'Missing module_name or monster_names'})
+        
+        info(f"TOOLKIT: Adding {len(monster_names)} monsters to bestiary from module: {module_name}")
+        
+        # Start processing in background thread
+        import threading
+        import asyncio
+        
+        def run_bestiary_update():
+            try:
+                from utils.bestiary_updater import BestiaryUpdater
+                updater = BestiaryUpdater()
+                
+                # Send initial progress
+                socketio.emit('bestiary_update_progress', {
+                    'status': 'started',
+                    'message': f'Starting to process {len(monster_names)} monsters...'
+                })
+                
+                # Create new event loop for thread
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                
+                # Run the async function (test_mode=False for real updates)
+                loop.run_until_complete(
+                    updater.process_missing_monsters(
+                        module_name=module_name,
+                        monster_names=monster_names,
+                        test_mode=False  # Actually update the bestiary
+                    )
+                )
+                
+                socketio.emit('bestiary_update_complete', {
+                    'success': True,
+                    'message': f'Successfully added {len(monster_names)} monsters to bestiary',
+                    'monsters': monster_names
+                })
+                info(f"TOOLKIT: Successfully added {len(monster_names)} monsters to bestiary")
+            except Exception as e:
+                error(f"TOOLKIT: Bestiary update failed: {e}")
+                socketio.emit('bestiary_update_error', {
+                    'success': False,
+                    'error': str(e)
+                })
+        
+        # Start in background thread
+        thread = threading.Thread(target=run_bestiary_update)
+        thread.daemon = True
+        thread.start()
+        
+        return jsonify({
+            'success': True,
+            'message': f'Started processing {len(monster_names)} monsters in background'
+        })
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to start bestiary update: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
 @app.route('/toolkit/get_style_prompt/<style_id>')
 def get_style_prompt(style_id):
     """Get the prompt for a specific style"""

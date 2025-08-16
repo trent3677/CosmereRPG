@@ -7,12 +7,15 @@
   "style": "photorealistic",
   "created_at": "2025-08-14T10:00:00Z",
   "monsters": {},
-  "total_monsters": 3,
+  "total_monsters": 6,
   "total_videos": 0,
   "monsters_included": [
+    "bog_mummy",
     "flesh_golem",
     "ghost",
-    "gnoll"
+    "gnoll",
+    "lord_thaddeus_greymont",
+    "shadow_of_sir_garran"
   ],
   "media_stats": {
     "images": [],

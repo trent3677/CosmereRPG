@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "created": "2025-08-13",
-  "total_monsters": 126,
+  "total_monsters": 130,
   "monsters": {
     "bandit_sentry": {
       "name": "Bandit Sentry",
@@ -371,7 +371,7 @@
     "bone_devil": {
       "name": "Bone Devil",
       "type": "elemental",
-      "description": "A towering 9-foot skeletal fiend with dried, mummified flesh stretched tight over its bones. Its skull-like head glows with burning red eyes and a twisted, fanged maw. Most distinctive is its long, segmented scorpion tail arched above its head, ending in a venomous stinger dripping with glowing green poison. The creature\u2019s emaciated humanoid body shows ribs through papery skin, with four elongated arms tipped in razor-sharp claws. Tattered, skin-and-bone wings spread wide from its back. Chains and hooks dangle from its body as it looms in a fiery hellscape of molten rock and brimstone. Its translucent skin reveals bone beneath, giving it a horrifying skeletal silhouette. Hellfire glows against its pale flesh as it strikes a dramatic, threatening pose, scorpion tail poised to strike.",
+      "description": "A towering 9-foot skeletal fiend with dried, mummified flesh stretched tight over its bones. Its skull-like head glows with burning red eyes and a twisted, fanged maw. Most distinctive is its long, segmented scorpion tail arched above its head, ending in a venomous stinger dripping with glowing green poison. The creature’s emaciated humanoid body shows ribs through papery skin, with four elongated arms tipped in razor-sharp claws. Tattered, skin-and-bone wings spread wide from its back. Chains and hooks dangle from its body as it looms in a fiery hellscape of molten rock and brimstone. Its translucent skin reveals bone beneath, giving it a horrifying skeletal silhouette. Hellfire glows against its pale flesh as it strikes a dramatic, threatening pose, scorpion tail poised to strike.",
       "tags": [
         "flying"
       ],
@@ -641,7 +641,7 @@
     "flesh_golem": {
       "name": "Flesh Golem",
       "type": "construct",
-      "description": "A towering flesh golem, a monstrous patchwork of mismatched human and bestial parts crudely stitched together. Its pale, waxy skin is stretched unevenly over bulging muscles, with jagged seams and dark sutures crisscrossing its body. The construct\u2019s massive hands hang heavy like slabs of meat, its fingers twisted and uneven. Its head is slightly lopsided, with a slack jaw and dull, lifeless eyes that twitch with unsettling animation. The creature\u2019s presence is both pitiful and terrifying \u2014 a grotesque mockery of life, lurching forward with lumbering strength through the shadows of a dungeon hall. Dim torchlight flickers across its scarred frame, highlighting the rough craftsmanship of its creation. Dark fantasy, photorealistic detail, grim atmosphere",
+      "description": "A towering flesh golem, a monstrous patchwork of mismatched human and bestial parts crudely stitched together. Its pale, waxy skin is stretched unevenly over bulging muscles, with jagged seams and dark sutures crisscrossing its body. The construct’s massive hands hang heavy like slabs of meat, its fingers twisted and uneven. Its head is slightly lopsided, with a slack jaw and dull, lifeless eyes that twitch with unsettling animation. The creature’s presence is both pitiful and terrifying — a grotesque mockery of life, lurching forward with lumbering strength through the shadows of a dungeon hall. Dim torchlight flickers across its scarred frame, highlighting the rough craftsmanship of its creation. Dark fantasy, photorealistic detail, grim atmosphere",
       "tags": [
         "swarm",
         "large"
@@ -1244,6 +1244,61 @@
         "large"
       ],
       "source_file": "generate_thornwood_missing.py"
+    },
+    "shadow_of_sir_garran": {
+      "name": "Shadow of Sir Garran",
+      "type": "undead",
+      "description": "Emerging from the oppressive gloom of Gloamwood, the Shadow of Sir Garran is a chilling specter, a once-noble knight now twisted into a wraith-like form. Cloaked in tattered remnants of a rusted suit of armor, its spectral visage shimmers with an eerie, dark luminescence. The armor is adorned with faded heraldry, cryptic runes, and the echoes of a long-lost valor that now resonate with despair. Ethereal chains cling to its form, dragging behind it as it silently glides through the undergrowth, vanishing into the shadows as easily as a whispered secret.\n\nIts face, obscured by the helm, reveals only a pair of glowing, hollow eye sockets that flicker with a baleful light, reflecting the torment of its eternal existence. The air around it is thick with a cold, biting chill, and the very ground beneath its feet seems to darken, absorbing light as if the forest itself recoils from its presence. When it moves, a haunting echo of battle cries and clashing steel fills the air, a mournful reminder of its tragic past. The Shadow is drawn to the flickering blue witchlights near the ancient stones, forever seeking to reclaim its lost honor, yet doomed to drain the vitality of any who dare disturb its haunted domain.",
+      "tags": [
+        "undead",
+        "shadow",
+        "Sir Garran",
+        "wraith",
+        "Gloamwood"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T11:54:27.216616"
+    },
+    "lord_thaddeus_greymont": {
+      "name": "Lord Thaddeus Greymont",
+      "type": "undead",
+      "description": "Lord Thaddeus Greymont, a spectral figure of noble descent, haunts the shadowy depths of Gloamwood, a relic of a long-fallen kingdom. His form is shrouded in tattered, once-regal robes that seem to blend seamlessly with the surrounding mists, a ghostly white intertwined with the deep greens and browns of the forest. Ethereal chains, remnants of his cursed past, rattle softly as he glides through the underbrush, leaving an aura of cold dread in his wake. His gaunt, pallid face is framed by disheveled locks of dark hair, and his hollow eyes glow with an otherworldly blue light, betraying the torment of his eternal existence. Thaddeus's presence is accompanied by a whispering wind, carrying fragmented echoes of his tragic demise and the anguished cries of those who fell victim to his dark ambitions. As he wanders the Witchlight Trailhead, he seeks the souls of the unwary, luring them with promises of power and glory, only to ensnare them in his tragedy. Shadows coil around him, twisting in response to his sorrowful lament, creating a palpable sense of foreboding in the air, as if the very forest mourns his lost humanity.",
+      "tags": [
+        "undead",
+        "specter",
+        "haunting"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T12:02:28.414828"
+    },
+    "animated_armor": {
+      "name": "Animated Armor",
+      "type": "construct",
+      "description": "The Animated Armor looms menacingly in the dim light of the Gloamwood, a patchwork of tarnished steel and rusted metal plates that once served a noble purpose. Its surface is adorned with remnants of faded heraldry, the once-vibrant colors now dulled by time and neglect, giving it a ghostly, almost spectral appearance. The armor stands unnaturally still, yet there's an unsettling energy radiating from it, as if it pulses with a life of its own. Ethereal blue witchlights flicker around its form, casting eerie shadows that dance along the forest floor, hinting at the dark enchantment that animates this construct.\n\nIts joints creak like ancient trees swaying in a windless night, and when it moves, it does so with a jarring fluidity, as if the armor itself is a marionette controlled by unseen hands. The hollow visor of the helm gazes forward, its emptiness hinting at a long-forgotten soul trapped within the cold steel. As the mists swirl around it, the ambiance thickens with an oppressive silence, broken only by the distant rustle of leaves and the soft clinking of metal, signaling the presence of an adversary bound to protect this cursed corner of the forest. In the chilling air, the scent of damp earth and decay lingers, creating a foreboding atmosphere that warns of the peril lurking within the shadows of Gloamwood.",
+      "tags": [
+        "construct",
+        "animated armor",
+        "Gloamwood",
+        "haunted",
+        "cursed"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T12:26:09.151749"
+    },
+    "bog_mummy": {
+      "name": "Bog Mummy",
+      "type": "undead",
+      "description": "Emerging from the thick, suffocating mists of Gloamwood, the Bog Mummy presents a haunting visage of decay and desolation. Its form is wrapped in tattered, damp bandages, caked with mud and moss, as if it has risen from the very depths of a forgotten swamp. Glowing, hollow eyes peer out from the shroud, radiating an otherworldly blue light that flickers like the ethereal witchlights above. The air around it is heavy with the stench of rot and stagnant water, mingling with the damp earth, creating a suffocating atmosphere that chills the bones of any who draw near.\n\nBehaviorally, the Bog Mummy is driven by a relentless desire to protect the secrets buried within the shadowy woods, moving with a disjointed grace that makes it seem almost fluid, as if it is one with the fog. It lurches forward with a slow, deliberate gait, its fingers claw-like and dripping with dark, fetid moisture. When provoked, it unleashes a mournful wail that echoes through the trees, a sound that chills the hearts of those who hear it, as if the very spirits of the forest are crying out in anguish. As it advances, the ground beneath it seems to wither, drawn into the dark magic that animates its body, leaving behind patches of blighted earth where life once flourished.",
+      "tags": [
+        "undead",
+        "bog",
+        "mummy",
+        "horror",
+        "Gloamwood"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T12:26:16.995500"
     }
-  }
+  },
+  "last_updated": "2025-08-16T12:26:17.002023"
 }

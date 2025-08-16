@@ -2667,6 +2667,71 @@
                 return;
             }
 
+            // Show confirmation popup with generation settings
+            const confirmationDiv = document.createElement('div');
+            confirmationDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #2a2a2a;
+                border: 2px solid #ff9800;
+                border-radius: 8px;
+                padding: 20px;
+                z-index: 10000;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+                min-width: 400px;
+                color: white;
+            `;
+            
+            confirmationDiv.innerHTML = `
+                <h3 style="margin: 0 0 20px 0; color: #ff9800;">Confirm Image Generation</h3>
+                <div style="margin-bottom: 15px;">
+                    <strong>Target Pack:</strong> <span style="color: #4CAF50;">${packName}</span>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>Style Template:</strong> <span style="color: #4CAF50;">${style || 'Default'}</span>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>AI Model:</strong> <span style="color: #4CAF50;">${model}</span>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <strong>Monsters to Generate:</strong> <span style="color: #4CAF50;">${selectedMonsters.length} selected</span>
+                </div>
+                <div style="text-align: center;">
+                    <button onclick="proceedWithGeneration()" style="padding: 8px 20px; margin-right: 10px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Proceed</button>
+                    <button onclick="cancelGeneration()" style="padding: 8px 20px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                </div>
+            `;
+            
+            document.body.appendChild(confirmationDiv);
+            
+            // Store settings for proceedWithGeneration
+            window.generationSettings = {
+                packName,
+                style,
+                model,
+                selectedMonsters,
+                confirmationDiv
+            };
+        }
+
+        function cancelGeneration() {
+            if (window.generationSettings && window.generationSettings.confirmationDiv) {
+                window.generationSettings.confirmationDiv.remove();
+                delete window.generationSettings;
+            }
+        }
+
+        async function proceedWithGeneration() {
+            if (!window.generationSettings) return;
+            
+            const { packName, style, model, selectedMonsters, confirmationDiv } = window.generationSettings;
+            
+            // Remove confirmation dialog
+            confirmationDiv.remove();
+            delete window.generationSettings;
+
             // Check if any of the selected monsters already have images in the pack
             try {
                 const checkResponse = await fetch('/api/toolkit/check_existing_images', {
@@ -2897,6 +2962,50 @@
                 
                 // Optionally update pack statistics without resetting selections
                 // loadPacks() was causing the target pack to reset
+            });
+            
+            // Bestiary update events
+            socket.on('bestiary_update_progress', (data) => {
+                console.log('[Bestiary Update Progress]', data);
+                const progressText = document.getElementById('bestiary-progress-text');
+                if (progressText) {
+                    progressText.textContent = data.message;
+                }
+            });
+            
+            socket.on('bestiary_update_complete', (data) => {
+                console.log('[Bestiary Update Complete]', data);
+                const progressDiv = document.getElementById('bestiary-progress');
+                if (progressDiv) {
+                    progressDiv.innerHTML = `
+                        <h4 style="color: #4CAF50; margin: 0 0 10px 0;">✓ Bestiary Updated!</h4>
+                        <div>${data.message}</div>
+                        <button onclick="this.parentElement.remove()" style="margin-top: 10px; padding: 5px 10px; background: #444; border: none; color: white; cursor: pointer; border-radius: 3px;">Close</button>
+                    `;
+                    // Auto-remove after 10 seconds
+                    setTimeout(() => {
+                        const div = document.getElementById('bestiary-progress');
+                        if (div) div.remove();
+                    }, 10000);
+                }
+                
+                // Refresh the monster list if in missing bestiary mode
+                if (document.getElementById('filter-missing-bestiary') && document.getElementById('filter-missing-bestiary').checked) {
+                    crossReferenceModuleMonsters();
+                }
+            });
+            
+            socket.on('bestiary_update_error', (data) => {
+                console.error('[Bestiary Update Error]', data);
+                const progressDiv = document.getElementById('bestiary-progress');
+                if (progressDiv) {
+                    progressDiv.innerHTML = `
+                        <h4 style="color: #f44336; margin: 0 0 10px 0;">✗ Update Failed</h4>
+                        <div style="color: #ff9999;">${data.error}</div>
+                        <button onclick="this.parentElement.remove()" style="margin-top: 10px; padding: 5px 10px; background: #444; border: none; color: white; cursor: pointer; border-radius: 3px;">Close</button>
+                    `;
+                }
+                alert(`Bestiary update failed: ${data.error}`);
             });
             
             socket.on('video_progress', (data) => {
@@ -3228,18 +3337,79 @@
             updateSelectionStatus(); // Update button text/state
         }
         
-        // Placeholder function for adding monsters to bestiary
-        function addSelectedToBestiary() {
-            const selectedMonsters = Array.from(document.querySelectorAll('.monster-item.placeholder-monster input[name="monster"]:checked'))
-                .map(cb => cb.value);
+        // Function to add selected monsters to bestiary
+        async function addSelectedToBestiary() {
+            const selectedCheckboxes = document.querySelectorAll('.monster-item.placeholder-monster input[name="monster"]:checked');
+            const selectedMonsters = Array.from(selectedCheckboxes).map(cb => {
+                // Get the monster name from the label text
+                const label = cb.closest('label');
+                const span = label.querySelector('span');
+                return span ? span.textContent : cb.value;
+            });
             
             if (selectedMonsters.length === 0) {
                 alert('Please select one or more monsters that are missing from the bestiary.');
                 return;
             }
-
-            alert(`(Placeholder) Functionality to add the following ${selectedMonsters.length} monster(s) to the bestiary will be implemented here:\n\n- ${selectedMonsters.join('\n- ')}`);
-            // The backend call will be added later.
+            
+            // Get the current module name
+            const moduleName = document.getElementById('genModule').value;
+            if (!moduleName) {
+                alert('Please select a module first.');
+                return;
+            }
+            
+            // Confirm with user
+            const confirmMsg = `This will use GPT-4o-mini to generate descriptions for the following ${selectedMonsters.length} monster(s):\n\n- ${selectedMonsters.join('\n- ')}\n\nProceed?`;
+            if (!confirm(confirmMsg)) {
+                return;
+            }
+            
+            // Disable button and show progress
+            const button = document.getElementById('add-to-bestiary-btn');
+            button.disabled = true;
+            button.textContent = 'Processing...';
+            
+            try {
+                const response = await fetch('/api/toolkit/add-to-bestiary', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        module_name: moduleName,
+                        monster_names: selectedMonsters
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Show initial message
+                    console.log('[Bestiary Update] Process started for:', selectedMonsters);
+                    
+                    // Add a progress div if it doesn't exist
+                    let progressDiv = document.getElementById('bestiary-progress');
+                    if (!progressDiv) {
+                        progressDiv = document.createElement('div');
+                        progressDiv.id = 'bestiary-progress';
+                        progressDiv.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: #2c2c2c; border: 2px solid #FFA500; padding: 15px; border-radius: 5px; z-index: 10000; min-width: 300px;';
+                        progressDiv.innerHTML = '<h4 style="color: #FFA500; margin: 0 0 10px 0;">Bestiary Update</h4><div id="bestiary-progress-text">Starting process...</div>';
+                        document.body.appendChild(progressDiv);
+                    }
+                    
+                    // Update progress text
+                    document.getElementById('bestiary-progress-text').textContent = `Processing ${selectedMonsters.length} monsters...`;
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+            } catch (error) {
+                alert(`Failed to start bestiary update: ${error}`);
+            } finally {
+                // Re-enable button
+                button.disabled = false;
+                updateSelectionStatus();
+            }
         }
         
         // Load monster description when selected
