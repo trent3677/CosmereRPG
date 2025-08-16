@@ -924,13 +924,14 @@
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0; /* Using explicit margins instead of gap */
         }
 
         .legend-color-box {
             width: 14px;
             height: 14px;
             border-radius: 3px;
+            margin-right: 8px; /* Space between color box and text */
         }
 
         .legend-color-box.bestiary {
@@ -957,7 +958,7 @@
         
         /* Checkbox styling for legend filters */
         .legend-item input[type="checkbox"] {
-            margin-right: 6px;      /* Tighter spacing */
+            margin-right: 4px;      /* Tighter spacing */
             vertical-align: middle;
             width: 14px;            /* Smaller checkbox */
             height: 14px;           /* Smaller checkbox */
