@@ -54,16 +54,18 @@ class PackManager:
         name: str,
         style_template: str,
         author: str = "Module Toolkit",
-        description: str = ""
+        description: str = "",
+        display_name: str = None
     ) -> Dict:
         """
         Create a new graphic pack
         
         Args:
-            name: Name of the pack
+            name: Name of the pack (internal ID)
             style_template: Style template to use
             author: Pack author
             description: Pack description
+            display_name: Display name for the pack
             
         Returns:
             Creation result dictionary
@@ -88,6 +90,7 @@ class PackManager:
             manifest = {
                 "name": name,
                 "safe_name": safe_name,
+                "display_name": display_name or name,  # Use display_name if provided
                 "version": "1.0.0",
                 "author": author,
                 "description": description,

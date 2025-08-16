@@ -573,10 +573,12 @@ def create_pack():
     try:
         data = request.json
         manager = PackManager()
+        # Pass all the new fields to the manager
         result = manager.create_pack(
             name=data.get('name'),
-            style_template=data.get('style', 'photorealistic'),
-            author=data.get('author', 'Module Toolkit'),
+            display_name=data.get('display_name'),
+            style_template=data.get('style', 'custom'),  # Default to custom style
+            author=data.get('author', 'Module Toolkit User'),
             description=data.get('description', '')
         )
         return jsonify(result)

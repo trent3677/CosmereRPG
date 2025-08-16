@@ -398,6 +398,24 @@
         .log-entry.error { color: #f44336; }
         .log-entry.info { color: #2196F3; }
 
+        /* ADD this rule for the new pack form */
+        .create-pack-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            align-items: end;
+        }
+        .create-pack-form .form-group {
+            margin-bottom: 0;
+        }
+        .create-pack-form textarea {
+            min-height: 0; /* Override default min-height */
+        }
+        .create-pack-form .form-group:nth-child(4),
+        .create-pack-form button {
+            grid-column: 1 / -1; /* Make description and button span both columns */
+        }
+
         /* === 9. Import Pack Section === */
         .import-container {
             background-color: #1a1a1a;
@@ -1428,6 +1446,30 @@
                     </div>
                 </div>
 
+                <!-- ADD THIS NEW SECTION for creating packs -->
+                <div class="section">
+                    <h2>Create New Monster Pack</h2>
+                    <div class="create-pack-form">
+                        <div class="form-group">
+                            <label for="new-pack-name">Pack Name (Internal ID)</label>
+                            <input type="text" id="new-pack-name" placeholder="e.g., anime_style_pack (no spaces, lowercase)">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-pack-display-name">Display Name</label>
+                            <input type="text" id="new-pack-display-name" placeholder="e.g., Anime Style Pack">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-pack-author">Author</label>
+                            <input type="text" id="new-pack-author" placeholder="Your name or alias">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-pack-description">Description</label>
+                            <textarea id="new-pack-description" rows="3" placeholder="A brief description of this pack's style and content."></textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="createNewPack()">Create Pack</button>
+                    </div>
+                </div>
+
                 <div class="section">
                     <h2>Available Asset Packs</h2>
                     <div class="pack-list-container">
@@ -1527,14 +1569,14 @@
                         <!-- ADD THIS NEW LEGEND -->
                         <div class="monster-list-legend">
                             <div class="legend-item">
-                                <span class="legend-color-box bestiary"></span> In Bestiary
+                                <span class="legend-color-box bestiary"></span> In Bestiary <span id="count-bestiary">(0)</span>
                             </div>
                             <div class="legend-item">
-                                <span class="legend-color-box pack-only"></span> Pack Exclusive
+                                <span class="legend-color-box pack-only"></span> Pack Exclusive <span id="count-pack-only">(0)</span>
                             </div>
                             <!-- ADD THIS NEW LEGEND ITEM -->
                             <div class="legend-item">
-                                <span class="legend-color-box missing-from-pack"></span> Missing from Pack
+                                <span class="legend-color-box missing-from-pack"></span> Missing from Pack <span id="count-missing">(0)</span>
                             </div>
                         </div>
 
@@ -1812,35 +1854,51 @@
             });
         }
         
-        async function createPack() {
-            const name = document.getElementById('packName').value;
-            const style = document.getElementById('packStyle').value;
-            const author = document.getElementById('packAuthor').value || 'Module Toolkit';
-            const description = document.getElementById('packDescription').value;
-            
-            if (!name) {
-                alert('Please enter a pack name');
+        async function createNewPack() {
+            const name = document.getElementById('new-pack-name').value.trim();
+            const displayName = document.getElementById('new-pack-display-name').value.trim();
+            const author = document.getElementById('new-pack-author').value.trim();
+            const description = document.getElementById('new-pack-description').value.trim();
+
+            if (!name || !displayName) {
+                alert('Pack Name and Display Name are required.');
                 return;
             }
-            
+
+            // Basic validation for the internal ID
+            if (/\s/.test(name) || name !== name.toLowerCase()) {
+                alert('Pack Name (Internal ID) must be all lowercase with no spaces.');
+                return;
+            }
+
             try {
                 const response = await fetch('/api/toolkit/packs/create', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, style, author, description })
+                    body: JSON.stringify({
+                        name: name,
+                        display_name: displayName,
+                        author: author || 'Module Toolkit User',
+                        description: description
+                    })
                 });
                 
                 const result = await response.json();
                 if (result.success) {
-                    addLog('genLog', `Created pack: ${result.pack_name}`, 'success');
+                    addLog('genLog', `Successfully created new pack: ${displayName}`, 'success');
+                    // Clear the form fields
+                    document.getElementById('new-pack-name').value = '';
+                    document.getElementById('new-pack-display-name').value = '';
+                    document.getElementById('new-pack-author').value = '';
+                    document.getElementById('new-pack-description').value = '';
+                    // Refresh the list of available packs
                     loadPacks();
-                    document.getElementById('packName').value = '';
-                    document.getElementById('packDescription').value = '';
                 } else {
                     alert(`Failed to create pack: ${result.error}`);
                 }
             } catch (error) {
-                console.error('Failed to create pack:', error);
+                console.error('Error creating pack:', error);
+                alert('An error occurred while creating the pack.');
             }
         }
         
@@ -2090,14 +2148,22 @@
             const grid = document.getElementById('monsterGrid');
             grid.innerHTML = '';
 
+            // Initialize counters
+            let bestiaryCount = 0;
+            let packOnlyCount = 0;
+            let missingCount = 0;
+
             // Helper function to determine the CSS class based on monster source
             const getMonsterSourceClass = (source) => {
                 switch (source) {
                     case 'bestiary':
+                        bestiaryCount++;
                         return 'monster-bestiary'; // In pack and bestiary (Green)
                     case 'pack_only':
+                        packOnlyCount++;
                         return 'monster-pack-only'; // Only in this pack (Orange)
                     case 'bestiary_only':
+                        missingCount++;
                         return 'monster-bestiary-only'; // In bestiary but not this pack (Red)
                     default:
                         return '';
@@ -2121,6 +2187,11 @@
                 grid.appendChild(item);
                 loadMonsterThumbnail(monster.id);
             });
+
+            // Update the legend counts in the HTML
+            document.getElementById('count-bestiary').textContent = `(${bestiaryCount})`;
+            document.getElementById('count-pack-only').textContent = `(${packOnlyCount})`;
+            document.getElementById('count-missing').textContent = `(${missingCount})`;
         }
         
         function selectAllMonsters() {
