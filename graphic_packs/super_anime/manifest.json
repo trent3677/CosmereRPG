@@ -8,9 +8,10 @@
   "style_template": "custom",
   "created_date": "2025-08-15",
   "last_modified": "2025-08-16",
-  "total_monsters": 3,
+  "total_monsters": 4,
   "monsters_included": [
     "adult_black_dragon",
+    "adult_red_dragon",
     "bandit_captain_gorvek",
     "bone_devil"
   ],

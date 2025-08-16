@@ -954,6 +954,20 @@
         .legend-color-box.in-module {
             background-color: #2196F3;
         }
+        
+        /* Checkbox styling for legend filters */
+        .legend-item input[type="checkbox"] {
+            margin-right: 8px;
+            vertical-align: middle;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .legend-item label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
 
         /* Shared style for all top option boxes for consistent padding/radius */
         .option-box {
@@ -1693,22 +1707,33 @@
                             </div>
                         </div>
                         
-                        <!-- ADD THIS NEW LEGEND -->
+                        <!-- Interactive legend with filter checkboxes -->
                         <div class="monster-list-legend">
                             <div class="legend-item" title="Monster exists in the Bestiary and the selected Graphic Pack.">
-                                <span class="legend-color-box bestiary"></span> In Bestiary <span id="count-bestiary">(0)</span>
+                                <input type="checkbox" id="filter-bestiary" class="legend-filter" onchange="applyLegendFilters()">
+                                <label for="filter-bestiary">
+                                    <span class="legend-color-box bestiary"></span> In Bestiary <span id="count-bestiary">(0)</span>
+                                </label>
                             </div>
                             <div class="legend-item" title="Monster exists in the selected Graphic Pack but not in the local Bestiary.">
-                                <span class="legend-color-box pack-only"></span> Pack Exclusive <span id="count-pack-only">(0)</span>
+                                <input type="checkbox" id="filter-pack-only" class="legend-filter" onchange="applyLegendFilters()">
+                                <label for="filter-pack-only">
+                                    <span class="legend-color-box pack-only"></span> Pack Exclusive <span id="count-pack-only">(0)</span>
+                                </label>
                             </div>
-                            <!-- ADD THIS NEW LEGEND ITEM -->
                             <div class="legend-item" title="Monster exists in the Bestiary but is MISSING from the selected Graphic Pack.">
-                                <span class="legend-color-box missing-from-pack"></span> Missing from Pack <span id="count-missing">(0)</span>
+                                <input type="checkbox" id="filter-missing" class="legend-filter" onchange="applyLegendFilters()">
+                                <label for="filter-missing">
+                                    <span class="legend-color-box missing-from-pack"></span> Missing from Pack <span id="count-missing">(0)</span>
+                                </label>
                             </div>
                             <div class="legend-item" title="Monster is used in the selected Module. The blue highlight appears on the right side of the tile.">
-                                <span class="legend-color-box in-module"></span> In Selected Module <span id="count-in-module">(0)</span>
+                                <input type="checkbox" id="filter-in-module" class="legend-filter" onchange="applyLegendFilters()">
+                                <label for="filter-in-module">
+                                    <span class="legend-color-box in-module"></span> In Selected Module <span id="count-in-module">(0)</span>
+                                </label>
                             </div>
-                            <!-- Refresh button with circular arrow icon (green for positive/refresh action) -->
+                            <!-- Refresh button remains the same -->
                             <button class="btn btn-success" style="margin-left: auto; padding: 5px 10px; display: flex; align-items: center; gap: 5px;" onclick="loadMonsters(); refreshMonsterThumbnails();" title="Refresh monster list">
                                 <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
@@ -1721,7 +1746,7 @@
                             <!-- Monsters will be loaded here -->
                         </div>
                     </div>
-                    <button class="btn btn-primary" style="margin-top: 20px;" onclick="startGeneration()">Generate Selected</button>
+                    <button class="btn btn-primary" style="margin-top: 20px;" onclick="startGeneration()">Generate Selected Images to Current Pack</button>
                 </div>
 
                 <div class="section">
@@ -2383,14 +2408,32 @@
             document.getElementById('count-pack-only').textContent = `(${packOnlyCount})`;
             document.getElementById('count-missing').textContent = `(${missingCount})`;
             document.getElementById('count-in-module').textContent = `(${inModuleCount})`;
+            
+            // Update the button text based on current selection
+            updateSelectionStatus();
+            
+            // Re-apply any active filters after rendering is complete
+            applyLegendFilters();
         }
         
         function selectAllMonsters() {
-            document.querySelectorAll('input[name="monster"]').forEach(cb => cb.checked = true);
+            // Find only the monster items that are currently visible
+            document.querySelectorAll('.monster-item').forEach(item => {
+                if (item.style.display !== 'none') {
+                    const checkbox = item.querySelector('input[name="monster"]');
+                    if (checkbox && !checkbox.disabled) {
+                        checkbox.checked = true;
+                    }
+                }
+            });
+            updateSelectionStatus(); // Update the button text
         }
         
         function deselectAllMonsters() {
             document.querySelectorAll('input[name="monster"]').forEach(cb => cb.checked = false);
+            document.getElementById('monsterDescriptionBox').value = 'Select a monster from the list to see its description...';
+            document.getElementById('selectedMonsterName').textContent = 'No monster selected';
+            updateSelectionStatus();
         }
         
         // Enhanced thumbnail loader with video detection
@@ -2473,10 +2516,11 @@
             deselectAllMonsters();
             document.querySelectorAll('.monster-item[data-missing-image="true"]').forEach(item => {
                 const checkbox = item.querySelector('input[type="checkbox"]');
-                if (checkbox) {
+                if (checkbox && !checkbox.disabled) {
                     checkbox.checked = true;
                 }
             });
+            updateSelectionStatus();
         }
         
         // Refresh thumbnails when pack changes
@@ -3008,20 +3052,69 @@
             }
         }
         
-        // Handle monster selection change with single-selection logic
+        // Handle monster selection change - now supports multi-selection
         function handleMonsterSelection(monsterId) {
             const checkbox = document.querySelector(`input[value="${monsterId}"]`);
+            const selectedMonsters = Array.from(document.querySelectorAll('input[name="monster"]:checked'));
+            
+            // Update the button and status text
+            updateSelectionStatus();
+            
+            // For description, show the most recently selected monster
             if (checkbox && checkbox.checked) {
-                // Uncheck all other boxes to only show one description at a time
-                document.querySelectorAll('input[name="monster"]').forEach(cb => {
-                    if (cb.value !== monsterId) cb.checked = false;
-                });
                 loadMonsterDescription(monsterId);
+            } else if (selectedMonsters.length > 0) {
+                // If this was unchecked but others remain, show the first selected
+                loadMonsterDescription(selectedMonsters[0].value);
             } else {
-                // If unchecked, clear the description box
+                // No monsters selected
                 document.getElementById('monsterDescriptionBox').value = 'Select a monster from the list to see its description...';
                 document.getElementById('selectedMonsterName').textContent = 'No monster selected';
             }
+        }
+        
+        // Update the status to show how many monsters are selected
+        function updateSelectionStatus() {
+            const selectedMonsters = Array.from(document.querySelectorAll('input[name="monster"]:checked'));
+            const button = document.querySelector('button[onclick="startGeneration()"]');
+            
+            if (selectedMonsters.length === 0) {
+                button.textContent = 'Generate Selected Images to Current Pack';
+            } else if (selectedMonsters.length === 1) {
+                button.textContent = 'Generate 1 Selected Image to Current Pack';
+            } else {
+                button.textContent = `Generate ${selectedMonsters.length} Selected Images to Current Pack`;
+            }
+        }
+        
+        // Apply legend filters to show/hide monsters based on selected categories
+        function applyLegendFilters() {
+            const filters = {
+                bestiary: document.getElementById('filter-bestiary').checked,
+                packOnly: document.getElementById('filter-pack-only').checked,
+                missing: document.getElementById('filter-missing').checked,
+                inModule: document.getElementById('filter-in-module').checked,
+            };
+
+            const isAnyFilterActive = Object.values(filters).some(v => v === true);
+            const monsterItems = document.querySelectorAll('.monster-item');
+
+            monsterItems.forEach(item => {
+                if (!isAnyFilterActive) {
+                    // If no filters are checked, show everything
+                    item.style.display = 'flex';
+                    return;
+                }
+
+                // Check if the item matches any of the active filters
+                let shouldShow = false;
+                if (filters.bestiary && item.classList.contains('monster-bestiary')) shouldShow = true;
+                if (filters.packOnly && item.classList.contains('monster-pack-only')) shouldShow = true;
+                if (filters.missing && item.classList.contains('monster-bestiary-only')) shouldShow = true;
+                if (filters.inModule && item.classList.contains('monster-in-module')) shouldShow = true;
+
+                item.style.display = shouldShow ? 'flex' : 'none';
+            });
         }
         
         // Load monster description when selected
