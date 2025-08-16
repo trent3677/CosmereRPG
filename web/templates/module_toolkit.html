@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Module Toolkit - NeverEndingQuest</title>
+    <title>NeverEndingQuest Developer Toolkit</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         /* === 1. Foundational Styles & Resets === */
@@ -1013,6 +1013,19 @@
             height: 100%;
             object-fit: cover;
         }
+
+        .no-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            border-radius: 4px;
+        }
         
         .monster-thumbnail-preview .no-image-placeholder {
             font-size: 20px;
@@ -1506,7 +1519,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Module Toolkit</h1>
+            <h1>NeverEndingQuest Developer Toolkit</h1>
             <p>The Dungeon Master's Workbench for creating and managing game assets.</p>
             <div class="header-divider-line"></div>
         </div>
@@ -1682,17 +1695,17 @@
                         
                         <!-- ADD THIS NEW LEGEND -->
                         <div class="monster-list-legend">
-                            <div class="legend-item">
+                            <div class="legend-item" title="Monster exists in the Bestiary and the selected Graphic Pack.">
                                 <span class="legend-color-box bestiary"></span> In Bestiary <span id="count-bestiary">(0)</span>
                             </div>
-                            <div class="legend-item">
+                            <div class="legend-item" title="Monster exists in the selected Graphic Pack but not in the local Bestiary.">
                                 <span class="legend-color-box pack-only"></span> Pack Exclusive <span id="count-pack-only">(0)</span>
                             </div>
                             <!-- ADD THIS NEW LEGEND ITEM -->
-                            <div class="legend-item">
+                            <div class="legend-item" title="Monster exists in the Bestiary but is MISSING from the selected Graphic Pack.">
                                 <span class="legend-color-box missing-from-pack"></span> Missing from Pack <span id="count-missing">(0)</span>
                             </div>
-                            <div class="legend-item">
+                            <div class="legend-item" title="Monster is used in the selected Module. The blue highlight appears on the right side of the tile.">
                                 <span class="legend-color-box in-module"></span> In Selected Module <span id="count-in-module">(0)</span>
                             </div>
                             <!-- Refresh button with circular arrow icon (green for positive/refresh action) -->
@@ -2285,14 +2298,15 @@
                 // Get current pack to scan for additional monsters
                 const packName = document.getElementById('genPack').value || 'photorealistic';
                 const response = await fetch(`/api/toolkit/monsters?pack=${packName}`);
-                monsterList = await response.json();
-                renderMonsters();
+                const monsters = await response.json();
+                // We pass the monster list directly to renderMonsters now
+                renderMonsters(monsters);
             } catch (error) {
                 console.error('Failed to load monsters:', error);
             }
         }
         
-        function renderMonsters() {
+        function renderMonsters(monstersToRender, isModuleView = false) {
             const grid = document.getElementById('monsterGrid');
             grid.innerHTML = '';
 
@@ -2300,46 +2314,75 @@
             let bestiaryCount = 0;
             let packOnlyCount = 0;
             let missingCount = 0;
+            let inModuleCount = 0;
 
-            // Helper function to determine the CSS class based on monster source
-            const getMonsterSourceClass = (source) => {
-                switch (source) {
+            monstersToRender.forEach(monster => {
+                const item = document.createElement('div');
+                let sourceClass = '';
+
+                // Determine source class for the left-side highlight
+                switch (monster.source) {
                     case 'bestiary':
                         bestiaryCount++;
-                        return 'monster-bestiary'; // In pack and bestiary (Green)
+                        sourceClass = 'monster-bestiary';
+                        break;
                     case 'pack_only':
                         packOnlyCount++;
-                        return 'monster-pack-only'; // Only in this pack (Orange)
+                        sourceClass = 'monster-pack-only';
+                        break;
                     case 'bestiary_only':
                         missingCount++;
-                        return 'monster-bestiary-only'; // In bestiary but not this pack (Red)
-                    default:
-                        return '';
+                        sourceClass = 'monster-bestiary-only';
+                        break;
                 }
-            };
-            
-            monsterList.forEach(monster => {
-                const item = document.createElement('div');
-                const sourceClass = getMonsterSourceClass(monster.source);
                 
                 item.className = `monster-item ${sourceClass}`;
-                item.innerHTML = `
-                    <label class="monster-label">
-                        <input type="checkbox" value="${monster.id}" name="monster" onchange="handleMonsterSelection('${monster.id}')">
-                        <span>${monster.name}</span>
-                    </label>
-                    <div class="monster-thumbnail-preview" id="thumb-${monster.id}">
-                        <!-- Thumbnail will be loaded here by JS -->
-                    </div>
-                `;
+
+                // Add the blue right-side highlight if the monster is in the selected module
+                if (monster.inModule) {
+                    item.classList.add('monster-in-module');
+                    inModuleCount++;
+                }
+
+                // Build the inner HTML for the monster tile
+                if (monster.isPlaceholder) {
+                    // This is a monster from the module that doesn't exist in the pack.
+                    // Render a disabled-looking placeholder.
+                    item.innerHTML = `
+                        <label class="monster-label" style="opacity: 0.6;">
+                            <input type="checkbox" value="${monster.id}" name="monster" disabled>
+                            <span>${monster.name}</span>
+                        </label>
+                        <div class="monster-thumbnail-preview">
+                            <div class="no-image-placeholder" style="color: #f44336;">!</div>
+                        </div>
+                    `;
+                } else {
+                    // This is a standard monster tile
+                    item.innerHTML = `
+                        <label class="monster-label">
+                            <input type="checkbox" value="${monster.id}" name="monster" onchange="handleMonsterSelection('${monster.id}')">
+                            <span>${monster.name}</span>
+                        </label>
+                        <div class="monster-thumbnail-preview" id="thumb-${monster.id}">
+                            <!-- Thumbnail will be loaded here by JS -->
+                        </div>
+                    `;
+                }
+                
                 grid.appendChild(item);
-                loadMonsterThumbnail(monster.id);
+
+                // Load the thumbnail only if it's not a placeholder
+                if (!monster.isPlaceholder) {
+                    loadMonsterThumbnail(monster.id);
+                }
             });
 
             // Update the legend counts in the HTML
             document.getElementById('count-bestiary').textContent = `(${bestiaryCount})`;
             document.getElementById('count-pack-only').textContent = `(${packOnlyCount})`;
             document.getElementById('count-missing').textContent = `(${missingCount})`;
+            document.getElementById('count-in-module').textContent = `(${inModuleCount})`;
         }
         
         function selectAllMonsters() {
@@ -2469,44 +2512,63 @@
 
         async function crossReferenceModuleMonsters() {
             const moduleName = document.getElementById('genModule').value;
-            const allMonsterItems = document.querySelectorAll('.monster-item');
-            
-            // First, clear all existing module highlights and reset the counter
-            allMonsterItems.forEach(item => item.classList.remove('monster-in-module'));
-            document.getElementById('count-in-module').textContent = `(0)`;
 
+            // If the user deselects the module, revert to the standard monster list
             if (!moduleName) {
-                return; // Exit if the user selected the default "-- Select a Module --" option
+                loadMonsters(); // This will load and render the default list
+                return;
             }
 
             try {
-                const response = await fetch(`/api/toolkit/modules/${moduleName}/monsters`);
-                const moduleMonsters = await response.json(); // Expects an array of monster IDs
-                
-                let foundCount = 0;
-                if (moduleMonsters && moduleMonsters.length > 0) {
-                    moduleMonsters.forEach(monsterId => {
-                        const checkbox = document.querySelector(`.monster-item input[value="${monsterId}"]`);
-                        if (checkbox) {
-                            const monsterItem = checkbox.closest('.monster-item');
-                            if (monsterItem) {
-                                monsterItem.classList.add('monster-in-module');
-                                foundCount++;
-                            }
-                        }
-                    });
-                }
-                // Update the count in the legend
-                document.getElementById('count-in-module').textContent = `(${foundCount})`;
+                // Step 1: Fetch the monster list for the selected module
+                const moduleResponse = await fetch(`/api/toolkit/modules/${moduleName}/monsters`);
+                const moduleMonsters = await moduleResponse.json();
+
+                // Step 2: Fetch the standard monster list for the current pack (we still need this for source info)
+                const packName = document.getElementById('genPack').value || 'photorealistic';
+                const packResponse = await fetch(`/api/toolkit/monsters?pack=${packName}`);
+                const packAndBestiaryMonsters = await packResponse.json();
+
+                // Step 3: Merge the two lists into a single, comprehensive list
+                const monsterMap = new Map();
+
+                // First, process the monsters from the pack and bestiary
+                packAndBestiaryMonsters.forEach(monster => {
+                    monsterMap.set(monster.id, { ...monster, inModule: false });
+                });
+
+                // Next, process monsters from the module, updating or adding as needed
+                moduleMonsters.forEach(monsterId => {
+                    if (monsterMap.has(monsterId)) {
+                        // If the monster already exists, just mark it as being in the module
+                        monsterMap.get(monsterId).inModule = true;
+                    } else {
+                        // If it doesn't exist, it's missing from the pack AND bestiary. Add it as a placeholder.
+                        monsterMap.set(monsterId, {
+                            id: monsterId,
+                            name: monsterId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                            source: 'bestiary_only', // Treat it as missing from the pack
+                            inModule: true,
+                            isPlaceholder: true // A flag to indicate we need to render a placeholder tile
+                        });
+                    }
+                });
+
+                // Convert the map back to an array and sort alphabetically by name
+                const combinedList = Array.from(monsterMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+
+                // Step 4: Render the final, combined list
+                renderMonsters(combinedList, true); // Pass a flag indicating it's a module view
+
             } catch (error) {
-                console.error(`Failed to get monsters for module ${moduleName}:`, error);
+                console.error(`Failed to get and merge monsters for module ${moduleName}:`, error);
             }
         }
 
         function clearModuleCrossReference() {
             const select = document.getElementById('genModule');
             select.value = ""; // Reset dropdown to the default option
-            crossReferenceModuleMonsters(); // Calling this with an empty value will clear the highlights
+            loadMonsters(); // Re-load the default monster list for the pack
         }
         
         // This new function replaces the old generateMonsters()
