@@ -890,6 +890,7 @@
             padding: 5px 10px; /* Tighter padding */
             transition: background 0.2s;
             border-left: 4px solid transparent; /* Increased from 3px for visibility */
+            border-right: 4px solid transparent; /* Added for right-side highlighting */
         }
         
         /* Color coding for monster sources */
@@ -943,6 +944,23 @@
         /* ADD this new rule for the red legend box */
         .legend-color-box.missing-from-pack {
             background-color: #f44336;
+        }
+
+        /* Blue highlight for monsters in selected module */
+        .monster-item.monster-in-module {
+            border-right-color: #2196F3; /* Blue for module monsters - moved to right side */
+        }
+
+        .legend-color-box.in-module {
+            background-color: #2196F3;
+        }
+
+        /* Blue outline for module selector */
+        .module-cross-reference-box {
+            border: 2px solid #2196F3; /* Blue border */
+            border-radius: 6px;
+            padding: 15px;
+            background-color: rgba(33, 150, 243, 0.05); /* Faint blue background */
         }
         
         .monster-label {
@@ -1591,6 +1609,16 @@
                                     Warning: GPT-Image requires a validated OpenAI account with higher tier access.
                                 </div>
                             </div>
+                            <div class="form-group module-cross-reference-box">
+                                <label for="genModule">Module Cross-Reference:</label>
+                                <div style="display: flex; gap: 10px;">
+                                    <select id="genModule" onchange="crossReferenceModuleMonsters()" style="flex-grow: 1;">
+                                        <option value="">-- Select a Module --</option>
+                                        <!-- Modules will be loaded here by JavaScript -->
+                                    </select>
+                                    <button class="btn btn-secondary btn-small" onclick="clearModuleCrossReference()" title="Clear module filter">Clear</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -1649,6 +1677,9 @@
                             <!-- ADD THIS NEW LEGEND ITEM -->
                             <div class="legend-item">
                                 <span class="legend-color-box missing-from-pack"></span> Missing from Pack <span id="count-missing">(0)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color-box in-module"></span> In Selected Module <span id="count-in-module">(0)</span>
                             </div>
                             <!-- Refresh button with circular arrow icon (green for positive/refresh action) -->
                             <button class="btn btn-success" style="margin-left: auto; padding: 5px 10px; display: flex; align-items: center; gap: 5px;" onclick="loadMonsters(); refreshMonsterThumbnails();" title="Refresh monster list">
@@ -1827,6 +1858,7 @@
             loadStyles();
             loadPacks();
             loadMonsters();
+            loadModules(); // Load available modules for cross-reference
             setupDragDrop();
             setupSocketHandlers();
         });
@@ -2389,6 +2421,68 @@
                     loadMonsterThumbnail(monster.id, true); // true = force refresh
                 });
             }
+        }
+
+        // Module cross-reference functions
+        async function loadModules() {
+            try {
+                const response = await fetch('/api/toolkit/modules');
+                const modules = await response.json();
+                const select = document.getElementById('genModule');
+                // Clear existing options except the first one
+                select.innerHTML = '<option value="">-- Select a Module --</option>'; 
+                modules.forEach(module => {
+                    const option = document.createElement('option');
+                    option.value = module.moduleName;
+                    // Prettify the name for display (e.g., "shadows_of_eldoria" -> "Shadows Of Eldoria")
+                    option.textContent = module.moduleName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Failed to load modules:', error);
+            }
+        }
+
+        async function crossReferenceModuleMonsters() {
+            const moduleName = document.getElementById('genModule').value;
+            const allMonsterItems = document.querySelectorAll('.monster-item');
+            
+            // First, clear all existing module highlights and reset the counter
+            allMonsterItems.forEach(item => item.classList.remove('monster-in-module'));
+            document.getElementById('count-in-module').textContent = `(0)`;
+
+            if (!moduleName) {
+                return; // Exit if the user selected the default "-- Select a Module --" option
+            }
+
+            try {
+                const response = await fetch(`/api/toolkit/modules/${moduleName}/monsters`);
+                const moduleMonsters = await response.json(); // Expects an array of monster IDs
+                
+                let foundCount = 0;
+                if (moduleMonsters && moduleMonsters.length > 0) {
+                    moduleMonsters.forEach(monsterId => {
+                        const checkbox = document.querySelector(`.monster-item input[value="${monsterId}"]`);
+                        if (checkbox) {
+                            const monsterItem = checkbox.closest('.monster-item');
+                            if (monsterItem) {
+                                monsterItem.classList.add('monster-in-module');
+                                foundCount++;
+                            }
+                        }
+                    });
+                }
+                // Update the count in the legend
+                document.getElementById('count-in-module').textContent = `(${foundCount})`;
+            } catch (error) {
+                console.error(`Failed to get monsters for module ${moduleName}:`, error);
+            }
+        }
+
+        function clearModuleCrossReference() {
+            const select = document.getElementById('genModule');
+            select.value = ""; // Reset dropdown to the default option
+            crossReferenceModuleMonsters(); // Calling this with an empty value will clear the highlights
         }
         
         // This new function replaces the old generateMonsters()

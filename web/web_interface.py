@@ -1150,6 +1150,59 @@ def save_toolkit_settings():
         error(f"TOOLKIT: Failed to save settings: {e}")
         return jsonify({'success': False, 'error': str(e)})
 
+@app.route('/api/toolkit/modules')
+def get_available_modules_api():
+    """Get list of available adventure modules."""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify([]), 503
+    
+    try:
+        # This function already exists and gives us what we need.
+        from core.generators.module_stitcher import list_available_modules
+        modules = list_available_modules()
+        return jsonify(modules)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get module list: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/toolkit/modules/<module_name>/monsters')
+def get_module_monsters_api(module_name):
+    """Get list of monster IDs found in a specific module."""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify([]), 503
+    
+    try:
+        # --- Your Implementation Logic ---
+        from utils.module_path_manager import ModulePathManager
+        from utils.file_operations import safe_read_json
+        import os
+
+        path_manager = ModulePathManager(module_name)
+        areas_dir = path_manager.get_areas_dir()
+        monster_ids = set()
+
+        if os.path.exists(areas_dir):
+            for filename in os.listdir(areas_dir):
+                if filename.endswith('.json'):
+                    area_path = os.path.join(areas_dir, filename)
+                    area_data = safe_read_json(area_path)
+                    if area_data and 'locations' in area_data:
+                        for location in area_data.get('locations', []):
+                            if 'monsters' in location and location['monsters']:
+                                for monster in location['monsters']:
+                                    if 'name' in monster:
+                                        # Normalize the name to match our monster IDs:
+                                        # "Adult Red Dragon" -> "adult_red_dragon"
+                                        monster_id = monster['name'].lower().replace(' ', '_')
+                                        monster_ids.add(monster_id)
+
+        return jsonify(list(monster_ids))
+        # --- End of Implementation ---
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get monsters for module {module_name}: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @socketio.on('connect')
 def handle_connect():
     """Handle client connection"""
