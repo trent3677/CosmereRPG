@@ -2310,10 +2310,11 @@
             }
             console.log(`Loading thumbnail for ${monsterId} from pack ${packName}`);
 
-            // Load from graphic pack folder
-            const thumbUrl = `/toolkit/pack_image/${packName}/${monsterId}_thumb.jpg`;
-            const fullImageUrl = `/toolkit/pack_image/${packName}/${monsterId}.jpg`;
-            const videoUrl = `/toolkit/pack_video/${packName}/${monsterId}_video.mp4`;
+            // Load from graphic pack folder with cache busting
+            const timestamp = new Date().getTime(); // Cache buster
+            const thumbUrl = `/toolkit/pack_image/${packName}/${monsterId}_thumb.jpg?t=${timestamp}`;
+            const fullImageUrl = `/toolkit/pack_image/${packName}/${monsterId}.jpg?t=${timestamp}`;
+            const videoUrl = `/toolkit/pack_video/${packName}/${monsterId}_video.mp4?t=${timestamp}`;
             
             console.log(`Thumbnail URL: ${thumbUrl}`);
             
@@ -2324,8 +2325,9 @@
                 console.log(`Thumbnail loaded for ${monsterId}`);
                 thumbContainer.innerHTML = '';
                 thumbContainer.appendChild(img);
-                thumbContainer.dataset.thumbSrc = thumbUrl; // Store thumbnail URL
-                thumbContainer.dataset.imageSrc = fullImageUrl; // Store full image URL
+                // Store URLs without cache buster for consistent references
+                thumbContainer.dataset.thumbSrc = `/toolkit/pack_image/${packName}/${monsterId}_thumb.jpg`;
+                thumbContainer.dataset.imageSrc = `/toolkit/pack_image/${packName}/${monsterId}.jpg`;
                 
                 // Make the container clickable with cursor pointer
                 thumbContainer.style.cursor = 'pointer';
@@ -2673,18 +2675,18 @@
 
             if (thumbContainer.dataset.videoSrc) {
                 console.log('Showing video:', thumbContainer.dataset.videoSrc);
-                // If video exists, show it
+                // If video exists, show it with cache busting
                 const video = document.createElement('video');
-                video.src = thumbContainer.dataset.videoSrc;
+                video.src = thumbContainer.dataset.videoSrc + '?t=' + new Date().getTime();
                 video.controls = true;
                 video.autoplay = true;
                 video.loop = true;
                 modalBody.appendChild(video);
             } else if (thumbContainer.dataset.imageSrc) {
                 console.log('Showing image:', thumbContainer.dataset.imageSrc);
-                // Show the full-size image (not the thumbnail)
+                // Show the full-size image with cache busting
                 const img = document.createElement('img');
-                img.src = thumbContainer.dataset.imageSrc;
+                img.src = thumbContainer.dataset.imageSrc + '?t=' + new Date().getTime();
                 modalBody.appendChild(img);
             } else if (thumbContainer.dataset.thumbSrc) {
                 console.log('Showing thumbnail:', thumbContainer.dataset.thumbSrc);
