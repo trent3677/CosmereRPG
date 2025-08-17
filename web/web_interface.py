@@ -829,6 +829,27 @@ def preview_pack():
             # Read and parse the manifest
             with zip_ref.open('manifest.json') as manifest_file:
                 manifest_data = json.load(manifest_file)
+                
+                # Count assets in the ZIP
+                monster_count = 0
+                npc_count = 0
+                video_count = 0
+                
+                for filename in zip_ref.namelist():
+                    if filename.startswith('monsters/'):
+                        if filename.endswith('.mp4'):
+                            video_count += 1
+                        elif filename.endswith(('.png', '.jpg', '.jpeg')) and '_thumb' not in filename:
+                            monster_count += 1
+                    elif filename.startswith('npcs/'):
+                        if filename.endswith(('.png', '.jpg', '.jpeg')) and '_thumb' not in filename:
+                            npc_count += 1
+                
+                # Add counts to manifest data
+                manifest_data['total_monsters'] = monster_count
+                manifest_data['total_npcs'] = npc_count
+                manifest_data['total_videos'] = video_count
+                
                 return jsonify({'success': True, 'data': manifest_data})
 
     except zipfile.BadZipFile:
@@ -848,8 +869,10 @@ def import_pack():
             return jsonify({'success': False, 'error': 'No file provided'})
         
         file = request.files['pack']
-        # Get the target folder name from the form data
+        # Get the target folder name and import options from the form data
         target_folder_name = request.form.get('target_folder_name')
+        import_monsters = request.form.get('import_monsters', 'true').lower() == 'true'
+        import_npcs = request.form.get('import_npcs', 'true').lower() == 'true'
 
         if file.filename == '':
             return jsonify({'success': False, 'error': 'No file selected'})
@@ -864,8 +887,13 @@ def import_pack():
             
             # File is now closed, safe to process
             manager = PackManager()
-            # Pass the target folder name to the manager
-            result = manager.import_pack(tmp_file, target_folder_name=target_folder_name)
+            # Pass the target folder name and import options to the manager
+            result = manager.import_pack(
+                tmp_file, 
+                target_folder_name=target_folder_name,
+                import_monsters=import_monsters,
+                import_npcs=import_npcs
+            )
             
             return jsonify(result)
         finally:

@@ -163,13 +163,16 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                 "error": str(e)
             }
     
-    def import_pack(self, zip_path: str, target_folder_name: Optional[str] = None) -> Dict:
+    def import_pack(self, zip_path: str, target_folder_name: Optional[str] = None, 
+                   import_monsters: bool = True, import_npcs: bool = True) -> Dict:
         """
-        Import a graphic pack from ZIP file
+        Import a graphic pack from ZIP file with selective asset import
         
         Args:
             zip_path: Path to the ZIP file
             target_folder_name: Optional custom folder name for the pack
+            import_monsters: Whether to import monster assets
+            import_npcs: Whether to import NPC assets
             
         Returns:
             Import result dictionary
@@ -222,14 +225,42 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                     shutil.move(str(pack_dir), str(self.packs_dir / backup_name))
                     print(f"Backed up existing pack to {backup_name}")
                 
-                # Extract pack
+                # Create pack directory
                 pack_dir.mkdir(parents=True, exist_ok=True)
-                zip_ref.extractall(pack_dir)
                 
-                # Validate structure
-                required_dirs = ['monsters/videos', 'monsters/images', 'monsters/thumbnails']
-                for dir_path in required_dirs:
-                    (pack_dir / dir_path).mkdir(parents=True, exist_ok=True)
+                # Selectively extract files based on import options
+                monsters_imported = 0
+                npcs_imported = 0
+                
+                for member in zip_ref.namelist():
+                    # Always extract manifest and readme files
+                    if member in ['manifest.json', 'README.md'] or member.endswith('/'):
+                        zip_ref.extract(member, pack_dir)
+                        continue
+                    
+                    # Check if we should import this file
+                    should_extract = False
+                    
+                    if member.startswith('monsters/') and import_monsters:
+                        should_extract = True
+                        if not member.endswith('/') and '_thumb' not in member:
+                            monsters_imported += 1
+                    elif member.startswith('npcs/') and import_npcs:
+                        should_extract = True
+                        if not member.endswith('/') and '_thumb' not in member:
+                            npcs_imported += 1
+                    
+                    if should_extract:
+                        zip_ref.extract(member, pack_dir)
+                
+                # Ensure required directories exist
+                if import_monsters:
+                    required_dirs = ['monsters/videos', 'monsters/images', 'monsters/thumbnails']
+                    for dir_path in required_dirs:
+                        (pack_dir / dir_path).mkdir(parents=True, exist_ok=True)
+                
+                if import_npcs:
+                    (pack_dir / 'npcs').mkdir(parents=True, exist_ok=True)
                 
                 # Update manifest with import info
                 manifest['imported_date'] = datetime.now().strftime("%Y-%m-%d")
@@ -238,13 +269,25 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                 with open(pack_dir / 'manifest.json', 'w') as f:
                     json.dump(manifest, f, indent=2)
                 
-                print(f"Imported pack: {pack_name}")
+                # Log what was imported
+                import_summary = []
+                if monsters_imported > 0:
+                    import_summary.append(f"{monsters_imported} monsters")
+                if npcs_imported > 0:
+                    import_summary.append(f"{npcs_imported} NPCs")
+                
+                if import_summary:
+                    print(f"Imported pack: {pack_name} ({', '.join(import_summary)})")
+                else:
+                    print(f"Created pack structure: {pack_name} (no assets imported)")
                 
                 return {
                     "success": True,
                     "pack_name": pack_name,
                     "pack_dir": str(pack_dir),
                     "manifest": manifest,
+                    "monsters_imported": monsters_imported,
+                    "npcs_imported": npcs_imported,
                     "total_monsters": len(manifest.get('monsters_included', []))
                 }
                 

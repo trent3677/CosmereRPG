@@ -1708,7 +1708,7 @@
         </div>
         
         <div class="tabs">
-            <button class="tab active" onclick="switchTab('packs')">Monster Graphic Pack Management</button>
+            <button class="tab active" onclick="switchTab('packs')">Graphic Pack Management</button>
             <button class="tab" onclick="switchTab('generator')">Monster Management & Generator</button>
             <button class="tab" onclick="switchTab('npcs')">NPC Management & Generator</button>
             <button class="tab" onclick="switchTab('videos')">Video Processor</button>
@@ -1716,13 +1716,13 @@
         </div>
         
         <div class="content">
-            <!-- Monster Graphic Pack Management Tab - SINGLE COLUMN LAYOUT -->
+            <!-- Graphic Pack Management Tab - SINGLE COLUMN LAYOUT -->
             <div id="packs-tab" class="tab-content active">
                 <!-- NEW TWO-COLUMN LAYOUT -->
                 <div class="two-column-layout" style="margin-bottom: 30px;">
                     <!-- Column 1: Import Pack -->
                     <div class="section">
-                        <h2>Import Monster Pack<span class="tooltip-trigger" data-tooltip="Import a monster pack from a .zip file. This will add it to your list of available packs below.">?</span></h2>
+                        <h2>Import Graphic Pack<span class="tooltip-trigger" data-tooltip="Import a graphic pack from a .zip file. Choose which assets to import to your game.">?</span></h2>
                         <div class="import-container">
                             <div class="import-control-row">
                                 <div id="file-path-display" class="file-display">No file selected...</div>
@@ -1730,8 +1730,21 @@
                                 <input type="file" id="importFile" accept=".zip" style="display:none" onchange="handleFileSelection(this.files)">
                             </div>
                             <div id="import-preview-area" class="import-preview" style="display: none;">
-                                <h4>Pack Preview<span class="tooltip-trigger" data-tooltip="Shows the contents and metadata of the selected pack before importing.">?</span></h4>
+                                <h4>Pack Contents<span class="tooltip-trigger" data-tooltip="Shows what assets are available in this pack.">?</span></h4>
                                 <div id="preview-metadata"></div>
+                                
+                                <div class="import-options" style="margin: 15px 0; padding: 15px; background: #1a1a1a; border-radius: 5px;">
+                                    <h4 style="margin-bottom: 10px; color: #FFA500;">Select Assets to Import:</h4>
+                                    <label class="checkbox-label" style="display: block; margin: 8px 0;">
+                                        <input type="checkbox" id="import-monsters" checked style="margin-right: 8px;">
+                                        <span id="monsters-count-label">Import Monsters</span>
+                                    </label>
+                                    <label class="checkbox-label" style="display: block; margin: 8px 0;">
+                                        <input type="checkbox" id="import-npcs" checked style="margin-right: 8px;">
+                                        <span id="npcs-count-label">Import NPCs</span>
+                                    </label>
+                                </div>
+                                
                                 <div class="import-confirmation">
                                     <div class="form-group" style="flex-grow: 1; margin-bottom: 0;">
                                         <label for="target-folder-name" style="font-size: 0.9em; color: #999;">Destination Folder:</label>
@@ -2201,7 +2214,7 @@
             }
         }
         
-        // Monster Graphic Pack Management
+        // Graphic Pack Management
         async function loadPacks() {
             try {
                 const response = await fetch('/api/toolkit/packs');
@@ -2704,13 +2717,29 @@
 
                 if (result.success) {
                     const data = result.data;
-                    // UPDATED to include description
+                    
+                    // Update asset counts in checkboxes
+                    const monsterCount = data.total_monsters || 0;
+                    const npcCount = data.total_npcs || 0;
+                    
+                    document.getElementById('monsters-count-label').textContent = `Import Monsters (${monsterCount} found)`;
+                    document.getElementById('npcs-count-label').textContent = `Import NPCs (${npcCount} found)`;
+                    
+                    // Disable checkboxes if no assets of that type
+                    document.getElementById('import-monsters').disabled = monsterCount === 0;
+                    document.getElementById('import-npcs').disabled = npcCount === 0;
+                    
+                    // Auto-uncheck if no assets
+                    if (monsterCount === 0) document.getElementById('import-monsters').checked = false;
+                    if (npcCount === 0) document.getElementById('import-npcs').checked = false;
+                    
                     metadataDiv.innerHTML = `
                         <strong>Name:</strong> ${data.display_name || data.name}<br>
                         <strong>Author:</strong> ${data.author || 'N/A'}<br>
                         <strong>Version:</strong> ${data.version || 'N/A'}<br>
                         <strong>Style:</strong> ${data.style_template || 'custom'}<br>
-                        <strong>Description:</strong> ${data.description || 'No description provided.'}
+                        <strong>Description:</strong> ${data.description || 'No description provided.'}<br>
+                        <strong>Contents:</strong> ${monsterCount} monsters, ${npcCount} NPCs, ${data.total_videos || 0} videos
                     `;
                     // Populate the editable folder name input
                     targetFolderInput.value = data.name;
@@ -2730,9 +2759,17 @@
                 alert('Destination folder name cannot be empty.');
                 return;
             }
+            
+            const importMonsters = document.getElementById('import-monsters').checked;
+            const importNpcs = document.getElementById('import-npcs').checked;
+            
+            if (!importMonsters && !importNpcs) {
+                alert('Please select at least one asset type to import.');
+                return;
+            }
 
             if (fileToImport) {
-                uploadAndImportPack(fileToImport, targetFolderName);
+                uploadAndImportPack(fileToImport, targetFolderName, importMonsters, importNpcs);
                 
                 document.getElementById('import-preview-area').style.display = 'none';
                 document.getElementById('file-path-display').textContent = 'No file selected...';
@@ -2744,10 +2781,19 @@
         }
 
         // RENAME this function from importPack to uploadAndImportPack
-        async function uploadAndImportPack(file, targetFolderName) {
+        async function uploadAndImportPack(file, targetFolderName, importMonsters = true, importNpcs = true) {
             const formData = new FormData();
             formData.append('pack', file);
-            formData.append('target_folder_name', targetFolderName); // Add the folder name
+            formData.append('target_folder_name', targetFolderName);
+            formData.append('import_monsters', importMonsters);
+            formData.append('import_npcs', importNpcs);
+            
+            // Show what's being imported
+            const importTypes = [];
+            if (importMonsters) importTypes.push('monsters');
+            if (importNpcs) importTypes.push('NPCs');
+            
+            addLog('genLog', `Importing ${importTypes.join(' and ')} from pack...`, 'info');
             
             try {
                 const response = await fetch('/api/toolkit/packs/import', {
@@ -2757,13 +2803,18 @@
                 
                 const result = await response.json();
                 if (result.success) {
-                    addLog('genLog', `Imported pack: ${result.pack_name}`, 'success');
+                    const importSummary = [];
+                    if (result.monsters_imported > 0) importSummary.push(`${result.monsters_imported} monsters`);
+                    if (result.npcs_imported > 0) importSummary.push(`${result.npcs_imported} NPCs`);
+                    
+                    addLog('genLog', `Imported pack: ${result.pack_name} (${importSummary.join(', ')})`, 'success');
                     loadPacks();
                 } else {
                     alert(`Failed to import pack: ${result.error}`);
                 }
             } catch (error) {
                 console.error('Failed to import pack:', error);
+                addLog('genLog', `Failed to import pack: ${error.message}`, 'error');
             }
         }
         
