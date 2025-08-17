@@ -57,9 +57,10 @@
     "thumbnails": [],
     "videos": []
   },
-  "total_npcs": 2,
+  "total_npcs": 3,
   "npcs_included": [
     "abbess_miralda",
+    "captain_merek",
     "eirik_hearthwise"
   ],
   "last_modified": "2025-08-17",

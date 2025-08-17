@@ -90,28 +90,28 @@ class NPCGenerator:
         
         if not style_data:
             print(f"Warning: Style '{style}' not found. Using a default fantasy art style.")
-            style_data = { "prompt": "digital painting, fantasy character portrait, dungeons and dragons" }
+            style_data = { "prompt": "digital painting, fantasy character portrait, dungeons and dragons art style" }
 
         prompt_parts = []
 
-        # Part 1: The Core Instruction (Style + Subject)
-        # This is the most critical change. The main style prompt is now the first thing the AI sees.
+        # Part 1: The Core Artistic Style
+        # This remains the most important instruction.
         base_style_prompt = style_data.get("prompt", "")
         prompt_parts.append(
-            f"A beautiful, charismatic {base_style_prompt} of a friendly D&D party companion named {npc_name}."
+            f"Epic fantasy character art portrait in the style of {base_style_prompt}."
         )
 
-        # Part 2: The Detailed Description (Its own paragraph)
-        # The AI now processes the physical details after understanding the artistic context.
+        # Part 2: The Full Description (which now includes the background)
+        # We simply append the entire new description here.
         prompt_parts.append(npc_description)
 
-        # Part 3: Composition and Framing (Clear, positive instructions)
+        # Part 3: Reinforce Composition and Quality
+        # A final instruction to ensure a high-quality, single-character result.
         prompt_parts.append(
-            "The portrait is a single character, centered, from the chest up. The background is a simple, atmospheric fantasy setting. The character has a friendly and trustworthy expression, looking towards the viewer."
+            "A dynamic half-body or full-body portrait of a single character. Cinematic composition. Friendly and heroic demeanor."
         )
 
-        # Part 4: Modifiers (Consistent with the monster generator)
-        # Appends extra keywords like "highly detailed, cinematic" for more punch.
+        # Part 4: Add Style Modifiers
         if style_data.get("modifiers"):
             modifiers_text = ", ".join(style_data["modifiers"])
             prompt_parts.append(modifiers_text)

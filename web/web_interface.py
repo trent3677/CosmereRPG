@@ -2623,34 +2623,33 @@ def fetch_npc_descriptions():
                     info(f"TOOLKIT: Description already exists for {npc_name}, skipping")
                     continue
                 
-                # Prepare prompt
-                prompt = f"""Generate a detailed physical description for a FRIENDLY NPC who could join the party in a D&D 5e adventure.
+                # Prepare a new, more directive prompt
+                prompt = f"""Generate a rich, descriptive prompt for an AI image generator to create a fantasy character portrait.
 
 NPC Name: {npc_name}
-Module Context: {module_context[:3000]}
+Module Context: {module_context[:2500]}
 
-Create a vivid, appealing description (150-200 words) for a potential party member/ally that includes:
-- Physical appearance (race, age, build, distinguishing features)
-- Clothing/armor in good condition (not battle-worn unless specified)
-- Friendly or approachable demeanor (even if they're normally rough characters)
-- Any equipment they carry (weapons sheathed/at rest, not drawn)
-- Personality traits that make them interesting as a companion
-- For romantic/attractive NPCs: Include appealing features
-- For rough/warrior types: Show their competent, reliable side
+The output should be a single paragraph (150-200 words) that is itself a high-quality image prompt. It must include:
+1.  **Physical Appearance:** Race, build, key features.
+2.  **Clothing & Gear:** Detailed description of their armor, clothes, and weapons (sheathed or at rest).
+3.  **Background/Setting:** A description of the environment (e.g., 'standing in a sun-dappled ancient forest', 'leaning against a table in a rustic tavern', 'in a dimly lit dungeon corridor').
+4.  **Atmosphere & Lighting:** Keywords for the mood (e.g., 'cinematic lighting', 'magical aura', 'dust motes in the air', 'soft morning light').
 
-The NPC should appear trustworthy and capable, someone the party would want to recruit or befriend.
-Focus on making them look like a potential ally, not an enemy."""
+The character must appear friendly, capable, and trustworthy, like a potential party ally. Do NOT use words like 'photorealistic', 'photo', 'cosplay', '3D render'. Focus on descriptive language for a digital painting.
+
+Example Output Format:
+"A stunning digital painting of Elara, a female wood elf ranger with emerald green eyes and long braided auburn hair. She wears masterfully crafted green leather armor with leaf-like patterns. A longbow is slung over her shoulder and a sheathed shortsword hangs at her hip. She stands in a misty, ancient forest at dawn, with golden morning light filtering through the canopy, creating a magical and serene atmosphere."
+"""
 
                 try:
-                    # Call OpenAI API
+                    # Call OpenAI API with the new system message and prompt
                     response = client.chat.completions.create(
                         model="gpt-4o-mini",
                         messages=[
-                            {"role": "system", "content": "You are a fantasy RPG character description expert. Create detailed visual descriptions optimized for AI image generation. Focus on physical appearance, clothing, equipment, and visual details. Describe characters as potential allies or party members in friendly, approachable poses. Output descriptions suitable for portrait generation prompts."},
+                            {"role": "system", "content": "You are an expert AI prompt engineer specializing in fantasy character art. Your task is to write image generation prompts, not narrative descriptions. The prompts you write will be used to create digital paintings."},
                             {"role": "user", "content": prompt}
                         ],
-                        temperature=0.7
-                        # No max_tokens limit - let the model complete the description
+                        temperature=0.8
                     )
                     
                     description = response.choices[0].message.content
