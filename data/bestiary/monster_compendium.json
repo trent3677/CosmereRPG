@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "created": "2025-08-13",
-  "total_monsters": 130,
+  "total_monsters": 161,
   "monsters": {
     "bandit_sentry": {
       "name": "Bandit Sentry",
@@ -371,7 +371,7 @@
     "bone_devil": {
       "name": "Bone Devil",
       "type": "elemental",
-      "description": "A towering 9-foot skeletal fiend with dried, mummified flesh stretched tight over its bones. Its skull-like head glows with burning red eyes and a twisted, fanged maw. Most distinctive is its long, segmented scorpion tail arched above its head, ending in a venomous stinger dripping with glowing green poison. The creature’s emaciated humanoid body shows ribs through papery skin, with four elongated arms tipped in razor-sharp claws. Tattered, skin-and-bone wings spread wide from its back. Chains and hooks dangle from its body as it looms in a fiery hellscape of molten rock and brimstone. Its translucent skin reveals bone beneath, giving it a horrifying skeletal silhouette. Hellfire glows against its pale flesh as it strikes a dramatic, threatening pose, scorpion tail poised to strike.",
+      "description": "A towering 9-foot skeletal fiend with dried, mummified flesh stretched tight over its bones. Its skull-like head glows with burning red eyes and a twisted, fanged maw. Most distinctive is its long, segmented scorpion tail arched above its head, ending in a venomous stinger dripping with glowing green poison. The creatureâ€™s emaciated humanoid body shows ribs through papery skin, with four elongated arms tipped in razor-sharp claws. Tattered, skin-and-bone wings spread wide from its back. Chains and hooks dangle from its body as it looms in a fiery hellscape of molten rock and brimstone. Its translucent skin reveals bone beneath, giving it a horrifying skeletal silhouette. Hellfire glows against its pale flesh as it strikes a dramatic, threatening pose, scorpion tail poised to strike.",
       "tags": [
         "flying"
       ],
@@ -641,7 +641,7 @@
     "flesh_golem": {
       "name": "Flesh Golem",
       "type": "construct",
-      "description": "A towering flesh golem, a monstrous patchwork of mismatched human and bestial parts crudely stitched together. Its pale, waxy skin is stretched unevenly over bulging muscles, with jagged seams and dark sutures crisscrossing its body. The construct’s massive hands hang heavy like slabs of meat, its fingers twisted and uneven. Its head is slightly lopsided, with a slack jaw and dull, lifeless eyes that twitch with unsettling animation. The creature’s presence is both pitiful and terrifying — a grotesque mockery of life, lurching forward with lumbering strength through the shadows of a dungeon hall. Dim torchlight flickers across its scarred frame, highlighting the rough craftsmanship of its creation. Dark fantasy, photorealistic detail, grim atmosphere",
+      "description": "A towering flesh golem, a monstrous patchwork of mismatched human and bestial parts crudely stitched together. Its pale, waxy skin is stretched unevenly over bulging muscles, with jagged seams and dark sutures crisscrossing its body. The constructâ€™s massive hands hang heavy like slabs of meat, its fingers twisted and uneven. Its head is slightly lopsided, with a slack jaw and dull, lifeless eyes that twitch with unsettling animation. The creatureâ€™s presence is both pitiful and terrifying â€” a grotesque mockery of life, lurching forward with lumbering strength through the shadows of a dungeon hall. Dim torchlight flickers across its scarred frame, highlighting the rough craftsmanship of its creation. Dark fantasy, photorealistic detail, grim atmosphere",
       "tags": [
         "swarm",
         "large"
@@ -819,7 +819,7 @@
     "harpy": {
       "name": "Harpy",
       "type": "elemental",
-      "description": "A vile creature with the upper body of a haggard woman and the lower body, wings, and talons of a vulture. Standing 6 feet tall with a 10-foot wingspan of dirty, molting feathers. The human portion is filthy with matted hair, cruel features, and arms that end in wing joints. The face shows a horrible beauty, alluring yet repulsive. Its mouth opens to reveal sharp teeth and to emit its enchanting song. The bird portions are those of a carrion bird - dark feathers, powerful talons caked with dried blood. The harpy perches on a rocky outcrop littered with bones. Its feathers are ragged and missing in patches. Flies buzz around it. The blend between human and bird is grotesque. Its expression shows hunger and cruelty. Photorealistic rendering of the cursed fusion, the corrupted beauty, and the deadly song of the harpy.",
+      "description": "A vile creature with the upper body of a haggard woman and the lower body, wings, and talons of a vulture. Standing 6 feet tall with a 10-foot wingspan of dirty, molting feathers. The human portion is filthy with matted hair, cruel features, and arms that end in wing joints. The face shows a horrible beauty, alluring yet repulsive. Its mouth opens to reveal sharp teeth and to emit its enchanting song. The bird portions are those of a carrion bird - dark feathers, powerful talons caked with dried blood. The harpy perches on a rocky outcrop littered with bones. Its feathers are ragged and missing in patches. Flies buzz around it. The blend between human and bird is grotesque. Its expression shows hunger and cruelty.",
       "tags": [
         "corrupted",
         "flying"
@@ -1298,7 +1298,431 @@
       ],
       "source_file": "bestiary_updater.py",
       "generated_date": "2025-08-16T12:26:16.995500"
+    },
+    "animated_torture_device": {
+      "name": "Animated Torture Device",
+      "type": "construct",
+      "description": "Emerging from the shadows of Gloamwood, the Animated Torture Device is a grotesque assembly of rusted metal and dark wood, fused together in a nightmarish fusion of function and malevolence. Its frame is a twisted amalgamation of iron bars and jagged blades, adorned with ominous spikes that glisten with remnants of past victims. Gears and cogs whir with an eerie life of their own, clanking rhythmically as it lurches forward, the sound echoing through the oppressive mist that envelops the forest. Flickering blue witchlights illuminate the device's sinister features, casting distorted shadows that dance across the damp earth, painting a haunting tableau of despair. The air is thick with the scent of decay and iron, and the low hum of its machinery resonates with a chilling promise of pain and torment.\n\nAs it moves, the device emits a low, mechanical groan, a sound that seems to intertwine with the whispers of the forest, beckoning adventurers closer. Its mechanical arms, equipped with cruel implements designed for infliction, reach out with an unsettling grace, as if anticipating the thrill of a new victim. In the darkness of this cursed forest, the Animated Torture Device serves as an unforgiving reminder of the horrors that dwell within the Keep of Doom, a relentless hunter of the unwary, forever cursed to enact the dreadful will of its creator.",
+      "tags": [
+        "animated",
+        "construct",
+        "torture",
+        "Gloamwood",
+        "horror",
+        "macabre"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T14:16:37.750017"
+    },
+    "barrow_guardian": {
+      "name": "Barrow Guardian",
+      "type": "undead",
+      "description": "The Barrow Guardian looms tall and imposing, a spectral figure clad in tattered remnants of ancient armor, its once-polished surface now dulled and mottled with the decay of centuries. Its skeletal visage is partially obscured by a shroud of ethereal mist, with glowing blue eyes piercing through the darkness like lanterns in the night, radiating an unsettling, mournful energy. The guardian's limbs are elongated and bony, each movement accompanied by the soft rustle of dry leaves, as if the forest itself whispers in response to its presence. \n\nIt stands vigil over the sacred ground of the ancient burial site, where the air is thick with a palpable tension, and the scent of damp earth mingles with the faint aroma of decay. Shadows cling to the guardian's form, twisting and swirling as it prowls the perimeter with a slow, deliberate gait, ever watchful for intruders who dare disturb its sacred duty. \n\nAs the guardian approaches, a chilling breeze sweeps through the clearing, causing the surrounding trees to creak and groan in protest. The flickering runes etched into nearby standing stones pulse faintly, casting eerie shadows that dance upon the guardian's form, hinting at the dark magic binding it to this cursed place. With each step, the ground beneath trembles, echoing the specter's ancient wrath, as it readies to unleash the fury of the fallen upon those who dare to trespass.",
+      "tags": [
+        "undead",
+        "guardian",
+        "spectral",
+        "ancient",
+        "foreboding"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T14:16:46.705045"
+    },
+    "black_banner_guard": {
+      "name": "Black Banner Guard",
+      "type": "undead",
+      "description": "Emerging from the shadows of the Gloamwood, the Black Banner Guard is a haunting specter clad in tattered remnants of dark armor, its once-glorious insignia now obscured by layers of grime and decay. A chilling wind whispers through the forest as the guard's hollow eyes burn with a malevolent light, casting an eerie glow in the oppressive darkness. Wisps of ethereal mist trail from its form, intertwining with the cold air, and a tattered black banner hangs like a shroud from its gauntleted hand, fluttering silently despite the stillness of the forest. The guard's movements are unnaturally fluid, gliding across the damp earth with an unsettling grace, as if it is not bound by the laws of life or death. Its presence instills an overwhelming sense of dread, as the very trees seem to recoil, their gnarled branches reaching away from the specter. When it speaks, its voice echoes like a distant thunderclap, reverberating through the mists and warning intruders to turn back, lest they face the wrath of a fallen sentinel, forever cursed to protect the secrets of the Keep of Doom.",
+      "tags": [
+        "undead",
+        "specter",
+        "guard"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T14:16:53.066771"
+    },
+    "corrupted_vine_blight": {
+      "name": "Corrupted Vine Blight",
+      "type": "plant",
+      "description": "Emerging from the damp soil and twisted roots of Gloamwood, the Corrupted Vine Blight is a grotesque manifestation of the forest's taint. Its form is a writhing mass of thick, dark vines, mottled in hues of sickly green and deep purple. Sharp thorns protrude menacingly from its sinewy appendages, glistening with a viscous sap that emits a faint, acrid odor. The creature's body is intertwined with decayed leaves and remnants of small animals, absorbed into its being, giving it an unsettlingly organic texture. Lacking a distinct face, it bears a gaping maw at its center, lined with jagged, leaf-like teeth, which drips with the same toxic fluid that seeps from its thorns.\n\nBeneath the canopy of the ancient oaks, the Corrupted Vine Blight thrives in the shadows, its movements slow and deliberate as it waits for prey. It emits a low, rustling sound, akin to whispers carried on the wind, drawing in unsuspecting travelers with promises of shelter from the oppressive gloom. When provoked, it lashes out violently, ensnaring foes in a vice-like grip of vines, seeking to drain their vitality and leave them as another offering to the dark forces inhabiting Gloamwood. The air around it is heavy with an unnatural chill, and the faint glow of ethereal blue witchlights flickers sporadically, illuminating its grotesque form as if the forest itself is warning intruders of the lurking menace.",
+      "tags": [
+        "plant",
+        "blight",
+        "corrupted",
+        "dark forest",
+        "Gloamwood"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T14:17:01.163954"
+    },
+    "phantom_torturer": {
+      "name": "Phantom Torturer",
+      "type": "undead",
+      "description": "Emerging from the oppressive mists of Gloamwood, the Phantom Torturer is a horrifying apparition that embodies the torment of the lost souls trapped within these cursed woods. Its form is ethereal and shrouded in tattered, shadowy rags that swirl like smoke, revealing glimpses of a skeletal frame beneath. Fragments of rusted chains dangle from its arms, clinking softly as it moves, echoing the cries of its countless victims. The Phantom Torturer's face is a mask of despair, its hollow eyes glowing with an eerie blue light that pierces the darkness, compelling those who meet its gaze to confront their deepest fears.\n\nAs it glides through the air, the air around it grows colder, causing frost to form on nearby leaves and soil. Wisps of spectral energy trail behind it, leaving a faint, ghostly glow in its wake. The creature's presence is often preceded by a chill and a whispering cacophony of anguished voices, each one recounting tales of suffering and betrayal. This tormented spirit is drawn to the horrors of the past, a relentless hunter of those who dare to wander the depths of Gloamwood, seeking revenge against the living for the pain it once endured. Its methodical movements and chilling wails create a palpable fear, a reminder that the shadows of the keep have a life of their own, ever hungry for new souls to ensnare.",
+      "tags": [
+        "undead",
+        "phantom",
+        "torturer",
+        "haunting",
+        "Gloamwood"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T14:17:08.195810"
+    },
+    "shadow_cage": {
+      "name": "Shadow Cage",
+      "type": "undead",
+      "description": "The Shadow Cage is an unsettling manifestation of darkness, a twisted amalgamation of shadow and despair that lurks in the hidden corners of the Gloamwood. Its form resembles a writhing mass of black smoke, coiling and undulating as if alive, with tendrils extending outward like the grasping fingers of a forgotten nightmare. Faint, ghostly faces can be seen momentarily within the depths of the darkness, forever trapped in silent screams, hinting at the souls ensnared by its malevolent grasp. The air around it grows heavy, almost suffocating, as the temperature drops, enveloping the area in an eerie chill that seems to sap the life from all who approach.\n\nWhen disturbed, the Shadow Cage shifts and contracts, revealing glimmers of dim, flickering light that echo the ethereal blue witchlights hovering above the standing stones nearby. It emits a low, dissonant hum--a haunting melody of sorrow and despair that reverberates through the forest, drawing in unsuspecting travelers. Those who linger too long within its vicinity may feel their strength waning, their resolve crumbling under the weight of the shadows, as the creature seeks to feed on their vitality and despair.\n\nLegends speak of the Shadow Cage as a guardian of the forest's darkest secrets, an eternal sentinel tethered to the ancient oaks, forever bound to protect the cursed keep from intruders, and a reminder that not all shadows fade with the light.",
+      "tags": [
+        "shadow",
+        "undead",
+        "Gloamwood",
+        "darkness",
+        "malevolent"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T14:17:15.028213"
+    },
+    "shadow_hound": {
+      "name": "Shadow Hound",
+      "type": "monstrosity",
+      "description": "Emerging from the shadows of Gloamwood, the Shadow Hound is a terrifying fusion of darkness and primal instinct. Its form is sleek and sinewy, cloaked in a shroud of swirling black mist that seems to absorb light, rendering it nearly invisible in the dim twilight of the forest. The creature's eyes glow with an eerie, pale blue light, piercing through the gloom like twin lanterns of malevolence, hinting at a predatory intelligence within. Long, elongated limbs end in clawed paws that leave no trace upon the forest floor, moving with a ghostly grace. As it prowls, the air grows colder, and an unsettling silence envelops the surroundings, amplifying the dread of its presence. The Shadow Hound emits low, guttural growls that resonate like distant thunder, reverberating through the trees and causing the hairs on the back of one's neck to stand on end. It stalks the unwary, drawn to the flickering witchlights above the ancient standing stones, seeking to drain the vitality from those who wander too close to its territory. When it strikes, it does so with blinding speed, leaving behind only the lingering chill of its nightmarish essence.",
+      "tags": [
+        "shadow",
+        "hound",
+        "monstrosity",
+        "Gloamwood",
+        "predator"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T14:17:22.449254"
+    },
+    "spectral_soldier": {
+      "name": "Spectral Soldier",
+      "type": "undead",
+      "description": "The Spectral Soldier drifts through the shadowy depths of Gloamwood, a haunting remnant of a long-forgotten battle. Clad in tattered, ethereal armor that glimmers with a ghostly light, its form is partly transparent, revealing glimpses of the twisted trees beyond. A faded heraldry, once vibrant, now appears as a mere suggestion against the swirling mists that envelop it. The soldier's face is obscured by a cracked helm, but hollow, glowing eyes burn with an otherworldly light, betraying a deep-seated sorrow and rage. As it moves, an unsettling silence fills the air, punctuated only by the distant echoes of clashing steel and the mournful whispers of the forest. The Spectral Soldier raises a spectral sword, its blade shimmering like moonlight, and it emits a chilling aura that saps the warmth from the air around it. When intruders approach, it lingers at the edge of visibility, emerging from thick tendrils of fog that curl around ancient oaks, ready to defend the cursed ground it haunts. The atmosphere is thick with anticipation, the very air heavy with the weight of unfinished business and restless spirits, as the soldier guards the secrets of the Keep of Doom.",
+      "tags": [
+        "undead",
+        "spectral",
+        "haunting"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T14:17:29.014241"
+    },
+    "stone_guardian": {
+      "name": "Stone Guardian",
+      "type": "construct",
+      "description": "Emerging from the gnarled roots of ancient oaks and the crumbling ruins of the Gloamwood, the Stone Guardian stands as a formidable sentinel. This towering figure is crafted from rugged, weathered stone, intricately etched with arcane runes that pulse faintly with a ghostly blue light, echoing the ethereal witchlights that float in the mists. Its form is a grotesque blend of humanoid and natural elements: moss and creeping vines cling to its limbs, creating a symbiosis with the forest, while shards of obsidian glint like malevolent eyes set into its rocky visage. Each movement is accompanied by the sound of grinding stone, a slow, deliberate rhythm that resonates with the earth beneath its feet. The guardian's hands, shaped like jagged boulders, possess the strength to crush intruders who dare to tread too deeply into its domain. It stands silent and still, a statue of vigilance amidst the swirling fog, until provoked by the unwary. Legends whisper that it is bound to protect the secrets of the Gloamwood, awakening only when the delicate balance of the forest is threatened, ready to unleash its wrath against those who would dare disturb the peaceful gloom.",
+      "tags": [
+        "guardian",
+        "construct",
+        "stone",
+        "Gloamwood",
+        "sentinel",
+        "mystical"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T14:17:35.840366"
+    },
+    "the_entity": {
+      "name": "The Entity",
+      "type": "aberration",
+      "description": "From the depths of the Gloamwood emerges The Entity, a grotesque amalgamation of shadow and despair. Its form is an ever-shifting mass, swirling like dark smoke through the underbrush, occasionally revealing glimpses of what appear to be tortured faces trapped within its depths. Glowing eyes--like smoldering embers--pierce the gloom, flickering with a malevolent hunger. Long, shadowy tendrils writhe from its core, reaching out as if to ensnare the unwary, while the air around it grows cold, thick with the scent of decay and damp earth. The Entity moves silently, a predator in the gloom, waiting for the opportune moment to strike. It feeds off fear, drawing strength from the terror that permeates the forest, and echoes of anguished whispers follow in its wake, luring travelers deeper into the woods. The ground beneath it appears warped, roots and soil twisting unnaturally as if recoiling from its presence. When it manifests, the very trees seem to shudder, their leaves rustling with a sound akin to mournful sighs, shrouding the area in an oppressive atmosphere that weighs heavily on the hearts of those who dare to tread its path.",
+      "tags": [
+        "shadow",
+        "horror",
+        "Gloamwood",
+        "entity",
+        "fear"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T14:17:41.989566"
+    },
+    "will_o_wisp": {
+      "name": "Will-O'-Wisp",
+      "type": "undead",
+      "description": "In the heart of Gloamwood, among the swirling mists and echoing whispers, the Will-O'-Wisp manifests as a flickering orb of ghostly blue light. It hovers just above the damp forest floor, illuminating the twisted roots and gnarled underbrush with an otherworldly glow. The light pulses softly, casting eerie shadows that dance along the ancient oaks, as if the very trees are alive with the spirits of the lost. This ethereal creature moves with a haunting grace, gliding effortlessly through the dense fog, drawing in unsuspecting travelers with its deceptive allure. Its appearance is both mesmerizing and foreboding, as the flickering light often seems to beckon adventurers deeper into the forest's treacherous embrace, luring them away from safety. As it flits between the shadows, the air grows colder, and a sense of dread settles in, whispering promises of lost souls and forgotten paths. Those who chase the light may find themselves ensnared in a labyrinth of despair, lost forever to the forest's dark embrace.",
+      "tags": [
+        "Will-O'-Wisp",
+        "undead",
+        "Gloamwood",
+        "ethereal",
+        "haunting"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T14:17:48.243754"
+    },
+    "wisps_of_memory": {
+      "name": "Wisps of Memory",
+      "type": "undead",
+      "description": "In the shadowy depths of Gloamwood, the Wisps of Memory drift like ethereal lanterns, their forms shimmering with an unsettling glow. Each wisp appears as a faint, translucent orb, pulsating with colors reminiscent of forgotten emotions--deep blues, muted purples, and flickering greens. They hover just above the forest floor, weaving between twisted roots and gnarled branches, leaving behind trails of shimmering motes that dissipate into the cold, damp air. As they float, whispers of long-lost voices echo faintly, each wisp carrying the fragmented memories of the departed, longing to be heard. \n\nThese spectral entities are drawn to the living, seeking to ensnare their minds with memories both cherished and haunting. When approached, they swirl and dart, creating a mesmerizing dance that can entrance even the most resolute adventurers. However, the allure is treacherous; those who linger too long may find themselves drawn into a maelstrom of their own past, facing regrets and sorrows long buried. The atmosphere grows thick with nostalgia and despair, a palpable weight that presses against the chest as the Wisps of Memory drift through the fog, their flickering light a bittersweet reminder of what once was.",
+      "tags": [
+        "undead",
+        "ethereal",
+        "memory",
+        "Gloamwood",
+        "spectral"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T14:17:55.444548"
+    },
+    "bandit_warrior": {
+      "name": "Bandit Warrior",
+      "type": "humanoid",
+      "description": "Emerging from the shadows of the Northern Corrupted Woods, the Bandit Warrior presents a fearsome sight, clad in mismatched armor that glimmers dully with a sickly green hue, as if touched by the very corruption plaguing the area. His leather armor, tattered and stained with the blood of his foes, fits him tightly, revealing sinewy muscles honed by years of survival in this cursed land. His face is obscured by a grimy scarf, leaving only piercing, malevolent eyes visible, glinting with a predatory hunger for plunder. The warrior wields a rusted short sword in one hand, the blade etched with dark runes, while a battered shield, adorned with a crude emblem of a twisted tree, offers a semblance of protection. He moves with a stealthy agility, slipping between the gnarled trees and thick brambles, ever watchful for intruders. The air around him crackles with tension, infused with the palpable fear of the corrupted forest, and the faint scent of decay lingers in his wake. A low growl escapes from his throat as he prepares to strike, embodying the desperation and ferocity of those who have succumbed to the darkness of Malarok's influence.",
+      "tags": [
+        "bandit",
+        "warrior",
+        "corruption",
+        "humanoid",
+        "Northern Corrupted Woods"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:18:37.950601"
+    },
+    "corrupted_animal": {
+      "name": "Corrupted Animal",
+      "type": "monstrosity",
+      "description": "The Corrupted Animal is a grotesque mockery of its former self, bearing the unmistakable signs of Malarok's dark sorcery. Its fur or feathers, once vibrant and healthy, have turned into a matted mass of sickly hues, speckled with patches of dark ooze that glisten in the dim light. The creature's eyes, hollow and sunken, burn with a malevolent glow, revealing a twisted intelligence that seeks only to spread terror. Jagged, unnatural growths protrude from its body--horns, spines, or thorns that seem to pulse with dark energy, creating an unsettling silhouette against the backdrop of the corrupted woods. The air around it crackles with an aura of decay and despair, making the atmosphere heavy and oppressive.\n\nAs it moves, there is a disturbing grace to its actions, as if the spirit of the animal is still fighting against the corruption that has claimed it. It emits a low growl, a sound that echoes with the whispers of countless tormented souls, and its breath carries the fetid scent of decay. The ground beneath its paws leaves a trail of blackened earth, as if the very soil itself is tainted by its presence. In the Northern Corrupted Woods, this creature serves as both hunter and hunted, a tragic reminder of nature turned against itself by dark magic.",
+      "tags": [
+        "corruption",
+        "malediction",
+        "twisted nature",
+        "monstrosity"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:18:45.454211"
+    },
+    "corrupted_owlbear": {
+      "name": "Corrupted Owlbear",
+      "type": "monstrosity",
+      "description": "The Corrupted Owlbear is a nightmarish amalgamation of familiar features twisted by dark magic. Standing nearly eight feet tall, its once-magnificent plumage is now matted and dull, streaked with patches of bristly black fur that seem to pulse with an unnatural gloom. Its eyes, once bright and intelligent, now glow with a sickly green light, radiating madness and ferocity. Jagged claws extend from its massive paws, stained with the remnants of past prey, while its beak is cracked and dripping a dark, viscous sap that sizzles upon contact with the ground. The creature's body is marked by festering wounds that ooze dark ichor, a testament to the corruption that has consumed it.\n\nIn the foreboding atmosphere of the Northern Corrupted Woods, the air thrums with Malarok's dark energy, and the trees writhe as if trying to escape the creature's wrath. The Corrupted Owlbear's growls reverberate through the twisted grove, a chilling sound that echoes the despair of the forest. As it prowls through the underbrush, it moves with a frenzied grace, its powerful muscles coiling beneath its corrupted skin. The ground beneath its feet is littered with blackened leaves that disintegrate upon contact, and the very air is thick with decay, making each breath feel heavy. This creature, once a guardian of the woods, is now a berserk embodiment of corruption, driven mad by the Voidstone's influence, and it attacks anything that dares to enter its territory with unrelenting ferocity.",
+      "tags": [
+        "corruption",
+        "monstrosity",
+        "forest guardian",
+        "madness"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:18:53.207857"
+    },
+    "shadow_corrupted_wolf": {
+      "name": "Shadow Corrupted Wolf",
+      "type": "monstrosity",
+      "description": "Emerging from the twisted shadows of the blighted Thornbriar Grove, the Shadow Corrupted Wolf is a haunting specter of its former self. Its fur, once a deep shade of russet, is now mottled with patches of velvety black, absorbing the faintest glimmers of light around it. The creature's eyes, glowing with a malevolent crimson hue, pierce through the darkness, emanating an unsettling intelligence that speaks of the corruption that has seized its very essence. Jagged, shadowy tendrils flicker along its body, twisting like smoke in a breeze, hinting at the dark magic that suffuses its being.\n\nSilent as a whisper, the wolf moves with an unnatural grace, its paws barely making a sound upon the ashen ground littered with decaying foliage. It stalks with a predatory elegance, a guardian of the Withered Hart, fiercely protective and ready to strike at any perceived threat. The air around it is thick with a palpable aura of dread, the lingering scent of decay and dark magic curling through the atmosphere. With each breath, it seems to absorb the very essence of corruption surrounding it, drawing power from the blighted land as it prepares to defend its territory with ruthless efficiency.",
+      "tags": [
+        "corrupted",
+        "shadow",
+        "wolf",
+        "dark magic",
+        "predator",
+        "menacing"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:19:00.223303"
+    },
+    "tainted_naiad": {
+      "name": "Tainted Naiad",
+      "type": "fey",
+      "description": "Emerging from the murky depths of a pool slick with blackened ichor, the Tainted Naiad embodies the corruption that has seeped into the heart of the Northern Corrupted Woods. Her once-ethereal form has twisted into something grotesque; her skin, once smooth and shimmering like moonlit water, now bears a sickly pallor, mottled with patches of dark, weeping wounds that ooze a viscous, tar-like substance. Long, tangled hair, resembling strands of wilted algae, cascades down her back, entwined with thorny vines that pulse with a faint, malevolent glow. Her eyes, once bright and enchanting, now glimmer with a haunting, unsettling light that reflects the very darkness she embodies. \n\nAs she moves, her lithe figure ripples like the surface of a disturbed pond, casting shadows that seem to stretch and twist unnaturally. The air around her is thick with a rancid, stagnant odor, reminiscent of decay and rot, mingling with the faint echo of sorrowful songs from long-forgotten times. The Tainted Naiad's demeanor is both alluring and menacing; she dances at the edge of the dark waters, luring unsuspecting travelers closer with haunting melodies, only to unleash the full force of her tainted magic upon those who draw near. In her presence, the very essence of nature feels suffocated, a testament to the corruption that has claimed her spirit.",
+      "tags": [
+        "fey",
+        "corruption",
+        "naiad",
+        "twisted",
+        "dark magic"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:19:09.089495"
+    },
+    "acid_slime": {
+      "name": "Acid Slime",
+      "type": "ooze",
+      "description": "In the shadowy recesses of the Cursed Cliffs, the Acid Slime oozes with a sinister, translucent greenish hue, its viscous form pulsating slowly as it shifts across the cracked stone floor. The slime glimmers under the faint moonlight that filters through the shattered stained glass, reflecting a sickly light that dances like ghostly flames. As it moves, a faint hissing can be heard, reminiscent of steam escaping a boiling pot, and the air is heavy with the acrid stench of burning metal and dissolved organic matter. Where it crawls, the salt-bitten stones begin to corrode, leaving behind a trail of bubbling, eroded surface, as if the very essence of the lighthouse is being consumed.\n\nThe Acid Slime is not merely a mindless creature; it reacts with an unsettling intelligence, quivering and contracting as it senses intruders, ready to engulf and dissolve anything that dares approach. Its semi-solid form can shift into grotesque shapes, mimicking the ruins of the cloister or the twisted figures of the fallen, luring the unwary into its embrace. With each pulse of its gelatinous body, the slime emits a low, gurgling sound, a haunting echo that melds with the distant chimes of the cursed lighthouse, embodying the despair that permeates the air. In this place of forgotten beauty and tragic history, the Acid Slime serves as a grim reminder of the dangers lurking in the shadows, waiting to ensnare the unwary.",
+      "tags": [
+        "ooze",
+        "acid",
+        "corrosive",
+        "cursed",
+        "undead"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:34:41.767090"
+    },
+    "alchemical_homunculus": {
+      "name": "Alchemical Homunculus",
+      "type": "construct",
+      "description": "In the dim light of the Brinefire Alchemist's Den, the Alchemical Homunculus scuttles across the cracked mosaic floor, a grotesque amalgamation of organic and alchemical materials. Its body, a patchwork of mismatched substances, glistens with a slick sheen of iodine and burnt salt, reflecting the faint aquamarine glow from the cauldron nearby. With a bulbous head that resembles a warped, glassy eye, it lacks a true face, instead featuring a gaping maw lined with jagged, metal-like teeth that clink and grind as it moves. Spindly limbs, each joint creaking like old machinery, end in sharp, claw-like appendages, perfect for grasping or slicing through anything that threatens its creator's secrets.\n\nThe air around it crackles with an unsettling energy, hinting at the volatile alchemical processes that birthed it. Tiny puffs of acrid smoke escape from its body, mingling with the lingering scents of the alchemist's lab, creating a thick haze that stings the eyes. When agitated, the Homunculus emits a high-pitched whine, reminiscent of glass shattering, and its movements become erratic and frantic, reflecting its loyalty to the old keeper Mira Tidewise. As it prowls through the shadows, its form is often obscured, vanishing into the gloom as if it were made of smoke itself, leaving only the echo of its discordant chimes in its wake.",
+      "tags": [
+        "construct",
+        "alchemical",
+        "homunculus"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:34:48.932820"
+    },
+    "animated_treasure_guardians": {
+      "name": "Animated Treasure Guardians",
+      "type": "construct",
+      "description": "Emerging from the depths of the Gloam-Tide Vault, the Animated Treasure Guardians are formidable constructs forged of tarnished gold and glimmering silver, each adorned with intricate engravings that tell tales of lost sailors and ancient curses. Their forms resemble a blend of humanoid and aquatic features, with limbs that mimic the flowing motions of waves, giving them an ethereal quality. Deep-set, gemstone eyes glint with an eerie azure light, reflecting the flickering illumination from the lighthouse above, while their bodies are encrusted with barnacles and salt crust, accentuating their connection to the watery depths. \n\nAs they animate, the air grows thick with the scent of brine and the echo of distant, ghostly chimes. Their movements are fluid yet deliberate, guided by an unseen force that protects the treasures they guard. They glide silently across the cracked tiles, casting elongated shadows that dance along the walls, hinting at the secrets hidden within the vault. When provoked, they unleash a torrent of shimmering energy, forming tendrils of light that lash out at intruders, while their haunting, whispered warnings resonate through the chamber, a reminder of the wealth and curses entwined within the relics they protect.",
+      "tags": [
+        "construct",
+        "guardian",
+        "treasure"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:34:56.607825"
+    },
+    "black_ember_wraith": {
+      "name": "Black Ember Wraith",
+      "type": "undead",
+      "description": "Emerging from the shadows of the Cursed Cliffs, the Black Ember Wraith is a haunting specter cloaked in tattered rags of darkness that seem to flicker like dying embers. Its form is ethereal, a swirling mass of smoky tendrils that flicker with a faint, eerie glow reminiscent of dying flames. The wraith's visage is obscured, yet within the depths of its shadowy hood, two ember-like eyes burn with a smoldering intensity, glimmering with an insatiable hunger for the warmth of the living. The air around it is choked with the acrid scent of burnt salt and the haunting echoes of lost souls, mingling with the briny tang of the sea. As it drifts silently through the crumbling ruins of the abbey, the Black Ember Wraith embodies the sorrow of the forsaken, weaving between broken pews and shattered mosaics, its presence chilling the very air. When provoked, it unleashes a whispering wail that reverberates through the salt-bitten stone, a mournful sound that speaks of despair and vengeance. Those drawn too close find themselves ensnared in its grasp, feeling their life force flicker like a candle caught in the wind, as the wraith seeks to reclaim the warmth it has lost to the depths of the sea.",
+      "tags": [
+        "undead",
+        "wraith",
+        "shadow",
+        "haunting",
+        "Cursed Cliffs"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:35:06.534104"
+    },
+    "cloister_echos": {
+      "name": "Cloister Echos",
+      "type": "undead",
+      "description": "Emerging from the shadows of the crumbling Lantern Vestibule, the Cloister Echos manifest as ethereal figures, their forms flickering like candle flames in the thick, salt-laden air. Cloaked in tattered remnants of once-sacred vestments, their spectral bodies shimmer with a ghostly luminescence, reminiscent of distant moonlight filtering through shattered stained glass. Each echo bears the sorrowful expressions of lost souls, their hollow eyes reflecting the despair of their cursed existence. Wisps of mist cling to their feet, swirling around them like the restless tides below, while the faint, melodic chime of distant bells resonates in the air, echoing their mournful cries.\n\nAs they move, the Cloister Echos leave behind trails of shimmering light that fade into darkness, casting eerie shadows that warp and contort across the slick, mosaic floor. They hover silently near the broken mosaic, their spectral chains rattling softly as if tethered to a forgotten past. These apparitions seem to beckon with outstretched hands, urging those who dare approach to listen to their tragic tales of betrayal and loss, while the atmosphere thickens with an unsettling blend of sorrow and foreboding, as if the very walls weep in remembrance of their plight.",
+      "tags": [
+        "undead",
+        "spectral",
+        "haunting"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:35:13.480844"
+    },
+    "drowned_alchemist_zombie": {
+      "name": "Drowned Alchemist Zombie",
+      "type": "undead",
+      "description": "Emerging from the brine-soaked depths of the Cursed Cliffs, the Drowned Alchemist Zombie is a grotesque parody of its former self. Its skin, a sickly hue reminiscent of decayed seaweed, hangs loosely over a skeletal frame, glistening with salt and brackish water. Faded remnants of once-regal alchemical robes cling to its body, now tattered and encrusted with barnacles and algae. The creature's eyes, hollow and sunken, burn with an otherworldly aquamarine glow, flickering with the faint pulse of arcane energy. Its fingers, elongated and claw-like, clutch a rusted alchemical flask stained with remnants of long-forgotten potions, while its breath carries the acrid tang of iodine and death.\n\nAs it shuffles across the cracked mosaic floor of the Brinefire Alchemist's Den, the air grows heavy with a miasma of decay and the faint echoes of distant chimes mingle with the soft lapping of waves below. Shadows twist unnaturally around it, and the echo of drowned voices seems to whisper arcane secrets into the air. When provoked, the Drowned Alchemist Zombie emits a low, gurgling groan--a haunting reminder of the tragic fate that befell it and the dark experiments that led to its reanimation. Its movements are slow yet deliberate, as if guided by an insatiable hunger for knowledge and revenge, forever bound to the cursed legacy of the lighthouse.",
+      "tags": [
+        "undead",
+        "zombie",
+        "alchemist",
+        "cursed",
+        "drowned",
+        "horror"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:35:20.483386"
+    },
+    "drowned_guards": {
+      "name": "Drowned Guards",
+      "type": "undead",
+      "description": "Emerging from the depths of the cursed Cliffs, the Drowned Guards are a haunting sight. Clad in rusted, barnacle-encrusted armor that bears the insignia of a long-lost maritime kingdom, these spectral sentinels are shrouded in an ethereal mist that clings to their forms like seawater. Their gaunt faces, once proud and resolute, are now pallid and twisted, with sunken eyes that glow faintly like the dying embers of a forgotten flame. Each movement is accompanied by the soft sound of dripping water, as if the very essence of the ocean clings to their presence.\n\nAs they glide silently across the damp stone, the air is thick with the scent of decay and brine, mixing with the salt of the sea. The moonlight filtering through shattered stained glass casts ghostly reflections that dance across their forms, enhancing their spectral nature. These guardians, forever bound to their duty, exhibit an unsettling stillness until provoked, at which point they lash out with rusted swords and ghostly strikes, their cries echoing like the wails of the drowned. Their presence fills the air with an oppressive weight, as if the very souls of the ocean's lost are trapped within, yearning for release yet eternally shackled to their grim task.",
+      "tags": [
+        "undead",
+        "ghostly",
+        "spectral",
+        "drowned",
+        "guardians"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:35:27.324700"
+    },
+    "drowned_noble_revenant": {
+      "name": "Drowned Noble Revenant",
+      "type": "undead",
+      "description": "The Drowned Noble Revenant rises from the depths of despair and the cold embrace of the sea, exuding an aura of both elegance and malevolence. Clad in tattered remnants of opulent garments, now sodden and encrusted with salt and barnacles, this spectral figure floats above the ground, its form partially translucent, revealing glimpses of rotting flesh and skeletal hands. A crown of twisted kelp adorns its brow, and its long, flowing hair appears to ripple as if underwater, glinting with the faint shimmer of submerged treasures. The revenant's eyes glow with an otherworldly light, reflecting the sorrow of its tragic past--the noble ruler betrayed and drowned by those it once trusted.\n\nIn the damp air of the Cursed Cliffs, it moves with an eerie grace, gliding silently between the shadows, leaving behind a trail of brine and despair. The sound of water lapping against stone accompanies its presence, intertwined with the ghostly whispers of the drowned. When angered, its voice echoes like a mournful wail, reverberating through the ancient halls, calling forth the souls of the sea to aid in its vengeance. The atmosphere thickens with a sense of dread as the revenant beckons the living, driven by an insatiable hunger for retribution against the living who disturb its watery rest.",
+      "tags": [
+        "undead",
+        "specter",
+        "cursed",
+        "haunting",
+        "noble"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:35:33.977792"
+    },
+    "drowned_retainers": {
+      "name": "Drowned Retainers",
+      "type": "undead",
+      "description": "Emerging from the shadows of the Drowned Sovereign's Court, the Drowned Retainers are ghastly figures clad in tattered remnants of once-regal attire, now soaked and heavy with water. Their skin, a sickly pale blue, is slick with brine and adorned with barnacles, giving them an eerie, unearthly appearance. Their sunken eyes, dark pools of despair, seem to glimmer with a faint, ghostly light, reflecting the lost glory of their former lives. The air around them is thick with the scent of salt and decay, mingling with the faint, mournful echoes of the drowned voices that surround them.\n\nThese spectral servants move with a slow, deliberate grace, as if burdened by the weight of their watery graves. Their fingers, elongated and skeletal, reach out with a ghostly chill that lingers long after their touch. When they speak, their voices are a haunting chorus, whispering secrets of betrayal and sorrow, reverberating through the damp, shadowy chamber. As they glide through the remnants of the throne room, the flickering light from the cursed beacon casts elongated shadows that seem to dance and writhe, echoing the tragic fate that befell their once-proud kingdom. The Drowned Retainers, bound to serve the Drowned King, embody a relentless sorrow, forever seeking redemption from their watery demise.",
+      "tags": [
+        "undead",
+        "ghostly",
+        "haunting",
+        "sorrowful",
+        "cursed"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:35:40.665649"
+    },
+    "echoes_of_lost_villagers": {
+      "name": "Echoes of Lost Villagers",
+      "type": "undead",
+      "description": "The Echoes of Lost Villagers manifest as spectral forms, their shapes distorted and flickering like candlelight caught in a breeze. Clad in tattered remnants of once-vibrant garments, their translucent bodies shimmer with a ghostly hue that echoes the colors of the shattered stained glass above. Their faces, often frozen in expressions of sorrow or despair, are marked by the salt of the sea, as if they have been weeping for their lost lives. Wisps of ethereal mist trail from their forms, swirling around them like a shroud of mourning. The air around them is thick with the scent of brine and decay, a reminder of their tragic fates. As they glide silently through the crumbling cloister, their presence is heralded by a chorus of soft, mournful wails that resonate with the distant chimes, weaving a haunting melody of sorrow that echoes off the stone walls. Shadows ripple in their wake, revealing glimpses of the villagers' past lives--a child's laughter, a mother's call, a farewell whispered in the dark. When approached, they may flicker into clarity, revealing snippets of their stories, yet their sorrowful gaze warns that they are bound by a curse, urging the adventurers to seek redemption for their lost souls.",
+      "tags": [
+        "undead",
+        "spectral",
+        "haunting"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:35:47.562064"
+    },
+    "restless_spirit": {
+      "name": "Restless Spirit",
+      "type": "undead",
+      "description": "Drifting through the shadows of the Ashen Cloister Walk, the Restless Spirit manifests as a translucent figure, its form flickering like a candle's flame in the wind. Cloaked in tattered remnants of a once-elegant robe, the spirit's silhouette is wreathed in a soft, eerie glow that casts elongated shadows along the salt-bitten stone. Its face, a mask of sorrow and longing, is obscured by a veil of mist, with hollow eyes that seem to absorb the very light around them, revealing a deep well of anguish. The air around the spirit vibrates with a distant, mournful wailing, echoing the cries of lost souls, while the scent of brine hangs heavily, as if the sea itself mourns its presence.\n\nAs it glides silently between the cracked pews and moss-choked passages, the Restless Spirit emits a faint phosphorescence that illuminates the broken mosaics underfoot, causing the remnants of the past to shimmer with ghostly colors. Occasionally, it pauses, as if listening to the whispers of the wind or the distant chimes that fill the air, its spectral hand reaching out as if yearning for something long lost. When disturbed, the spirit's sorrow transforms into wrath, swirling into a tempest of shadow and despair, ready to defend its domain from the living intruders who dare to tread on its cursed ground.",
+      "tags": [
+        "undead",
+        "spirit",
+        "haunting",
+        "shadow",
+        "cursed"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:35:54.205738"
+    },
+    "salt_wraiths": {
+      "name": "Salt Wraith",
+      "type": "undead",
+      "description": "Emerging from the shadows of the Ashen Cloister Walk, the Salt Wraith is a translucent figure, its form a swirling amalgamation of salt crystals and ghostly mist. It is barely humanoid, with elongated limbs that seem to drift and dissolve into the briny air, creating a haunting silhouette against the moonlit backdrop. Its face is a mask of sorrow and rage, with hollow eyes that glimmer like distant stars, speaking of the tragic fate that binds it to this forsaken place. The surface of its body is crusted with salt, giving it a jagged, crystalline texture that refracts the dim light, casting eerie reflections across the decaying chapel floors.\n\nAs it glides silently through the air, the Salt Wraith emits a low, mournful wail that resonates with the whispers of long-forgotten prayers. It is drawn to the remnants of life, lingering near broken pews and tattered banners, forever caught between the realms of the living and the dead. The air grows colder in its presence, thick with the sharp tang of brine and the echo of ancient chimes that seem to call out for redemption. Though it may be reasoned with, the Wraith reacts violently if provoked, its spectral form twisting into a vortex of fury and despair, ready to unleash its salt-laden vengeance upon the living intruders of its domain.",
+      "tags": [
+        "undead",
+        "wraith",
+        "salt",
+        "haunting",
+        "spectral"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:36:00.396332"
+    },
+    "silent_king_effigy": {
+      "name": "Silent King Effigy",
+      "type": "construct",
+      "description": "The Silent King Effigy stands as a haunting silhouette against the flickering light of the cursed lighthouse, a towering figure of salt-encrusted stone and ancient wood. Its form is both regal and eerie, draped in tattered remnants of regal attire that flutter like whispers in the wind. A crown of barnacles and twisted coral crowns its head, glistening with moisture, while hollow eye sockets seem to absorb the very light around it, giving it an unsettling presence. The effigy's body is adorned with intricate carvings that depict the tales of the Drowned King, their details eroded yet still resonant with a tragic beauty. As the moonlight bathes it in ghostly hues, the effigy emits a soft, mournful hum, reminiscent of distant chimes echoing through the air, creating an atmosphere of sorrow and longing.\n\nWhen approached, the Silent King Effigy seems almost alive; it shifts subtly, as if responding to the emotions of those nearby. Shadows dance across its surface, weaving tales of loss and regret, while the air thickens with the scent of brine and decay. The surrounding atmosphere is charged with a palpable tension, as if the very essence of the sea and the echoes of the past conspire to protect this solemn monument. It stands as a sentinel of the cursed cliffs, a reminder of the sacrifices made and the shadows that linger, waiting for the unwary to disturb its eternal vigil.",
+      "tags": [
+        "construct",
+        "effigy",
+        "haunting",
+        "cursed",
+        "regal"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:36:08.294476"
+    },
+    "swarm_of_bone_leeches": {
+      "name": "Swarm of Bone Leeches",
+      "type": "undead",
+      "description": "In the shadows of the Ashen Cloister Walk, where the moonlight struggles to pierce the veil of darkness, a grotesque mass of Bone Leeches slithers across the salt-bitten stone. Each leech, elongated and glistening with a morbid sheen, is crafted from a patchwork of desiccated bones and remnants of long-forgotten souls. Their bodies undulate unnaturally, resembling a writhing tapestry of death that glints eerily in the dim aquamarine light filtering through the ancient stained glass. As they move, the sound is a chilling symphony of scraping and squelching, echoing through the hollow passages like whispers of the drowned. \n\nThe air grows heavy with a brackish scent, laden with the lingering essence of decay as the swarm pulses forward, drawn by the warmth of the living. Their translucent, gelatinous skin betrays a swirling, dark ichor within--an unholy mixture that feeds on the very essence of life. In moments of stillness, they coalesce into a pulsating mound, a grotesque visage of death that seems to breathe, exuding an aura of despair. When threatened, the swarm bursts forth with unnatural speed, seeking to latch onto their prey, siphoning away vitality, leaving only cold, withered husks in their wake.",
+      "tags": [
+        "undead",
+        "swarm",
+        "bone",
+        "creepy",
+        "horror"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-16T15:36:14.303805"
     }
   },
-  "last_updated": "2025-08-16T12:26:17.002023"
+  "last_updated": "2025-08-16T15:36:14.314023"
 }
