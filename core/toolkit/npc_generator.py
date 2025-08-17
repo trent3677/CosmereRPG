@@ -93,21 +93,21 @@ class NPCGenerator:
                 "prompt": "High quality fantasy art portrait, detailed character art, warm lighting, centered composition"
             }
         
-        # Build the complete prompt - EMPHASIZE SINGLE PORTRAIT
-        base_prompt = f"Single character portrait of {npc_name} as a friendly party NPC companion. One person only, centered composition, facing forward or slight 3/4 view. {npc_description}"
+        # Build the complete prompt - EMPHASIZE FANTASY D&D STYLE
+        base_prompt = f"Fantasy tabletop RPG character portrait of {npc_name}, a potential party ally in a medieval fantasy world. Epic fantasy art style, dungeons and dragons character art. Single character only, heroic portrait composition. {npc_description}"
         
         # Add style-specific prompt
         style_prompt = style_data.get("prompt", "")
         
         if style_prompt:
-            full_prompt = f"{base_prompt}\n\nIMPORTANT: Single portrait image only, NOT multiple views or angles.\n\nStyle: {style_prompt}"
+            full_prompt = f"{base_prompt}\n\nIMPORTANT: Single fantasy character portrait only, NOT multiple views. Medieval fantasy setting, magical world atmosphere.\n\nStyle: {style_prompt}"
         else:
             # Fallback to default style
             full_prompt = f"""{base_prompt}
 
-Important: SINGLE CHARACTER PORTRAIT ONLY. Show them in a friendly, approachable pose. Slight smile or neutral expression. Looking at viewer with trustworthy demeanor. Weapons sheathed or held casually. Clean, well-maintained appearance. ONE image, NOT a photo sheet or multiple angles.
+Important: SINGLE FANTASY CHARACTER PORTRAIT. Epic fantasy RPG art style like Dungeons & Dragons, Pathfinder, or fantasy video games. Heroic pose, medieval fantasy setting. Magical atmosphere with dramatic lighting. Professional fantasy character art quality. ONE portrait image only.
 
-Style: High quality fantasy art portrait, detailed character art, party member portrait style, warm lighting, centered composition, neutral or tavern/camp background. Charismatic and appealing presentation."""
+Style: Professional fantasy RPG character art, painted fantasy portrait, epic medieval fantasy style, dramatic magical lighting, heroic character portrait, fantasy game art quality. Background hints at tavern, dungeon, or fantasy landscape."""
         
         return full_prompt
     
