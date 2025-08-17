@@ -191,18 +191,25 @@ Style: High quality fantasy art portrait, detailed character art, party member p
             
             elapsed = time.time() - start_time
             
-            # Get image data
+            # Get image data (handle both URL and base64 responses)
             image_url = getattr(response.data[0], 'url', None)
+            b64_json = getattr(response.data[0], 'b64_json', None)
             
-            if not image_url:
+            # Download/decode image
+            if b64_json:
+                import base64
+                image_data = base64.b64decode(b64_json)
+                img = Image.open(BytesIO(image_data))
+                # For consistency, set a placeholder URL
+                image_url = "base64_image"
+            elif image_url:
+                img_response = requests.get(image_url)
+                img = Image.open(BytesIO(img_response.content))
+            else:
                 return {
                     "success": False,
-                    "error": "No image URL in response"
+                    "error": "No image data in response (no URL or base64)"
                 }
-            
-            # Download image
-            img_response = requests.get(image_url)
-            img = Image.open(BytesIO(img_response.content))
             
             # Save to pack if specified
             if pack_name:
