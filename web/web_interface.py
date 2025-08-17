@@ -655,6 +655,150 @@ def delete_pack(pack_name):
         error(f"TOOLKIT: Failed to delete pack: {e}")
         return jsonify({'success': False, 'error': str(e)})
 
+@app.route('/api/toolkit/packs/<pack_name>/merge', methods=['POST'])
+def merge_pack(pack_name):
+    """Merges a specified pack into the currently active pack."""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'}), 503
+
+    try:
+        # --- BACKEND LOGIC TO BE IMPLEMENTED ---
+        # 1. Create an instance of PackManager.
+        #    manager = PackManager()
+        #
+        # 2. Get the currently active pack. This will be the DESTINATION.
+        #    active_pack = manager.get_active_pack()
+        #    if not active_pack:
+        #        return jsonify({'success': False, 'error': 'No active pack found to merge into.'})
+        #
+        # 3. The `pack_name` from the URL is the SOURCE pack.
+        #
+        # 4. Call a new method on the manager, e.g., `manager.merge_pack(source_pack_name=pack_name, dest_pack_name=active_pack['name'])`
+        #    This method will need to:
+        #      a. Get the file paths for both packs.
+        #      b. Iterate through all files (monsters, videos) in the source pack.
+        #      c. For each file, copy it to the destination pack, overwriting if it exists.
+        #      d. After copying, re-scan the destination pack's manifest to update monster/video counts.
+        #
+        # 5. Return the result from the manager.
+        # --- END OF LOGIC TO BE IMPLEMENTED ---
+
+        # For now, return a placeholder success message.
+        info(f"TOOLKIT: Placeholder merge request for pack '{pack_name}'")
+        return jsonify({'success': True, 'message': f"Placeholder: Successfully merged '{pack_name}' into the active pack."})
+
+    except Exception as e:
+        error(f"TOOLKIT: Failed to merge pack '{pack_name}': {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/toolkit/export-monsters-to-pack', methods=['POST'])
+def export_monsters_to_pack():
+    """Export selected monsters from a source pack to a new custom pack"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'}), 503
+    
+    try:
+        data = request.json
+        pack_name = data.get('pack_name')
+        display_name = data.get('display_name')
+        author = data.get('author')
+        description = data.get('description', '')
+        style = data.get('style', 'custom')
+        source_pack = data.get('source_pack')
+        monster_ids = data.get('monster_ids', [])
+        
+        if not all([pack_name, display_name, author, source_pack, monster_ids]):
+            return jsonify({'success': False, 'error': 'Missing required fields'})
+        
+        info(f"TOOLKIT: Creating new pack '{pack_name}' with {len(monster_ids)} monsters from '{source_pack}'")
+        
+        import os
+        import shutil
+        import json
+        from datetime import datetime
+        
+        # Create pack directory
+        pack_dir = os.path.join('graphic_packs', pack_name)
+        if os.path.exists(pack_dir):
+            return jsonify({'success': False, 'error': f'Pack "{pack_name}" already exists'})
+        
+        os.makedirs(pack_dir)
+        monsters_dir = os.path.join(pack_dir, 'monsters')
+        os.makedirs(monsters_dir)
+        
+        # Source pack directory
+        source_dir = os.path.join('graphic_packs', source_pack, 'monsters')
+        if not os.path.exists(source_dir):
+            shutil.rmtree(pack_dir)  # Clean up
+            return jsonify({'success': False, 'error': f'Source pack "{source_pack}" not found'})
+        
+        # Copy monster files
+        exported_count = 0
+        skipped = []
+        
+        for monster_id in monster_ids:
+            copied = False
+            
+            # Try to copy image file (jpg or png)
+            for ext in ['.jpg', '.png']:
+                source_image = os.path.join(source_dir, f'{monster_id}{ext}')
+                if os.path.exists(source_image):
+                    dest_image = os.path.join(monsters_dir, f'{monster_id}{ext}')
+                    shutil.copy2(source_image, dest_image)
+                    copied = True
+                    
+                    # Copy thumbnail if exists
+                    source_thumb = os.path.join(source_dir, f'{monster_id}_thumb{ext}')
+                    if os.path.exists(source_thumb):
+                        dest_thumb = os.path.join(monsters_dir, f'{monster_id}_thumb{ext}')
+                        shutil.copy2(source_thumb, dest_thumb)
+                    break
+            
+            # Copy video if exists
+            source_video = os.path.join(source_dir, f'{monster_id}_video.mp4')
+            if os.path.exists(source_video):
+                dest_video = os.path.join(monsters_dir, f'{monster_id}_video.mp4')
+                shutil.copy2(source_video, dest_video)
+                copied = True
+            
+            if copied:
+                exported_count += 1
+            else:
+                skipped.append(monster_id)
+                warning(f"TOOLKIT: Monster '{monster_id}' not found in source pack")
+        
+        # Create manifest.json
+        manifest = {
+            "name": pack_name,
+            "display_name": display_name,
+            "author": author,
+            "description": description,
+            "version": "1.0.0",
+            "created": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "style_template": style,
+            "total_monsters": exported_count,
+            "total_videos": len([f for f in os.listdir(monsters_dir) if f.endswith('_video.mp4')]),
+            "monsters": monster_ids,
+            "source": f"Exported from {source_pack}"
+        }
+        
+        manifest_path = os.path.join(pack_dir, 'manifest.json')
+        with open(manifest_path, 'w', encoding='utf-8') as f:
+            json.dump(manifest, f, indent=2)
+        
+        info(f"TOOLKIT: Successfully created pack '{pack_name}' with {exported_count} monsters")
+        
+        return jsonify({
+            'success': True,
+            'exported_count': exported_count,
+            'skipped': skipped,
+            'pack_name': pack_name
+        })
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to export monsters to pack: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 @app.route('/api/toolkit/packs/preview', methods=['POST'])
 def preview_pack():
     """Reads the manifest from a ZIP file without saving it."""
@@ -971,14 +1115,21 @@ def add_to_bestiary():
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
                 
-                # Run the async function (test_mode=False for real updates)
-                loop.run_until_complete(
-                    updater.process_missing_monsters(
-                        module_name=module_name,
-                        monster_names=monster_names,
-                        test_mode=False  # Actually update the bestiary
+                try:
+                    # Run the async function (test_mode=False for real updates)
+                    loop.run_until_complete(
+                        updater.process_missing_monsters(
+                            module_name=module_name,
+                            monster_names=monster_names,
+                            test_mode=False  # Actually update the bestiary
+                        )
                     )
-                )
+                except Exception as e:
+                    error(f"TOOLKIT: Error in bestiary update process: {e}")
+                    socketio.emit('bestiary_update_error', {
+                        'error': f'Process error: {str(e)}'
+                    })
+                    return
                 
                 socketio.emit('bestiary_update_complete', {
                     'success': True,
@@ -1094,19 +1245,22 @@ def get_monster_description(monster_id):
         return jsonify({'description': '', 'name': monster_id})
     
     try:
-        # Load monster compendium
+        # Load monster compendium with explicit UTF-8 encoding
         import json
         compendium_path = 'data/bestiary/monster_compendium.json'
-        with open(compendium_path, 'r') as f:
+        with open(compendium_path, 'r', encoding='utf-8') as f:
             compendium = json.load(f)
         
         # Look for monster in compendium
         monsters = compendium.get('monsters', {})
         if monster_id in monsters:
             monster_data = monsters[monster_id]
+            description = monster_data.get('description', '')
+            name = monster_data.get('name', monster_id)
+            info(f"TOOLKIT: Found {monster_id} - desc length: {len(description)}")
             return jsonify({
-                'description': monster_data.get('description', ''),
-                'name': monster_data.get('name', monster_id)
+                'description': description,
+                'name': name
             })
         else:
             # Try with underscores replaced by spaces

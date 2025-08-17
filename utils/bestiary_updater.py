@@ -77,10 +77,24 @@ class BestiaryUpdater:
         for area_file in sorted(areas_path.glob("*_BU.json")):
             debug(f"Reading area file: {area_file.name}")
             
-            # Read area data
-            area_data = safe_read_json(str(area_file))
+            # Read area data with explicit UTF-8 encoding
+            try:
+                with open(area_file, 'r', encoding='utf-8') as f:
+                    area_data = json.load(f)
+            except UnicodeDecodeError:
+                # Try with utf-8-sig to handle BOM
+                try:
+                    with open(area_file, 'r', encoding='utf-8-sig') as f:
+                        area_data = json.load(f)
+                except Exception as e:
+                    warning(f"Could not read area file {area_file}: {e}")
+                    continue
+            except Exception as e:
+                warning(f"Could not read area file {area_file}: {e}")
+                continue
+            
             if not area_data:
-                warning(f"Could not read area file: {area_file}")
+                warning(f"Area file is empty: {area_file}")
                 continue
             
             # Extract area information
@@ -109,22 +123,31 @@ class BestiaryUpdater:
                 if monsters:
                     combined_context.append("  Monsters:")
                     for monster in monsters:
-                        name = monster.get("name", "Unknown")
-                        number = monster.get("number", 1)
-                        disposition = monster.get("disposition", "unknown")
-                        strategy = monster.get("strategy", "")
-                        combined_context.append(f"    - {name} (x{number}, {disposition})")
-                        if strategy:
-                            combined_context.append(f"      Strategy: {strategy}")
+                        # Handle both dict and string formats
+                        if isinstance(monster, dict):
+                            name = monster.get("name", "Unknown")
+                            number = monster.get("number", 1)
+                            disposition = monster.get("disposition", "unknown")
+                            strategy = monster.get("strategy", "")
+                            combined_context.append(f"    - {name} (x{number}, {disposition})")
+                            if strategy:
+                                combined_context.append(f"      Strategy: {strategy}")
+                        elif isinstance(monster, str):
+                            # Handle string format (e.g., "2 Goblins")
+                            combined_context.append(f"    - {monster}")
                 
                 # NPCs
                 npcs = location.get("npcs", [])
                 if npcs:
                     combined_context.append("  NPCs:")
                     for npc in npcs:
-                        npc_name = npc.get("name", "Unknown")
-                        npc_desc = npc.get("description", "")
-                        combined_context.append(f"    - {npc_name}: {npc_desc[:200]}")
+                        # Handle both dict and string formats
+                        if isinstance(npc, dict):
+                            npc_name = npc.get("name", "Unknown")
+                            npc_desc = npc.get("description", "")
+                            combined_context.append(f"    - {npc_name}: {npc_desc[:200]}")
+                        elif isinstance(npc, str):
+                            combined_context.append(f"    - {npc}")
                 
                 # Plot hooks
                 hooks = location.get("plotHooks", [])
@@ -182,39 +205,81 @@ Focus on any mentions of '{monster_name}' in the module. If this specific creatu
 infer its appearance based on the module's theme and any similar creatures. Create an atmospheric, 
 image-generation-ready description that would fit this adventure."""
         
-        try:
-            info(f"Generating description for: {monster_name}")
-            
-            response = self.client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                temperature=0.7,
-                response_format={"type": "json_object"}
-            )
-            
-            # Update last request time
-            self.last_request_time = time.time()
-            
-            # Parse response
-            result = json.loads(response.choices[0].message.content)
-            
-            # Add metadata
-            result["source_file"] = "bestiary_updater.py"
-            result["generated_date"] = datetime.now().isoformat()
-            
-            # Sanitize text fields
-            result["description"] = sanitize_text(result["description"])
-            result["name"] = sanitize_text(result["name"])
-            
-            info(f"Successfully generated description for: {result['name']}")
-            return result
-            
-        except Exception as e:
-            error(f"Failed to generate description for {monster_name}: {e}")
-            return None
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                info(f"Generating description for: {monster_name} (attempt {attempt + 1}/{max_retries})")
+                
+                response = self.client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ],
+                    temperature=0.7,
+                    response_format={"type": "json_object"}
+                )
+                
+                # Update last request time
+                self.last_request_time = time.time()
+                
+                # Parse response
+                response_text = response.choices[0].message.content
+                
+                # Try to parse JSON
+                try:
+                    result = json.loads(response_text)
+                except json.JSONDecodeError as je:
+                    warning(f"JSON decode error on attempt {attempt + 1}: {je}")
+                    if attempt < max_retries - 1:
+                        # Add more explicit instructions for next attempt
+                        user_prompt = f"""{user_prompt}
+
+IMPORTANT: You MUST return valid JSON with exactly these fields:
+{{
+    "name": "{monster_name}",
+    "type": "one of: aberration, beast, celestial, construct, dragon, elemental, fey, fiend, giant, humanoid, monstrosity, ooze, plant, undead",
+    "description": "detailed description text here",
+    "tags": ["tag1", "tag2", "tag3"]
+}}"""
+                        continue
+                    else:
+                        raise je
+                
+                # Validate required fields
+                required_fields = ["name", "type", "description"]
+                missing_fields = [f for f in required_fields if f not in result]
+                if missing_fields:
+                    warning(f"Missing required fields on attempt {attempt + 1}: {missing_fields}")
+                    if attempt < max_retries - 1:
+                        continue
+                    else:
+                        # Try to patch missing fields
+                        result.setdefault("name", monster_name)
+                        result.setdefault("type", "monstrosity")
+                        result.setdefault("description", f"A mysterious creature known as {monster_name}")
+                        result.setdefault("tags", [])
+                
+                # Add metadata
+                result["source_file"] = "bestiary_updater.py"
+                result["generated_date"] = datetime.now().isoformat()
+                
+                # Sanitize text fields
+                result["description"] = sanitize_text(result.get("description", ""))
+                result["name"] = sanitize_text(result.get("name", monster_name))
+                
+                info(f"Successfully generated description for: {result['name']}")
+                return result
+                
+            except Exception as e:
+                error(f"Failed to generate description for {monster_name} on attempt {attempt + 1}: {e}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(2)  # Wait before retry
+                    continue
+                else:
+                    return None
+        
+        return None
     
     def update_bestiary_safe(self, new_monsters: Dict[str, Dict], test_mode: bool = False) -> bool:
         """
@@ -299,19 +364,30 @@ image-generation-ready description that would fit this adventure."""
         
         # Generate descriptions for each monster
         new_monsters = {}
-        for monster_name in monster_names:
-            # Normalize the monster ID for storage
-            monster_id = monster_name.lower().replace(" ", "_").replace("-", "_").replace("'", "")
-            
-            # Generate description
-            monster_data = await self.generate_monster_description(monster_name, module_context)
-            if monster_data:
-                new_monsters[monster_id] = monster_data
-                info(f"Generated description for: {monster_name} -> {monster_id}")
-            else:
-                warning(f"Failed to generate description for {monster_name}")
+        failed_monsters = []
         
-        # Update bestiary
+        for i, monster_name in enumerate(monster_names, 1):
+            try:
+                info(f"Processing monster {i}/{len(monster_names)}: {monster_name}")
+                
+                # Normalize the monster ID for storage
+                monster_id = monster_name.lower().replace(" ", "_").replace("-", "_").replace("'", "")
+                
+                # Generate description
+                monster_data = await self.generate_monster_description(monster_name, module_context)
+                if monster_data:
+                    new_monsters[monster_id] = monster_data
+                    info(f"Successfully generated description for: {monster_name} -> {monster_id}")
+                else:
+                    warning(f"Failed to generate description for {monster_name}")
+                    failed_monsters.append(monster_name)
+                    
+            except Exception as e:
+                error(f"Exception processing {monster_name}: {e}")
+                failed_monsters.append(monster_name)
+                continue
+        
+        # Update bestiary - only with successfully generated descriptions
         if new_monsters:
             success = self.update_bestiary_safe(new_monsters, test_mode)
             if success:
@@ -319,13 +395,16 @@ image-generation-ready description that would fit this adventure."""
             else:
                 error("Failed to update bestiary")
         else:
-            warning("No new monsters to add")
+            warning("No new monsters to add - all descriptions failed to generate")
         
         # Generate summary report
         info("\n=== Bestiary Update Summary ===")
         info(f"Module scanned: {module_name}")
         info(f"Monsters requested: {len(monster_names)}")
         info(f"Descriptions generated: {len(new_monsters)}")
+        info(f"Failed to generate: {len(failed_monsters)}")
+        if failed_monsters:
+            info(f"Failed monsters: {', '.join(failed_monsters[:5])}{'...' if len(failed_monsters) > 5 else ''}")
         info(f"Test mode: {test_mode}")
         info("================================\n")
 

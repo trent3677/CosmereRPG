@@ -481,22 +481,11 @@
         .log-entry.error { color: #f44336; }
         .log-entry.info { color: #2196F3; }
 
-        /* ADD this rule for the new pack form */
+        /* Updated rule for the create pack form in two-column layout */
         .create-pack-form {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            align-items: end;
-        }
-        .create-pack-form .form-group {
-            margin-bottom: 0;
-        }
-        .create-pack-form textarea {
-            min-height: 0; /* Override default min-height */
-        }
-        .create-pack-form .form-group:nth-child(4),
-        .create-pack-form button {
-            grid-column: 1 / -1; /* Make description and button span both columns */
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         /* === 9. Import Pack Section === */
@@ -1562,42 +1551,37 @@
         <div class="content">
             <!-- Monster Graphic Pack Management Tab - SINGLE COLUMN LAYOUT -->
             <div id="packs-tab" class="tab-content active">
-                <!-- NEW SINGLE-COLUMN LAYOUT -->
-                <!-- This is the new "Import Pack" section -->
-                <div class="section">
-                    <h2>Import Monster Pack</h2>
-                    <div class="import-container">
-                        <!-- Row for file selection -->
-                        <div class="import-control-row">
-                            <div id="file-path-display" class="file-display">No file selected...</div>
-                            <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">Select File</button>
-                            <input type="file" id="importFile" accept=".zip" style="display:none" onchange="handleFileSelection(this.files)">
-                        </div>
-                        
-                        <!-- Hidden area for previewing pack metadata -->
-                        <div id="import-preview-area" class="import-preview" style="display: none;">
-                            <h4>Pack Preview</h4>
-                            <div id="preview-metadata">
-                                <!-- Metadata will be loaded here by JavaScript -->
+                <!-- NEW TWO-COLUMN LAYOUT -->
+                <div class="two-column-layout" style="margin-bottom: 30px;">
+                    <!-- Column 1: Import Pack -->
+                    <div class="section">
+                        <h2>Import Monster Pack</h2>
+                        <div class="import-container">
+                            <div class="import-control-row">
+                                <div id="file-path-display" class="file-display">No file selected...</div>
+                                <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">Select File</button>
+                                <input type="file" id="importFile" accept=".zip" style="display:none" onchange="handleFileSelection(this.files)">
                             </div>
-                            <div class="import-confirmation">
-                                <div class="form-group" style="flex-grow: 1; margin-bottom: 0;">
-                                    <label for="target-folder-name" style="font-size: 0.9em; color: #999;">Destination Folder:</label>
-                                    <input type="text" id="target-folder-name" class="import-folder-input">
+                            <div id="import-preview-area" class="import-preview" style="display: none;">
+                                <h4>Pack Preview</h4>
+                                <div id="preview-metadata"></div>
+                                <div class="import-confirmation">
+                                    <div class="form-group" style="flex-grow: 1; margin-bottom: 0;">
+                                        <label for="target-folder-name" style="font-size: 0.9em; color: #999;">Destination Folder:</label>
+                                        <input type="text" id="target-folder-name" class="import-folder-input">
+                                    </div>
+                                    <button id="confirm-import-btn" class="btn btn-primary" onclick="confirmImport()">Confirm Import</button>
                                 </div>
-                                <button id="confirm-import-btn" class="btn btn-primary" onclick="confirmImport()">Confirm Import</button>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- ADD THIS NEW SECTION for creating packs -->
-                <div class="section">
-                    <h2>Create New Monster Pack</h2>
-                    <div class="create-pack-form">
+                    <!-- Column 2: Create New Pack -->
+                    <div class="section">
+                        <h2>Create New Pack</h2>
                         <div class="form-group">
                             <label for="new-pack-name">Pack Name (Internal ID)</label>
-                            <input type="text" id="new-pack-name" placeholder="e.g., anime_style_pack (no spaces, lowercase)">
+                            <input type="text" id="new-pack-name" placeholder="e.g., anime_style_pack">
                         </div>
                         <div class="form-group">
                             <label for="new-pack-display-name">Display Name</label>
@@ -1606,10 +1590,6 @@
                         <div class="form-group">
                             <label for="new-pack-author">Author</label>
                             <input type="text" id="new-pack-author" placeholder="Your name or alias">
-                        </div>
-                        <div class="form-group">
-                            <label for="new-pack-description">Description</label>
-                            <textarea id="new-pack-description" rows="3" placeholder="A brief description of this pack's style and content."></textarea>
                         </div>
                         <button class="btn btn-primary" onclick="createNewPack()">Create Pack</button>
                     </div>
@@ -1766,6 +1746,7 @@
                         </div>
                     </div>
                     <button class="btn btn-primary" style="margin-top: 20px;" onclick="startGeneration()">Generate Selected Images to Current Pack</button>
+                    <button class="btn btn-success" style="margin-top: 20px;" onclick="showExportToPackModal()">Export Selected to New Pack</button>
                     <button class="btn btn-warning" style="margin-top: 20px; display: none;" id="add-to-bestiary-btn" onclick="addSelectedToBestiary()">Add to Bestiary</button>
                 </div>
 
@@ -2019,6 +2000,7 @@
                             : `<button class="btn btn-success" onclick="showPackConfirmation('${pack.name}')">Activate</button>`
                         }
                         <button class="btn btn-secondary" onclick="exportPack('${pack.name}')">Export</button>
+                        ${(!pack.is_active) ? `<button class="btn btn-primary" onclick="showMergeConfirmation('${pack.name}')">Merge</button>` : ''}
                         ${(!isDefault && !pack.is_active) ? 
                             `<button class="btn btn-danger" onclick="deletePack('${pack.name}')">Delete</button>` :
                             ''
@@ -2240,6 +2222,183 @@
                     console.error('Failed to delete pack:', error);
                     alert('An error occurred while trying to delete the pack.');
                 }
+            }
+        }
+        
+        // Merge Pack Functions
+        let pendingPackMerge = null;
+
+        function showMergeConfirmation(sourcePackName) {
+            const destPack = availablePacks.find(p => p.is_active);
+            if (!destPack) {
+                alert('Cannot merge because there is no active pack to merge into.');
+                return;
+            }
+
+            pendingPackMerge = sourcePackName;
+            
+            document.getElementById('merge-source-pack').textContent = sourcePackName;
+            document.getElementById('merge-dest-pack').textContent = destPack.display_name || destPack.name;
+            document.getElementById('merge-confirm-modal').style.display = 'flex';
+        }
+
+        function cancelMerge() {
+            document.getElementById('merge-confirm-modal').style.display = 'none';
+            pendingPackMerge = null;
+        }
+
+        async function confirmMerge() {
+            if (!pendingPackMerge) return;
+
+            const sourcePackName = pendingPackMerge;
+            cancelMerge(); // Hide modal and clear pending state immediately
+
+            addLog('genLog', `Starting merge from '${sourcePackName}'...`, 'info');
+
+            try {
+                const response = await fetch(`/api/toolkit/packs/${sourcePackName}/merge`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    addLog('genLog', result.message, 'success');
+                    // Reload packs to show updated monster/video counts in the active pack
+                    await loadPacks(); 
+                } else {
+                    addLog('genLog', `Merge failed: ${result.error}`, 'error');
+                    alert(`Merge failed: ${result.error}`);
+                }
+            } catch (error) {
+                addLog('genLog', `Merge failed with a network error: ${error}`, 'error');
+                alert(`An error occurred during the merge process.`);
+            }
+        }
+        
+        // Export to Pack Functions
+        function showExportToPackModal() {
+            const selectedMonsters = Array.from(document.querySelectorAll('input[name="monster"]:checked'))
+                .map(cb => cb.value);
+            
+            if (selectedMonsters.length === 0) {
+                alert('Please select at least one monster to export.');
+                return;
+            }
+            
+            // Get current pack name to use as source
+            const currentPack = document.getElementById('genPack').value;
+            if (!currentPack || currentPack === '__new__') {
+                alert('Please select a valid source pack first.');
+                return;
+            }
+            
+            // Update monster count in modal
+            document.getElementById('export-monster-count').textContent = selectedMonsters.length;
+            
+            // Suggest a pack name based on module
+            const moduleName = document.getElementById('genModule').value;
+            if (moduleName) {
+                const suggestedName = moduleName.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_pack';
+                document.getElementById('export-pack-name').value = suggestedName;
+                
+                // Suggest display name
+                const moduleOption = document.querySelector(`#genModule option[value="${moduleName}"]`);
+                if (moduleOption) {
+                    document.getElementById('export-pack-display-name').value = moduleOption.textContent + ' Monster Pack';
+                }
+            }
+            
+            // Show modal
+            document.getElementById('export-to-pack-modal').style.display = 'flex';
+        }
+        
+        function cancelExportToPack() {
+            document.getElementById('export-to-pack-modal').style.display = 'none';
+            // Clear form
+            document.getElementById('export-pack-name').value = '';
+            document.getElementById('export-pack-display-name').value = '';
+            document.getElementById('export-pack-author').value = '';
+            document.getElementById('export-pack-description').value = '';
+            document.getElementById('export-pack-style').value = '';
+        }
+        
+        async function confirmExportToPack() {
+            // Gather pack information
+            const packName = document.getElementById('export-pack-name').value.trim();
+            const displayName = document.getElementById('export-pack-display-name').value.trim();
+            const author = document.getElementById('export-pack-author').value.trim();
+            const description = document.getElementById('export-pack-description').value.trim();
+            const style = document.getElementById('export-pack-style').value.trim() || 'custom';
+            
+            // Validate pack name
+            if (!packName || !/^[a-z0-9_]+$/.test(packName)) {
+                alert('Pack name must contain only lowercase letters, numbers, and underscores.');
+                return;
+            }
+            
+            if (!displayName) {
+                alert('Please provide a display name for the pack.');
+                return;
+            }
+            
+            if (!author) {
+                alert('Please provide an author name.');
+                return;
+            }
+            
+            // Get selected monsters
+            const selectedMonsters = Array.from(document.querySelectorAll('input[name="monster"]:checked'))
+                .map(cb => cb.value);
+            
+            // Get source pack
+            const sourcePack = document.getElementById('genPack').value;
+            
+            // Close modal
+            cancelExportToPack();
+            
+            // Show progress
+            addLog('genLog', `Creating new pack "${displayName}"...`, 'info');
+            
+            try {
+                const response = await fetch('/api/toolkit/export-monsters-to-pack', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        pack_name: packName,
+                        display_name: displayName,
+                        author: author,
+                        description: description,
+                        style: style,
+                        source_pack: sourcePack,
+                        monster_ids: selectedMonsters
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    addLog('genLog', `Successfully created pack: ${displayName}`, 'success');
+                    addLog('genLog', `Exported ${result.exported_count} monsters`, 'success');
+                    if (result.skipped && result.skipped.length > 0) {
+                        addLog('genLog', `Skipped ${result.skipped.length} monsters (not found in source)`, 'warning');
+                    }
+                    
+                    // Reload packs list
+                    await loadPacks();
+                    
+                    // Option to download the pack
+                    if (confirm(`Pack created successfully! Would you like to download it as a ZIP file?`)) {
+                        window.location.href = `/api/toolkit/packs/${packName}/export`;
+                    }
+                } else {
+                    addLog('genLog', `Failed to create pack: ${result.error}`, 'error');
+                    alert(`Failed to create pack: ${result.error}`);
+                }
+            } catch (error) {
+                addLog('genLog', `Error creating pack: ${error}`, 'error');
+                alert(`An error occurred while creating the pack.`);
             }
         }
         
@@ -3851,6 +4010,68 @@
             <div class="modal-buttons">
                 <button class="btn btn-danger" onclick="confirmPackActivation()">Activate Pack</button>
                 <button class="btn btn-secondary" onclick="cancelPackActivation()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Merge Pack Confirmation Modal -->
+    <div id="merge-confirm-modal" class="modal" style="display: none;">
+        <div class="modal-content pack-confirm-content">
+            <h3>Confirm Pack Merge</h3>
+            <div class="modal-warning">
+                <p><strong>Warning:</strong> This will copy all assets from the source pack into the active pack.</p>
+                <p>Any files with the same name in the active pack <strong>will be overwritten</strong> by the files from the source pack. This action cannot be undone.</p>
+            </div>
+            <div class="modal-pack-info">
+                <p>Merging From (Source): <strong id="merge-source-pack"></strong></p>
+                <p>Merging Into (Destination): <strong id="merge-dest-pack"></strong></p>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="confirmMerge()">Confirm Merge</button>
+                <button class="btn btn-secondary" onclick="cancelMerge()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export to Pack Modal -->
+    <div id="export-to-pack-modal" class="modal" style="display: none;">
+        <div class="modal-content pack-confirm-content" style="min-width: 500px;">
+            <h3 style="color: #4CAF50;">Export Monsters to New Pack</h3>
+            <div class="modal-pack-info">
+                <p>You are about to export <strong id="export-monster-count">0</strong> selected monster(s) to a new pack.</p>
+            </div>
+            
+            <div style="margin: 20px 0;">
+                <div class="form-group">
+                    <label for="export-pack-name">Pack Name (Internal ID)</label>
+                    <input type="text" id="export-pack-name" placeholder="e.g., shadows_of_kharos_pack" style="width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: white;">
+                    <small style="color: #999;">Use lowercase letters, numbers, and underscores only</small>
+                </div>
+                
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="export-pack-display-name">Display Name</label>
+                    <input type="text" id="export-pack-display-name" placeholder="e.g., Shadows of Kharos Monster Pack" style="width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: white;">
+                </div>
+                
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="export-pack-author">Author</label>
+                    <input type="text" id="export-pack-author" placeholder="Your name or alias" style="width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: white;">
+                </div>
+                
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="export-pack-description">Description</label>
+                    <textarea id="export-pack-description" rows="3" placeholder="Describe this pack's content and purpose" style="width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: white; resize: vertical;"></textarea>
+                </div>
+                
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="export-pack-style">Style Template</label>
+                    <input type="text" id="export-pack-style" placeholder="e.g., photorealistic, fantasy_art" style="width: 100%; padding: 8px; background: #1a1a1a; border: 1px solid #444; color: white;">
+                </div>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="btn btn-success" onclick="confirmExportToPack()">Create Pack</button>
+                <button class="btn btn-secondary" onclick="cancelExportToPack()">Cancel</button>
             </div>
         </div>
     </div>
