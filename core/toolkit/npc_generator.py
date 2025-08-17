@@ -79,7 +79,7 @@ class NPCGenerator:
             return False
     
     def build_prompt(self, npc_name: str, npc_description: str, style: str = "photorealistic") -> str:
-        """Build a complete prompt for NPC portrait generation"""
+        """Build a complete prompt for NPC portrait generation using a proven, modular structure."""
         
         # Get style template - check both builtin and custom
         style_data = None
@@ -87,29 +87,37 @@ class NPCGenerator:
             style_data = self.style_templates["builtin"][style]
         elif style in self.style_templates.get("custom", {}):
             style_data = self.style_templates["custom"][style]
-        else:
-            # Default fallback
-            style_data = {
-                "prompt": "High quality fantasy art portrait, detailed character art, warm lighting, centered composition"
-            }
         
-        # Build the complete prompt - EMPHASIZE FANTASY D&D STYLE
-        base_prompt = f"Fantasy tabletop RPG character portrait of {npc_name}, a potential party ally in a medieval fantasy world. Epic fantasy art style, dungeons and dragons character art. Single character only, heroic portrait composition. {npc_description}"
-        
-        # Add style-specific prompt
-        style_prompt = style_data.get("prompt", "")
-        
-        if style_prompt:
-            full_prompt = f"{base_prompt}\n\nIMPORTANT: Single fantasy character portrait only, NOT multiple views. Medieval fantasy setting, magical world atmosphere.\n\nStyle: {style_prompt}"
-        else:
-            # Fallback to default style
-            full_prompt = f"""{base_prompt}
+        if not style_data:
+            print(f"Warning: Style '{style}' not found. Using a default fantasy art style.")
+            style_data = { "prompt": "digital painting, fantasy character portrait, dungeons and dragons" }
 
-Important: SINGLE FANTASY CHARACTER PORTRAIT. Epic fantasy RPG art style like Dungeons & Dragons, Pathfinder, or fantasy video games. Heroic pose, medieval fantasy setting. Magical atmosphere with dramatic lighting. Professional fantasy character art quality. ONE portrait image only.
+        prompt_parts = []
 
-Style: Professional fantasy RPG character art, painted fantasy portrait, epic medieval fantasy style, dramatic magical lighting, heroic character portrait, fantasy game art quality. Background hints at tavern, dungeon, or fantasy landscape."""
+        # Part 1: The Core Instruction (Style + Subject)
+        # This is the most critical change. The main style prompt is now the first thing the AI sees.
+        base_style_prompt = style_data.get("prompt", "")
+        prompt_parts.append(
+            f"A beautiful, charismatic {base_style_prompt} of a friendly D&D party companion named {npc_name}."
+        )
+
+        # Part 2: The Detailed Description (Its own paragraph)
+        # The AI now processes the physical details after understanding the artistic context.
+        prompt_parts.append(npc_description)
+
+        # Part 3: Composition and Framing (Clear, positive instructions)
+        prompt_parts.append(
+            "The portrait is a single character, centered, from the chest up. The background is a simple, atmospheric fantasy setting. The character has a friendly and trustworthy expression, looking towards the viewer."
+        )
+
+        # Part 4: Modifiers (Consistent with the monster generator)
+        # Appends extra keywords like "highly detailed, cinematic" for more punch.
+        if style_data.get("modifiers"):
+            modifiers_text = ", ".join(style_data["modifiers"])
+            prompt_parts.append(modifiers_text)
         
-        return full_prompt
+        # Join the parts with double newlines for clarity
+        return "\n\n".join(prompt_parts)
     
     def generate_npc_portrait(
         self, 
