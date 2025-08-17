@@ -601,11 +601,20 @@ def activate_pack(pack_name):
         # Check if backup should be created
         create_backup = request.json.get('create_backup', False) if request.json else False
         
-        manager = PackManager()
-        result = manager.activate_pack(pack_name, create_backup=create_backup)
+        # If backup requested, create a backup pack from current live game assets FIRST
+        if create_backup:
+            backup_result = create_live_assets_backup_pack()
+            if not backup_result.get('success'):
+                warning(f"TOOLKIT: Failed to create live assets backup: {backup_result.get('error')}")
         
-        # If activation successful, also copy NPCs to game folder
+        manager = PackManager()
+        result = manager.activate_pack(pack_name, create_backup=False)  # Don't need pack backup since we did live backup
+        
+        # If activation successful, copy all assets to the live game folders
         if result.get('success'):
+            # First, copy the monster assets (NO individual backup needed)
+            copy_pack_monsters_to_game(pack_name)
+            # Then, copy the NPC assets (NO individual backup needed)
             copy_pack_npcs_to_game(pack_name)
         
         return jsonify(result)
@@ -2928,8 +2937,130 @@ def update_pack_manifest_with_npcs(pack_name):
     except Exception as e:
         error(f"TOOLKIT: Failed to update pack manifest: {e}")
 
+def create_live_assets_backup_pack():
+    """
+    Creates a backup pack from the current live game assets.
+    This preserves ALL assets currently in use, regardless of their source.
+    """
+    try:
+        import os
+        import shutil
+        from datetime import datetime
+        import json
+        
+        # Generate backup pack name with timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_name = f"live_backup_{timestamp}"
+        backup_dir = os.path.join('graphic_packs', backup_name)
+        
+        # Create the backup pack directory
+        os.makedirs(backup_dir, exist_ok=True)
+        
+        # Define source and destination paths
+        live_monsters_dir = os.path.join('web', 'static', 'media', 'monsters')
+        live_npcs_dir = os.path.join('web', 'static', 'media', 'npcs')
+        backup_monsters_dir = os.path.join(backup_dir, 'monsters')
+        backup_npcs_dir = os.path.join(backup_dir, 'npcs')
+        
+        copied_monsters = 0
+        copied_npcs = 0
+        
+        # Copy monster assets if they exist
+        if os.path.exists(live_monsters_dir) and os.listdir(live_monsters_dir):
+            os.makedirs(backup_monsters_dir, exist_ok=True)
+            for filename in os.listdir(live_monsters_dir):
+                src_path = os.path.join(live_monsters_dir, filename)
+                dest_path = os.path.join(backup_monsters_dir, filename)
+                if os.path.isfile(src_path):
+                    shutil.copy2(src_path, dest_path)
+                    copied_monsters += 1
+        
+        # Copy NPC assets if they exist
+        if os.path.exists(live_npcs_dir) and os.listdir(live_npcs_dir):
+            os.makedirs(backup_npcs_dir, exist_ok=True)
+            for filename in os.listdir(live_npcs_dir):
+                src_path = os.path.join(live_npcs_dir, filename)
+                dest_path = os.path.join(backup_npcs_dir, filename)
+                if os.path.isfile(src_path):
+                    shutil.copy2(src_path, dest_path)
+                    copied_npcs += 1
+        
+        # Create manifest for the backup pack
+        manifest = {
+            "name": backup_name,
+            "display_name": f"Live Assets Backup ({datetime.now().strftime('%Y-%m-%d %H:%M')})",
+            "description": f"Automatic backup of all live game assets. Contains {copied_monsters} monster files and {copied_npcs} NPC files.",
+            "is_backup": True,
+            "backup_type": "live_assets",
+            "backup_date": datetime.now().isoformat(),
+            "monster_count": copied_monsters,
+            "npc_count": copied_npcs,
+            "created_by": "System"
+        }
+        
+        manifest_path = os.path.join(backup_dir, 'manifest.json')
+        with open(manifest_path, 'w') as f:
+            json.dump(manifest, f, indent=2)
+        
+        info(f"TOOLKIT: Created live assets backup pack '{backup_name}' with {copied_monsters} monsters and {copied_npcs} NPCs")
+        
+        return {
+            "success": True,
+            "backup_name": backup_name,
+            "monsters": copied_monsters,
+            "npcs": copied_npcs
+        }
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to create live assets backup: {e}")
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+def copy_pack_monsters_to_game(pack_name):
+    """
+    Replaces live monster assets with assets from the specified pack.
+    Note: Backup should be done at pack level before calling this.
+    """
+    try:
+        import os
+        import shutil
+
+        # Define source and destination paths
+        source_dir = os.path.join('graphic_packs', pack_name, 'monsters')
+        live_dir = os.path.join('web', 'static', 'media', 'monsters')
+
+        if not os.path.exists(source_dir):
+            info(f"TOOLKIT: Pack '{pack_name}' has no 'monsters' folder. Skipping monster asset copy.")
+            return
+
+        # Clear existing live directory
+        if os.path.exists(live_dir):
+            shutil.rmtree(live_dir)
+        
+        # Create fresh live directory
+        os.makedirs(live_dir, exist_ok=True)
+
+        # 3. Copy all files from the pack's monster folder to the live folder
+        copied_count = 0
+        for filename in os.listdir(source_dir):
+            src_path = os.path.join(source_dir, filename)
+            dest_path = os.path.join(live_dir, filename)
+            if os.path.isfile(src_path):
+                shutil.copy2(src_path, dest_path)
+                copied_count += 1
+        
+        info(f"TOOLKIT: Copied {copied_count} monster files from pack '{pack_name}' to live game folder.")
+
+    except Exception as e:
+        error(f"TOOLKIT: Failed to copy monster assets to game folder: {e}")
+
 def copy_pack_npcs_to_game(pack_name):
-    """Copy NPCs from a pack to the game's NPC media folder"""
+    """
+    Replaces live NPC assets with assets from the specified pack.
+    Note: Backup should be done at pack level before calling this.
+    """
     try:
         import os
         import shutil
@@ -2941,7 +3072,11 @@ def copy_pack_npcs_to_game(pack_name):
             info(f"TOOLKIT: Pack '{pack_name}' has no NPCs folder")
             return
         
-        # Create game NPCs directory if needed
+        # Clear existing live directory
+        if os.path.exists(game_npcs_dir):
+            shutil.rmtree(game_npcs_dir)
+        
+        # Create fresh live directory
         os.makedirs(game_npcs_dir, exist_ok=True)
         
         # Copy all NPC files to game folder

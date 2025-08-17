@@ -2055,6 +2055,20 @@
                     <button class="btn btn-primary" style="margin-top: 20px;" onclick="startNpcGeneration()">Generate Selected Portraits</button>
                     <button class="btn btn-success" style="margin-top: 20px;" onclick="exportNpcsToPack()">Export to Pack</button>
                 </div>
+                
+                <!-- Generation Log for NPCs -->
+                <div class="section">
+                    <h2>Generation Log</h2>
+                    <div class="log-container" id="npcGenLog">
+                        <!-- NPC generation log entries will appear here -->
+                    </div>
+                    <div class="progress-container" id="npcGenProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="npcGenProgressFill">0%</div>
+                        </div>
+                        <div class="progress-status" id="npcGenStatus">Preparing...</div>
+                    </div>
+                </div>
             </div>
             
             <!-- Video Processor Tab - UPDATED LAYOUT -->
@@ -3512,28 +3526,28 @@
             // NPC Management events
             socket.on('npc_description_progress', (data) => {
                 console.log('[NPC Description Progress]', data);
-                addLog('genLog', `Generating description for ${data.npc_name} (${data.current}/${data.total})`, 
+                addLog('npcGenLog', `Generating description for ${data.npc_name} (${data.current}/${data.total})`, 
                        data.status === 'success' ? 'success' : 'error');
                        
-                // Update progress bar
+                // Update NPC progress bar
                 const percent = (data.current / data.total) * 100;
-                document.getElementById('genProgressFill').style.width = `${percent}%`;
-                document.getElementById('genProgressFill').textContent = `${Math.round(percent)}%`;
-                document.getElementById('genStatus').textContent = `Generating description for ${data.npc_name} (${data.current}/${data.total})`;
-                document.getElementById('genProgress').style.display = 'block';
+                document.getElementById('npcGenProgressFill').style.width = `${percent}%`;
+                document.getElementById('npcGenProgressFill').textContent = `${Math.round(percent)}%`;
+                document.getElementById('npcGenStatus').textContent = `Generating description for ${data.npc_name} (${data.current}/${data.total})`;
+                document.getElementById('npcGenProgress').style.display = 'block';
             });
             
             socket.on('npc_portrait_progress', (data) => {
                 console.log('[NPC Portrait Progress]', data);
-                addLog('genLog', `Generating portrait for ${data.npc_name} (${data.current}/${data.total})`, 
+                addLog('npcGenLog', `Generating portrait for ${data.npc_name} (${data.current}/${data.total})`, 
                        data.status === 'success' ? 'success' : 'error');
                        
-                // Update progress bar
+                // Update NPC progress bar
                 const percent = (data.current / data.total) * 100;
-                document.getElementById('genProgressFill').style.width = `${percent}%`;
-                document.getElementById('genProgressFill').textContent = `${Math.round(percent)}%`;
-                document.getElementById('genStatus').textContent = `Generating portrait for ${data.npc_name} (${data.current}/${data.total})`;
-                document.getElementById('genProgress').style.display = 'block';
+                document.getElementById('npcGenProgressFill').style.width = `${percent}%`;
+                document.getElementById('npcGenProgressFill').textContent = `${Math.round(percent)}%`;
+                document.getElementById('npcGenStatus').textContent = `Generating portrait for ${data.npc_name} (${data.current}/${data.total})`;
+                document.getElementById('npcGenProgress').style.display = 'block';
                        
                 // Update thumbnail if successful
                 if (data.status === 'success') {
@@ -3542,6 +3556,33 @@
                     const npcId = data.npc_name.toLowerCase().replace(/\s+/g, '_').replace(/'/g, '').replace(/-/g, '_');
                     loadNpcThumbnail(npcId, packName);
                 }
+            });
+            
+            socket.on('npc_generation_complete', (data) => {
+                console.log('[NPC Generation Complete]', data);
+                
+                // Hide NPC progress bar
+                document.getElementById('npcGenProgress').style.display = 'none';
+                
+                const successful = data.successful || [];
+                const failed = data.failed || [];
+                
+                if (successful.length > 0) {
+                    addLog('npcGenLog', `Successfully generated ${successful.length} portrait(s)!`, 'success');
+                    successful.forEach(item => {
+                        addLog('npcGenLog', `[OK] ${item.npc_name} portrait saved`, 'success');
+                    });
+                }
+                
+                if (failed.length > 0) {
+                    addLog('npcGenLog', `Failed to generate ${failed.length} portrait(s)`, 'error');
+                    failed.forEach(item => {
+                        addLog('npcGenLog', `[ERROR] ${item.npc_id}: ${item.error}`, 'error');
+                    });
+                }
+                
+                // Reload the NPC list to show updated thumbnails
+                setTimeout(() => loadNpcsForModule(), 2000);
             });
             
             socket.on('npc_portrait_complete', (data) => {
@@ -4320,7 +4361,7 @@
 
                 item.innerHTML = `
                     <label class="monster-label">
-                        <input type="checkbox" value="${npc.name}" name="npc-select" onchange="loadNpcDescription('${npc.name.replace(/'/g, "\\'")}')" data-npc-id="${npc.id}">
+                        <input type="checkbox" value="${npc.name}" name="npc-select" onchange="loadNpcDescription('${npc.name.replace(/'/g, "\\'")}'); updateNpcSelectionStatus()" data-npc-id="${npc.id}">
                         <span>${npc.name}</span>
                     </label>
                     <div class="npc-thumbnail-preview" id="thumb-npc-${npc.id}">
@@ -4580,10 +4621,28 @@
                     checkbox.checked = false;
                 }
             });
+            updateNpcSelectionStatus();
         }
 
         function deselectAllNpcs() {
             document.querySelectorAll('input[name="npc-select"]').forEach(cb => cb.checked = false);
+            updateNpcSelectionStatus();
+        }
+        
+        // Update NPC selection status to show count on button
+        function updateNpcSelectionStatus() {
+            const selectedNpcs = Array.from(document.querySelectorAll('input[name="npc-select"]:checked'));
+            const generateBtn = document.querySelector('button[onclick="startNpcGeneration()"]');
+            
+            if (generateBtn) {
+                if (selectedNpcs.length === 0) {
+                    generateBtn.textContent = 'Generate Selected Portraits';
+                } else if (selectedNpcs.length === 1) {
+                    generateBtn.textContent = 'Generate 1 Selected Portrait';
+                } else {
+                    generateBtn.textContent = `Generate ${selectedNpcs.length} Selected Portraits`;
+                }
+            }
         }
 
         // NPC Model Warning
@@ -4742,14 +4801,89 @@
                 id: input.dataset.npcId
             }));
             
-            // Show progress
-            addLog('genLog', `Starting portrait generation for ${npcsToGenerate.length} NPCs with ${styleSelect.value} style...`, 'info');
+            // Show confirmation popup with generation settings
+            const confirmationDiv = document.createElement('div');
+            confirmationDiv.id = 'npc-confirmation-popup';
+            confirmationDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #2a2a2a;
+                border: 2px solid #ff9800;
+                border-radius: 8px;
+                padding: 20px;
+                z-index: 10000;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+                min-width: 400px;
+                color: white;
+            `;
             
-            // Show progress bar
-            document.getElementById('genProgress').style.display = 'block';
-            document.getElementById('genProgressFill').style.width = '0%';
-            document.getElementById('genProgressFill').textContent = '0%';
-            document.getElementById('genStatus').textContent = 'Initializing portrait generation...';
+            confirmationDiv.innerHTML = `
+                <h3 style="margin: 0 0 20px 0; color: #ff9800;">Confirm Portrait Generation</h3>
+                <div style="margin-bottom: 15px;">
+                    <strong>Source Module:</strong> <span style="color: #4CAF50;">${moduleName}</span>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>Target Pack:</strong> <span style="color: #4CAF50;">${packName}</span>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>Style Template:</strong> <span style="color: #4CAF50;">${styleSelect.options[styleSelect.selectedIndex].text}</span>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <strong>AI Model:</strong> <span style="color: #4CAF50;">${model}</span>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <strong>NPCs to Generate:</strong> <span style="color: #4CAF50;">${npcsToGenerate.length} portrait${npcsToGenerate.length > 1 ? 's' : ''}</span>
+                    <div style="max-height: 150px; overflow-y: auto; margin-top: 10px; padding: 10px; background: #1a1a1a; border-radius: 4px;">
+                        ${npcsToGenerate.map(npc => `<div style="margin: 2px 0;">• ${npc.name}</div>`).join('')}
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <button onclick="proceedWithNpcGeneration()" style="padding: 8px 20px; margin-right: 10px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Proceed</button>
+                    <button onclick="cancelNpcGeneration()" style="padding: 8px 20px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                </div>
+            `;
+            
+            document.body.appendChild(confirmationDiv);
+            
+            // Store settings for the 'proceed' function to use
+            window.npcGenerationSettings = {
+                moduleName,
+                packName,
+                model,
+                style: styleSelect.value,
+                stylePrompt,
+                npcs: npcsToGenerate
+            };
+        }
+        
+        // Function to cancel NPC generation
+        function cancelNpcGeneration() {
+            const popup = document.getElementById('npc-confirmation-popup');
+            if (popup) popup.remove();
+            // Clear the stored settings
+            delete window.npcGenerationSettings;
+        }
+        
+        // Function to proceed with NPC generation after confirmation
+        async function proceedWithNpcGeneration() {
+            if (!window.npcGenerationSettings) return;
+            
+            // Retrieve the stored settings
+            const { moduleName, packName, model, style, stylePrompt, npcs } = window.npcGenerationSettings;
+            
+            // Close the pop-up
+            cancelNpcGeneration();
+            
+            // Show progress in NPC generation log
+            addLog('npcGenLog', `Starting portrait generation for ${npcs.length} NPCs with ${style} style...`, 'info');
+            
+            // Show NPC progress bar
+            document.getElementById('npcGenProgress').style.display = 'block';
+            document.getElementById('npcGenProgressFill').style.width = '0%';
+            document.getElementById('npcGenProgressFill').textContent = '0%';
+            document.getElementById('npcGenStatus').textContent = 'Initializing portrait generation...';
             
             try {
                 const response = await fetch('/api/toolkit/npcs/generate-portraits', {
@@ -4759,20 +4893,22 @@
                         module_name: moduleName,
                         pack_name: packName,
                         model: model,
-                        style: styleSelect.value,
+                        style: style,
                         style_prompt: stylePrompt,
-                        npcs: npcsToGenerate
+                        npcs: npcs
                     })
                 });
                 
                 const result = await response.json();
                 if (result.success) {
-                    addLog('genLog', 'Portrait generation started successfully!', 'success');
+                    addLog('npcGenLog', 'Portrait generation started successfully!', 'success');
                 } else {
-                    addLog('genLog', `Error starting generation: ${result.error}`, 'error');
+                    addLog('npcGenLog', `Error starting generation: ${result.error}`, 'error');
+                    document.getElementById('npcGenProgress').style.display = 'none';
                 }
             } catch (error) {
-                addLog('genLog', `Failed to start generation: ${error}`, 'error');
+                addLog('npcGenLog', `Failed to start generation: ${error}`, 'error');
+                document.getElementById('npcGenProgress').style.display = 'none';
             }
         }
 
