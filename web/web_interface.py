@@ -2451,12 +2451,15 @@ def open_browser():
 @app.route('/api/toolkit/modules/<module_name>/npcs')
 def get_module_npcs(module_name):
     """
-    Scans for NPCs and checks for portraits in the pack's npcs/ folder and the live game folder.
+    Scans a module for NPCs and checks for portraits in the pack's npcs/ folder
+    and optionally in the live game folder.
     """
     if not TOOLKIT_AVAILABLE:
         return jsonify([]), 503
     
     pack_name = request.args.get('pack')
+    include_local = request.args.get('include_local', 'false').lower() == 'true'
+
     if not pack_name:
         return jsonify({'error': 'A target pack must be specified.'}), 400
         
@@ -2466,43 +2469,32 @@ def get_module_npcs(module_name):
         
         npcs_found = {}
         
-        # --- LOGIC FOR SCANNING A MODULE ---
-        if module_name != "__local__":
-            areas_dir = os.path.join('modules', module_name, 'areas')
-            if os.path.exists(areas_dir):
-                for filename in os.listdir(areas_dir):
-                    if filename.endswith('_BU.json'):
-                        area_path = os.path.join(areas_dir, filename)
-                        area_data = safe_read_json(area_path)
-                        if area_data and 'locations' in area_data:
-                            for location in area_data.get('locations', []):
-                                if 'npcs' in location and location['npcs']:
-                                    for npc in location['npcs']:
-                                        if isinstance(npc, dict) and 'name' in npc:
-                                            npc_name = npc['name']
-                                            npc_id = npc_name.lower().replace(' ', '_').replace("'", "").replace("-", "_")
-                                            if npc_id not in npcs_found:
-                                                npcs_found[npc_id] = {'name': npc_name, 'id': npc_id}
-                                        elif isinstance(npc, str):
-                                            npc_name = npc
-                                            npc_id = npc_name.lower().replace(' ', '_').replace("'", "").replace("-", "_")
-                                            if npc_id not in npcs_found:
-                                                npcs_found[npc_id] = {'name': npc_name, 'id': npc_id}
-        # --- LOGIC FOR SCANNING LOCAL GAME FILES ---
-        else:
-            local_portraits_dir = os.path.join('web', 'static', 'portraits')
-            if os.path.exists(local_portraits_dir):
-                for filename in os.listdir(local_portraits_dir):
-                    if filename.endswith('.png'):
-                        npc_id = filename[:-4]  # remove .png
-                        npc_name = npc_id.replace('_', ' ').title()
-                        if npc_id not in npcs_found:
-                            npcs_found[npc_id] = {'name': npc_name, 'id': npc_id}
+        # Always scan a module to get the list of required NPCs
+        areas_dir = os.path.join('modules', module_name, 'areas')
+        if os.path.exists(areas_dir):
+            for filename in os.listdir(areas_dir):
+                if filename.endswith('_BU.json'):
+                    area_path = os.path.join(areas_dir, filename)
+                    area_data = safe_read_json(area_path)
+                    if area_data and 'locations' in area_data:
+                        for location in area_data.get('locations', []):
+                            if 'npcs' in location and location['npcs']:
+                                for npc in location['npcs']:
+                                    if isinstance(npc, dict) and 'name' in npc:
+                                        npc_name = npc['name']
+                                        npc_id = npc_name.lower().replace(' ', '_').replace("'", "").replace("-", "_")
+                                        if npc_id not in npcs_found:
+                                            npcs_found[npc_id] = {'name': npc_name, 'id': npc_id}
+                                    elif isinstance(npc, str):
+                                        npc_name = npc
+                                        npc_id = npc_name.lower().replace(' ', '_').replace("'", "").replace("-", "_")
+                                        if npc_id not in npcs_found:
+                                            npcs_found[npc_id] = {'name': npc_name, 'id': npc_id}
 
-        # --- CHECK PORTRAIT EXISTENCE ---
+        # Check portrait existence based on findings
         npc_list = []
         pack_npcs_dir = os.path.join('graphic_packs', pack_name, 'npcs')
-        local_portraits_dir = os.path.join('web', 'static', 'portraits')
+        local_npcs_dir = os.path.join('web', 'static', 'media', 'npcs')  # Correct NPC location
         
         for npc_id, npc_info in npcs_found.items():
             result = {
@@ -2520,15 +2512,20 @@ def get_module_npcs(module_name):
                         result['has_portrait'] = True
                         break
 
-            # Check 2: In the live 'web/static/portraits' folder
-            if os.path.exists(os.path.join(local_portraits_dir, f'{npc_id}.png')):
-                result['is_local'] = True
+            # Check 2: In the live 'web/static/media/npcs' folder (if requested)
+            if include_local:
+                # Check for any NPC asset in the game folder
+                if os.path.exists(local_npcs_dir):
+                    for ext in ['.png', '.jpg', '_thumb.png', '_thumb.jpg', '_video.mp4']:
+                        if os.path.exists(os.path.join(local_npcs_dir, f'{npc_id}{ext}')):
+                            result['is_local'] = True
+                            break
 
             npc_list.append(result)
         
         npc_list.sort(key=lambda x: x['name'])
         
-        info(f"TOOLKIT: Found {len(npc_list)} unique NPCs for source '{module_name}'")
+        info(f"TOOLKIT: Found {len(npc_list)} NPCs for module '{module_name}' (Include Local: {include_local})")
         return jsonify(npc_list)
         
     except Exception as e:
@@ -3101,7 +3098,7 @@ def export_npcs_to_pack():
         if not pack_name or not npc_ids:
             return jsonify({'success': False, 'error': 'Missing pack name or NPC IDs.'}), 400
 
-        source_dir = os.path.join('web', 'static', 'portraits')
+        source_dir = os.path.join('web', 'static', 'media', 'npcs')  # Correct NPC location
         dest_dir = os.path.join('graphic_packs', pack_name, 'npcs')
         os.makedirs(dest_dir, exist_ok=True)
 
@@ -3109,15 +3106,21 @@ def export_npcs_to_pack():
         skipped_count = 0
 
         for npc_id in npc_ids:
-            source_file = os.path.join(source_dir, f"{npc_id}.png")
-            if os.path.exists(source_file):
-                dest_file = os.path.join(dest_dir, f"{npc_id}.png")
-                shutil.copy2(source_file, dest_file)
-                exported_count += 1
-                info(f"TOOLKIT: Exported NPC portrait '{npc_id}' to pack '{pack_name}'")
-            else:
+            exported = False
+            # Try to export any NPC asset found (image, thumbnail, or video)
+            for ext in ['.png', '.jpg', '_thumb.png', '_thumb.jpg', '_video.mp4']:
+                source_file = os.path.join(source_dir, f"{npc_id}{ext}")
+                if os.path.exists(source_file):
+                    dest_file = os.path.join(dest_dir, f"{npc_id}{ext}")
+                    shutil.copy2(source_file, dest_file)
+                    if not exported:  # Count once per NPC, not per file
+                        exported_count += 1
+                        exported = True
+                    info(f"TOOLKIT: Exported NPC asset '{npc_id}{ext}' to pack '{pack_name}'")
+            
+            if not exported:
                 skipped_count += 1
-                warning(f"TOOLKIT: Could not find portrait for '{npc_id}' in local game files to export.")
+                warning(f"TOOLKIT: Could not find any assets for '{npc_id}' in local game files to export.")
 
         # After exporting, update the destination pack's manifest
         update_pack_manifest_with_npcs(pack_name)

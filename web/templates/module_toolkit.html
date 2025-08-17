@@ -1665,7 +1665,7 @@
         }
         
         .npc-item.is-local {
-            border-right: 4px solid #2196F3; /* Blue for local files */
+            border-right: 4px solid #00BCD4; /* Cyan right-side border */
         }
 
         .npc-item:hover {
@@ -1968,7 +1968,7 @@
                     <div class="prompt-description-section">
                         <div class="prompt-editor">
                             <div class="prompt-editor-header">
-                                <h4>NPC Description<span class="tooltip-trigger" data-tooltip="This description will be used to generate the portrait. Click 'Fetch Descriptions' to generate them with AI, or edit them manually.">?</span></h4>
+                                <h4>NPC Description<span class="tooltip-trigger" data-tooltip="NPC descriptions are pack-specific and stored locally in temp files. This description will be used to generate the portrait. Click 'Fetch Descriptions' to generate them with AI, or edit them manually.">?</span></h4>
                                 <div>
                                     <button class="btn btn-primary btn-small" onclick="fetchNpcDescriptions()">Fetch Descriptions</button>
                                     <button class="btn btn-primary btn-small" onclick="saveNpcDescription()">Save</button>
@@ -1995,11 +1995,15 @@
                             <div class="legend-item" title="A portrait for this NPC exists in the selected pack's 'npcs' folder.">
                                 <span class="legend-color-box bestiary"></span> In Pack <span id="npc-count-exists">(0)</span>
                             </div>
-                            <div class="legend-item" title="A portrait for this NPC was found in the live game folder ('web/static/portraits/'). This portrait can be exported to the selected pack.">
-                                <span class="legend-color-box in-module"></span> In Game Folder <span id="npc-count-local">(0)</span>
-                            </div>
-                            <div class="legend-item" title="A portrait for this NPC is missing entirely.">
+                            <div class="legend-item" title="A portrait for this NPC is missing from the selected pack.">
                                 <span class="legend-color-box missing-from-pack"></span> Portrait Missing <span id="npc-count-missing">(0)</span>
+                            </div>
+                            <!-- The new toggle and counter -->
+                            <div class="legend-item" title="Check this to also scan the live 'web/static/portraits' folder. Portraits found here can be exported to the selected pack.">
+                                <input type="checkbox" id="filter-include-local" onchange="loadNpcsForModule()">
+                                <label for="filter-include-local">
+                                    <span class="legend-color-box in-module"></span> Include Local Files <span id="npc-count-local">(0)</span>
+                                </label>
                             </div>
                         </div>
                         <div class="monster-grid" id="npcGrid">
@@ -4090,20 +4094,6 @@
                 
                 select.innerHTML = '<option value="">-- Select a Module --</option>'; 
                 
-                // Add special "Local Game Files" option
-                const localOption = document.createElement('option');
-                localOption.value = '__local__';
-                localOption.textContent = '📁 Local Game Files';
-                localOption.style.fontWeight = 'bold';
-                select.appendChild(localOption);
-                
-                // Add separator
-                const separator = document.createElement('option');
-                separator.disabled = true;
-                separator.textContent = '────────────────';
-                select.appendChild(separator);
-                
-                // Add modules
                 modules.forEach(module => {
                     const option = document.createElement('option');
                     option.value = module.moduleName;
@@ -4136,6 +4126,7 @@
         async function loadNpcsForModule() {
             const moduleName = document.getElementById('npcModuleSelect').value;
             const packName = document.getElementById('npcPackSelect').value;
+            const includeLocal = document.getElementById('filter-include-local').checked; // Get the toggle state
             const grid = document.getElementById('npcGrid');
 
             if (!moduleName) {
@@ -4148,10 +4139,11 @@
                 return;
             }
             
-            grid.innerHTML = '<div class="loading">Scanning module for NPCs...</div>';
+            grid.innerHTML = '<div class="loading">Scanning for NPCs...</div>';
 
             try {
-                const response = await fetch(`/api/toolkit/modules/${moduleName}/npcs?pack=${packName}`);
+                // Append the new 'include_local' parameter to the API call
+                const response = await fetch(`/api/toolkit/modules/${moduleName}/npcs?pack=${packName}&include_local=${includeLocal}`);
                 const npcs = await response.json();
                 renderNpcs(npcs);
             } catch (error) {
@@ -4169,7 +4161,11 @@
             let localCount = 0;
 
             if (!npcs || npcs.length === 0) {
-                grid.innerHTML = '<div class="loading">No NPCs found.</div>';
+                grid.innerHTML = '<div class="loading">No NPCs found in this module.</div>';
+                // Reset counts to 0
+                document.getElementById('npc-count-exists').textContent = `(0)`;
+                document.getElementById('npc-count-missing').textContent = `(0)`;
+                document.getElementById('npc-count-local').textContent = `(0)`;
                 return;
             }
 
@@ -4198,7 +4194,7 @@
                 
                 // Load thumbnail if it exists in either the pack or local files
                 if (npc.has_portrait || npc.is_local) {
-                    loadNpcThumbnail(npc.id, npc.pack_name);
+                    loadNpcThumbnail(npc.id, npc.pack_name, npc.is_local);
                 } else {
                     const thumbContainer = document.getElementById(`thumb-npc-${npc.id}`);
                     if(thumbContainer) thumbContainer.innerHTML = '<div class="no-image-placeholder">?</div>';
@@ -4212,10 +4208,11 @@
         }
 
         // Loads a single NPC thumbnail with click handling for full preview
-        function loadNpcThumbnail(npcId, packName) {
+        function loadNpcThumbnail(npcId, packName, isLocal = false) {
             const thumbContainer = document.getElementById(`thumb-npc-${npcId}`);
             if (!thumbContainer) return;
             
+            // Try pack first, then fall back to local game files if isLocal is true
             const portraitUrl = `/api/toolkit/packs/${packName}/npcs/${npcId}/thumbnail?v=${new Date().getTime()}`; // Cache bust
             const fullImageUrl = `/api/toolkit/packs/${packName}/npcs/${npcId}/image`;
             const videoUrl = `/api/toolkit/packs/${packName}/npcs/${npcId}/video`;
@@ -4258,10 +4255,38 @@
                     });
             };
             img.onerror = () => {
-                thumbContainer.innerHTML = '<div class="no-image-placeholder">?</div>';
-                const npcItem = thumbContainer.closest('.npc-item');
-                if (npcItem) npcItem.dataset.missingImage = "true";
-                console.warn(`Failed to load NPC thumbnail: ${portraitUrl}`);
+                // If pack load fails and isLocal is true, try loading from game folder
+                if (isLocal) {
+                    // Try loading directly from the game's NPC media folder
+                    const gameThumbUrl = `/static/media/npcs/${npcId}_thumb.jpg`;
+                    const gameImg = new Image();
+                    gameImg.onload = () => {
+                        thumbContainer.innerHTML = '';
+                        thumbContainer.appendChild(gameImg);
+                        thumbContainer.style.cursor = 'pointer';
+                        thumbContainer.addEventListener('click', showNpcMediaPopup);
+                    };
+                    gameImg.onerror = () => {
+                        // Try non-thumbnail version
+                        const gameFullUrl = `/static/media/npcs/${npcId}.jpg`;
+                        const gameFull = new Image();
+                        gameFull.onload = () => {
+                            thumbContainer.innerHTML = '';
+                            thumbContainer.appendChild(gameFull);
+                            thumbContainer.style.cursor = 'pointer';
+                            thumbContainer.addEventListener('click', showNpcMediaPopup);
+                        };
+                        gameFull.onerror = () => {
+                            thumbContainer.innerHTML = '<div class="no-image-placeholder">?</div>';
+                        };
+                        gameFull.src = gameFullUrl;
+                    };
+                    gameImg.src = gameThumbUrl;
+                } else {
+                    thumbContainer.innerHTML = '<div class="no-image-placeholder">?</div>';
+                    const npcItem = thumbContainer.closest('.npc-item');
+                    if (npcItem) npcItem.dataset.missingImage = "true";
+                }
             };
             img.src = portraitUrl;
         }
