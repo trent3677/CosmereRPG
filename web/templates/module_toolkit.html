@@ -298,7 +298,7 @@
         .pack-list-header, .pack-list-row {
             display: grid;
             /* Defines our 5 columns: Active, Name, Details, Stats, Actions */
-            grid-template-columns: 60px 1.5fr 2.5fr 180px 220px; /* Adjusted column widths */
+            grid-template-columns: 60px 1.5fr 2.5fr 180px 240px; /* Adjusted column widths */
             align-items: center;
             gap: 20px;
             padding: 12px 20px;
@@ -403,6 +403,49 @@
         .pack-actions-cell {
             justify-content: flex-end;
             gap: 10px;
+        }
+
+        /* Icon button styles */
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;  /* Square button */
+            height: 40px; /* Square button */
+            padding: 0;   /* Remove padding */
+            border-radius: 6px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .btn-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Specific colors for icon buttons */
+        .btn-icon.btn-success { background-color: var(--color-special); }
+        .btn-icon.btn-success:hover { background-color: var(--color-special-hover); }
+
+        .btn-icon.btn-primary { background-color: var(--color-primary); }
+        .btn-icon.btn-primary:hover { background-color: var(--color-primary-hover); }
+
+        .btn-icon.btn-secondary { background-color: var(--color-neutral); }
+        .btn-icon.btn-secondary:hover { background-color: var(--color-neutral-hover); }
+
+        .btn-icon.btn-danger { background-color: var(--color-destructive); }
+        .btn-icon.btn-danger:hover { background-color: var(--color-destructive-hover); }
+
+        .btn-icon:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .monster-grid {
@@ -1531,6 +1574,62 @@
             to { transform: rotate(360deg); }
         }
 
+        /* === 15. Tooltip Styles === */
+        .tooltip-trigger {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: #444;
+            color: #aaa;
+            border: 1px solid #666;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 18px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: help;
+            margin-left: 10px;
+            position: relative; /* Needed for tooltip positioning */
+            vertical-align: middle;
+        }
+
+        .tooltip-trigger:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%; /* Position above the icon */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1a1a1a;
+            color: #FFA500; /* Orange text */
+            padding: 10px 15px;
+            border: 1px solid #FFA500;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-family: 'Crimson Text', serif;
+            font-weight: normal;
+            white-space: pre-wrap; /* Allows line breaks */
+            width: 280px; /* Set a consistent width */
+            z-index: 10001; /* Ensure it's on top */
+            text-align: left;
+            pointer-events: none; /* Allow hover to pass through */
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.2s;
+        }
+
+        .tooltip-trigger::after {
+            content: '';
+            position: absolute;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Add flex display to headers to align the icon correctly */
+        .section h2, .panel-header, .prompt-editor-header {
+            display: flex;
+            align-items: center;
+        }
+
     </style>
 </head>
 <body>
@@ -1555,7 +1654,7 @@
                 <div class="two-column-layout" style="margin-bottom: 30px;">
                     <!-- Column 1: Import Pack -->
                     <div class="section">
-                        <h2>Import Monster Pack</h2>
+                        <h2>Import Monster Pack<span class="tooltip-trigger" data-tooltip="Import a monster pack from a .zip file. This will add it to your list of available packs below.">?</span></h2>
                         <div class="import-container">
                             <div class="import-control-row">
                                 <div id="file-path-display" class="file-display">No file selected...</div>
@@ -1563,7 +1662,7 @@
                                 <input type="file" id="importFile" accept=".zip" style="display:none" onchange="handleFileSelection(this.files)">
                             </div>
                             <div id="import-preview-area" class="import-preview" style="display: none;">
-                                <h4>Pack Preview</h4>
+                                <h4>Pack Preview<span class="tooltip-trigger" data-tooltip="Shows the contents and metadata of the selected pack before importing.">?</span></h4>
                                 <div id="preview-metadata"></div>
                                 <div class="import-confirmation">
                                     <div class="form-group" style="flex-grow: 1; margin-bottom: 0;">
@@ -1578,17 +1677,17 @@
 
                     <!-- Column 2: Create New Pack -->
                     <div class="section">
-                        <h2>Create New Pack</h2>
+                        <h2>Create New Pack<span class="tooltip-trigger" data-tooltip="Create a new, empty graphic pack. You can then use the 'Monster Management' tab to generate images into this new pack.">?</span></h2>
                         <div class="form-group">
-                            <label for="new-pack-name">Pack Name (Internal ID)</label>
+                            <label for="new-pack-name">Pack Name (Internal ID)<span class="tooltip-trigger" data-tooltip="The internal identifier for the pack. Must be lowercase with no spaces (e.g., 'my_custom_pack').">?</span></label>
                             <input type="text" id="new-pack-name" placeholder="e.g., anime_style_pack">
                         </div>
                         <div class="form-group">
-                            <label for="new-pack-display-name">Display Name</label>
+                            <label for="new-pack-display-name">Display Name<span class="tooltip-trigger" data-tooltip="The human-readable name shown in the UI. Can include spaces and capitalization.">?</span></label>
                             <input type="text" id="new-pack-display-name" placeholder="e.g., Anime Style Pack">
                         </div>
                         <div class="form-group">
-                            <label for="new-pack-author">Author</label>
+                            <label for="new-pack-author">Author<span class="tooltip-trigger" data-tooltip="Your name or alias, credited as the pack creator.">?</span></label>
                             <input type="text" id="new-pack-author" placeholder="Your name or alias">
                         </div>
                         <button class="btn btn-primary" onclick="createNewPack()">Create Pack</button>
@@ -1596,7 +1695,7 @@
                 </div>
 
                 <div class="section">
-                    <h2>Available Asset Packs</h2>
+                    <h2>Available Asset Packs<span class="tooltip-trigger" data-tooltip="Manage all installed graphic packs. The 'Active' pack is used by the game. 'Merge' copies assets from an inactive pack into the active one, overwriting any duplicates.">?</span></h2>
                     <div class="pack-list-container">
                         <!-- The Header for our table will go here -->
                         <div class="pack-list-header">
@@ -1617,25 +1716,25 @@
             <!-- Monster Management & Generator Tab - UPDATED LAYOUT -->
             <div id="generator-tab" class="tab-content">
                 <div class="section">
-                    <h2>Generate Monster Images</h2>
+                    <h2>Generate Monster Images<span class="tooltip-trigger" data-tooltip="This is the main workspace for creating monster art. Select a pack, style, and monsters, then generate images.">?</span></h2>
                     <!-- REPLACE the old .form-column-layout with this new .generator-controls block -->
                     <div class="generator-controls">
                         <!-- Part 1: All the dropdown options -->
                         <div class="generator-options">
                             <div class="form-group option-box orange-outline">
-                                <label for="genPack">Target Pack:</label>
+                                <label for="genPack">Target Pack:<span class="tooltip-trigger" data-tooltip="The graphic pack where newly generated images will be saved.">?</span></label>
                                 <select id="genPack" onchange="loadMonsters(); refreshMonsterThumbnails();">
                                     <option value="__new__">+ Create New Pack...</option>
                                 </select>
                             </div>
                             <div class="form-group option-box orange-outline">
-                                <label for="genStyle">Style Template:</label>
+                                <label for="genStyle">Style Template:<span class="tooltip-trigger" data-tooltip="The artistic style used for image generation. You can edit existing prompts or save new custom styles.">?</span></label>
                                 <select id="genStyle" onchange="loadStylePrompt()">
                                     <!-- Styles will be loaded from JSON -->
                                 </select>
                             </div>
                             <div class="form-group option-box purple-outline">
-                                <label for="genModel">AI Model:</label>
+                                <label for="genModel">AI Model:<span class="tooltip-trigger" data-tooltip="The underlying AI model for image generation. DALL-E 3 is the default.">?</span></label>
                                 <select id="genModel" onchange="checkModelWarning()">
                                     <option value="dall-e-3">DALL-E 3 (Default)</option>
                                     <option value="gpt-image-1">GPT-Image (Best Quality)</option>
@@ -1645,7 +1744,7 @@
                                 </div>
                             </div>
                             <div class="form-group module-cross-reference-box option-box">
-                                <label for="genModule">Module Cross-Reference:</label>
+                                <label for="genModule">Module Cross-Reference:<span class="tooltip-trigger" data-tooltip="Select an adventure module to see which monsters it uses. This helps identify which assets you need to create.">?</span></label>
                                 <div style="display: flex; gap: 10px;">
                                     <select id="genModule" onchange="crossReferenceModuleMonsters()" style="flex-grow: 1;">
                                         <option value="">-- Select a Module --</option>
@@ -1663,7 +1762,7 @@
                             <!-- Style Prompt Editor -->
                             <div class="prompt-editor">
                                 <div class="prompt-editor-header">
-                                    <h4>Style Prompt</h4>
+                                    <h4>Style Prompt<span class="tooltip-trigger" data-tooltip="The text prompt that defines the artistic style. Edit this to fine-tune the look of your images.">?</span></h4>
                                     <button class="btn btn-small btn-primary" onclick="saveStylePrompt()">Save (Overwrite Style)</button>
                                 </div>
                                 <textarea id="stylePromptBox" class="preview-textarea" placeholder="Select a style template to see its prompt..."></textarea>
@@ -1679,7 +1778,7 @@
                             <!-- Monster Description Editor -->
                             <div class="prompt-editor">
                                 <div class="prompt-editor-header">
-                                    <h4>Monster Description</h4>
+                                    <h4>Monster Description<span class="tooltip-trigger" data-tooltip="The descriptive text used by the AI to visualize the monster. Select a monster from the list below to view and edit its description.">?</span></h4>
                                     <button class="btn btn-small btn-primary" onclick="saveMonsterDescription()">Save</button>
                                 </div>
                                 <textarea id="monsterDescriptionBox" class="preview-textarea" placeholder="Select a monster from the list below..."></textarea>
@@ -1693,7 +1792,7 @@
                     <!-- ADD THIS NEW WRAPPER AND PASTE THE CONTROLS HERE -->
                     <div class="monster-list-container">
                         <div class="monster-list-header">
-                            <h4>Available Monsters in Pack</h4>
+                            <h4>Available Monsters in Pack<span class="tooltip-trigger" data-tooltip="This list shows all monsters from the bestiary and the selected pack. Use the legend checkboxes above to filter the list.">?</span></h4>
                             <div class="monster-buttons">
                                 <button class="btn btn-light btn-small" onclick="selectAllMonsters()">Select All</button>
                                 <button class="btn btn-light btn-small" onclick="selectMissingImages()">Select Missing</button>
@@ -1770,9 +1869,9 @@
                     <!-- Left Column -->
                     <div class="column-left">
                         <div class="section">
-                            <h2>Process Monster Videos</h2>
+                            <h2>Process Monster Videos<span class="tooltip-trigger" data-tooltip="Upload monster videos (e.g., MP4s) here. The tool will compress them and save them into the selected graphic pack with the correct naming convention.">?</span></h2>
                             <div class="form-group">
-                                <label for="videoPack">Target Pack:</label>
+                                <label for="videoPack">Target Pack:<span class="tooltip-trigger" data-tooltip="The graphic pack where processed videos will be saved.">?</span></label>
                                 <select id="videoPack">
                                     <!-- Packs will be loaded here -->
                                 </select>
@@ -1790,7 +1889,7 @@
                     <!-- Right Column -->
                     <div class="column-right">
                          <div class="section">
-                            <h2>Processing Log</h2>
+                            <h2>Processing Log<span class="tooltip-trigger" data-tooltip="Shows the real-time status of video processing operations.">?</span></h2>
                             <div class="log-container" id="videoLog">
                                 <!-- Log entries will appear here -->
                             </div>
@@ -1880,7 +1979,7 @@
                     
                     <!-- Right Panel: Existing Modules -->
                     <div class="panel modules-panel">
-                        <div class="panel-header">Existing Modules</div>
+                        <div class="panel-header">Existing Modules<span class="tooltip-trigger" data-tooltip="This panel lists all modules currently installed in your 'modules' directory, along with their key statistics.">?</span></div>
                         <div class="panel-content" id="modules-list">
                             <div class="no-modules">Loading modules...</div>
                         </div>
@@ -1994,16 +2093,26 @@
                         </div>
                     </div>
                     <div class="pack-list-cell pack-actions-cell">
-                        <!-- THIS IS THE CORRECTED LOGIC -->
                         ${pack.is_active 
                             ? `<button class="btn btn-secondary" disabled>Active</button>`
-                            : `<button class="btn btn-success" onclick="showPackConfirmation('${pack.name}')">Activate</button>`
+                            : `<button class="btn-icon btn-success" onclick="showPackConfirmation('${pack.name}')" title="Activate Pack">
+                                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                                </button>`
                         }
-                        <button class="btn btn-secondary" onclick="exportPack('${pack.name}')">Export</button>
-                        ${(!pack.is_active) ? `<button class="btn btn-primary" onclick="showMergeConfirmation('${pack.name}')">Merge</button>` : ''}
-                        ${(!isDefault && !pack.is_active) ? 
-                            `<button class="btn btn-danger" onclick="deletePack('${pack.name}')">Delete</button>` :
-                            ''
+                        <button class="btn-icon btn-secondary" onclick="exportPack('${pack.name}')" title="Export Pack">
+                            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                        </button>
+                        ${(!pack.is_active) 
+                            ? `<button class="btn-icon btn-primary" onclick="showMergeConfirmation('${pack.name}')" title="Merge into Active Pack">
+                                    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                                </button>` 
+                            : ''
+                        }
+                        ${(!isDefault && !pack.is_active) 
+                            ? `<button class="btn-icon btn-danger" onclick="deletePack('${pack.name}')" title="Delete Pack">
+                                    <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                </button>` 
+                            : ''
                         }
                     </div>
                 `;

@@ -589,29 +589,30 @@
             background-color: #da190b;
         }
         
-        /* Module Toolkit Button */
+        /* Module Toolkit Button - Themed with metallic grey */
         .toolkit-button {
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-left: auto;
-            margin-right: 15px;
-            padding: 8px 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
+            gap: 8px;
+            margin-left: 10px;
+            margin-right: 0;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #555 0%, #333 100%); /* Metallic grey gradient */
+            color: #e0e0e0;
+            border: 1px solid #777;
             border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
         }
         
         .toolkit-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            border-color: #FFA500; /* Orange border on hover */
+            background: linear-gradient(135deg, #666 0%, #444 100%);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 10px rgba(255, 165, 0, 0.5); /* Orange glow */
         }
         
         .toolkit-button svg {
@@ -3799,12 +3800,7 @@
             font-size: 12px;
         }
         
-        /* Adjust the Toolkit button's position to fit next to the new toggle stack */
-        .header .toolkit-button {
-            margin-left: 10px;
-            margin-right: 0;
-            padding: 8px 12px; /* Make it slightly more compact */
-        }
+        /* Remove duplicate style - now handled in main .toolkit-button definition above */
     </style>
 </head>
 <body>
@@ -3840,10 +3836,10 @@
                 </div>
             </div>
             
-            <!-- The relocated and modified Toolkit Button -->
+            <!-- The relocated and modified Toolkit Button with anvil icon -->
             <button class="toolkit-button" onclick="openToolkit()" title="Open Module Toolkit">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"></path>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M22,2V8H20V4H17V2H22M2,8V2H7V4H4V8H2M20,13.09A2.5,2.5 0 0,0 22.5,15.59C22.5,16.9 21.4,18 20,18H4C2.6,18 1.5,16.9 1.5,15.59C1.5,14.09 2.59,12.83 4,12.5V10H20V13.09M20,16H4A1,1 0 0,1 3,15A1,1 0 0,1 4,14H20A1,1 0 0,1 21,15A1,1 0 0,1 20,16Z" />
                 </svg>
                 <span>Toolkit</span>
             </button>
