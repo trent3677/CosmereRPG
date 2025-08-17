@@ -2617,25 +2617,29 @@ def fetch_npc_descriptions():
                     continue
                 
                 # Prepare prompt
-                prompt = f"""Generate a detailed physical description for an NPC in a D&D 5e adventure.
+                prompt = f"""Generate a detailed physical description for a FRIENDLY NPC who could join the party in a D&D 5e adventure.
 
 NPC Name: {npc_name}
 Module Context: {module_context[:3000]}
 
-Create a vivid, atmospheric description (150-200 words) that includes:
-- Physical appearance (race, age, build, clothing, distinguishing features)
-- Personality traits visible in their demeanor
-- Any equipment or items they carry
-- Overall impression they make
+Create a vivid, appealing description (150-200 words) for a potential party member/ally that includes:
+- Physical appearance (race, age, build, distinguishing features)
+- Clothing/armor in good condition (not battle-worn unless specified)
+- Friendly or approachable demeanor (even if they're normally rough characters)
+- Any equipment they carry (weapons sheathed/at rest, not drawn)
+- Personality traits that make them interesting as a companion
+- For romantic/attractive NPCs: Include appealing features
+- For rough/warrior types: Show their competent, reliable side
 
-The description should be suitable for generating a portrait image. Focus on visual details."""
+The NPC should appear trustworthy and capable, someone the party would want to recruit or befriend.
+Focus on making them look like a potential ally, not an enemy."""
 
                 try:
                     # Call OpenAI API
                     response = client.chat.completions.create(
                         model="gpt-4o-mini",
                         messages=[
-                            {"role": "system", "content": "You are a D&D 5e NPC description expert. Create rich, visual descriptions."},
+                            {"role": "system", "content": "You are a D&D 5e NPC description expert. Create rich, visual descriptions for PARTY NPCs - friendly characters who could join or assist the party. Even villains should be described in their 'recruiting' or 'parlaying' state, not hostile. Make them appealing as potential companions."},
                             {"role": "user", "content": prompt}
                         ],
                         temperature=0.7
@@ -2847,9 +2851,11 @@ def generate_npc_portraits():
                 description = npc_desc_data.get('description', f'A fantasy NPC named {npc_name}')
                 
                 # Prepare DALL-E prompt
-                prompt = f"""Fantasy portrait of {npc_name}. {description}
+                prompt = f"""Fantasy portrait of {npc_name} as a friendly party NPC companion. {description}
                 
-Style: High quality fantasy art portrait, detailed character art, D&D character portrait style, centered composition, neutral background."""
+Important: Show them in a friendly, approachable pose. Slight smile or neutral expression. Looking at viewer with trustworthy demeanor. Weapons sheathed or held casually. Clean, well-maintained appearance.
+                
+Style: High quality fantasy art portrait, detailed character art, D&D party member portrait style, warm lighting, centered composition, neutral or tavern/camp background. Charismatic and appealing presentation."""
                 
                 try:
                     info(f"TOOLKIT: Generating portrait for {npc_name} ({i+1}/{len(npcs)})")
