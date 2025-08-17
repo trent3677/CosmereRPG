@@ -1968,6 +1968,12 @@
                                     <!-- Packs will be loaded here -->
                                 </select>
                             </div>
+                            <div class="form-group option-box orange-outline">
+                                <label for="npcStyleSelect">Style Template:<span class="tooltip-trigger" data-tooltip="The artistic style used for portrait generation. You can edit existing prompts or save new custom styles.">?</span></label>
+                                <select id="npcStyleSelect" onchange="loadNpcStylePrompt()">
+                                    <!-- Styles will be loaded from JSON -->
+                                </select>
+                            </div>
                             <div class="form-group option-box purple-outline">
                                 <label for="npcModelSelect">AI Model:<span class="tooltip-trigger" data-tooltip="The AI model used for generating portraits.">?</span></label>
                                 <select id="npcModelSelect">
@@ -1977,19 +1983,38 @@
                         </div>
                     </div>
 
-                    <!-- Middle Row: Description Editor -->
+                    <!-- Middle Row: Style Prompt & Description Editor -->
                     <div class="prompt-description-section">
-                        <div class="prompt-editor">
-                            <div class="prompt-editor-header">
-                                <h4>NPC Description<span class="tooltip-trigger" data-tooltip="NPC descriptions are pack-specific and stored locally in temp files. This description will be used to generate the portrait. Click 'Fetch Descriptions' to generate them with AI, or edit them manually.">?</span></h4>
-                                <div>
-                                    <button class="btn btn-primary btn-small" onclick="fetchNpcDescriptions()">Fetch Descriptions</button>
-                                    <button class="btn btn-primary btn-small" onclick="saveNpcDescription()">Save</button>
+                        <div class="preview-layout">
+                            <!-- Style Prompt Editor for NPCs -->
+                            <div class="prompt-editor">
+                                <div class="prompt-editor-header">
+                                    <h4>Style Prompt<span class="tooltip-trigger" data-tooltip="The text prompt that defines the artistic style for NPC portraits. Edit this to fine-tune the look of your portraits.">?</span></h4>
+                                    <button class="btn btn-small btn-primary" onclick="saveNpcStylePrompt()">Save (Overwrite Style)</button>
+                                </div>
+                                <textarea id="npcStylePromptBox" class="preview-textarea" placeholder="Select a style template to see its prompt..."></textarea>
+                                <div class="save-as-new">
+                                    <input type="text" id="newNpcStyleName" placeholder="Save as new style name...">
+                                    <button class="btn btn-light btn-small" onclick="saveAsNewNpcStyle()">Save as New</button>
                                 </div>
                             </div>
-                            <textarea id="npcDescriptionBox" class="preview-textarea" placeholder="Select a module, then select an NPC from the list below..."></textarea>
-                            <div class="selected-monster-info">
-                                <small id="selectedNpcName">No NPC selected</small>
+                            
+                            <!-- Separator -->
+                            <div class="preview-separator">+</div>
+                            
+                            <!-- NPC Description Editor -->
+                            <div class="prompt-editor">
+                                <div class="prompt-editor-header">
+                                    <h4>NPC Description<span class="tooltip-trigger" data-tooltip="NPC descriptions are pack-specific and stored locally in temp files. This description will be used to generate the portrait. Click 'Fetch Descriptions' to generate them with AI, or edit them manually.">?</span></h4>
+                                    <div>
+                                        <button class="btn btn-primary btn-small" onclick="fetchNpcDescriptions()">Fetch Descriptions</button>
+                                        <button class="btn btn-primary btn-small" onclick="saveNpcDescription()">Save</button>
+                                    </div>
+                                </div>
+                                <textarea id="npcDescriptionBox" class="preview-textarea" placeholder="Select a module, then select an NPC from the list below..."></textarea>
+                                <div class="selected-monster-info">
+                                    <small id="selectedNpcName">No NPC selected</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -4074,15 +4099,26 @@
             .then(data => {
                 console.log('Styles received:', data);
                 const styleSelect = document.getElementById('genStyle');
+                const npcStyleSelect = document.getElementById('npcStyleSelect');
                 
                 // Clear current options
                 styleSelect.innerHTML = '';
+                if (npcStyleSelect) {
+                    npcStyleSelect.innerHTML = '';
+                }
                 
                 // Add builtin styles
                 if (data.builtin) {
                     Object.entries(data.builtin).forEach(([id, style]) => {
+                        // Monster style dropdown
                         const option = new Option(style.name, id);
                         styleSelect.appendChild(option);
+                        
+                        // NPC style dropdown
+                        if (npcStyleSelect) {
+                            const npcOption = new Option(style.name, id);
+                            npcStyleSelect.appendChild(npcOption);
+                        }
                     });
                 }
                 
@@ -4092,14 +4128,30 @@
                     separator.disabled = true;
                     styleSelect.appendChild(separator);
                     
+                    if (npcStyleSelect) {
+                        const npcSeparator = new Option('--- Custom Styles ---', '', true, false);
+                        npcSeparator.disabled = true;
+                        npcStyleSelect.appendChild(npcSeparator);
+                    }
+                    
                     Object.entries(data.custom).forEach(([id, style]) => {
+                        // Monster style dropdown
                         const option = new Option(style.name + ' (Custom)', id);
                         styleSelect.appendChild(option);
+                        
+                        // NPC style dropdown
+                        if (npcStyleSelect) {
+                            const npcOption = new Option(style.name + ' (Custom)', id);
+                            npcStyleSelect.appendChild(npcOption);
+                        }
                     });
                 }
                 
                 // Load prompt for selected style
                 loadStylePrompt();
+                if (npcStyleSelect) {
+                    loadNpcStylePrompt();
+                }
             })
             .catch(error => {
                 console.error('Error loading styles:', error);
@@ -4499,11 +4551,102 @@
             document.querySelectorAll('input[name="npc-select"]').forEach(cb => cb.checked = false);
         }
 
+        // NPC Style Management Functions
+        function loadNpcStylePrompt() {
+            const styleSelect = document.getElementById('npcStyleSelect');
+            const stylePromptBox = document.getElementById('npcStylePromptBox');
+            
+            if (!styleSelect || !stylePromptBox) return;
+            
+            if (styleSelect.value && stylePrompts[styleSelect.value]) {
+                stylePromptBox.value = stylePrompts[styleSelect.value];
+            } else {
+                stylePromptBox.value = '';
+            }
+        }
+
+        function saveNpcStylePrompt() {
+            const styleSelect = document.getElementById('npcStyleSelect');
+            const stylePrompt = document.getElementById('npcStylePromptBox').value;
+            
+            if (!styleSelect.value) {
+                alert('Please select a style to save.');
+                return;
+            }
+            
+            if (!stylePrompt.trim()) {
+                alert('Style prompt cannot be empty.');
+                return;
+            }
+            
+            // Save to localStorage and global variable
+            stylePrompts[styleSelect.value] = stylePrompt;
+            localStorage.setItem('customStylePrompts', JSON.stringify(stylePrompts));
+            
+            // Save to server
+            fetch('/api/toolkit/styles', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    styles: stylePrompts
+                })
+            }).then(response => {
+                if (response.ok) {
+                    alert('Style prompt saved successfully!');
+                }
+            });
+        }
+
+        function saveAsNewNpcStyle() {
+            const styleName = document.getElementById('newNpcStyleName').value;
+            const stylePrompt = document.getElementById('npcStylePromptBox').value;
+            
+            if (!styleName.trim()) {
+                alert('Please enter a name for the new style.');
+                return;
+            }
+            
+            if (!stylePrompt.trim()) {
+                alert('Style prompt cannot be empty.');
+                return;
+            }
+            
+            // Add to stylePrompts
+            stylePrompts[styleName] = stylePrompt;
+            localStorage.setItem('customStylePrompts', JSON.stringify(stylePrompts));
+            
+            // Add to dropdown
+            const styleSelect = document.getElementById('npcStyleSelect');
+            const option = document.createElement('option');
+            option.value = styleName;
+            option.textContent = styleName;
+            styleSelect.appendChild(option);
+            styleSelect.value = styleName;
+            
+            // Clear the new style name input
+            document.getElementById('newNpcStyleName').value = '';
+            
+            // Save to server
+            fetch('/api/toolkit/styles', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    styles: stylePrompts
+                })
+            }).then(response => {
+                if (response.ok) {
+                    alert('New style saved successfully!');
+                }
+            });
+        }
+
         async function startNpcGeneration() {
             const selectedNpcs = document.querySelectorAll('input[name="npc-select"]:checked');
             const packName = document.getElementById('npcPackSelect').value;
             const moduleName = document.getElementById('npcModuleSelect').value;
             const model = document.getElementById('npcModelSelect').value;
+            const styleSelect = document.getElementById('npcStyleSelect');
+            const stylePrompt = document.getElementById('npcStylePromptBox').value;
             
             if (selectedNpcs.length === 0) {
                 alert('Please select at least one NPC to generate.');
@@ -4515,13 +4658,18 @@
                 return;
             }
             
+            if (!styleSelect.value || !stylePrompt) {
+                alert('Please select a style template.');
+                return;
+            }
+            
             const npcsToGenerate = Array.from(selectedNpcs).map(input => ({
                 name: input.value,
                 id: input.dataset.npcId
             }));
             
             // Show progress
-            addLog('genLog', `Starting portrait generation for ${npcsToGenerate.length} NPCs...`, 'info');
+            addLog('genLog', `Starting portrait generation for ${npcsToGenerate.length} NPCs with ${styleSelect.value} style...`, 'info');
             
             try {
                 const response = await fetch('/api/toolkit/npcs/generate-portraits', {
@@ -4531,6 +4679,8 @@
                         module_name: moduleName,
                         pack_name: packName,
                         model: model,
+                        style: styleSelect.value,
+                        style_prompt: stylePrompt,
                         npcs: npcsToGenerate
                     })
                 });

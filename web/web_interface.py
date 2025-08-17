@@ -2805,6 +2805,8 @@ def generate_npc_portraits():
     module_name = data.get('module_name')
     pack_name = data.get('pack_name')
     model = data.get('model', 'dall-e-3')
+    style = data.get('style', 'photorealistic')
+    style_prompt = data.get('style_prompt', '')
     npcs = data.get('npcs', [])
     
     if not all([module_name, pack_name, npcs]):
@@ -2850,15 +2852,22 @@ def generate_npc_portraits():
                 npc_desc_data = descriptions.get(npc_id, {})
                 description = npc_desc_data.get('description', f'A fantasy NPC named {npc_name}')
                 
-                # Prepare DALL-E prompt
-                prompt = f"""Fantasy portrait of {npc_name} as a friendly party NPC companion. {description}
+                # Prepare DALL-E prompt with style
+                base_prompt = f"Fantasy portrait of {npc_name} as a friendly party NPC companion. {description}"
+                
+                # Add style-specific prompt if provided
+                if style_prompt:
+                    prompt = f"{base_prompt}\n\n{style_prompt}"
+                else:
+                    # Fallback to default style
+                    prompt = f"""{base_prompt}
                 
 Important: Show them in a friendly, approachable pose. Slight smile or neutral expression. Looking at viewer with trustworthy demeanor. Weapons sheathed or held casually. Clean, well-maintained appearance.
                 
 Style: High quality fantasy art portrait, detailed character art, D&D party member portrait style, warm lighting, centered composition, neutral or tavern/camp background. Charismatic and appealing presentation."""
                 
                 try:
-                    info(f"TOOLKIT: Generating portrait for {npc_name} ({i+1}/{len(npcs)})")
+                    info(f"TOOLKIT: Generating portrait for {npc_name} ({i+1}/{len(npcs)}) with {style} style")
                     
                     # Call DALL-E API
                     response = client.images.generate(
