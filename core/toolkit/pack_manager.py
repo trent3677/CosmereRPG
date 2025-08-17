@@ -374,46 +374,62 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                     except Exception as e:
                         print(f"Warning: Could not create backup: {e}")
             
-            # Handle game assets directory
-            game_assets_dir = Path("web/static/media/monsters")
+            # Handle game assets directories
+            game_monsters_dir = Path("web/static/media/monsters")
+            game_npcs_dir = Path("web/static/media/npcs")
             
-            # Copy pack assets to game directory
+            # Copy monster assets to game directory
             pack_monsters_dir = pack_dir / "monsters"
             if pack_monsters_dir.exists():
                 # Ensure game assets directory exists
-                game_assets_dir.mkdir(parents=True, exist_ok=True)
+                game_monsters_dir.mkdir(parents=True, exist_ok=True)
                 
                 # Handle new structure: all files directly in monsters/ folder
                 for file in pack_monsters_dir.glob("*"):
                     if file.is_file():
                         if file.suffix in ['.png', '.jpg', '.jpeg', '.mp4']:
-                            shutil.copy2(file, game_assets_dir / file.name)
+                            shutil.copy2(file, game_monsters_dir / file.name)
                 
                 # Handle old structure: separate subdirectories
                 # Copy thumbnails
                 thumb_source = pack_monsters_dir / "thumbnails"
                 if thumb_source.exists():
                     for thumb in thumb_source.glob("*.jpg"):
-                        shutil.copy2(thumb, game_assets_dir / thumb.name)
+                        shutil.copy2(thumb, game_monsters_dir / thumb.name)
                 
                 # Copy videos
                 video_source = pack_monsters_dir / "videos"
                 if video_source.exists():
                     for video in video_source.glob("*.mp4"):
-                        shutil.copy2(video, game_assets_dir / video.name)
+                        shutil.copy2(video, game_monsters_dir / video.name)
                 
                 # Copy images
                 image_source = pack_monsters_dir / "images"
                 if image_source.exists():
                     for image in image_source.glob("*"):
                         if image.suffix in ['.png', '.jpg', '.jpeg']:
-                            shutil.copy2(image, game_assets_dir / image.name)
+                            shutil.copy2(image, game_monsters_dir / image.name)
+            
+            # Copy NPC assets to game directory
+            pack_npcs_dir = pack_dir / "npcs"
+            if pack_npcs_dir.exists():
+                # Ensure game NPCs directory exists
+                game_npcs_dir.mkdir(parents=True, exist_ok=True)
+                
+                # Copy all NPC files
+                for file in pack_npcs_dir.glob("*"):
+                    if file.is_file():
+                        if file.suffix in ['.png', '.jpg', '.jpeg', '.mp4']:
+                            shutil.copy2(file, game_npcs_dir / file.name)
             
             # Save as active pack
             self._save_active_pack(pack_name)
             
             print(f"Activated pack: {pack_name}")
-            print(f"  - Copied assets to {game_assets_dir}")
+            if pack_monsters_dir.exists():
+                print(f"  - Copied monster assets to {game_monsters_dir}")
+            if pack_npcs_dir.exists():
+                print(f"  - Copied NPC assets to {game_npcs_dir}")
             
             return {
                 "success": True,
@@ -455,9 +471,26 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                     
                     # Count actual files (supporting both old and new structure)
                     monsters_dir = pack_dir / "monsters"
+                    npcs_dir = pack_dir / "npcs"
                     video_count = 0
                     image_count = 0
                     thumb_count = 0
+                    npc_count = 0
+                    
+                    # Count NPCs if directory exists
+                    if npcs_dir.exists():
+                        for file in npcs_dir.glob("*"):
+                            if file.is_file():
+                                if file.suffix in [".png", ".jpg", ".jpeg"]:
+                                    if "_thumb" not in file.stem:
+                                        npc_count += 1
+                    
+                    # Also check manifest for NPC count
+                    npc_count = max(
+                        npc_count,
+                        manifest.get("total_npcs", 0),
+                        len(manifest.get("npcs_included", []))
+                    )
                     
                     if monsters_dir.exists():
                         # New structure: everything in monsters/ folder
@@ -495,6 +528,7 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                         "style": manifest.get("style", manifest.get("style_template", "unknown")),
                         "style_template": manifest.get("style_template", manifest.get("style", "unknown")),
                         "total_monsters": monster_count,
+                        "total_npcs": npc_count,
                         "total_videos": video_count,
                         "monsters_count": monster_count,
                         "size_mb": round(pack_size, 2),
@@ -509,7 +543,9 @@ Created: {datetime.now().strftime("%Y-%m-%d")}
                         "version": "Unknown",
                         "author": "Unknown",
                         "style": "unknown",
-                        "monsters": 0,
+                        "total_monsters": 0,
+                        "total_npcs": 0,
+                        "total_videos": 0,
                         "size_mb": 0,
                         "created": "Unknown",
                         "is_active": pack_dir.name == self.active_pack

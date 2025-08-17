@@ -2222,6 +2222,7 @@
                 row.className = 'pack-list-row';
                 
                 const monsterCount = pack.total_monsters || pack.monsters_count || 0;
+                const npcCount = pack.total_npcs || 0;
                 const videoCount = pack.total_videos || 0;
                 const author = pack.author || 'Unknown';
                 const style = pack.style || pack.style_template || 'custom';
@@ -2243,6 +2244,10 @@
                         <div class="stat">
                             <div class="stat-value">${monsterCount}</div>
                             <div class="stat-label">Monsters</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${npcCount}</div>
+                            <div class="stat-label">NPCs</div>
                         </div>
                         <div class="stat">
                             <div class="stat-value">${videoCount}</div>
