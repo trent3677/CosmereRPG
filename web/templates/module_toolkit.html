@@ -1663,6 +1663,10 @@
         .npc-item.missing-portrait {
             border-left-color: #f44336; /* Red */
         }
+        
+        .npc-item.is-local {
+            border-right: 4px solid #2196F3; /* Blue for local files */
+        }
 
         .npc-item:hover {
             background: rgba(255, 165, 0, 0.05);
@@ -1931,6 +1935,12 @@
             <div id="npcs-tab" class="tab-content">
                 <div class="section">
                     <h2>Generate NPC Portraits<span class="tooltip-trigger" data-tooltip="Generate portrait images for NPCs found in adventure modules. NPCs are module-specific and stored separately from monsters.">?</span></h2>
+                    
+                    <!-- Important Disclaimer -->
+                    <div style="background-color: #f0f8ff; border: 1px solid #4a90e2; border-radius: 5px; padding: 12px; margin-bottom: 20px;">
+                        <strong style="color: #2c5282;">Important Note:</strong> NPC images and assets are specifically designed for party mechanics and are not used for general NPC encounters in the game. These portraits will only be incorporated into gameplay if the NPC is explicitly added to the party. NPCs and monsters are treated as completely separate asset types to maintain clean organization.
+                    </div>
+                    
                     <!-- Top Row: Selectors -->
                     <div class="generator-controls">
                         <div class="generator-options">
@@ -1984,10 +1994,13 @@
                             </div>
                         </div>
                         <div class="npc-list-legend">
-                            <div class="legend-item" title="A portrait for this NPC already exists in the selected pack.">
-                                <span class="legend-color-box bestiary"></span> Portrait Exists <span id="npc-count-exists">(0)</span>
+                            <div class="legend-item" title="A portrait for this NPC exists in the selected pack's 'npcs' folder.">
+                                <span class="legend-color-box bestiary"></span> In Pack <span id="npc-count-exists">(0)</span>
                             </div>
-                            <div class="legend-item" title="A portrait for this NPC is missing from the selected pack.">
+                            <div class="legend-item" title="A portrait for this NPC was found in the live game folder ('web/static/portraits/'). This portrait can be exported to the selected pack.">
+                                <span class="legend-color-box in-module"></span> In Game Folder <span id="npc-count-local">(0)</span>
+                            </div>
+                            <div class="legend-item" title="A portrait for this NPC is missing entirely.">
                                 <span class="legend-color-box missing-from-pack"></span> Portrait Missing <span id="npc-count-missing">(0)</span>
                             </div>
                         </div>
@@ -1996,6 +2009,7 @@
                         </div>
                     </div>
                     <button class="btn btn-primary" style="margin-top: 20px;" onclick="startNpcGeneration()">Generate Selected Portraits</button>
+                    <button class="btn btn-success" style="margin-top: 20px;" onclick="exportNpcsToPack()">Export to Pack</button>
                 </div>
             </div>
             
@@ -4077,6 +4091,21 @@
                 if (!select) return; // Tab might not be active
                 
                 select.innerHTML = '<option value="">-- Select a Module --</option>'; 
+                
+                // Add special "Local Game Files" option
+                const localOption = document.createElement('option');
+                localOption.value = '__local__';
+                localOption.textContent = '📁 Local Game Files';
+                localOption.style.fontWeight = 'bold';
+                select.appendChild(localOption);
+                
+                // Add separator
+                const separator = document.createElement('option');
+                separator.disabled = true;
+                separator.textContent = '────────────────';
+                select.appendChild(separator);
+                
+                // Add modules
                 modules.forEach(module => {
                     const option = document.createElement('option');
                     option.value = module.moduleName;
@@ -4139,9 +4168,10 @@
             grid.innerHTML = '';
             let existsCount = 0;
             let missingCount = 0;
+            let localCount = 0;
 
             if (!npcs || npcs.length === 0) {
-                grid.innerHTML = '<div class="loading">No NPCs found in this module.</div>';
+                grid.innerHTML = '<div class="loading">No NPCs found.</div>';
                 return;
             }
 
@@ -4150,7 +4180,12 @@
                 const statusClass = npc.has_portrait ? 'has-portrait' : 'missing-portrait';
                 item.className = `monster-item npc-item ${statusClass}`;
                 
+                // Update counters
                 if (npc.has_portrait) existsCount++; else missingCount++;
+                if (npc.is_local) {
+                    item.classList.add('is-local');
+                    localCount++;
+                }
 
                 item.innerHTML = `
                     <label class="monster-label">
@@ -4163,13 +4198,19 @@
                 `;
                 grid.appendChild(item);
                 
-                if (npc.has_portrait) {
+                // Load thumbnail if it exists in either the pack or local files
+                if (npc.has_portrait || npc.is_local) {
                     loadNpcThumbnail(npc.id, npc.pack_name);
+                } else {
+                    const thumbContainer = document.getElementById(`thumb-npc-${npc.id}`);
+                    if(thumbContainer) thumbContainer.innerHTML = '<div class="no-image-placeholder">?</div>';
                 }
             });
 
+            // Update all legend counters
             document.getElementById('npc-count-exists').textContent = `(${existsCount})`;
             document.getElementById('npc-count-missing').textContent = `(${missingCount})`;
+            document.getElementById('npc-count-local').textContent = `(${localCount})`;
         }
 
         // Loads a single NPC thumbnail with click handling for full preview
@@ -4423,6 +4464,56 @@
                 }
             } catch (error) {
                 addLog('genLog', `Failed to start generation: ${error}`, 'error');
+            }
+        }
+
+        // Export NPCs to Pack functionality
+        function exportNpcsToPack() {
+            const selectedNpcs = document.querySelectorAll('input[name="npc-select"]:checked');
+            const packName = document.getElementById('npcPackSelect').value;
+
+            if (selectedNpcs.length === 0) {
+                alert('Please select one or more NPCs to export.');
+                return;
+            }
+            if (!packName) {
+                alert('Please select a destination pack.');
+                return;
+            }
+
+            const npcIdsToExport = Array.from(selectedNpcs).map(cb => cb.dataset.npcId);
+            
+            const message = `You are about to copy the portraits for ${npcIdsToExport.length} NPC(s) into the '${packName}' graphic pack.\n\nThis is useful for creating a distributable pack for a module. Any existing portraits in the destination pack with the same name will be overwritten.\n\nProceed?`;
+
+            if (confirm(message)) {
+                performNpcExport(packName, npcIdsToExport);
+            }
+        }
+
+        async function performNpcExport(packName, npcIds) {
+            addLog('genLog', `Exporting ${npcIds.length} NPC portraits to pack '${packName}'...`, 'info');
+            try {
+                const response = await fetch('/api/toolkit/npcs/export-to-pack', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        pack_name: packName,
+                        npc_ids: npcIds
+                    })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    addLog('genLog', `Successfully exported ${result.exported_count} portraits. Skipped ${result.skipped_count}.`, 'success');
+                    // Refresh the view to show the updated status
+                    loadNpcsForModule();
+                } else {
+                    addLog('genLog', `Export failed: ${result.error}`, 'error');
+                    alert(`Export failed: ${result.error}`);
+                }
+            } catch (error) {
+                addLog('genLog', `An error occurred during export: ${error}`, 'error');
+                alert('An error occurred during the export process.');
             }
         }
 
