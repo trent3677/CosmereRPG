@@ -4497,6 +4497,12 @@
 
             addLog('genLog', `Requesting AI descriptions for ${npcs.length} selected NPCs in module '${moduleName}'...`, 'info');
             
+            // Show progress bar for description fetching
+            document.getElementById('genProgress').style.display = 'block';
+            document.getElementById('genProgressFill').style.width = '0%';
+            document.getElementById('genProgressFill').textContent = '0%';
+            document.getElementById('genStatus').textContent = 'Fetching NPC descriptions...';
+            
             try {
                 const response = await fetch('/api/toolkit/npcs/fetch-descriptions', {
                     method: 'POST',
@@ -4599,11 +4605,19 @@
             
             if (!styleSelect || !stylePromptBox) return;
             
-            if (styleSelect.value && stylePrompts[styleSelect.value]) {
-                stylePromptBox.value = stylePrompts[styleSelect.value];
-            } else {
+            fetch(`/toolkit/get_style_prompt/${styleSelect.value}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.prompt) {
+                    stylePromptBox.value = data.prompt;
+                } else {
+                    stylePromptBox.value = '';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading NPC style prompt:', error);
                 stylePromptBox.value = '';
-            }
+            });
         }
 
         function saveNpcStylePrompt() {
@@ -4620,21 +4634,26 @@
                 return;
             }
             
-            // Save to localStorage and global variable
-            stylePrompts[styleSelect.value] = stylePrompt;
-            localStorage.setItem('customStylePrompts', JSON.stringify(stylePrompts));
-            
-            // Save to server
-            fetch('/api/toolkit/styles', {
+            // Save to server using the same endpoint as monsters
+            fetch('/toolkit/update_style_prompt', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    styles: stylePrompts
+                    style_id: styleSelect.value,
+                    prompt: stylePrompt
                 })
-            }).then(response => {
-                if (response.ok) {
-                    alert('Style prompt saved successfully!');
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Style prompt updated successfully!');
+                } else {
+                    alert('Failed to update style: ' + (data.error || 'Unknown error'));
                 }
+            })
+            .catch(error => {
+                console.error('Error updating style:', error);
+                alert('Failed to update style prompt');
             });
         }
 
@@ -4652,32 +4671,46 @@
                 return;
             }
             
-            // Add to stylePrompts
-            stylePrompts[styleName] = stylePrompt;
-            localStorage.setItem('customStylePrompts', JSON.stringify(stylePrompts));
-            
-            // Add to dropdown
-            const styleSelect = document.getElementById('npcStyleSelect');
-            const option = document.createElement('option');
-            option.value = styleName;
-            option.textContent = styleName;
-            styleSelect.appendChild(option);
-            styleSelect.value = styleName;
-            
-            // Clear the new style name input
-            document.getElementById('newNpcStyleName').value = '';
-            
-            // Save to server
-            fetch('/api/toolkit/styles', {
+            // Save to server using the same endpoint as monsters
+            fetch('/toolkit/save_new_style', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    styles: stylePrompts
+                    name: styleName,
+                    prompt: stylePrompt
                 })
-            }).then(response => {
-                if (response.ok) {
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
                     alert('New style saved successfully!');
+                    
+                    // Add to both dropdowns
+                    const styleSelect = document.getElementById('npcStyleSelect');
+                    const option = document.createElement('option');
+                    option.value = data.style_id || styleName;
+                    option.textContent = styleName + ' (Custom)';
+                    styleSelect.appendChild(option);
+                    styleSelect.value = data.style_id || styleName;
+                    
+                    // Also add to monster dropdown
+                    const monsterStyleSelect = document.getElementById('genStyle');
+                    if (monsterStyleSelect) {
+                        const monsterOption = document.createElement('option');
+                        monsterOption.value = data.style_id || styleName;
+                        monsterOption.textContent = styleName + ' (Custom)';
+                        monsterStyleSelect.appendChild(monsterOption);
+                    }
+                    
+                    // Clear the new style name input
+                    document.getElementById('newNpcStyleName').value = '';
+                } else {
+                    alert('Failed to save style: ' + (data.error || 'Unknown error'));
                 }
+            })
+            .catch(error => {
+                console.error('Error saving new style:', error);
+                alert('Failed to save new style');
             });
         }
 
