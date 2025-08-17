@@ -2639,7 +2639,7 @@ Focus on making them look like a potential ally, not an enemy."""
                     response = client.chat.completions.create(
                         model="gpt-4o-mini",
                         messages=[
-                            {"role": "system", "content": "You are a D&D 5e NPC description expert. Create rich, visual descriptions for PARTY NPCs - friendly characters who could join or assist the party. Even villains should be described in their 'recruiting' or 'parlaying' state, not hostile. Make them appealing as potential companions."},
+                            {"role": "system", "content": "You are a fantasy RPG character description expert. Create detailed visual descriptions optimized for AI image generation. Focus on physical appearance, clothing, equipment, and visual details. Describe characters as potential allies or party members in friendly, approachable poses. Output descriptions suitable for portrait generation prompts."},
                             {"role": "user", "content": prompt}
                         ],
                         temperature=0.7

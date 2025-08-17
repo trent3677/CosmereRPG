@@ -3514,12 +3514,26 @@
                 console.log('[NPC Description Progress]', data);
                 addLog('genLog', `Generating description for ${data.npc_name} (${data.current}/${data.total})`, 
                        data.status === 'success' ? 'success' : 'error');
+                       
+                // Update progress bar
+                const percent = (data.current / data.total) * 100;
+                document.getElementById('genProgressFill').style.width = `${percent}%`;
+                document.getElementById('genProgressFill').textContent = `${Math.round(percent)}%`;
+                document.getElementById('genStatus').textContent = `Generating description for ${data.npc_name} (${data.current}/${data.total})`;
+                document.getElementById('genProgress').style.display = 'block';
             });
             
             socket.on('npc_portrait_progress', (data) => {
                 console.log('[NPC Portrait Progress]', data);
                 addLog('genLog', `Generating portrait for ${data.npc_name} (${data.current}/${data.total})`, 
                        data.status === 'success' ? 'success' : 'error');
+                       
+                // Update progress bar
+                const percent = (data.current / data.total) * 100;
+                document.getElementById('genProgressFill').style.width = `${percent}%`;
+                document.getElementById('genProgressFill').textContent = `${Math.round(percent)}%`;
+                document.getElementById('genStatus').textContent = `Generating portrait for ${data.npc_name} (${data.current}/${data.total})`;
+                document.getElementById('genProgress').style.display = 'block';
                        
                 // Update thumbnail if successful
                 if (data.status === 'success') {
@@ -3532,7 +3546,14 @@
             
             socket.on('npc_portrait_complete', (data) => {
                 console.log('[NPC Portrait Complete]', data);
-                addLog('genLog', `✓ Portrait generation complete for ${data.count} NPCs in pack '${data.pack_name}'`, 'success');
+                addLog('genLog', `Portrait generation complete for ${data.count} NPCs in pack '${data.pack_name}'`, 'success');
+                
+                // Hide progress bar
+                document.getElementById('genProgress').style.display = 'none';
+                document.getElementById('genProgressFill').style.width = '0%';
+                document.getElementById('genProgressFill').textContent = '0%';
+                document.getElementById('genStatus').textContent = 'Complete';
+                
                 // Refresh the NPC list to show updated portraits
                 loadNpcsForModule();
             });
@@ -4462,19 +4483,19 @@
                 return;
             }
             
-            // Get all NPC names from the grid
-            const npcItems = document.querySelectorAll('.npc-item input[name="npc-select"]');
-            const npcs = Array.from(npcItems).map(input => ({
+            // Get only SELECTED NPC names from the grid
+            const selectedNpcItems = document.querySelectorAll('.npc-item input[name="npc-select"]:checked');
+            const npcs = Array.from(selectedNpcItems).map(input => ({
                 name: input.value,
                 id: input.dataset.npcId
             }));
 
             if (npcs.length === 0) {
-                alert('No NPCs found to fetch descriptions for.');
+                alert('Please select at least one NPC to fetch descriptions for.');
                 return;
             }
 
-            addLog('genLog', `Requesting AI descriptions for ${npcs.length} NPCs in module '${moduleName}'...`, 'info');
+            addLog('genLog', `Requesting AI descriptions for ${npcs.length} selected NPCs in module '${moduleName}'...`, 'info');
             
             try {
                 const response = await fetch('/api/toolkit/npcs/fetch-descriptions', {
@@ -4690,6 +4711,12 @@
             
             // Show progress
             addLog('genLog', `Starting portrait generation for ${npcsToGenerate.length} NPCs with ${styleSelect.value} style...`, 'info');
+            
+            // Show progress bar
+            document.getElementById('genProgress').style.display = 'block';
+            document.getElementById('genProgressFill').style.width = '0%';
+            document.getElementById('genProgressFill').textContent = '0%';
+            document.getElementById('genStatus').textContent = 'Initializing portrait generation...';
             
             try {
                 const response = await fetch('/api/toolkit/npcs/generate-portraits', {
