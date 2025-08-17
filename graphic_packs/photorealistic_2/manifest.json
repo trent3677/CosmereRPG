@@ -57,14 +57,10 @@
     "thumbnails": [],
     "videos": []
   },
-  "total_npcs": 6,
+  "total_npcs": 2,
   "npcs_included": [
-    "corrupted_ranger_thane",
-    "eirik_hearthwise",
-    "ranger_elen",
-    "ranger_thane",
-    "scout_elen",
-    "scout_kira"
+    "abbess_miralda",
+    "eirik_hearthwise"
   ],
   "last_modified": "2025-08-17",
   "imported_date": "2025-08-17",

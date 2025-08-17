@@ -2174,12 +2174,11 @@ def handle_generate_image(data):
         
         # Try to generate image
         try:
-            # Generate image using DALL-E 3 with standard quality settings
+            # Generate image using DALL-E 3
             response = client.images.generate(
                 model="dall-e-3",
                 prompt=prompt,
                 size="1024x1024",
-                quality="standard",
                 n=1,
             )
             # Get the image URL
@@ -2196,7 +2195,6 @@ def handle_generate_image(data):
                     model="dall-e-3",
                     prompt=sanitized_prompt,
                     size="1024x1024",
-                    quality="standard",
                     n=1,
                 )
                 image_url = response.data[0].url
@@ -2797,7 +2795,7 @@ def handle_npc_description():
 
 @app.route('/api/toolkit/npcs/generate-portraits', methods=['POST'])
 def generate_npc_portraits():
-    """Generate portrait images for selected NPCs using DALL-E"""
+    """Generate portrait images for selected NPCs using NPCGenerator"""
     if not TOOLKIT_AVAILABLE:
         return jsonify({'success': False, 'error': 'Toolkit not available'}), 503
     
@@ -2815,11 +2813,9 @@ def generate_npc_portraits():
     # Start background thread for portrait generation
     def generate_portraits():
         try:
-            from openai import OpenAI
-            from PIL import Image
+            from core.toolkit.npc_generator import NPCGenerator
             from utils.file_operations import safe_read_json
-            import requests
-            import io
+            import asyncio
             
             # Get API key
             try:
@@ -2833,112 +2829,60 @@ def generate_npc_portraits():
                 error("TOOLKIT: OpenAI API key not configured")
                 return
                 
-            client = OpenAI(api_key=OPENAI_API_KEY)
+            # Initialize NPC generator
+            generator = NPCGenerator(api_key=OPENAI_API_KEY)
             
             # Load descriptions
             descriptions_file = f'temp/npc_descriptions_{module_name}.json'
             descriptions = safe_read_json(descriptions_file) or {}
             
-            # Create NPCs directory in pack if needed
-            npcs_dir = os.path.join('graphic_packs', pack_name, 'npcs')
-            os.makedirs(npcs_dir, exist_ok=True)
-            
-            # Generate portrait for each NPC
-            for i, npc_data in enumerate(npcs):
-                npc_name = npc_data['name']
+            # Prepare NPC data with descriptions
+            npcs_with_descriptions = []
+            for npc_data in npcs:
                 npc_id = npc_data['id']
+                npc_name = npc_data['name']
                 
                 # Get description
                 npc_desc_data = descriptions.get(npc_id, {})
                 description = npc_desc_data.get('description', f'A fantasy NPC named {npc_name}')
                 
-                # Prepare DALL-E prompt with style
-                base_prompt = f"Fantasy portrait of {npc_name} as a friendly party NPC companion. {description}"
-                
-                # Add style-specific prompt if provided
-                if style_prompt:
-                    prompt = f"{base_prompt}\n\n{style_prompt}"
-                else:
-                    # Fallback to default style
-                    prompt = f"""{base_prompt}
-                
-Important: Show them in a friendly, approachable pose. Slight smile or neutral expression. Looking at viewer with trustworthy demeanor. Weapons sheathed or held casually. Clean, well-maintained appearance.
-                
-Style: High quality fantasy art portrait, detailed character art, D&D party member portrait style, warm lighting, centered composition, neutral or tavern/camp background. Charismatic and appealing presentation."""
-                
-                try:
-                    info(f"TOOLKIT: Generating portrait for {npc_name} ({i+1}/{len(npcs)}) with {style} style")
-                    
-                    # Call DALL-E API
-                    response = client.images.generate(
-                        model=model,
-                        prompt=prompt[:4000],  # DALL-E has character limit
-                        size="1024x1024",
-                        quality="standard",
-                        n=1,
-                    )
-                    
-                    # Download and save image
-                    image_url = response.data[0].url
-                    img_response = requests.get(image_url)
-                    img = Image.open(io.BytesIO(img_response.content))
-                    
-                    # Save full size image to pack
-                    portrait_path = os.path.join(npcs_dir, f'{npc_id}.png')
-                    img.save(portrait_path, 'PNG')
-                    
-                    # Create and save thumbnail
-                    thumb = img.copy()
-                    thumb.thumbnail((128, 128), Image.Resampling.LANCZOS)
-                    thumb_path = os.path.join(npcs_dir, f'{npc_id}_thumb.png')
-                    thumb.save(thumb_path, 'PNG')
-                    
-                    # Also copy to game's NPC media folder for live use
-                    game_npcs_dir = os.path.join('web', 'static', 'media', 'npcs')
-                    os.makedirs(game_npcs_dir, exist_ok=True)
-                    
-                    # Copy thumbnail to game folder (game uses JPG thumbnails)
-                    thumb_jpg = img.copy()
-                    thumb_jpg.thumbnail((128, 128), Image.Resampling.LANCZOS)
-                    if thumb_jpg.mode == 'RGBA':
-                        # Convert RGBA to RGB for JPG
-                        rgb_img = Image.new('RGB', thumb_jpg.size, (255, 255, 255))
-                        rgb_img.paste(thumb_jpg, mask=thumb_jpg.split()[3] if len(thumb_jpg.split()) > 3 else None)
-                        thumb_jpg = rgb_img
-                    game_thumb_path = os.path.join(game_npcs_dir, f'{npc_id}_thumb.jpg')
-                    thumb_jpg.save(game_thumb_path, 'JPEG', quality=85)
-                    
-                    info(f"TOOLKIT: Successfully generated portrait for {npc_name}")
-                    
-                    # Emit progress
-                    socketio.emit('npc_portrait_progress', {
-                        'current': i + 1,
-                        'total': len(npcs),
-                        'npc_name': npc_name,
-                        'status': 'success'
-                    })
-                    
-                    # Rate limiting
-                    time.sleep(3)  # Wait 3 seconds between DALL-E requests
-                    
-                except Exception as e:
-                    error(f"TOOLKIT: Failed to generate portrait for {npc_name}: {e}")
-                    socketio.emit('npc_portrait_progress', {
-                        'current': i + 1,
-                        'total': len(npcs),
-                        'npc_name': npc_name,
-                        'status': 'error',
-                        'error': str(e)
-                    })
+                npcs_with_descriptions.append({
+                    'id': npc_id,
+                    'name': npc_name,
+                    'description': description
+                })
+            
+            # Create progress callback
+            def progress_callback(progress_data):
+                socketio.emit('npc_portrait_progress', progress_data)
+            
+            # Run the async batch generation
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            
+            result = loop.run_until_complete(
+                generator.batch_generate_portraits(
+                    npcs=npcs_with_descriptions,
+                    pack_name=pack_name,
+                    style=style,
+                    model=model,
+                    progress_callback=progress_callback
+                )
+            )
             
             # Update pack manifest to include NPC count
             update_pack_manifest_with_npcs(pack_name)
             
-            info(f"TOOLKIT: Completed portrait generation for {len(npcs)} NPCs")
+            # Log results
+            info(f"TOOLKIT: Completed portrait generation - {len(result['successful'])} successful, {len(result['failed'])} failed")
+            
+            # Emit completion
             socketio.emit('npc_portrait_complete', {
                 'module_name': module_name,
                 'pack_name': pack_name,
-                'count': len(npcs)
+                'count': len(result['successful']),
+                'successful': len(result['successful']),
+                'failed': len(result['failed'])
             })
             
         except Exception as e:
