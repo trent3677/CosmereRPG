@@ -2885,13 +2885,13 @@ def generate_npc_portraits():
             # Log results
             info(f"TOOLKIT: Completed portrait generation - {len(result['successful'])} successful, {len(result['failed'])} failed")
             
-            # Emit completion
-            socketio.emit('npc_portrait_complete', {
+            # Emit completion with detailed results
+            socketio.emit('npc_generation_complete', {
                 'module_name': module_name,
                 'pack_name': pack_name,
-                'count': len(result['successful']),
-                'successful': len(result['successful']),
-                'failed': len(result['failed'])
+                'successful': result.get('successful', []),
+                'failed': result.get('failed', []),
+                'total': len(result.get('successful', [])) + len(result.get('failed', []))
             })
             
         except Exception as e:
