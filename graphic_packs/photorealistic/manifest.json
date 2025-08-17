@@ -57,5 +57,14 @@
     "thumbnails": [],
     "videos": []
   },
-  "last_modified": "2025-08-16"
+  "total_npcs": 6,
+  "npcs_included": [
+    "corrupted_ranger_thane",
+    "eirik_hearthwise",
+    "ranger_elen",
+    "ranger_thane",
+    "scout_elen",
+    "scout_kira"
+  ],
+  "last_modified": "2025-08-17"
 }

@@ -1026,6 +1026,10 @@
         .orange-outline {
             border: 2px solid #FFA500; /* Orange */
         }
+        
+        .blue-outline {
+            border: 2px solid #2196F3; /* Blue */
+        }
 
         .purple-outline {
             border: 2px solid #9c27b0; /* Purple */
@@ -1629,6 +1633,65 @@
             display: flex;
             align-items: center;
         }
+        
+        /* === 16. NPC Tab Styles === */
+        /* Legend for the NPC list */
+        .npc-list-legend {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            font-size: 0.85em;
+            color: #aaa;
+            padding-left: 5px;
+        }
+
+        /* NPC item styles in the grid */
+        .npc-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 10px;
+            transition: background 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .npc-item.has-portrait {
+            border-left-color: #4CAF50; /* Green */
+        }
+
+        .npc-item.missing-portrait {
+            border-left-color: #f44336; /* Red */
+        }
+
+        .npc-item:hover {
+            background: rgba(255, 165, 0, 0.05);
+        }
+
+        .npc-thumbnail-preview {
+            width: 40px;
+            height: 40px;
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-left: 15px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .npc-thumbnail-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .npc-thumbnail-preview .no-image-placeholder {
+            color: #666;
+            font-size: 20px;
+        }
 
     </style>
 </head>
@@ -1643,6 +1706,7 @@
         <div class="tabs">
             <button class="tab active" onclick="switchTab('packs')">Monster Graphic Pack Management</button>
             <button class="tab" onclick="switchTab('generator')">Monster Management & Generator</button>
+            <button class="tab" onclick="switchTab('npcs')">NPC Management & Generator</button>
             <button class="tab" onclick="switchTab('videos')">Video Processor</button>
             <button class="tab" onclick="switchTab('builder')">Module Builder</button>
         </div>
@@ -1863,6 +1927,78 @@
                 </div>
             </div>
             
+            <!-- NPC Management & Generator Tab -->
+            <div id="npcs-tab" class="tab-content">
+                <div class="section">
+                    <h2>Generate NPC Portraits<span class="tooltip-trigger" data-tooltip="Generate portrait images for NPCs found in adventure modules. NPCs are module-specific and stored separately from monsters.">?</span></h2>
+                    <!-- Top Row: Selectors -->
+                    <div class="generator-controls">
+                        <div class="generator-options">
+                            <div class="form-group option-box blue-outline">
+                                <label for="npcModuleSelect">Source Module:<span class="tooltip-trigger" data-tooltip="Select the adventure module to scan for NPCs.">?</span></label>
+                                <select id="npcModuleSelect" onchange="loadNpcsForModule()">
+                                    <option value="">-- Select a Module --</option>
+                                    <!-- Modules will be loaded here -->
+                                </select>
+                            </div>
+                            <div class="form-group option-box orange-outline">
+                                <label for="npcPackSelect">Target Pack:<span class="tooltip-trigger" data-tooltip="The graphic pack where new NPC portraits will be saved.">?</span></label>
+                                <select id="npcPackSelect" onchange="loadNpcsForModule()">
+                                    <!-- Packs will be loaded here -->
+                                </select>
+                            </div>
+                            <div class="form-group option-box purple-outline">
+                                <label for="npcModelSelect">AI Model:<span class="tooltip-trigger" data-tooltip="The AI model used for generating portraits.">?</span></label>
+                                <select id="npcModelSelect">
+                                    <option value="dall-e-3">DALL-E 3 (Default)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Middle Row: Description Editor -->
+                    <div class="prompt-description-section">
+                        <div class="prompt-editor">
+                            <div class="prompt-editor-header">
+                                <h4>NPC Description<span class="tooltip-trigger" data-tooltip="This description will be used to generate the portrait. Click 'Fetch Descriptions' to generate them with AI, or edit them manually.">?</span></h4>
+                                <div>
+                                    <button class="btn btn-primary btn-small" onclick="fetchNpcDescriptions()">Fetch Descriptions</button>
+                                    <button class="btn btn-primary btn-small" onclick="saveNpcDescription()">Save</button>
+                                </div>
+                            </div>
+                            <textarea id="npcDescriptionBox" class="preview-textarea" placeholder="Select a module, then select an NPC from the list below..."></textarea>
+                            <div class="selected-monster-info">
+                                <small id="selectedNpcName">No NPC selected</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Section: NPC List -->
+                    <div class="monster-list-container">
+                        <div class="monster-list-header">
+                            <h4>NPCs Found in Module<span class="tooltip-trigger" data-tooltip="This list shows all NPCs found in the selected module's area files.">?</span></h4>
+                            <div class="monster-buttons">
+                                <button class="btn btn-light btn-small" onclick="selectAllNpcs(true)">Select All</button>
+                                <button class="btn btn-light btn-small" onclick="selectAllNpcs(false)">Select Missing</button>
+                                <button class="btn btn-secondary btn-small" onclick="deselectAllNpcs()">Deselect All</button>
+                            </div>
+                        </div>
+                        <div class="npc-list-legend">
+                            <div class="legend-item" title="A portrait for this NPC already exists in the selected pack.">
+                                <span class="legend-color-box bestiary"></span> Portrait Exists <span id="npc-count-exists">(0)</span>
+                            </div>
+                            <div class="legend-item" title="A portrait for this NPC is missing from the selected pack.">
+                                <span class="legend-color-box missing-from-pack"></span> Portrait Missing <span id="npc-count-missing">(0)</span>
+                            </div>
+                        </div>
+                        <div class="monster-grid" id="npcGrid">
+                            <!-- NPCs will be loaded here -->
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 20px;" onclick="startNpcGeneration()">Generate Selected Portraits</button>
+                </div>
+            </div>
+            
             <!-- Video Processor Tab - UPDATED LAYOUT -->
             <div id="videos-tab" class="tab-content">
                 <div class="two-column-layout balanced">
@@ -2011,6 +2147,7 @@
             loadPacks();
             loadMonsters();
             loadModules(); // Load available modules for cross-reference
+            loadNpcModules(); // Load modules for NPC tab
             setupDragDrop();
             setupSocketHandlers();
             initializeModuleBuilderElements(); // Initialize module builder DOM elements
@@ -2037,6 +2174,10 @@
             if (tab === 'generator') {
                 loadStyles();
                 loadMonsters();
+            } else if (tab === 'npcs') {
+                // Load NPC modules and packs when switching to NPC tab
+                loadNpcModules();
+                loadNpcPacks();
             } else if (tab === 'builder') {
                 // Request module list when switching to builder tab
                 console.log('Switching to builder tab, requesting module list...');
@@ -3263,6 +3404,34 @@
                 }
             });
             
+            // NPC Management events
+            socket.on('npc_description_progress', (data) => {
+                console.log('[NPC Description Progress]', data);
+                addLog('genLog', `Generating description for ${data.npc_name} (${data.current}/${data.total})`, 
+                       data.status === 'success' ? 'success' : 'error');
+            });
+            
+            socket.on('npc_portrait_progress', (data) => {
+                console.log('[NPC Portrait Progress]', data);
+                addLog('genLog', `Generating portrait for ${data.npc_name} (${data.current}/${data.total})`, 
+                       data.status === 'success' ? 'success' : 'error');
+                       
+                // Update thumbnail if successful
+                if (data.status === 'success') {
+                    const packName = document.getElementById('npcPackSelect').value;
+                    // Refresh the thumbnail for this NPC
+                    const npcId = data.npc_name.toLowerCase().replace(/\s+/g, '_').replace(/'/g, '').replace(/-/g, '_');
+                    loadNpcThumbnail(npcId, packName);
+                }
+            });
+            
+            socket.on('npc_portrait_complete', (data) => {
+                console.log('[NPC Portrait Complete]', data);
+                addLog('genLog', `✓ Portrait generation complete for ${data.count} NPCs in pack '${data.pack_name}'`, 'success');
+                // Refresh the NPC list to show updated portraits
+                loadNpcsForModule();
+            });
+            
             socket.on('bestiary_update_error', (data) => {
                 console.error('[Bestiary Update Error]', data);
                 const progressDiv = document.getElementById('bestiary-progress');
@@ -3896,6 +4065,366 @@
         
         // Load styles and initialize on page load
         // Removed duplicate DOMContentLoaded listener - already handled above
+
+        // === NPC MANAGEMENT & GENERATOR FUNCTIONS ===
+        
+        // Populates the module dropdown on the NPC tab
+        async function loadNpcModules() {
+            try {
+                const response = await fetch('/api/toolkit/modules');
+                const modules = await response.json();
+                const select = document.getElementById('npcModuleSelect');
+                if (!select) return; // Tab might not be active
+                
+                select.innerHTML = '<option value="">-- Select a Module --</option>'; 
+                modules.forEach(module => {
+                    const option = document.createElement('option');
+                    option.value = module.moduleName;
+                    option.textContent = module.moduleName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Failed to load NPC modules:', error);
+            }
+        }
+
+        // Populates the pack dropdown on the NPC tab
+        function loadNpcPacks() {
+            const select = document.getElementById('npcPackSelect');
+            if (!select) return;
+            const activePackName = availablePacks.find(p => p.is_active)?.name;
+            select.innerHTML = '';
+            availablePacks.forEach(pack => {
+                const option = document.createElement('option');
+                option.value = pack.name;
+                option.textContent = pack.display_name || pack.name;
+                if (pack.name === activePackName) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+        }
+
+        // Main function to scan a module and display its NPCs
+        async function loadNpcsForModule() {
+            const moduleName = document.getElementById('npcModuleSelect').value;
+            const packName = document.getElementById('npcPackSelect').value;
+            const grid = document.getElementById('npcGrid');
+
+            if (!moduleName) {
+                grid.innerHTML = '<div class="loading">Please select a module to scan for NPCs.</div>';
+                return;
+            }
+            
+            if (!packName) {
+                grid.innerHTML = '<div class="loading">Please select a target pack.</div>';
+                return;
+            }
+            
+            grid.innerHTML = '<div class="loading">Scanning module for NPCs...</div>';
+
+            try {
+                const response = await fetch(`/api/toolkit/modules/${moduleName}/npcs?pack=${packName}`);
+                const npcs = await response.json();
+                renderNpcs(npcs);
+            } catch (error) {
+                console.error('Failed to load NPCs for module:', error);
+                grid.innerHTML = '<div class="loading" style="color: #f44336;">Error loading NPCs.</div>';
+            }
+        }
+
+        // Renders the list of NPCs into the grid
+        function renderNpcs(npcs) {
+            const grid = document.getElementById('npcGrid');
+            grid.innerHTML = '';
+            let existsCount = 0;
+            let missingCount = 0;
+
+            if (!npcs || npcs.length === 0) {
+                grid.innerHTML = '<div class="loading">No NPCs found in this module.</div>';
+                return;
+            }
+
+            npcs.forEach(npc => {
+                const item = document.createElement('div');
+                const statusClass = npc.has_portrait ? 'has-portrait' : 'missing-portrait';
+                item.className = `monster-item npc-item ${statusClass}`;
+                
+                if (npc.has_portrait) existsCount++; else missingCount++;
+
+                item.innerHTML = `
+                    <label class="monster-label">
+                        <input type="checkbox" value="${npc.name}" name="npc-select" onchange="loadNpcDescription('${npc.name.replace(/'/g, "\\'")}')" data-npc-id="${npc.id}">
+                        <span>${npc.name}</span>
+                    </label>
+                    <div class="npc-thumbnail-preview" id="thumb-npc-${npc.id}">
+                        <!-- Thumbnail will be loaded here -->
+                    </div>
+                `;
+                grid.appendChild(item);
+                
+                if (npc.has_portrait) {
+                    loadNpcThumbnail(npc.id, npc.pack_name);
+                }
+            });
+
+            document.getElementById('npc-count-exists').textContent = `(${existsCount})`;
+            document.getElementById('npc-count-missing').textContent = `(${missingCount})`;
+        }
+
+        // Loads a single NPC thumbnail with click handling for full preview
+        function loadNpcThumbnail(npcId, packName) {
+            const thumbContainer = document.getElementById(`thumb-npc-${npcId}`);
+            if (!thumbContainer) return;
+            
+            const portraitUrl = `/api/toolkit/packs/${packName}/npcs/${npcId}/thumbnail?v=${new Date().getTime()}`; // Cache bust
+            const fullImageUrl = `/api/toolkit/packs/${packName}/npcs/${npcId}/image`;
+            const videoUrl = `/api/toolkit/packs/${packName}/npcs/${npcId}/video`;
+
+            const img = new Image();
+            img.onload = () => {
+                thumbContainer.innerHTML = '';
+                thumbContainer.appendChild(img);
+                
+                // Store URLs for popup use
+                thumbContainer.dataset.thumbSrc = `/api/toolkit/packs/${packName}/npcs/${npcId}/thumbnail`;
+                thumbContainer.dataset.imageSrc = fullImageUrl;
+                thumbContainer.dataset.npcId = npcId;
+                thumbContainer.dataset.packName = packName;
+                
+                // Make the container clickable
+                thumbContainer.style.cursor = 'pointer';
+                
+                // Check if video exists
+                fetch(videoUrl, { method: 'HEAD' })
+                    .then(res => {
+                        if (res.ok) {
+                            console.log(`Video found for NPC ${npcId}`);
+                            // Video exists, add indicator
+                            thumbContainer.dataset.videoSrc = videoUrl;
+                            const indicator = document.createElement('div');
+                            indicator.className = 'video-indicator';
+                            indicator.innerHTML = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                            thumbContainer.appendChild(indicator);
+                        } else {
+                            console.log(`No video for NPC ${npcId}`);
+                        }
+                        // Add click listener regardless of video existence
+                        thumbContainer.addEventListener('click', showNpcMediaPopup);
+                    })
+                    .catch((err) => {
+                        console.log(`Error checking video for NPC ${npcId}:`, err);
+                        // If fetch fails, still add click listener for image
+                        thumbContainer.addEventListener('click', showNpcMediaPopup);
+                    });
+            };
+            img.onerror = () => {
+                thumbContainer.innerHTML = '<div class="no-image-placeholder">?</div>';
+                const npcItem = thumbContainer.closest('.npc-item');
+                if (npcItem) npcItem.dataset.missingImage = "true";
+                console.warn(`Failed to load NPC thumbnail: ${portraitUrl}`);
+            };
+            img.src = portraitUrl;
+        }
+
+        // Show NPC media popup (full image or video)
+        function showNpcMediaPopup(event) {
+            console.log('showNpcMediaPopup called');
+            const thumbContainer = event.currentTarget;
+            const npcName = thumbContainer.closest('.npc-item').querySelector('.monster-label span').textContent;
+            
+            const modal = document.getElementById('media-modal');
+            const modalBody = document.getElementById('media-modal-body');
+            const modalTitle = document.getElementById('media-modal-title');
+
+            if (!modal) {
+                console.error('Media modal not found!');
+                return;
+            }
+
+            modalTitle.textContent = npcName;
+            modalBody.innerHTML = ''; // Clear previous content
+
+            if (thumbContainer.dataset.videoSrc) {
+                console.log('Showing NPC video:', thumbContainer.dataset.videoSrc);
+                // If video exists, show it with cache busting
+                const video = document.createElement('video');
+                video.src = thumbContainer.dataset.videoSrc + '?t=' + new Date().getTime();
+                video.controls = true;
+                video.autoplay = true;
+                video.loop = true;
+                modalBody.appendChild(video);
+            } else if (thumbContainer.dataset.imageSrc) {
+                console.log('Showing NPC image:', thumbContainer.dataset.imageSrc);
+                // Show the full-size image with cache busting
+                const img = document.createElement('img');
+                img.src = thumbContainer.dataset.imageSrc + '?t=' + new Date().getTime();
+                modalBody.appendChild(img);
+            } else if (thumbContainer.dataset.thumbSrc) {
+                console.log('Showing NPC thumbnail:', thumbContainer.dataset.thumbSrc);
+                // Fallback to thumbnail if full image not available
+                const img = document.createElement('img');
+                img.src = thumbContainer.dataset.thumbSrc + '?t=' + new Date().getTime();
+                modalBody.appendChild(img);
+            }
+            
+            // Show the modal
+            modal.classList.add('active');
+        }
+
+        // --- Description Handling ---
+        let currentSelectedNpc = null;
+        
+        async function fetchNpcDescriptions() {
+            const moduleName = document.getElementById('npcModuleSelect').value;
+            if (!moduleName) {
+                alert('Please select a module first.');
+                return;
+            }
+            
+            // Get all NPC names from the grid
+            const npcItems = document.querySelectorAll('.npc-item input[name="npc-select"]');
+            const npcs = Array.from(npcItems).map(input => ({
+                name: input.value,
+                id: input.dataset.npcId
+            }));
+
+            if (npcs.length === 0) {
+                alert('No NPCs found to fetch descriptions for.');
+                return;
+            }
+
+            addLog('genLog', `Requesting AI descriptions for ${npcs.length} NPCs in module '${moduleName}'...`, 'info');
+            
+            try {
+                const response = await fetch('/api/toolkit/npcs/fetch-descriptions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ module_name: moduleName, npcs: npcs })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    addLog('genLog', 'AI description generation process started. Descriptions will appear as they are generated.', 'success');
+                } else {
+                    addLog('genLog', `Error starting description generation: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                addLog('genLog', `Failed to start description generation: ${error}`, 'error');
+            }
+        }
+
+        async function loadNpcDescription(npcName) {
+            const moduleName = document.getElementById('npcModuleSelect').value;
+            const descriptionBox = document.getElementById('npcDescriptionBox');
+            const npcInput = document.querySelector(`input[name="npc-select"][value="${npcName.replace(/'/g, "\\'")}"]`);
+            const npcId = npcInput ? npcInput.dataset.npcId : npcName.toLowerCase().replace(/\s+/g, '_');
+            
+            currentSelectedNpc = { name: npcName, id: npcId };
+            document.getElementById('selectedNpcName').textContent = `Selected: ${npcName}`;
+            descriptionBox.value = 'Loading description...';
+
+            try {
+                const response = await fetch(`/api/toolkit/npcs/description?module=${moduleName}&npc_id=${npcId}`);
+                const result = await response.json();
+                descriptionBox.value = result.description || 'No description found. Click "Fetch Descriptions" to generate one with AI.';
+            } catch (error) {
+                descriptionBox.value = 'Error loading description.';
+            }
+        }
+
+        async function saveNpcDescription() {
+            const moduleName = document.getElementById('npcModuleSelect').value;
+            if (!moduleName || !currentSelectedNpc) {
+                alert('Please select a module and an NPC to save a description for.');
+                return;
+            }
+            
+            const description = document.getElementById('npcDescriptionBox').value;
+
+            try {
+                const response = await fetch('/api/toolkit/npcs/description', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        module_name: moduleName, 
+                        npc_id: currentSelectedNpc.id,
+                        npc_name: currentSelectedNpc.name,
+                        description: description 
+                    })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('Description saved successfully!');
+                } else {
+                    alert(`Error saving description: ${result.error}`);
+                }
+            } catch (error) {
+                alert(`Failed to save description: ${error}`);
+            }
+        }
+
+        // --- Selection & Generation ---
+        function selectAllNpcs(selectAll = true) {
+            document.querySelectorAll('.npc-item').forEach(item => {
+                const checkbox = item.querySelector('input[name="npc-select"]');
+                if (selectAll || item.classList.contains('missing-portrait')) {
+                    checkbox.checked = true;
+                } else {
+                    checkbox.checked = false;
+                }
+            });
+        }
+
+        function deselectAllNpcs() {
+            document.querySelectorAll('input[name="npc-select"]').forEach(cb => cb.checked = false);
+        }
+
+        async function startNpcGeneration() {
+            const selectedNpcs = document.querySelectorAll('input[name="npc-select"]:checked');
+            const packName = document.getElementById('npcPackSelect').value;
+            const moduleName = document.getElementById('npcModuleSelect').value;
+            const model = document.getElementById('npcModelSelect').value;
+            
+            if (selectedNpcs.length === 0) {
+                alert('Please select at least one NPC to generate.');
+                return;
+            }
+            
+            if (!packName || !moduleName) {
+                alert('Please select both a module and target pack.');
+                return;
+            }
+            
+            const npcsToGenerate = Array.from(selectedNpcs).map(input => ({
+                name: input.value,
+                id: input.dataset.npcId
+            }));
+            
+            // Show progress
+            addLog('genLog', `Starting portrait generation for ${npcsToGenerate.length} NPCs...`, 'info');
+            
+            try {
+                const response = await fetch('/api/toolkit/npcs/generate-portraits', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        module_name: moduleName,
+                        pack_name: packName,
+                        model: model,
+                        npcs: npcsToGenerate
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    addLog('genLog', 'Portrait generation started successfully!', 'success');
+                } else {
+                    addLog('genLog', `Error starting generation: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                addLog('genLog', `Failed to start generation: ${error}`, 'error');
+            }
+        }
 
         // === MODULE BUILDER SCRIPT ===
 

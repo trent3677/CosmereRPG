@@ -603,6 +603,11 @@ def activate_pack(pack_name):
         
         manager = PackManager()
         result = manager.activate_pack(pack_name, create_backup=create_backup)
+        
+        # If activation successful, also copy NPCs to game folder
+        if result.get('success'):
+            copy_pack_npcs_to_game(pack_name)
+        
         return jsonify(result)
     except Exception as e:
         error(f"TOOLKIT: Failed to activate pack: {e}")
@@ -2437,6 +2442,652 @@ def open_browser():
     except ImportError:
         port = 8357
     webbrowser.open(f'http://localhost:{port}')
+
+
+# ============================================================================
+# NPC MANAGEMENT API ENDPOINTS
+# ============================================================================
+
+@app.route('/api/toolkit/modules/<module_name>/npcs')
+def get_module_npcs(module_name):
+    """
+    Scans a module for unique NPC names and checks if portraits exist in a given pack.
+    """
+    if not TOOLKIT_AVAILABLE:
+        return jsonify([]), 503
+    
+    pack_name = request.args.get('pack')
+    if not pack_name:
+        return jsonify({'error': 'A target pack must be specified.'}), 400
+        
+    try:
+        import os
+        import json
+        from utils.file_operations import safe_read_json
+        
+        # Scan all area files in the module
+        areas_dir = os.path.join('modules', module_name, 'areas')
+        npcs_found = {}  # Use dict to track unique NPCs
+        
+        if os.path.exists(areas_dir):
+            for filename in os.listdir(areas_dir):
+                # Check backup files which contain original unmodified data
+                if filename.endswith('_BU.json'):
+                    area_path = os.path.join(areas_dir, filename)
+                    area_data = safe_read_json(area_path)
+                    if area_data and 'locations' in area_data:
+                        for location in area_data.get('locations', []):
+                            if 'npcs' in location and location['npcs']:
+                                for npc in location['npcs']:
+                                    if isinstance(npc, dict) and 'name' in npc:
+                                        npc_name = npc['name']
+                                        # Create a normalized ID from the name
+                                        npc_id = npc_name.lower().replace(' ', '_').replace("'", "").replace("-", "_")
+                                        if npc_id not in npcs_found:
+                                            npcs_found[npc_id] = {
+                                                'name': npc_name,
+                                                'id': npc_id,
+                                                'locations': []
+                                            }
+                                        npcs_found[npc_id]['locations'].append(location.get('name', 'Unknown'))
+                                    elif isinstance(npc, str):
+                                        # Handle string format NPCs
+                                        npc_name = npc
+                                        npc_id = npc_name.lower().replace(' ', '_').replace("'", "").replace("-", "_")
+                                        if npc_id not in npcs_found:
+                                            npcs_found[npc_id] = {
+                                                'name': npc_name,
+                                                'id': npc_id,
+                                                'locations': []
+                                            }
+                                        npcs_found[npc_id]['locations'].append(location.get('name', 'Unknown'))
+        
+        # Check if portraits exist for each NPC
+        npc_list = []
+        npcs_dir = os.path.join('graphic_packs', pack_name, 'npcs')
+        
+        for npc_id, npc_info in npcs_found.items():
+            has_portrait = False
+            if os.path.exists(npcs_dir):
+                # Check for main portrait OR thumbnail (some NPCs only have thumbnails)
+                files_to_check = [
+                    f'{npc_id}.png',
+                    f'{npc_id}.jpg', 
+                    f'{npc_id}_thumb.png',
+                    f'{npc_id}_thumb.jpg'
+                ]
+                for filename in files_to_check:
+                    file_path = os.path.join(npcs_dir, filename)
+                    if os.path.exists(file_path):
+                        has_portrait = True
+                        break
+            
+            npc_list.append({
+                'name': npc_info['name'],
+                'id': npc_id,
+                'has_portrait': has_portrait,
+                'pack_name': pack_name,  # Always include pack_name for thumbnail loading
+                'locations': list(set(npc_info['locations']))[:3]  # Limit to 3 locations for display
+            })
+        
+        # Sort NPCs alphabetically
+        npc_list.sort(key=lambda x: x['name'])
+        
+        info(f"TOOLKIT: Found {len(npc_list)} unique NPCs in module {module_name}")
+        return jsonify(npc_list)
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get NPCs for module {module_name}: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/toolkit/npcs/fetch-descriptions', methods=['POST'])
+def fetch_npc_descriptions():
+    """
+    Receives a list of NPC names and starts a background task to generate descriptions.
+    """
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'}), 503
+    
+    data = request.json
+    module_name = data.get('module_name')
+    npcs = data.get('npcs', [])
+
+    if not module_name or not npcs:
+        return jsonify({'success': False, 'error': 'Missing module name or NPC list'}), 400
+
+    # Start background thread for description generation
+    def generate_descriptions():
+        try:
+            import time
+            from openai import OpenAI
+            from utils.file_operations import safe_read_json, safe_write_json
+            from utils.encoding_utils import sanitize_text
+            
+            # Get API key
+            try:
+                from config import OPENAI_API_KEY
+            except ImportError:
+                OPENAI_API_KEY = None
+                error("TOOLKIT: OpenAI API key not found")
+                return
+            
+            if not OPENAI_API_KEY:
+                error("TOOLKIT: OpenAI API key not configured")
+                return
+                
+            client = OpenAI(api_key=OPENAI_API_KEY)
+            
+            # Load or create descriptions file
+            descriptions_file = f'temp/npc_descriptions_{module_name}.json'
+            os.makedirs('temp', exist_ok=True)
+            
+            existing_descriptions = safe_read_json(descriptions_file) or {}
+            
+            # Extract module context
+            module_context = extract_module_context_for_npcs(module_name)
+            
+            # Generate description for each NPC
+            for i, npc_data in enumerate(npcs):
+                npc_name = npc_data['name']
+                npc_id = npc_data['id']
+                
+                # Skip if description already exists
+                if npc_id in existing_descriptions:
+                    info(f"TOOLKIT: Description already exists for {npc_name}, skipping")
+                    continue
+                
+                # Prepare prompt
+                prompt = f"""Generate a detailed physical description for an NPC in a D&D 5e adventure.
+
+NPC Name: {npc_name}
+Module Context: {module_context[:3000]}
+
+Create a vivid, atmospheric description (150-200 words) that includes:
+- Physical appearance (race, age, build, clothing, distinguishing features)
+- Personality traits visible in their demeanor
+- Any equipment or items they carry
+- Overall impression they make
+
+The description should be suitable for generating a portrait image. Focus on visual details."""
+
+                try:
+                    # Call OpenAI API
+                    response = client.chat.completions.create(
+                        model="gpt-4o-mini",
+                        messages=[
+                            {"role": "system", "content": "You are a D&D 5e NPC description expert. Create rich, visual descriptions."},
+                            {"role": "user", "content": prompt}
+                        ],
+                        temperature=0.7,
+                        max_tokens=300
+                    )
+                    
+                    description = response.choices[0].message.content
+                    description = sanitize_text(description)
+                    
+                    # Save description
+                    existing_descriptions[npc_id] = {
+                        'name': npc_name,
+                        'description': description,
+                        'generated_at': datetime.now().isoformat()
+                    }
+                    
+                    # Write back to file
+                    safe_write_json(descriptions_file, existing_descriptions)
+                    
+                    info(f"TOOLKIT: Generated description for {npc_name} ({i+1}/{len(npcs)})")
+                    
+                    # Emit progress via SocketIO
+                    socketio.emit('npc_description_progress', {
+                        'current': i + 1,
+                        'total': len(npcs),
+                        'npc_name': npc_name,
+                        'status': 'success'
+                    })
+                    
+                    # Rate limiting
+                    time.sleep(2)  # Wait 2 seconds between requests
+                    
+                except Exception as e:
+                    error(f"TOOLKIT: Failed to generate description for {npc_name}: {e}")
+                    socketio.emit('npc_description_progress', {
+                        'current': i + 1,
+                        'total': len(npcs),
+                        'npc_name': npc_name,
+                        'status': 'error',
+                        'error': str(e)
+                    })
+            
+            info(f"TOOLKIT: Completed description generation for module {module_name}")
+            
+        except Exception as e:
+            error(f"TOOLKIT: Description generation failed: {e}")
+    
+    # Start background thread
+    thread = threading.Thread(target=generate_descriptions)
+    thread.daemon = True
+    thread.start()
+    
+    info(f"TOOLKIT: Started description generation for {len(npcs)} NPCs in {module_name}")
+    return jsonify({'success': True, 'message': 'Description generation started.'})
+
+def extract_module_context_for_npcs(module_name):
+    """Extract context from module for NPC description generation"""
+    try:
+        from utils.file_operations import safe_read_json
+        import os
+        
+        context_parts = []
+        context_parts.append(f"Module: {module_name.replace('_', ' ').title()}\n")
+        
+        # Read module plot if available
+        plot_file = os.path.join('modules', module_name, 'module_plot.json')
+        plot_data = safe_read_json(plot_file)
+        if plot_data:
+            if 'current_quest' in plot_data:
+                context_parts.append(f"Current Quest: {plot_data['current_quest']}\n")
+            if 'setting' in plot_data:
+                context_parts.append(f"Setting: {plot_data['setting']}\n")
+        
+        # Sample area descriptions for context
+        areas_dir = os.path.join('modules', module_name, 'areas')
+        if os.path.exists(areas_dir):
+            area_count = 0
+            for filename in os.listdir(areas_dir):
+                if filename.endswith('_BU.json') and area_count < 3:  # Limit to 3 areas
+                    area_path = os.path.join(areas_dir, filename)
+                    area_data = safe_read_json(area_path)
+                    if area_data:
+                        area_name = area_data.get('areaName', 'Unknown Area')
+                        area_desc = area_data.get('areaDescription', '')[:200]
+                        context_parts.append(f"\nArea: {area_name}\n{area_desc}")
+                        area_count += 1
+        
+        return '\n'.join(context_parts)
+    except Exception as e:
+        error(f"Failed to extract module context: {e}")
+        return f"Adventure module: {module_name}"
+
+@app.route('/api/toolkit/npcs/description', methods=['GET', 'POST'])
+def handle_npc_description():
+    """
+    Gets or sets a single NPC's description from the temporary JSON file.
+    """
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'}), 503
+
+    if request.method == 'GET':
+        module_name = request.args.get('module')
+        npc_id = request.args.get('npc_id')
+        
+        if not module_name or not npc_id:
+            return jsonify({'error': 'Missing module or NPC ID'}), 400
+        
+        try:
+            from utils.file_operations import safe_read_json
+            
+            descriptions_file = f'temp/npc_descriptions_{module_name}.json'
+            descriptions = safe_read_json(descriptions_file) or {}
+            
+            if npc_id in descriptions:
+                return jsonify({'description': descriptions[npc_id].get('description', '')})
+            else:
+                return jsonify({'description': ''})
+                
+        except Exception as e:
+            error(f"TOOLKIT: Failed to load NPC description: {e}")
+            return jsonify({'error': str(e)}), 500
+    
+    if request.method == 'POST':
+        data = request.json
+        module_name = data.get('module_name')
+        npc_id = data.get('npc_id')
+        npc_name = data.get('npc_name')
+        description = data.get('description')
+        
+        if not all([module_name, npc_id, description]):
+            return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+        
+        try:
+            from utils.file_operations import safe_read_json, safe_write_json
+            from utils.encoding_utils import sanitize_text
+            
+            descriptions_file = f'temp/npc_descriptions_{module_name}.json'
+            os.makedirs('temp', exist_ok=True)
+            
+            descriptions = safe_read_json(descriptions_file) or {}
+            descriptions[npc_id] = {
+                'name': npc_name,
+                'description': sanitize_text(description),
+                'updated_at': datetime.now().isoformat()
+            }
+            
+            safe_write_json(descriptions_file, descriptions)
+            
+            info(f"TOOLKIT: Description for NPC '{npc_name}' (ID: {npc_id}) was updated")
+            return jsonify({'success': True})
+            
+        except Exception as e:
+            error(f"TOOLKIT: Failed to save NPC description: {e}")
+            return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/toolkit/npcs/generate-portraits', methods=['POST'])
+def generate_npc_portraits():
+    """Generate portrait images for selected NPCs using DALL-E"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'}), 503
+    
+    data = request.json
+    module_name = data.get('module_name')
+    pack_name = data.get('pack_name')
+    model = data.get('model', 'dall-e-3')
+    npcs = data.get('npcs', [])
+    
+    if not all([module_name, pack_name, npcs]):
+        return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+    
+    # Start background thread for portrait generation
+    def generate_portraits():
+        try:
+            from openai import OpenAI
+            from PIL import Image
+            from utils.file_operations import safe_read_json
+            import requests
+            import io
+            
+            # Get API key
+            try:
+                from config import OPENAI_API_KEY
+            except ImportError:
+                OPENAI_API_KEY = None
+                error("TOOLKIT: OpenAI API key not found")
+                return
+            
+            if not OPENAI_API_KEY:
+                error("TOOLKIT: OpenAI API key not configured")
+                return
+                
+            client = OpenAI(api_key=OPENAI_API_KEY)
+            
+            # Load descriptions
+            descriptions_file = f'temp/npc_descriptions_{module_name}.json'
+            descriptions = safe_read_json(descriptions_file) or {}
+            
+            # Create NPCs directory in pack if needed
+            npcs_dir = os.path.join('graphic_packs', pack_name, 'npcs')
+            os.makedirs(npcs_dir, exist_ok=True)
+            
+            # Generate portrait for each NPC
+            for i, npc_data in enumerate(npcs):
+                npc_name = npc_data['name']
+                npc_id = npc_data['id']
+                
+                # Get description
+                npc_desc_data = descriptions.get(npc_id, {})
+                description = npc_desc_data.get('description', f'A fantasy NPC named {npc_name}')
+                
+                # Prepare DALL-E prompt
+                prompt = f"""Fantasy portrait of {npc_name}. {description}
+                
+Style: High quality fantasy art portrait, detailed character art, D&D character portrait style, centered composition, neutral background."""
+                
+                try:
+                    info(f"TOOLKIT: Generating portrait for {npc_name} ({i+1}/{len(npcs)})")
+                    
+                    # Call DALL-E API
+                    response = client.images.generate(
+                        model=model,
+                        prompt=prompt[:4000],  # DALL-E has character limit
+                        size="1024x1024",
+                        quality="standard",
+                        n=1,
+                    )
+                    
+                    # Download and save image
+                    image_url = response.data[0].url
+                    img_response = requests.get(image_url)
+                    img = Image.open(io.BytesIO(img_response.content))
+                    
+                    # Save full size image to pack
+                    portrait_path = os.path.join(npcs_dir, f'{npc_id}.png')
+                    img.save(portrait_path, 'PNG')
+                    
+                    # Create and save thumbnail
+                    thumb = img.copy()
+                    thumb.thumbnail((128, 128), Image.Resampling.LANCZOS)
+                    thumb_path = os.path.join(npcs_dir, f'{npc_id}_thumb.png')
+                    thumb.save(thumb_path, 'PNG')
+                    
+                    # Also copy to game's NPC media folder for live use
+                    game_npcs_dir = os.path.join('web', 'static', 'media', 'npcs')
+                    os.makedirs(game_npcs_dir, exist_ok=True)
+                    
+                    # Copy thumbnail to game folder (game uses JPG thumbnails)
+                    thumb_jpg = img.copy()
+                    thumb_jpg.thumbnail((128, 128), Image.Resampling.LANCZOS)
+                    if thumb_jpg.mode == 'RGBA':
+                        # Convert RGBA to RGB for JPG
+                        rgb_img = Image.new('RGB', thumb_jpg.size, (255, 255, 255))
+                        rgb_img.paste(thumb_jpg, mask=thumb_jpg.split()[3] if len(thumb_jpg.split()) > 3 else None)
+                        thumb_jpg = rgb_img
+                    game_thumb_path = os.path.join(game_npcs_dir, f'{npc_id}_thumb.jpg')
+                    thumb_jpg.save(game_thumb_path, 'JPEG', quality=85)
+                    
+                    info(f"TOOLKIT: Successfully generated portrait for {npc_name}")
+                    
+                    # Emit progress
+                    socketio.emit('npc_portrait_progress', {
+                        'current': i + 1,
+                        'total': len(npcs),
+                        'npc_name': npc_name,
+                        'status': 'success'
+                    })
+                    
+                    # Rate limiting
+                    time.sleep(3)  # Wait 3 seconds between DALL-E requests
+                    
+                except Exception as e:
+                    error(f"TOOLKIT: Failed to generate portrait for {npc_name}: {e}")
+                    socketio.emit('npc_portrait_progress', {
+                        'current': i + 1,
+                        'total': len(npcs),
+                        'npc_name': npc_name,
+                        'status': 'error',
+                        'error': str(e)
+                    })
+            
+            # Update pack manifest to include NPC count
+            update_pack_manifest_with_npcs(pack_name)
+            
+            info(f"TOOLKIT: Completed portrait generation for {len(npcs)} NPCs")
+            socketio.emit('npc_portrait_complete', {
+                'module_name': module_name,
+                'pack_name': pack_name,
+                'count': len(npcs)
+            })
+            
+        except Exception as e:
+            error(f"TOOLKIT: Portrait generation failed: {e}")
+    
+    # Start background thread
+    thread = threading.Thread(target=generate_portraits)
+    thread.daemon = True
+    thread.start()
+    
+    info(f"TOOLKIT: Started portrait generation for {len(npcs)} NPCs")
+    return jsonify({'success': True, 'message': 'Portrait generation started.'})
+
+def update_pack_manifest_with_npcs(pack_name):
+    """Update pack manifest to include NPC information"""
+    try:
+        from utils.file_operations import safe_read_json, safe_write_json
+        import os
+        
+        manifest_path = os.path.join('graphic_packs', pack_name, 'manifest.json')
+        manifest = safe_read_json(manifest_path) or {}
+        
+        # Count NPCs
+        npcs_dir = os.path.join('graphic_packs', pack_name, 'npcs')
+        npc_count = 0
+        npc_list = []
+        
+        if os.path.exists(npcs_dir):
+            for filename in os.listdir(npcs_dir):
+                if filename.endswith('.png') and not filename.endswith('_thumb.png'):
+                    npc_id = filename[:-4]  # Remove .png
+                    npc_list.append(npc_id)
+                    npc_count += 1
+        
+        # Update manifest
+        manifest['total_npcs'] = npc_count
+        manifest['npcs_included'] = sorted(npc_list)
+        manifest['last_modified'] = datetime.now().strftime("%Y-%m-%d")
+        
+        safe_write_json(manifest_path, manifest)
+        info(f"TOOLKIT: Updated manifest for pack '{pack_name}' with {npc_count} NPCs")
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to update pack manifest: {e}")
+
+def copy_pack_npcs_to_game(pack_name):
+    """Copy NPCs from a pack to the game's NPC media folder"""
+    try:
+        import os
+        import shutil
+        
+        pack_npcs_dir = os.path.join('graphic_packs', pack_name, 'npcs')
+        game_npcs_dir = os.path.join('web', 'static', 'media', 'npcs')
+        
+        if not os.path.exists(pack_npcs_dir):
+            info(f"TOOLKIT: Pack '{pack_name}' has no NPCs folder")
+            return
+        
+        # Create game NPCs directory if needed
+        os.makedirs(game_npcs_dir, exist_ok=True)
+        
+        # Copy all NPC files to game folder
+        copied_count = 0
+        for filename in os.listdir(pack_npcs_dir):
+            src_path = os.path.join(pack_npcs_dir, filename)
+            dest_path = os.path.join(game_npcs_dir, filename)
+            
+            # Convert PNG thumbnails to JPG for game use
+            if filename.endswith('_thumb.png'):
+                from PIL import Image
+                img = Image.open(src_path)
+                if img.mode == 'RGBA':
+                    # Convert RGBA to RGB for JPG
+                    rgb_img = Image.new('RGB', img.size, (255, 255, 255))
+                    rgb_img.paste(img, mask=img.split()[3] if len(img.split()) > 3 else None)
+                    img = rgb_img
+                jpg_filename = filename[:-4] + '.jpg'  # Replace .png with .jpg
+                jpg_path = os.path.join(game_npcs_dir, jpg_filename)
+                img.save(jpg_path, 'JPEG', quality=85)
+                info(f"TOOLKIT: Converted {filename} to {jpg_filename}")
+            else:
+                # Copy other files as-is
+                shutil.copy2(src_path, dest_path)
+                copied_count += 1
+        
+        info(f"TOOLKIT: Copied {copied_count} NPC files from pack '{pack_name}' to game folder")
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to copy NPCs to game folder: {e}")
+
+@app.route('/api/toolkit/packs/<pack_name>/npcs/<npc_id>/thumbnail')
+def get_npc_thumbnail(pack_name, npc_id):
+    """Serve NPC thumbnail image from a specific graphic pack."""
+    if not TOOLKIT_AVAILABLE:
+        return '', 404
+    
+    try:
+        from flask import send_from_directory
+        import os
+        
+        npcs_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'npcs'))
+        
+        # Try to find a thumbnail first (png or jpg)
+        for ext in ['.png', '.jpg']:
+            thumb_filename = f'{npc_id}_thumb{ext}'
+            thumb_path = os.path.join(npcs_dir, thumb_filename)
+            if os.path.exists(thumb_path):
+                info(f"TOOLKIT: Serving NPC thumbnail {thumb_filename} from {pack_name}")
+                return send_from_directory(npcs_dir, thumb_filename)
+        
+        # If no thumbnail, try to find the full portrait
+        for ext in ['.png', '.jpg']:
+            portrait_filename = f'{npc_id}{ext}'
+            portrait_path = os.path.join(npcs_dir, portrait_filename)
+            if os.path.exists(portrait_path):
+                info(f"TOOLKIT: Serving NPC portrait {portrait_filename} from {pack_name}")
+                return send_from_directory(npcs_dir, portrait_filename)
+        
+        # If nothing is found, return a 404
+        warning(f"TOOLKIT: No image found for NPC {npc_id} in {pack_name}")
+        return '', 404
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to serve NPC thumbnail for {npc_id} in {pack_name}: {e}")
+        return '', 500
+
+@app.route('/api/toolkit/packs/<pack_name>/npcs/<npc_id>/image')
+def get_npc_image(pack_name, npc_id):
+    """Serve full NPC image from a specific graphic pack."""
+    if not TOOLKIT_AVAILABLE:
+        return '', 404
+    
+    try:
+        from flask import send_from_directory
+        import os
+        
+        npcs_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'npcs'))
+        
+        # Try to find the full image (png or jpg)
+        for ext in ['.png', '.jpg']:
+            image_filename = f'{npc_id}{ext}'
+            image_path = os.path.join(npcs_dir, image_filename)
+            if os.path.exists(image_path):
+                info(f"TOOLKIT: Serving NPC image {image_filename} from {pack_name}")
+                return send_from_directory(npcs_dir, image_filename)
+        
+        warning(f"TOOLKIT: No full image found for NPC {npc_id} in {pack_name}")
+        return '', 404
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to serve NPC image for {npc_id} in {pack_name}: {e}")
+        return '', 500
+
+@app.route('/api/toolkit/packs/<pack_name>/npcs/<npc_id>/video')
+def get_npc_video(pack_name, npc_id):
+    """Serve NPC video from a specific graphic pack."""
+    if not TOOLKIT_AVAILABLE:
+        return '', 404
+    
+    try:
+        from flask import send_from_directory
+        import os
+        
+        npcs_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'npcs'))
+        
+        # Try to find video files with different naming patterns
+        video_patterns = [
+            f'{npc_id}_video.mp4',
+            f'{npc_id}_video_low.mp4',
+            f'{npc_id}.mp4'
+        ]
+        
+        for video_filename in video_patterns:
+            video_path = os.path.join(npcs_dir, video_filename)
+            if os.path.exists(video_path):
+                info(f"TOOLKIT: Serving NPC video {video_filename} from {pack_name}")
+                return send_from_directory(npcs_dir, video_filename)
+        
+        warning(f"TOOLKIT: No video found for NPC {npc_id} in {pack_name}")
+        return '', 404
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to serve NPC video for {npc_id} in {pack_name}: {e}")
+        return '', 500
 
 
 # ============================================================================
