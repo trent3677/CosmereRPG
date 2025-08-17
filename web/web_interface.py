@@ -2618,8 +2618,8 @@ The description should be suitable for generating a portrait image. Focus on vis
                             {"role": "system", "content": "You are a D&D 5e NPC description expert. Create rich, visual descriptions."},
                             {"role": "user", "content": prompt}
                         ],
-                        temperature=0.7,
-                        max_tokens=300
+                        temperature=0.7
+                        # No max_tokens limit - let the model complete the description
                     )
                     
                     description = response.choices[0].message.content
