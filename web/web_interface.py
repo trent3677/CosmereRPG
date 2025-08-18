@@ -2626,7 +2626,7 @@ def fetch_npc_descriptions():
                 prompt = f"""Generate a rich, descriptive prompt for an AI image generator to create a fantasy character portrait.
 
 NPC Name: {npc_name}
-Module Context: {module_context[:2500]}
+Module Context: {module_context}
 
 The output should be a single paragraph (150-200 words) that is itself a high-quality image prompt. It must include:
 1.  **Physical Appearance:** Race, build, key features.
@@ -2701,41 +2701,49 @@ Example Output Format:
     return jsonify({'success': True, 'message': 'Description generation started.'})
 
 def extract_module_context_for_npcs(module_name):
-    """Extract context from module for NPC description generation"""
+    """
+    Extracts the FULL context from a module, including the entire plot file
+    and all area files, to ensure maximum accuracy for NPC descriptions.
+    """
     try:
         from utils.file_operations import safe_read_json
         import os
+        import json
         
         context_parts = []
-        context_parts.append(f"Module: {module_name.replace('_', ' ').title()}\n")
         
-        # Read module plot if available
+        # Header for the entire context block
+        context_parts.append(f"--- START OF CONTEXT FOR MODULE: {module_name} ---")
+
+        # 1. Read and append the entire module plot file
         plot_file = os.path.join('modules', module_name, 'module_plot.json')
-        plot_data = safe_read_json(plot_file)
-        if plot_data:
-            if 'current_quest' in plot_data:
-                context_parts.append(f"Current Quest: {plot_data['current_quest']}\n")
-            if 'setting' in plot_data:
-                context_parts.append(f"Setting: {plot_data['setting']}\n")
+        if os.path.exists(plot_file):
+            plot_data = safe_read_json(plot_file)
+            if plot_data:
+                context_parts.append("\n--- MODULE PLOT FILE: module_plot.json ---")
+                context_parts.append(json.dumps(plot_data, indent=2))
         
-        # Sample area descriptions for context
+        # 2. Read and append EVERY area file (_BU.json version)
         areas_dir = os.path.join('modules', module_name, 'areas')
         if os.path.exists(areas_dir):
-            area_count = 0
-            for filename in os.listdir(areas_dir):
-                if filename.endswith('_BU.json') and area_count < 3:  # Limit to 3 areas
-                    area_path = os.path.join(areas_dir, filename)
-                    area_data = safe_read_json(area_path)
-                    if area_data:
-                        area_name = area_data.get('areaName', 'Unknown Area')
-                        area_desc = area_data.get('areaDescription', '')[:200]
-                        context_parts.append(f"\nArea: {area_name}\n{area_desc}")
-                        area_count += 1
+            area_files = sorted([f for f in os.listdir(areas_dir) if f.endswith('_BU.json')])
+            for filename in area_files:
+                area_path = os.path.join(areas_dir, filename)
+                area_data = safe_read_json(area_path)
+                if area_data:
+                    context_parts.append(f"\n--- AREA FILE: {filename} ---")
+                    context_parts.append(json.dumps(area_data, indent=2))
         
-        return '\n'.join(context_parts)
+        context_parts.append(f"\n--- END OF CONTEXT FOR MODULE: {module_name} ---")
+        
+        # Join all parts into a single, massive string
+        full_context = "\n".join(context_parts)
+        info(f"TOOLKIT: Compiled full module context for '{module_name}', total length: {len(full_context)} characters.")
+        return full_context
+
     except Exception as e:
-        error(f"Failed to extract module context: {e}")
-        return f"Adventure module: {module_name}"
+        error(f"Failed to extract full module context: {e}")
+        return f"Error building context for adventure module: {module_name}"
 
 @app.route('/api/toolkit/npcs/description', methods=['GET', 'POST'])
 def handle_npc_description():
