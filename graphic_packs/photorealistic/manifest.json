@@ -57,14 +57,25 @@
     "thumbnails": [],
     "videos": []
   },
-  "total_npcs": 6,
+  "total_npcs": 17,
   "npcs_included": [
-    "corrupted_ranger_thane",
+    "apprentice_jeb",
+    "caravan_guard_bex",
+    "dock_worker_finn",
     "eirik_hearthwise",
-    "ranger_elen",
-    "ranger_thane",
-    "scout_elen",
-    "scout_kira"
+    "merchant_gareth",
+    "merchant_kael",
+    "merchant_vera",
+    "messenger_tom",
+    "quartermaster_brann",
+    "ranger_marcus",
+    "rusk",
+    "spirit_touched_hermit_maelo",
+    "the_withered_hart",
+    "thorn_touched_dryad_sylara",
+    "trader_mila",
+    "trader_sila",
+    "wounded_ranger_gareth"
   ],
   "last_modified": "2025-08-17"
 }
