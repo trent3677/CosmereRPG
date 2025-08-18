@@ -559,8 +559,15 @@ def get_packs():
 
     try:
         manager = PackManager()
-        packs = manager.list_available_packs()
-        return jsonify(packs)
+        # First, get the complete list of packs, including the unwanted ones.
+        all_packs = manager.list_available_packs()
+        
+        # Now, filter the list to exclude any pack whose 'name' starts with a '.'
+        # This is a standard way to handle hidden/system folders.
+        filtered_packs = [pack for pack in all_packs if not pack.get('name', '').startswith('.')]
+        
+        # Return only the clean, filtered list to the frontend.
+        return jsonify(filtered_packs)
     except Exception as e:
         # This is the most important change.
         # Instead of failing silently, we now send the actual error back to the browser.
