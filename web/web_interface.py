@@ -2618,10 +2618,9 @@ def fetch_npc_descriptions():
                 npc_name = npc_data['name']
                 npc_id = npc_data['id']
                 
-                # Skip if description already exists
+                # In toolkit mode, always regenerate descriptions
                 if npc_id in existing_descriptions:
-                    info(f"TOOLKIT: Description already exists for {npc_name}, skipping")
-                    continue
+                    info(f"TOOLKIT: Overwriting existing description for {npc_name}")
                 
                 # Prepare a new, more directive prompt
                 prompt = f"""Generate a rich, descriptive prompt for an AI image generator to create a fantasy character portrait.
