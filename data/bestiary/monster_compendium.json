@@ -235,7 +235,7 @@
     "stirge": {
       "name": "Stirge",
       "type": "elemental",
-      "description": "A flying pest the size of a housecat with a mosquito-like proboscis and bat wings. Its body is covered in coarse fur with a rusty red color from dried blood. Four legs end in sharp pincers for gripping victims. The wings are leathery and allow surprising agility. Most disturbing is its proboscis - a foot-long needle designed to pierce flesh and drain blood. Multiple stirges swarm together, attacking from above. Their eyes glow red with hunger. The creatures are shown latched onto victims, their bodies swelling with blood. The buzzing of their wings fills the air. Despite their small size, they're terrifying in groups. Photorealistic detail of the blood-drinking pest, the flying parasite, and the dungeon mosquito.",
+      "description": "A flying stirge is a pest the size of a housecat with a mosquito-like proboscis and bat wings. Its body is covered in coarse fur with a rusty red color from dried blood. Four legs end in sharp pincers for gripping victims. The wings are leathery and allow surprising agility. Most disturbing is its proboscis - a foot-long needle designed to pierce flesh and drain blood. Photorealistic detail of the blood-drinking pest, the flying parasite, and the dungeon mosquito.",
       "tags": [
         "swarm",
         "tiny",
@@ -342,7 +342,7 @@
     "wyvern": {
       "name": "Wyvern",
       "type": "beast",
-      "description": "A dragon-like creature but with only two legs and a venomous stinger tail. Standing 15 feet long with a 20-foot wingspan, its scales are dark green to brown. The head is draconic but more bestial, lacking a true dragon's intelligence. Its wings are its primary limbs when on ground, folding to walk on wing-knuckles. The tail is its most dangerous feature - long and flexible ending in a scorpion-like stinger dripping venom. The wyvern perches on a cliff, wings spread for balance. Its mouth shows rows of teeth but no breath weapon. The creature is more animal than intelligent, a lesser cousin to true dragons. Scars show territorial battles. Photorealistic rendering of the two-legged dragon, the venomous flyer, and the mount of evil riders.",
+      "description": "This wyvern is a dragon-like creature but with only two legs and a venomous stinger tail. Standing 15 feet long with a 20-foot wingspan, its scales are dark green to brown. The head is draconic but more bestial, lacking a true dragon's intelligence. Its wings are its primary limbs when on ground, folding to walk on wing-knuckles. The tail is its most dangerous feature - long and flexible ending in a scorpion-like stinger dripping venom. The wyvern perches on a cliff, wings spread for balance. Its mouth shows rows of teeth but no breath weapon. The creature is more animal than intelligent, a lesser cousin to true dragons. Scars show territorial battles. Photorealistic rendering of the two-legged dragon, the venomous flyer, and the mount of evil riders.",
       "tags": [
         "flying"
       ],

@@ -1353,7 +1353,7 @@ def update_monster_description():
         # Load and update monster compendium
         import json
         compendium_path = 'data/bestiary/monster_compendium.json'
-        with open(compendium_path, 'r') as f:
+        with open(compendium_path, 'r', encoding='utf-8') as f:
             compendium = json.load(f)
         
         monsters = compendium.get('monsters', {})
@@ -1379,8 +1379,8 @@ def update_monster_description():
                 }
         
         # Save updated compendium
-        with open(compendium_path, 'w') as f:
-            json.dump(compendium, f, indent=2)
+        with open(compendium_path, 'w', encoding='utf-8') as f:
+            json.dump(compendium, f, indent=2, ensure_ascii=False)
         
         return jsonify({'success': True, 'message': 'Monster description updated'})
     except Exception as e:
