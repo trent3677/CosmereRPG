@@ -338,3 +338,8 @@ module_builder.mp4
 ochre_jelly.mp4
 tainted_stirge.mp4
 old/
+
+# Graphic packs - only keep the primary photorealistic pack
+graphic_packs/*/
+!graphic_packs/photorealistic/
+graphic_packs/.deleted/
