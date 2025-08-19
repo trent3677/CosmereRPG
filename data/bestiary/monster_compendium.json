@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "created": "2025-08-13",
-  "total_monsters": 162,
+  "total_monsters": 163,
   "monsters": {
     "bandit_sentry": {
       "name": "Bandit Sentry",
@@ -1736,7 +1736,22 @@
       ],
       "source_file": "bestiary_updater.py",
       "generated_date": "2025-08-18T15:51:55.199585"
+    },
+    "swarm_of_spiders": {
+      "name": "Swarm of Spiders",
+      "type": "beast",
+      "description": "A churning mass of spiders, the swarm writhes and pulses like a living shadow, skittering across the damp, leaf-strewn ground beneath the ancient oaks of Gloamwood. Each arachnid is no larger than a pinhead, their glossy black bodies glistening with a sinister sheen as they move in unison, creating the illusion of a dark, undulating carpet. The air is heavy with the scent of damp earth and decay, mingled with the faint, sickly-sweet odor of webbing that clings to the underbrush. As the party approaches, the swarm hisses softly, a sound reminiscent of distant whispers echoing through the misty air, warning intruders to turn back. Their movement is quick and erratic; they scatter like leaves caught in a gust before converging again, forming a darker shape against the dim light filtering through the thick canopy above. The ethereal blue witchlights hovering nearby illuminate their glossy bodies, casting eerie shadows that dance among the twisted roots and gnarled branches, creating an unsettling atmosphere that seems to pulse with the heartbeat of the forest itself. Should they feel threatened, the swarm reacts with a biting frenzy, a surge of legs and fangs that can overwhelm even the most steadfast of adventurers.",
+      "tags": [
+        "swarm",
+        "spiders",
+        "Gloamwood",
+        "forest",
+        "creepy",
+        "dark"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-18T19:57:03.447962"
     }
   },
-  "last_updated": "2025-08-18T15:51:55.210621"
+  "last_updated": "2025-08-18T19:57:03.464037"
 }

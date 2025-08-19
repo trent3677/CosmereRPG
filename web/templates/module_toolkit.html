@@ -1911,7 +1911,7 @@
                         <div class="generator-options">
                             <div class="form-group option-box orange-outline">
                                 <label for="genPack">Target Pack:<span class="tooltip-trigger" data-tooltip="The graphic pack where newly generated images will be saved.">?</span></label>
-                                <select id="genPack" onchange="loadMonsters(); refreshMonsterThumbnails();">
+                                <select id="genPack" onchange="handlePackChange();">
                                     <option value="__new__">+ Create New Pack...</option>
                                 </select>
                             </div>
@@ -2020,7 +2020,7 @@
                                 <label for="filter-missing-bestiary">Show Missing from Bestiary</label>
                             </div>
                             <!-- Refresh button remains the same -->
-                            <button class="btn btn-success" style="margin-left: auto; padding: 5px 10px; display: flex; align-items: center; gap: 5px;" onclick="loadMonsters(); refreshMonsterThumbnails();" title="Refresh monster list">
+                            <button class="btn btn-success" style="margin-left: auto; padding: 5px 10px; display: flex; align-items: center; gap: 5px;" onclick="handlePackChange();" title="Refresh monster list">
                                 <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
                                 </svg>
@@ -2990,6 +2990,7 @@
                 const packName = document.getElementById('genPack').value || 'photorealistic';
                 const response = await fetch(`/api/toolkit/monsters?pack=${packName}`);
                 const monsters = await response.json();
+                monsterList = monsters; // Update global variable to keep state in sync
                 // We pass the monster list directly to renderMonsters now
                 renderMonsters(monsters);
             } catch (error) {
@@ -3191,6 +3192,23 @@
         }
         
         // Refresh thumbnails when pack changes
+        function handlePackChange() {
+            // Check if a module is selected to determine which refresh to use
+            const moduleName = document.getElementById('genModule').value;
+            
+            if (moduleName) {
+                // If a module is selected, use smart refresh that preserves context
+                console.log("Pack changed with module selected. Performing context-aware refresh.");
+                crossReferenceModuleMonsters();
+            } else {
+                // If no module selected, use standard refresh
+                console.log("Pack changed without module. Performing standard refresh.");
+                loadMonsters();
+            }
+            
+            refreshMonsterThumbnails();
+        }
+        
         function refreshMonsterThumbnails() {
             // Re-render all monsters to reload thumbnails with cache busting
             if (monsterList && monsterList.length > 0) {
@@ -3286,6 +3304,7 @@
 
                 // Convert the map back to an array and sort alphabetically by name
                 const combinedList = Array.from(monsterMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+                monsterList = combinedList; // Update global variable to keep state in sync
 
                 // Step 4: Render the final, combined list
                 renderMonsters(combinedList, true); // Pass a flag indicating it's a module view
@@ -3613,8 +3632,20 @@
                 document.getElementById('genProgress').style.display = 'none'; // Use style.display
                 addLog('genLog', `Generation complete: ${data.successful.length} successful, ${data.failed.length} failed`, 'info');
                 
-                // Only refresh the monster list, don't reload packs (which would reset the dropdown)
-                loadMonsters();
+                // --- START OF FIX ---
+                // Check if a module is currently selected.
+                const moduleName = document.getElementById('genModule').value;
+                
+                if (moduleName) {
+                    // If a module is selected, perform a "smart" refresh that preserves module context.
+                    console.log("Generation complete. Performing context-aware refresh for module:", moduleName);
+                    crossReferenceModuleMonsters();
+                } else {
+                    // If no module is selected, the "dumb" refresh is safe.
+                    console.log("Generation complete. Performing standard refresh.");
+                    loadMonsters();
+                }
+                // --- END OF FIX ---
                 
                 // Optionally update pack statistics without resetting selections
                 // loadPacks() was causing the target pack to reset
@@ -4051,7 +4082,7 @@
         }
         
         // Toggle special mode for showing only missing bestiary entries
-        function toggleBestiaryMissingMode() {
+        async function toggleBestiaryMissingMode() {
             const isMissingMode = document.getElementById('filter-missing-bestiary').checked;
             const legendFilters = document.querySelectorAll('.legend-filter');
             const monsterItems = document.querySelectorAll('.monster-item');
@@ -4059,50 +4090,66 @@
             const addToBestiaryBtn = document.getElementById('add-to-bestiary-btn');
 
             if (isMissingMode) {
-                // --- ENTERING MISSING MODE ---
-                // 1. Disable and uncheck other filters
-                legendFilters.forEach(filter => {
-                    filter.checked = false;
-                    filter.disabled = true;
-                });
+                const moduleName = document.getElementById('genModule').value;
+                if (!moduleName) {
+                    alert('Please select a module from the "Module Cross-Reference" dropdown first to use this feature.');
+                    document.getElementById('filter-missing-bestiary').checked = false;
+                    return;
+                }
+                
+                // Ensure the monsterList is properly synchronized with the module
+                // This handles the case where the module was selected but crossReferenceModuleMonsters hasn't run yet
+                if (!monsterList.some(m => m.inModule)) {
+                    console.log("MonsterList appears stale, refreshing with module context...");
+                    await crossReferenceModuleMonsters();
+                }
 
-                // 2. Show both placeholder (red) AND pack-only (yellow) monsters
+                legendFilters.forEach(filter => { filter.checked = false; filter.disabled = true; });
+
+                // Loop through the DOM elements
                 monsterItems.forEach(item => {
-                    // Show if it's missing from bestiary (red) OR pack-exclusive (yellow)
-                    if (item.classList.contains('placeholder-monster') || item.classList.contains('monster-pack-only')) {
-                        item.style.display = 'flex';
-                        const checkbox = item.querySelector('input[name="monster"]');
-                        if (checkbox) checkbox.disabled = false;
+                    const monsterId = item.querySelector('input[name="monster"]').value;
+                    // Find the corresponding monster in our reliable monsterList data
+                    const monsterData = monsterList.find(m => m.id === monsterId);
+
+                    if (monsterData) {
+                        // Condition 1: Is the monster missing a bestiary entry?
+                        const isMissingBestiary = monsterData.source === 'bestiary_only' || monsterData.source === 'pack_only';
+                        // Condition 2: Is the monster part of the selected module?
+                        const isInModule = monsterData.inModule;
+
+                        if (isMissingBestiary && isInModule) {
+                            item.style.display = 'flex';
+                            const checkbox = item.querySelector('input[name="monster"]');
+                            if (checkbox) checkbox.disabled = false;
+                        } else {
+                            item.style.display = 'none';
+                        }
                     } else {
+                        // If for some reason it's not in our data list, hide it.
                         item.style.display = 'none';
                     }
                 });
 
-                // 3. Toggle button visibility
                 generateBtn.style.display = 'none';
                 addToBestiaryBtn.style.display = 'inline-block';
 
             } else {
-                // --- EXITING MISSING MODE ---
-                // 1. Re-enable other filters
-                legendFilters.forEach(filter => {
-                    filter.disabled = false;
-                });
-
-                // 2. Disable placeholder checkboxes and re-apply normal filters
+                // --- EXITING MODE ---
+                legendFilters.forEach(filter => { filter.disabled = false; });
+                
                 monsterItems.forEach(item => {
                     if (item.classList.contains('placeholder-monster')) {
                         const checkbox = item.querySelector('input[name="monster"]');
                         if (checkbox) checkbox.disabled = true;
                     }
                 });
-                applyLegendFilters(); // This will restore the correct view
+                applyLegendFilters(); // Restore the normal view
 
-                // 3. Toggle button visibility
                 generateBtn.style.display = 'inline-block';
                 addToBestiaryBtn.style.display = 'none';
             }
-            updateSelectionStatus(); // Update button text/state
+            updateSelectionStatus();
         }
         
         // Function to add selected monsters to bestiary
