@@ -7,7 +7,7 @@
   "description": "Test",
   "style_template": "custom",
   "created_date": "2025-08-15",
-  "last_modified": "2025-08-16",
+  "last_modified": "2025-08-17",
   "total_monsters": 5,
   "monsters_included": [
     "adult_black_dragon",
@@ -28,5 +28,9 @@
       "custom"
     ],
     "preview_image": null
-  }
+  },
+  "total_npcs": 1,
+  "npcs_included": [
+    "captain_merek"
+  ]
 }

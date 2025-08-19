@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "created": "2025-08-13",
-  "total_monsters": 161,
+  "total_monsters": 162,
   "monsters": {
     "bandit_sentry": {
       "name": "Bandit Sentry",
@@ -1722,7 +1722,21 @@
       ],
       "source_file": "bestiary_updater.py",
       "generated_date": "2025-08-16T15:36:14.303805"
+    },
+    "awakened_shrub": {
+      "name": "Awakened Shrub",
+      "type": "plant",
+      "description": "From the depths of the blighted Thornbriar Grove, the Awakened Shrub emerges--a twisted creation of dark magic and corrupted nature. This small, unassuming shrub stands at about three feet tall, its leaves an unsettling mix of vibrant greens and deep purples, marred by patches of blackened rot. The once-soft foliage is now sharp and thorny, with jagged edges that glint menacingly in the dim light of the grove. Pulsing with a faint, sickly glow, the shrub seems to thrum with the dark energy of Malarok's Voidstone magic, as if it possesses a heartbeat of its own. \n\nIts gnarled branches twist and coil like serpents, ready to lash out at intruders with a sudden ferocity. The air around the shrub is thick with a foul odor reminiscent of decay, and the ground beneath it is littered with crumbling ash and dying leaves, a testament to the corruption that has taken hold of this once-sacred place. As the party approaches, the Awakened Shrub emits an eerie rustling sound, like whispers of long-forgotten spirits, warning of the danger that lies within this forsaken grove. \n\nThe atmosphere is heavy with tension, as the faint glow of sickly fungi illuminates the scene, casting flickering shadows that dance across the warped branches, enhancing the feeling of dread in the air. This is a creature born of despair, ready to defend its corrupted territory against any who dare to tread upon it.",
+      "tags": [
+        "plant",
+        "corruption",
+        "dark magic",
+        "Thornwood Watch",
+        "guardian"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-18T15:51:55.199585"
     }
   },
-  "last_updated": "2025-08-16T15:36:14.314023"
+  "last_updated": "2025-08-18T15:51:55.210621"
 }

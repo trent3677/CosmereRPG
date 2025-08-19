@@ -91,6 +91,11 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dungeon-master-secret-key'
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+# Suppress werkzeug HTTP request logs (they clutter the console)
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)  # Only show errors, not every HTTP request
+
 # Global variables for managing output
 game_output_queue = queue.Queue()
 debug_output_queue = queue.Queue()
@@ -1134,16 +1139,16 @@ def process_video():
 
 @app.route('/api/toolkit/add-to-bestiary', methods=['POST'])
 def add_to_bestiary():
-    """Add missing monsters to the bestiary using GPT-4o-mini"""
+    """Adds monsters to the bestiary using their ID. Skips any that already exist."""
     try:
         data = request.json
-        module_name = data.get('module_name')
-        monster_names = data.get('monster_names', [])
+        module_name = data.get('module_name')  # Used for context
+        monster_ids = data.get('monster_ids', [])  # We now use IDs
         
-        if not module_name or not monster_names:
-            return jsonify({'success': False, 'error': 'Missing module_name or monster_names'})
+        if not module_name or not monster_ids:
+            return jsonify({'success': False, 'error': 'Missing module_name or monster_ids'})
         
-        info(f"TOOLKIT: Adding {len(monster_names)} monsters to bestiary from module: {module_name}")
+        info(f"TOOLKIT: Request to add {len(monster_ids)} monsters to bestiary from module: {module_name}")
         
         # Start processing in background thread
         import threading
@@ -1154,54 +1159,59 @@ def add_to_bestiary():
                 from utils.bestiary_updater import BestiaryUpdater
                 updater = BestiaryUpdater()
                 
-                # Send initial progress
+                # Convert IDs to names for the updater, but FIRST filter out existing ones
+                compendium_path = 'data/bestiary/monster_compendium.json'
+                with open(compendium_path, 'r', encoding='utf-8') as f:
+                    compendium = json.load(f)
+                existing_monsters = compendium.get("monsters", {}).keys()
+
+                monsters_to_add_ids = [mid for mid in monster_ids if mid not in existing_monsters]
+                
+                if not monsters_to_add_ids:
+                    socketio.emit('bestiary_update_complete', {
+                        'success': True,
+                        'message': 'All selected monsters already exist in the bestiary. No action taken.',
+                        'monsters': []
+                    })
+                    return
+
+                # Convert the filtered IDs to names for the existing updater logic
+                monsters_to_add_names = [mid.replace('_', ' ').title() for mid in monsters_to_add_ids]
+
                 socketio.emit('bestiary_update_progress', {
                     'status': 'started',
-                    'message': f'Starting to process {len(monster_names)} monsters...'
+                    'message': f'Starting to process {len(monsters_to_add_names)} new monsters...'
                 })
                 
                 # Create new event loop for thread
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
                 
-                try:
-                    # Run the async function (test_mode=False for real updates)
-                    loop.run_until_complete(
-                        updater.process_missing_monsters(
-                            module_name=module_name,
-                            monster_names=monster_names,
-                            test_mode=False  # Actually update the bestiary
-                        )
+                loop.run_until_complete(
+                    updater.process_missing_monsters(
+                        module_name=module_name,
+                        monster_names=monsters_to_add_names,  # Pass names to the existing function
+                        test_mode=False
                     )
-                except Exception as e:
-                    error(f"TOOLKIT: Error in bestiary update process: {e}")
-                    socketio.emit('bestiary_update_error', {
-                        'error': f'Process error: {str(e)}'
-                    })
-                    return
+                )
                 
                 socketio.emit('bestiary_update_complete', {
                     'success': True,
-                    'message': f'Successfully added {len(monster_names)} monsters to bestiary',
-                    'monsters': monster_names
+                    'message': f'Successfully added {len(monsters_to_add_names)} monsters to bestiary.',
+                    'monsters': monsters_to_add_names
                 })
-                info(f"TOOLKIT: Successfully added {len(monster_names)} monsters to bestiary")
+                info(f"TOOLKIT: Successfully added {len(monsters_to_add_names)} monsters to bestiary.")
+
             except Exception as e:
                 error(f"TOOLKIT: Bestiary update failed: {e}")
-                socketio.emit('bestiary_update_error', {
-                    'success': False,
-                    'error': str(e)
-                })
+                socketio.emit('bestiary_update_error', {'success': False, 'error': str(e)})
         
         # Start in background thread
         thread = threading.Thread(target=run_bestiary_update)
         thread.daemon = True
         thread.start()
         
-        return jsonify({
-            'success': True,
-            'message': f'Started processing {len(monster_names)} monsters in background'
-        })
+        return jsonify({'success': True, 'message': f'Started processing {len(monster_ids)} monsters.'})
         
     except Exception as e:
         error(f"TOOLKIT: Failed to start bestiary update: {e}")
@@ -1375,6 +1385,66 @@ def update_monster_description():
         return jsonify({'success': True, 'message': 'Monster description updated'})
     except Exception as e:
         error(f"TOOLKIT: Failed to update monster description: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/promote-to-bestiary', methods=['POST'])
+def promote_to_bestiary():
+    """Creates a new bestiary entry for a pack-exclusive monster."""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        monster_id = data.get('monster_id')
+        
+        if not monster_id:
+            return jsonify({'success': False, 'error': 'Monster ID is required'})
+
+        # 1. Load the compendium to check for existence
+        compendium_path = 'data/bestiary/monster_compendium.json'
+        with open(compendium_path, 'r', encoding='utf-8') as f:
+            compendium = json.load(f)
+        
+        if monster_id in compendium.get('monsters', {}):
+            return jsonify({'success': False, 'error': f'Monster "{monster_id}" already exists in the bestiary.'})
+
+        # 2. Use AI to generate a description
+        monster_name = monster_id.replace('_', ' ').title()
+        prompt = f"""Generate a compelling Dungeons & Dragons style bestiary description for a monster named "{monster_name}".
+        The description should be concise (around 100-150 words) and focus on its appearance, typical behavior, and combat tactics.
+        Make it sound like an entry from an official monster manual. Do not include stat blocks."""
+        
+        from config import OPENAI_API_KEY
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a creative writer for a fantasy role-playing game, specializing in monster lore."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7
+        )
+        description = response.choices[0].message.content.strip()
+
+        # 3. Create and add the new monster entry
+        new_entry = {
+            "name": monster_name,
+            "description": description,
+            "type": "unknown",
+            "tags": ["custom", "pack-promoted"]
+        }
+        compendium["monsters"][monster_id] = new_entry
+        
+        # 4. Save the updated compendium
+        with open(compendium_path, 'w', encoding='utf-8') as f:
+            json.dump(compendium, f, indent=2)
+        
+        info(f"TOOLKIT: Promoted pack monster '{monster_id}' to the bestiary.")
+        return jsonify({'success': True, 'message': f'Successfully added {monster_name} to the bestiary.'})
+
+    except Exception as e:
+        error(f"TOOLKIT: Failed to promote monster to bestiary: {e}")
         return jsonify({'success': False, 'error': str(e)})
 
 @app.route('/toolkit/create_pack', methods=['POST'])
@@ -1866,7 +1936,7 @@ def handle_npc_inventory_request(data):
 
 @socketio.on('request_party_data')
 def handle_party_data_request():
-    """Handle requests for party member display (non-combat)."""
+    """Handle requests for party member display and current location NPCs (non-combat)."""
     try:
         from utils.file_operations import safe_read_json
         from utils.module_path_manager import ModulePathManager
@@ -1935,11 +2005,39 @@ def handle_party_data_request():
                 'type': 'npc'
             })
         
-        emit('party_data_response', {'members': party_members})
+        # Find NPCs in current location
+        location_npcs = []
+        world_conditions = party_tracker.get("worldConditions", {})
+        current_area_id = world_conditions.get("currentAreaId")
+        current_location_id = world_conditions.get("currentLocationId")
+
+        if current_module and current_area_id and current_location_id:
+            # Construct the path to the current area file
+            areas_dir = os.path.join("modules", current_module, "areas")
+            area_file_path = os.path.join(areas_dir, f"{current_area_id}_BU.json")
+            
+            if os.path.exists(area_file_path):
+                area_data = safe_read_json(area_file_path)
+                if area_data and 'locations' in area_data:
+                    # Find the specific location the player is in
+                    current_location_data = next((loc for loc in area_data['locations'] 
+                                                 if loc.get('locationId') == current_location_id), None)
+                    
+                    if current_location_data and 'npcs' in current_location_data:
+                        # Extract the names of the NPCs in that location
+                        for npc in current_location_data['npcs']:
+                            npc_name = npc.get('name') if isinstance(npc, dict) else npc
+                            if npc_name:
+                                # Exclude NPCs that are already in the player's party
+                                if not any(member['name'] == npc_name for member in party_members):
+                                    location_npcs.append({'name': npc_name, 'type': 'location_npc'})
+        
+        # Send both lists to the frontend
+        emit('party_data_response', {'members': party_members, 'location_npcs': location_npcs})
         
     except Exception as e:
         error(f"Failed to get party data: {str(e)}", exception=e, category="web_interface")
-        emit('party_data_response', {'members': []})
+        emit('party_data_response', {'members': [], 'location_npcs': []})
 
 @socketio.on('request_initiative_data')
 def handle_initiative_data_request():

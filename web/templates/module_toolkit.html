@@ -216,6 +216,19 @@
             margin-bottom: 15px;
         }
 
+        /* Notice for missing bestiary monsters */
+        .bestiary-notice {
+            color: #FFA500;
+            font-style: italic;
+            font-size: 0.9em;
+            text-align: center;
+            margin: -5px 0 15px 0;
+            padding: 8px;
+            background-color: rgba(255, 165, 0, 0.05);
+            border: 1px solid rgba(255, 165, 0, 0.2);
+            border-radius: 4px;
+        }
+
         .section {
             margin-bottom: 30px;
             padding: 20px;
@@ -2014,6 +2027,11 @@
                                 Refresh
                             </button>
                         </div>
+                        
+                        <!-- Notice for missing bestiary monsters -->
+                        <p id="missing-bestiary-notice" class="bestiary-notice" style="display: none;">
+                            <strong>Note:</strong> This module contains monsters not in your bestiary. Check the "Show Missing from Bestiary" box above to add them.
+                        </p>
 
                         <div class="monster-grid" id="monsterGrid">
                             <!-- Monsters will be loaded here -->
@@ -3211,10 +3229,12 @@
             }
             
             const moduleName = document.getElementById('genModule').value;
+            const noticeElement = document.getElementById('missing-bestiary-notice');
 
             // If the user deselects the module, revert to the standard monster list
             if (!moduleName) {
                 loadMonsters(); // This will load and render the default list
+                if (noticeElement) noticeElement.style.display = 'none';
                 return;
             }
 
@@ -3230,6 +3250,7 @@
 
                 // Step 3: Merge the two lists into a single, comprehensive list
                 const monsterMap = new Map();
+                let hasMissingBestiaryMonsters = false;
 
                 // First, process the monsters from the pack and bestiary
                 packAndBestiaryMonsters.forEach(monster => {
@@ -3243,6 +3264,7 @@
                         monsterMap.get(monsterId).inModule = true;
                     } else {
                         // If it doesn't exist, it's missing from the pack AND bestiary. Add it as a placeholder.
+                        hasMissingBestiaryMonsters = true;
                         monsterMap.set(monsterId, {
                             id: monsterId,
                             name: monsterId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
@@ -3253,6 +3275,15 @@
                     }
                 });
 
+                // Show or hide the notice based on whether there are missing monsters
+                if (noticeElement) {
+                    if (hasMissingBestiaryMonsters) {
+                        noticeElement.style.display = 'block';
+                    } else {
+                        noticeElement.style.display = 'none';
+                    }
+                }
+
                 // Convert the map back to an array and sort alphabetically by name
                 const combinedList = Array.from(monsterMap.values()).sort((a, b) => a.name.localeCompare(b.name));
 
@@ -3261,6 +3292,7 @@
 
             } catch (error) {
                 console.error(`Failed to get and merge monsters for module ${moduleName}:`, error);
+                if (noticeElement) noticeElement.style.display = 'none';
             }
         }
 
@@ -3268,6 +3300,8 @@
             const select = document.getElementById('genModule');
             select.value = ""; // Reset dropdown to the default option
             loadMonsters(); // Re-load the default monster list for the pack
+            const noticeElement = document.getElementById('missing-bestiary-notice');
+            if (noticeElement) noticeElement.style.display = 'none'; // Hide the notice
         }
         
         // This new function replaces the old generateMonsters()
@@ -4032,9 +4066,10 @@
                     filter.disabled = true;
                 });
 
-                // 2. Show only placeholder monsters and enable their checkboxes
+                // 2. Show both placeholder (red) AND pack-only (yellow) monsters
                 monsterItems.forEach(item => {
-                    if (item.classList.contains('placeholder-monster')) {
+                    // Show if it's missing from bestiary (red) OR pack-exclusive (yellow)
+                    if (item.classList.contains('placeholder-monster') || item.classList.contains('monster-pack-only')) {
                         item.style.display = 'flex';
                         const checkbox = item.querySelector('input[name="monster"]');
                         if (checkbox) checkbox.disabled = false;
@@ -4072,33 +4107,27 @@
         
         // Function to add selected monsters to bestiary
         async function addSelectedToBestiary() {
-            const selectedCheckboxes = document.querySelectorAll('.monster-item.placeholder-monster input[name="monster"]:checked');
-            const selectedMonsters = Array.from(selectedCheckboxes).map(cb => {
-                // Get the monster name from the label text
-                const label = cb.closest('label');
-                const span = label.querySelector('span');
-                return span ? span.textContent : cb.value;
-            });
+            // Select ALL checked monsters, regardless of type (red or yellow)
+            const selectedCheckboxes = document.querySelectorAll('.monster-item input[name="monster"]:checked');
             
-            if (selectedMonsters.length === 0) {
-                alert('Please select one or more monsters that are missing from the bestiary.');
+            // Get their IDs from the checkbox value attribute
+            const selectedMonsterIds = Array.from(selectedCheckboxes).map(cb => cb.value);
+            
+            if (selectedMonsterIds.length === 0) {
+                alert('Please select one or more monsters to add to the bestiary.');
                 return;
             }
             
-            // Get the current module name
             const moduleName = document.getElementById('genModule').value;
             if (!moduleName) {
-                alert('Please select a module first.');
+                alert('A module must be selected to provide context for the new bestiary entries.');
                 return;
             }
             
-            // Confirm with user
-            const confirmMsg = `This will use GPT-4o-mini to generate descriptions for the following ${selectedMonsters.length} monster(s):\n\n- ${selectedMonsters.join('\n- ')}\n\nProceed?`;
-            if (!confirm(confirmMsg)) {
+            if (!confirm(`This will use AI to generate bestiary entries for ${selectedMonsterIds.length} monster(s). Proceed?`)) {
                 return;
             }
             
-            // Disable button and show progress
             const button = document.getElementById('add-to-bestiary-btn');
             button.disabled = true;
             button.textContent = 'Processing...';
@@ -4106,33 +4135,25 @@
             try {
                 const response = await fetch('/api/toolkit/add-to-bestiary', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         module_name: moduleName,
-                        monster_names: selectedMonsters
+                        monster_ids: selectedMonsterIds // Send IDs
                     })
                 });
                 
                 const result = await response.json();
                 
                 if (result.success) {
-                    // Show initial message
-                    console.log('[Bestiary Update] Process started for:', selectedMonsters);
-                    
-                    // Add a progress div if it doesn't exist
                     let progressDiv = document.getElementById('bestiary-progress');
                     if (!progressDiv) {
                         progressDiv = document.createElement('div');
                         progressDiv.id = 'bestiary-progress';
-                        progressDiv.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: #2c2c2c; border: 2px solid #FFA500; padding: 15px; border-radius: 5px; z-index: 10000; min-width: 300px;';
-                        progressDiv.innerHTML = '<h4 style="color: #FFA500; margin: 0 0 10px 0;">Bestiary Update</h4><div id="bestiary-progress-text">Starting process...</div>';
+                        progressDiv.className = 'status-popup'; // Use the same style as the NPC popup
                         document.body.appendChild(progressDiv);
                     }
-                    
-                    // Update progress text
-                    document.getElementById('bestiary-progress-text').textContent = `Processing ${selectedMonsters.length} monsters...`;
+                    progressDiv.innerHTML = `<h4 id="bestiary-status-title">Bestiary Update</h4><p id="bestiary-status-message">${result.message}</p><button onclick="this.parentElement.remove()">Close</button>`;
+                    progressDiv.style.display = 'block';
                 } else {
                     alert(`Error: ${result.error}`);
                 }

@@ -332,6 +332,34 @@
             transform: scale(1.05);
             box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
         }
+
+        /* Location NPC boxes (non-combat) */
+        .location-npc-item {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            border: 2px solid #9C27B0;  /* Distinct purple border */
+            background-color: #1e1e1e;
+            color: white;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 4px;
+            padding: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            opacity: 0.8; /* Slightly faded to show they aren't party members */
+        }
+
+        .location-npc-item:hover {
+            transform: scale(1.05);
+            opacity: 1;
+            box-shadow: 0 0 10px rgba(156, 39, 176, 0.5);
+        }
         
         /* Initiative boxes (combat) */
         .initiative-item {
@@ -5365,7 +5393,8 @@
                 partyContainer.innerHTML = ''; // Clear existing content
                 partyContainer.style.display = 'flex'; // Show party display
                 
-                if (!response || !response.members || response.members.length === 0) {
+                if (!response || ((!response.members || response.members.length === 0) && 
+                    (!response.location_npcs || response.location_npcs.length === 0))) {
                     partyContainer.style.display = 'none';
                     return;
                 }
@@ -5497,6 +5526,38 @@
                     
                     partyContainer.appendChild(item);
                 });
+                
+                // Render location NPCs if present
+                if (response.location_npcs && response.location_npcs.length > 0) {
+                    response.location_npcs.forEach(npc => {
+                        const item = document.createElement('div');
+                        item.classList.add('location-npc-item');
+                        
+                        const npcFilename = npc.name.toLowerCase().replace(/\s+/g, '_').replace(/'/g, "");
+                        const portraitUrl = `/static/media/npcs/${npcFilename}_thumb.jpg`;
+                        
+                        item.style.backgroundImage = `url('${portraitUrl}')`;
+                        item.style.backgroundSize = 'cover';
+                        item.style.backgroundPosition = 'center';
+                        item.style.color = 'white';
+                        item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
+                        
+                        const textSpan = document.createElement('span');
+                        textSpan.classList.add('initiative-item-text');
+                        textSpan.textContent = npc.name;
+                        item.appendChild(textSpan);
+                        item.title = `${npc.name} (In Location)`;
+                        
+                        partyContainer.appendChild(item);
+                        
+                        // Handle missing thumbnail
+                        const img = new Image();
+                        img.onerror = () => {
+                            item.style.backgroundImage = '';
+                        };
+                        img.src = portraitUrl;
+                    });
+                }
             } else {
                 // Hide party display during combat
                 partyContainer.style.display = 'none';
