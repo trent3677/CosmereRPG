@@ -344,4 +344,8 @@ old/
 # Graphic packs - only keep the primary photorealistic pack
 graphic_packs/*/
 !graphic_packs/photorealistic/
+!graphic_packs/photorealistic/**/*.jpg
+!graphic_packs/photorealistic/**/*.png
+!graphic_packs/photorealistic/**/*.mp4
+!graphic_packs/photorealistic/**/*.json
 graphic_packs/.deleted/
