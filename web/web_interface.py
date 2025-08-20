@@ -54,6 +54,7 @@ import time
 import webbrowser
 from datetime import datetime
 import io
+import zipfile
 from contextlib import redirect_stdout, redirect_stderr
 from openai import OpenAI
 from PIL import Image
@@ -71,12 +72,29 @@ import utils.reset_campaign as reset_campaign
 from core.managers.status_manager import set_status_callback
 from utils.enhanced_logger import debug, info, warning, error, set_script_name
 
+# Import toolkit components for API support
+try:
+    from core.toolkit.pack_manager import PackManager
+    from core.toolkit.monster_generator import MonsterGenerator
+    from core.toolkit.video_processor import VideoProcessor
+    TOOLKIT_AVAILABLE = True
+except ImportError:
+    TOOLKIT_AVAILABLE = False
+    print("Module Toolkit not available - toolkit endpoints disabled")
+
 # Set script name for logging
 set_script_name("web_interface")
 
+# Set up Flask with correct template and static paths
+# Templates are in both web/templates (for game) and root templates (for toolkit)
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dungeon-master-secret-key'
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+# Suppress werkzeug HTTP request logs (they clutter the console)
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)  # Only show errors, not every HTTP request
 
 # Global variables for managing output
 game_output_queue = queue.Queue()
@@ -526,6 +544,1028 @@ def get_spell_data():
     except FileNotFoundError:
         return jsonify({})
 
+# ============================================================================
+# MODULE TOOLKIT API ENDPOINTS
+# ============================================================================
+
+@app.route('/toolkit')
+def toolkit_interface():
+    """Serve the module toolkit interface"""
+    if not TOOLKIT_AVAILABLE:
+        return "Module Toolkit not available", 503
+    return render_template('module_toolkit.html')
+
+@app.route('/api/toolkit/packs')
+def get_packs():
+    """Get list of available graphic packs"""
+    if not TOOLKIT_AVAILABLE:
+        # Return an error if the toolkit isn't available, so the frontend knows why it's empty.
+        return jsonify({'error': 'Module Toolkit components are not available on the server.'}), 503
+
+    try:
+        manager = PackManager()
+        # First, get the complete list of packs, including the unwanted ones.
+        all_packs = manager.list_available_packs()
+        
+        # Now, filter the list to exclude any pack whose 'name' starts with a '.'
+        # This is a standard way to handle hidden/system folders.
+        filtered_packs = [pack for pack in all_packs if not pack.get('name', '').startswith('.')]
+        
+        # Return only the clean, filtered list to the frontend.
+        return jsonify(filtered_packs)
+    except Exception as e:
+        # This is the most important change.
+        # Instead of failing silently, we now send the actual error back to the browser.
+        error_message = f"TOOLKIT: Failed to list packs: {e}"
+        error(error_message) # Log the error to the server console
+        # Return a JSON object with the error and a 500 Internal Server Error status.
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/toolkit/packs/create', methods=['POST'])
+def create_pack():
+    """Create a new graphic pack"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        manager = PackManager()
+        # Pass all the new fields to the manager
+        result = manager.create_pack(
+            name=data.get('name'),
+            display_name=data.get('display_name'),
+            style_template=data.get('style', 'custom'),  # Default to custom style
+            author=data.get('author', 'Module Toolkit User'),
+            description=data.get('description', '')
+        )
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to create pack: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/packs/<pack_name>/activate', methods=['POST'])
+def activate_pack(pack_name):
+    """Activate a graphic pack with optional backup"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        # Check if backup should be created
+        create_backup = request.json.get('create_backup', False) if request.json else False
+        
+        # If backup requested, create a backup pack from current live game assets FIRST
+        if create_backup:
+            backup_result = create_live_assets_backup_pack()
+            if not backup_result.get('success'):
+                warning(f"TOOLKIT: Failed to create live assets backup: {backup_result.get('error')}")
+        
+        manager = PackManager()
+        result = manager.activate_pack(pack_name, create_backup=False)  # Don't need pack backup since we did live backup
+        
+        # If activation successful, copy all assets to the live game folders
+        if result.get('success'):
+            # First, copy the monster assets (NO individual backup needed)
+            copy_pack_monsters_to_game(pack_name)
+            # Then, copy the NPC assets (NO individual backup needed)
+            copy_pack_npcs_to_game(pack_name)
+        
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to activate pack: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/packs/<pack_name>/export')
+def export_pack(pack_name):
+    """Export a pack as ZIP file"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        import tempfile
+        manager = PackManager()
+        
+        # Export to temp directory
+        with tempfile.TemporaryDirectory() as temp_dir:
+            result = manager.export_pack(pack_name, temp_dir)
+            if result['success']:
+                # Send the ZIP file
+                zip_path = result['zip_path']
+                with open(zip_path, 'rb') as f:
+                    zip_data = f.read()
+                
+                response = Response(
+                    zip_data,
+                    mimetype='application/zip',
+                    headers={
+                        'Content-Disposition': f'attachment; filename={os.path.basename(zip_path)}'
+                    }
+                )
+                return response
+            else:
+                return jsonify(result), 400
+    except Exception as e:
+        error(f"TOOLKIT: Failed to export pack: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/toolkit/packs/<pack_name>', methods=['DELETE'])
+def delete_pack(pack_name):
+    """Delete a graphic pack"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        manager = PackManager()
+        result = manager.delete_pack(pack_name)
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to delete pack: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/packs/<pack_name>/merge', methods=['POST'])
+def merge_pack(pack_name):
+    """Merges a specified pack into the currently active pack."""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'}), 503
+
+    try:
+        # --- BACKEND LOGIC TO BE IMPLEMENTED ---
+        # 1. Create an instance of PackManager.
+        #    manager = PackManager()
+        #
+        # 2. Get the currently active pack. This will be the DESTINATION.
+        #    active_pack = manager.get_active_pack()
+        #    if not active_pack:
+        #        return jsonify({'success': False, 'error': 'No active pack found to merge into.'})
+        #
+        # 3. The `pack_name` from the URL is the SOURCE pack.
+        #
+        # 4. Call a new method on the manager, e.g., `manager.merge_pack(source_pack_name=pack_name, dest_pack_name=active_pack['name'])`
+        #    This method will need to:
+        #      a. Get the file paths for both packs.
+        #      b. Iterate through all files (monsters, videos) in the source pack.
+        #      c. For each file, copy it to the destination pack, overwriting if it exists.
+        #      d. After copying, re-scan the destination pack's manifest to update monster/video counts.
+        #
+        # 5. Return the result from the manager.
+        # --- END OF LOGIC TO BE IMPLEMENTED ---
+
+        # For now, return a placeholder success message.
+        info(f"TOOLKIT: Placeholder merge request for pack '{pack_name}'")
+        return jsonify({'success': True, 'message': f"Placeholder: Successfully merged '{pack_name}' into the active pack."})
+
+    except Exception as e:
+        error(f"TOOLKIT: Failed to merge pack '{pack_name}': {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/toolkit/export-monsters-to-pack', methods=['POST'])
+def export_monsters_to_pack():
+    """Export selected monsters from a source pack to a new custom pack"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'}), 503
+    
+    try:
+        data = request.json
+        pack_name = data.get('pack_name')
+        display_name = data.get('display_name')
+        author = data.get('author')
+        description = data.get('description', '')
+        style = data.get('style', 'custom')
+        source_pack = data.get('source_pack')
+        monster_ids = data.get('monster_ids', [])
+        
+        if not all([pack_name, display_name, author, source_pack, monster_ids]):
+            return jsonify({'success': False, 'error': 'Missing required fields'})
+        
+        info(f"TOOLKIT: Creating new pack '{pack_name}' with {len(monster_ids)} monsters from '{source_pack}'")
+        
+        import os
+        import shutil
+        import json
+        from datetime import datetime
+        
+        # Create pack directory
+        pack_dir = os.path.join('graphic_packs', pack_name)
+        if os.path.exists(pack_dir):
+            return jsonify({'success': False, 'error': f'Pack "{pack_name}" already exists'})
+        
+        os.makedirs(pack_dir)
+        monsters_dir = os.path.join(pack_dir, 'monsters')
+        os.makedirs(monsters_dir)
+        
+        # Source pack directory
+        source_dir = os.path.join('graphic_packs', source_pack, 'monsters')
+        if not os.path.exists(source_dir):
+            shutil.rmtree(pack_dir)  # Clean up
+            return jsonify({'success': False, 'error': f'Source pack "{source_pack}" not found'})
+        
+        # Copy monster files
+        exported_count = 0
+        skipped = []
+        
+        for monster_id in monster_ids:
+            copied = False
+            
+            # Try to copy image file (jpg or png)
+            for ext in ['.jpg', '.png']:
+                source_image = os.path.join(source_dir, f'{monster_id}{ext}')
+                if os.path.exists(source_image):
+                    dest_image = os.path.join(monsters_dir, f'{monster_id}{ext}')
+                    shutil.copy2(source_image, dest_image)
+                    copied = True
+                    
+                    # Copy thumbnail if exists
+                    source_thumb = os.path.join(source_dir, f'{monster_id}_thumb{ext}')
+                    if os.path.exists(source_thumb):
+                        dest_thumb = os.path.join(monsters_dir, f'{monster_id}_thumb{ext}')
+                        shutil.copy2(source_thumb, dest_thumb)
+                    break
+            
+            # Copy video if exists
+            source_video = os.path.join(source_dir, f'{monster_id}_video.mp4')
+            if os.path.exists(source_video):
+                dest_video = os.path.join(monsters_dir, f'{monster_id}_video.mp4')
+                shutil.copy2(source_video, dest_video)
+                copied = True
+            
+            if copied:
+                exported_count += 1
+            else:
+                skipped.append(monster_id)
+                warning(f"TOOLKIT: Monster '{monster_id}' not found in source pack")
+        
+        # Create manifest.json
+        manifest = {
+            "name": pack_name,
+            "display_name": display_name,
+            "author": author,
+            "description": description,
+            "version": "1.0.0",
+            "created": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "style_template": style,
+            "total_monsters": exported_count,
+            "total_videos": len([f for f in os.listdir(monsters_dir) if f.endswith('_video.mp4')]),
+            "monsters": monster_ids,
+            "source": f"Exported from {source_pack}"
+        }
+        
+        manifest_path = os.path.join(pack_dir, 'manifest.json')
+        with open(manifest_path, 'w', encoding='utf-8') as f:
+            json.dump(manifest, f, indent=2)
+        
+        info(f"TOOLKIT: Successfully created pack '{pack_name}' with {exported_count} monsters")
+        
+        return jsonify({
+            'success': True,
+            'exported_count': exported_count,
+            'skipped': skipped,
+            'pack_name': pack_name
+        })
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to export monsters to pack: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/toolkit/packs/preview', methods=['POST'])
+def preview_pack():
+    """Reads the manifest from a ZIP file without saving it."""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    if 'pack' not in request.files:
+        return jsonify({'success': False, 'error': 'No file provided for preview'})
+    
+    file = request.files['pack']
+    if file.filename == '':
+        return jsonify({'success': False, 'error': 'No file selected'})
+
+    try:
+        # Read the file into memory
+        zip_in_memory = io.BytesIO(file.read())
+        
+        with zipfile.ZipFile(zip_in_memory, 'r') as zip_ref:
+            # Check for manifest file
+            if 'manifest.json' not in zip_ref.namelist():
+                return jsonify({'success': False, 'error': 'manifest.json not found in archive.'})
+            
+            # Read and parse the manifest
+            with zip_ref.open('manifest.json') as manifest_file:
+                manifest_data = json.load(manifest_file)
+                
+                # Count assets in the ZIP
+                monster_count = 0
+                npc_count = 0
+                video_count = 0
+                
+                for filename in zip_ref.namelist():
+                    if filename.startswith('monsters/'):
+                        if filename.endswith('.mp4'):
+                            video_count += 1
+                        elif filename.endswith(('.png', '.jpg', '.jpeg')) and '_thumb' not in filename:
+                            monster_count += 1
+                    elif filename.startswith('npcs/'):
+                        if filename.endswith(('.png', '.jpg', '.jpeg')) and '_thumb' not in filename:
+                            npc_count += 1
+                
+                # Add counts to manifest data
+                manifest_data['total_monsters'] = monster_count
+                manifest_data['total_npcs'] = npc_count
+                manifest_data['total_videos'] = video_count
+                
+                return jsonify({'success': True, 'data': manifest_data})
+
+    except zipfile.BadZipFile:
+        return jsonify({'success': False, 'error': 'Invalid .zip file.'})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to preview pack: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/packs/import', methods=['POST'])
+def import_pack():
+    """Import a pack from ZIP file"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        if 'pack' not in request.files:
+            return jsonify({'success': False, 'error': 'No file provided'})
+        
+        file = request.files['pack']
+        # Get the target folder name and import options from the form data
+        target_folder_name = request.form.get('target_folder_name')
+        import_monsters = request.form.get('import_monsters', 'true').lower() == 'true'
+        import_npcs = request.form.get('import_npcs', 'true').lower() == 'true'
+
+        if file.filename == '':
+            return jsonify({'success': False, 'error': 'No file selected'})
+        
+        # Save to temp file
+        import tempfile
+        tmp_file = None
+        try:
+            with tempfile.NamedTemporaryFile(suffix='.zip', delete=False) as tmp:
+                tmp_file = tmp.name
+                file.save(tmp.name)
+            
+            # File is now closed, safe to process
+            manager = PackManager()
+            # Pass the target folder name and import options to the manager
+            result = manager.import_pack(
+                tmp_file, 
+                target_folder_name=target_folder_name,
+                import_monsters=import_monsters,
+                import_npcs=import_npcs
+            )
+            
+            return jsonify(result)
+        finally:
+            # Clean up temp file in finally block to ensure it happens
+            if tmp_file and os.path.exists(tmp_file):
+                try:
+                    os.unlink(tmp_file)
+                except Exception as cleanup_error:
+                    # Log but don't fail if we can't delete temp file
+                    error(f"TOOLKIT: Could not delete temp file {tmp_file}: {cleanup_error}")
+    except Exception as e:
+        error(f"TOOLKIT: Failed to import pack: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/monsters')
+def get_monsters():
+    """Get list of available monsters"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify([])
+    
+    try:
+        # Get pack parameter from query string
+        pack_name = request.args.get('pack', 'photorealistic')
+        
+        # Use a temporary generator instance to get monster list
+        from config import OPENAI_API_KEY
+        generator = MonsterGenerator(api_key=OPENAI_API_KEY)
+        monsters = generator.get_monster_list(pack_name=pack_name)
+        return jsonify(monsters)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get monster list: {e}")
+        return jsonify([])
+
+@app.route('/toolkit/pack_image/<pack_name>/<filename>')
+def serve_pack_image(pack_name, filename):
+    """Serve an image from a graphic pack"""
+    from flask import send_from_directory
+    import os
+    
+    # Construct the absolute path to the image - all files in monsters folder now
+    pack_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'monsters'))
+    
+    # Check if file exists - NO FALLBACK
+    file_path = os.path.join(pack_dir, filename)
+    if os.path.exists(file_path):
+        return send_from_directory(pack_dir, filename)
+    
+    # Return 404 if not found - no fallback to other directories
+    return '', 404
+
+@app.route('/toolkit/pack_video/<pack_name>/<filename>')
+def serve_pack_video(pack_name, filename):
+    """Serve a video from a graphic pack"""
+    from flask import send_from_directory
+    import os
+    
+    # Construct the absolute path to the video - all files in monsters folder now
+    pack_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'monsters'))
+    
+    # Check if file exists - NO FALLBACK
+    file_path = os.path.join(pack_dir, filename)
+    if os.path.exists(file_path):
+        return send_from_directory(pack_dir, filename)
+    
+    # Return 404 if not found - no fallback to other directories
+    return '', 404
+
+@app.route('/api/toolkit/check_existing_images', methods=['POST'])
+def check_existing_images():
+    """Check if images already exist for the given monsters in a pack"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        pack_name = data.get('pack_name')
+        monster_ids = data.get('monster_ids', [])
+        
+        if not pack_name or not monster_ids:
+            return jsonify({'success': False, 'error': 'Missing pack_name or monster_ids'})
+        
+        # Check which files exist
+        pack_dir = Path(f"graphic_packs/{pack_name}/monsters")
+        existing = []
+        
+        if pack_dir.exists():
+            for monster_id in monster_ids:
+                # Check for .jpg files only (the correct format)
+                jpg_path = pack_dir / f"{monster_id}.jpg"
+                
+                if jpg_path.exists():
+                    existing.append(monster_id)
+        
+        return jsonify({
+            'success': True,
+            'existing': existing,
+            'total_checked': len(monster_ids)
+        })
+    
+    except Exception as e:
+        error(f"TOOLKIT: Error checking existing images: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/generate', methods=['POST'])
+def generate_monsters():
+    """Start monster generation task"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        pack_name = data.get('pack_name')
+        style = data.get('style', 'photorealistic')
+        model = data.get('model', 'auto')
+        monsters = data.get('monsters', [])
+        
+        # Start generation in background thread
+        import uuid
+        import asyncio
+        task_id = str(uuid.uuid4())
+        
+        def run_generation():
+            try:
+                from config import OPENAI_API_KEY
+                generator = MonsterGenerator(api_key=OPENAI_API_KEY)
+                
+                # Create progress callback
+                def progress_callback(progress_data):
+                    socketio.emit('generation_progress', progress_data)
+                
+                # Run the async function
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                result = loop.run_until_complete(
+                    generator.batch_generate_pack(
+                        pack_name=pack_name,
+                        style=style,
+                        monsters=monsters,
+                        model=model,
+                        progress_callback=progress_callback
+                    )
+                )
+                
+                socketio.emit('generation_complete', result)
+            except Exception as e:
+                error(f"TOOLKIT: Generation failed: {e}")
+                socketio.emit('generation_error', {'error': str(e)})
+        
+        # Start in background thread
+        thread = threading.Thread(target=run_generation)
+        thread.daemon = True
+        thread.start()
+        
+        return jsonify({'success': True, 'task_id': task_id})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to start generation: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/process-video', methods=['POST'])
+def process_video():
+    """Process a monster video"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        if 'video' not in request.files:
+            return jsonify({'success': False, 'error': 'No video file provided'})
+        
+        file = request.files['video']
+        monster_id = request.form.get('monster_id')
+        pack_name = request.form.get('pack_name')
+        
+        if not monster_id or not pack_name:
+            return jsonify({'success': False, 'error': 'Missing monster_id or pack_name'})
+        
+        # Save to temp file
+        import tempfile
+        import time
+        
+        tmp_file = None
+        result = {'success': False, 'error': 'Unknown error'}  # Initialize result
+        
+        try:
+            with tempfile.NamedTemporaryFile(suffix='.mp4', delete=False) as tmp:
+                tmp_file = tmp.name
+                file.save(tmp_file)
+            
+            print(f"[INFO] Processing video for {monster_id}")
+            print(f"[INFO] Temp file: {tmp_file}")
+            print(f"[INFO] File size: {os.path.getsize(tmp_file)} bytes")
+            
+            processor = VideoProcessor()
+            result = processor.process_monster_video(
+                input_path=tmp_file,
+                monster_id=monster_id,
+                pack_name=pack_name,
+                skip_compression=False  # Enable compression
+            )
+            
+            # Try to clean up temp file with retries for Windows
+            for attempt in range(5):
+                try:
+                    if tmp_file and os.path.exists(tmp_file):
+                        os.unlink(tmp_file)
+                    break
+                except PermissionError:
+                    if attempt < 4:  # Don't sleep on last attempt
+                        time.sleep(0.5)  # Wait half a second and retry
+                    else:
+                        # Log warning but don't fail the request
+                        print(f"Warning: Could not delete temp file {tmp_file}")
+                        
+        except Exception as process_error:
+            # Capture the actual error in result
+            error(f"TOOLKIT: Video processing error: {process_error}")
+            result = {'success': False, 'error': str(process_error)}
+            
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to process video: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/add-to-bestiary', methods=['POST'])
+def add_to_bestiary():
+    """Adds monsters to the bestiary using their ID. Skips any that already exist."""
+    try:
+        data = request.json
+        module_name = data.get('module_name')  # Used for context
+        monster_ids = data.get('monster_ids', [])  # We now use IDs
+        
+        if not module_name or not monster_ids:
+            return jsonify({'success': False, 'error': 'Missing module_name or monster_ids'})
+        
+        info(f"TOOLKIT: Request to add {len(monster_ids)} monsters to bestiary from module: {module_name}")
+        
+        # Start processing in background thread
+        import threading
+        import asyncio
+        
+        def run_bestiary_update():
+            try:
+                from utils.bestiary_updater import BestiaryUpdater
+                updater = BestiaryUpdater()
+                
+                # Convert IDs to names for the updater, but FIRST filter out existing ones
+                compendium_path = 'data/bestiary/monster_compendium.json'
+                with open(compendium_path, 'r', encoding='utf-8') as f:
+                    compendium = json.load(f)
+                existing_monsters = compendium.get("monsters", {}).keys()
+
+                monsters_to_add_ids = [mid for mid in monster_ids if mid not in existing_monsters]
+                
+                if not monsters_to_add_ids:
+                    socketio.emit('bestiary_update_complete', {
+                        'success': True,
+                        'message': 'All selected monsters already exist in the bestiary. No action taken.',
+                        'monsters': []
+                    })
+                    return
+
+                # Convert the filtered IDs to names for the existing updater logic
+                monsters_to_add_names = [mid.replace('_', ' ').title() for mid in monsters_to_add_ids]
+
+                socketio.emit('bestiary_update_progress', {
+                    'status': 'started',
+                    'message': f'Starting to process {len(monsters_to_add_names)} new monsters...'
+                })
+                
+                # Create new event loop for thread
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                
+                loop.run_until_complete(
+                    updater.process_missing_monsters(
+                        module_name=module_name,
+                        monster_names=monsters_to_add_names,  # Pass names to the existing function
+                        test_mode=False
+                    )
+                )
+                
+                socketio.emit('bestiary_update_complete', {
+                    'success': True,
+                    'message': f'Successfully added {len(monsters_to_add_names)} monsters to bestiary.',
+                    'monsters': monsters_to_add_names
+                })
+                info(f"TOOLKIT: Successfully added {len(monsters_to_add_names)} monsters to bestiary.")
+
+            except Exception as e:
+                error(f"TOOLKIT: Bestiary update failed: {e}")
+                socketio.emit('bestiary_update_error', {'success': False, 'error': str(e)})
+        
+        # Start in background thread
+        thread = threading.Thread(target=run_bestiary_update)
+        thread.daemon = True
+        thread.start()
+        
+        return jsonify({'success': True, 'message': f'Started processing {len(monster_ids)} monsters.'})
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to start bestiary update: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/toolkit/get_style_prompt/<style_id>')
+def get_style_prompt(style_id):
+    """Get the prompt for a specific style"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'prompt': ''})
+    
+    try:
+        from core.toolkit.style_manager import StyleManager
+        manager = StyleManager()
+        prompt = manager.get_style_prompt(style_id)
+        return jsonify({'prompt': prompt or ''})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get style prompt: {e}")
+        return jsonify({'prompt': ''})
+
+@app.route('/toolkit/get_styles')
+def get_all_styles():
+    """Get all available style templates"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'builtin': {}, 'custom': {}})
+    
+    try:
+        from core.toolkit.style_manager import StyleManager
+        manager = StyleManager()
+        styles = manager.get_all_styles()
+        
+        # Organize by type
+        builtin = {k: v for k, v in styles.items() if v['type'] == 'builtin'}
+        custom = {k: v for k, v in styles.items() if v['type'] == 'custom'}
+        
+        return jsonify({'builtin': builtin, 'custom': custom})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get styles: {e}")
+        return jsonify({'builtin': {}, 'custom': {}})
+
+@app.route('/toolkit/save_style_template', methods=['POST'])
+def save_style_template():
+    """Save a custom style template"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        name = data.get('name')
+        prompt = data.get('prompt')
+        
+        if not name or not prompt:
+            return jsonify({'success': False, 'error': 'Name and prompt are required'})
+        
+        from core.toolkit.style_manager import StyleManager
+        manager = StyleManager()
+        result = manager.save_custom_style(name, prompt)
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to save style: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/toolkit/update_style_prompt', methods=['POST'])
+def update_style_prompt():
+    """Update an existing style's prompt"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        style_id = data.get('style_id')
+        prompt = data.get('prompt')
+        
+        if not style_id or not prompt:
+            return jsonify({'success': False, 'error': 'Style ID and prompt are required'})
+        
+        from core.toolkit.style_manager import StyleManager
+        manager = StyleManager()
+        # Use overwrite_style which handles both builtin and custom styles
+        result = manager.overwrite_style(style_id, prompt)
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to update style: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/toolkit/get_monster_description/<monster_id>')
+def get_monster_description(monster_id):
+    """Get the description for a specific monster"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'description': '', 'name': monster_id})
+    
+    try:
+        # Load monster compendium with explicit UTF-8 encoding
+        import json
+        compendium_path = 'data/bestiary/monster_compendium.json'
+        with open(compendium_path, 'r', encoding='utf-8') as f:
+            compendium = json.load(f)
+        
+        # Look for monster in compendium
+        monsters = compendium.get('monsters', {})
+        if monster_id in monsters:
+            monster_data = monsters[monster_id]
+            description = monster_data.get('description', '')
+            name = monster_data.get('name', monster_id)
+            info(f"TOOLKIT: Found {monster_id} - desc length: {len(description)}")
+            return jsonify({
+                'description': description,
+                'name': name
+            })
+        else:
+            # Try with underscores replaced by spaces
+            monster_id_alt = monster_id.replace('_', ' ').lower()
+            for mid, mdata in monsters.items():
+                if mid.lower() == monster_id_alt or mdata.get('name', '').lower() == monster_id_alt:
+                    return jsonify({
+                        'description': mdata.get('description', ''),
+                        'name': mdata.get('name', monster_id)
+                    })
+        
+        return jsonify({'description': '', 'name': monster_id})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get monster description: {e}")
+        return jsonify({'description': '', 'name': monster_id})
+
+@app.route('/toolkit/update_monster_description', methods=['POST'])
+def update_monster_description():
+    """Update a monster's description"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        monster_id = data.get('monster_id')
+        description = data.get('description')
+        
+        if not monster_id or not description:
+            return jsonify({'success': False, 'error': 'Monster ID and description are required'})
+        
+        # Load and update monster compendium
+        import json
+        compendium_path = 'data/bestiary/monster_compendium.json'
+        with open(compendium_path, 'r', encoding='utf-8') as f:
+            compendium = json.load(f)
+        
+        monsters = compendium.get('monsters', {})
+        if monster_id in monsters:
+            monsters[monster_id]['description'] = description
+        else:
+            # Try to find by alternative ID
+            monster_id_alt = monster_id.replace('_', ' ').lower()
+            found = False
+            for mid, mdata in monsters.items():
+                if mid.lower() == monster_id_alt or mdata.get('name', '').lower() == monster_id_alt:
+                    monsters[mid]['description'] = description
+                    found = True
+                    break
+            
+            if not found:
+                # Add new monster entry
+                monsters[monster_id] = {
+                    'name': monster_id.replace('_', ' ').title(),
+                    'description': description,
+                    'type': 'unknown',
+                    'tags': []
+                }
+        
+        # Save updated compendium
+        with open(compendium_path, 'w', encoding='utf-8') as f:
+            json.dump(compendium, f, indent=2, ensure_ascii=False)
+        
+        return jsonify({'success': True, 'message': 'Monster description updated'})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to update monster description: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/promote-to-bestiary', methods=['POST'])
+def promote_to_bestiary():
+    """Creates a new bestiary entry for a pack-exclusive monster."""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        monster_id = data.get('monster_id')
+        
+        if not monster_id:
+            return jsonify({'success': False, 'error': 'Monster ID is required'})
+
+        # 1. Load the compendium to check for existence
+        compendium_path = 'data/bestiary/monster_compendium.json'
+        with open(compendium_path, 'r', encoding='utf-8') as f:
+            compendium = json.load(f)
+        
+        if monster_id in compendium.get('monsters', {}):
+            return jsonify({'success': False, 'error': f'Monster "{monster_id}" already exists in the bestiary.'})
+
+        # 2. Use AI to generate a description
+        monster_name = monster_id.replace('_', ' ').title()
+        prompt = f"""Generate a compelling Dungeons & Dragons style bestiary description for a monster named "{monster_name}".
+        The description should be concise (around 100-150 words) and focus on its appearance, typical behavior, and combat tactics.
+        Make it sound like an entry from an official monster manual. Do not include stat blocks."""
+        
+        from config import OPENAI_API_KEY
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a creative writer for a fantasy role-playing game, specializing in monster lore."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7
+        )
+        description = response.choices[0].message.content.strip()
+
+        # 3. Create and add the new monster entry
+        new_entry = {
+            "name": monster_name,
+            "description": description,
+            "type": "unknown",
+            "tags": ["custom", "pack-promoted"]
+        }
+        compendium["monsters"][monster_id] = new_entry
+        
+        # 4. Save the updated compendium
+        with open(compendium_path, 'w', encoding='utf-8') as f:
+            json.dump(compendium, f, indent=2)
+        
+        info(f"TOOLKIT: Promoted pack monster '{monster_id}' to the bestiary.")
+        return jsonify({'success': True, 'message': f'Successfully added {monster_name} to the bestiary.'})
+
+    except Exception as e:
+        error(f"TOOLKIT: Failed to promote monster to bestiary: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/toolkit/create_pack', methods=['POST'])
+def create_pack_toolkit():
+    """Create a new graphic pack from toolkit"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        manager = PackManager()
+        result = manager.create_pack(
+            name=data.get('name'),
+            style_template=data.get('style_template', 'photorealistic'),
+            author=data.get('author', 'Module Toolkit'),
+            description=data.get('description', '')
+        )
+        return jsonify(result)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to create pack: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/settings', methods=['POST'])
+def save_toolkit_settings():
+    """Save toolkit settings"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'})
+    
+    try:
+        data = request.json
+        active_pack = data.get('active_pack')
+        api_key = data.get('api_key')
+        
+        # Save active pack
+        if active_pack:
+            manager = PackManager()
+            manager.activate_pack(active_pack)
+        
+        # API key would be saved to config if provided
+        # For now, just acknowledge
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        error(f"TOOLKIT: Failed to save settings: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/toolkit/modules')
+def get_available_modules_api():
+    """Get list of available adventure modules."""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify([]), 503
+    
+    try:
+        # This function already exists and gives us what we need.
+        from core.generators.module_stitcher import list_available_modules
+        modules = list_available_modules()
+        return jsonify(modules)
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get module list: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/toolkit/modules/<module_name>/monsters')
+def get_module_monsters_api(module_name):
+    """Get list of monster IDs found in a specific module."""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify([]), 503
+    
+    try:
+        from utils.module_path_manager import ModulePathManager
+        from utils.file_operations import safe_read_json
+        import os
+        import re
+
+        path_manager = ModulePathManager(module_name)
+        monster_ids = set()
+
+        # Build areas directory path
+        areas_dir = os.path.join('modules', module_name, 'areas')
+        
+        # Scan area backup files (_BU.json) for monsters in locations
+        if os.path.exists(areas_dir):
+            for filename in os.listdir(areas_dir):
+                # Only check backup files which contain original unmodified data
+                if filename.endswith('_BU.json'):
+                    area_path = os.path.join(areas_dir, filename)
+                    area_data = safe_read_json(area_path)
+                    if area_data and 'locations' in area_data:
+                        for location in area_data.get('locations', []):
+                            if 'monsters' in location and location['monsters']:
+                                for monster in location['monsters']:
+                                    if isinstance(monster, dict) and 'name' in monster:
+                                        # Normalize the name to match our monster IDs:
+                                        # "Bandit Captain Gorvek" -> "bandit_captain_gorvek"
+                                        monster_id = monster['name'].lower().replace(' ', '_')
+                                        monster_ids.add(monster_id)
+                                    elif isinstance(monster, str):
+                                        # Handle string format like "1 Tainted Naiad"
+                                        # Extract just the monster name
+                                        match = re.search(r'\d*\s*(.+?)(?:\s*\(|$)', monster)
+                                        if match:
+                                            monster_name = match.group(1).strip()
+                                            monster_id = monster_name.lower().replace(' ', '_')
+                                            monster_ids.add(monster_id)
+        
+        # Also scan the monsters folder for this module
+        monsters_dir = os.path.join('modules', module_name, 'monsters')
+        if os.path.exists(monsters_dir):
+            for filename in os.listdir(monsters_dir):
+                if filename.endswith('.json'):
+                    # Extract monster ID from filename
+                    # e.g., "bandit_captain_gorvek.json" -> "bandit_captain_gorvek"
+                    monster_id = filename[:-5]  # Remove .json extension
+                    monster_ids.add(monster_id)
+
+        info(f"TOOLKIT: Found {len(monster_ids)} unique monsters in module {module_name}: {list(monster_ids)[:5]}...")
+        return jsonify(list(monster_ids))
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get monsters for module {module_name}: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @socketio.on('connect')
 def handle_connect():
     """Handle client connection"""
@@ -896,7 +1936,7 @@ def handle_npc_inventory_request(data):
 
 @socketio.on('request_party_data')
 def handle_party_data_request():
-    """Handle requests for party member display (non-combat)."""
+    """Handle requests for party member display and current location NPCs (non-combat)."""
     try:
         from utils.file_operations import safe_read_json
         from utils.module_path_manager import ModulePathManager
@@ -965,11 +2005,39 @@ def handle_party_data_request():
                 'type': 'npc'
             })
         
-        emit('party_data_response', {'members': party_members})
+        # Find NPCs in current location
+        location_npcs = []
+        world_conditions = party_tracker.get("worldConditions", {})
+        current_area_id = world_conditions.get("currentAreaId")
+        current_location_id = world_conditions.get("currentLocationId")
+
+        if current_module and current_area_id and current_location_id:
+            # Construct the path to the current area file
+            areas_dir = os.path.join("modules", current_module, "areas")
+            area_file_path = os.path.join(areas_dir, f"{current_area_id}_BU.json")
+            
+            if os.path.exists(area_file_path):
+                area_data = safe_read_json(area_file_path)
+                if area_data and 'locations' in area_data:
+                    # Find the specific location the player is in
+                    current_location_data = next((loc for loc in area_data['locations'] 
+                                                 if loc.get('locationId') == current_location_id), None)
+                    
+                    if current_location_data and 'npcs' in current_location_data:
+                        # Extract the names of the NPCs in that location
+                        for npc in current_location_data['npcs']:
+                            npc_name = npc.get('name') if isinstance(npc, dict) else npc
+                            if npc_name:
+                                # Exclude NPCs that are already in the player's party
+                                if not any(member['name'] == npc_name for member in party_members):
+                                    location_npcs.append({'name': npc_name, 'type': 'location_npc'})
+        
+        # Send both lists to the frontend
+        emit('party_data_response', {'members': party_members, 'location_npcs': location_npcs})
         
     except Exception as e:
         error(f"Failed to get party data: {str(e)}", exception=e, category="web_interface")
-        emit('party_data_response', {'members': []})
+        emit('party_data_response', {'members': [], 'location_npcs': []})
 
 @socketio.on('request_initiative_data')
 def handle_initiative_data_request():
@@ -1220,12 +2288,11 @@ def handle_generate_image(data):
         
         # Try to generate image
         try:
-            # Generate image using DALL-E 3 with high quality settings
+            # Generate image using DALL-E 3
             response = client.images.generate(
                 model="dall-e-3",
                 prompt=prompt,
                 size="1024x1024",
-                quality="hd",
                 n=1,
             )
             # Get the image URL
@@ -1242,7 +2309,6 @@ def handle_generate_image(data):
                     model="dall-e-3",
                     prompt=sanitized_prompt,
                     size="1024x1024",
-                    quality="hd",
                     n=1,
                 )
                 image_url = response.data[0].url
@@ -1516,6 +2582,901 @@ def open_browser():
     except ImportError:
         port = 8357
     webbrowser.open(f'http://localhost:{port}')
+
+
+# ============================================================================
+# NPC MANAGEMENT API ENDPOINTS
+# ============================================================================
+
+@app.route('/api/toolkit/modules/<module_name>/npcs')
+def get_module_npcs(module_name):
+    """
+    Scans a module for NPCs and checks for portraits in the pack's npcs/ folder
+    and optionally in the live game folder.
+    """
+    if not TOOLKIT_AVAILABLE:
+        return jsonify([]), 503
+    
+    pack_name = request.args.get('pack')
+    include_local = request.args.get('include_local', 'false').lower() == 'true'
+
+    if not pack_name:
+        return jsonify({'error': 'A target pack must be specified.'}), 400
+        
+    try:
+        import os
+        from utils.file_operations import safe_read_json
+        
+        npcs_found = {}
+        
+        # Always scan a module to get the list of required NPCs
+        areas_dir = os.path.join('modules', module_name, 'areas')
+        if os.path.exists(areas_dir):
+            for filename in os.listdir(areas_dir):
+                if filename.endswith('_BU.json'):
+                    area_path = os.path.join(areas_dir, filename)
+                    area_data = safe_read_json(area_path)
+                    if area_data and 'locations' in area_data:
+                        for location in area_data.get('locations', []):
+                            if 'npcs' in location and location['npcs']:
+                                for npc in location['npcs']:
+                                    if isinstance(npc, dict) and 'name' in npc:
+                                        npc_name = npc['name']
+                                        npc_id = npc_name.lower().replace(' ', '_').replace("'", "").replace("-", "_")
+                                        if npc_id not in npcs_found:
+                                            npcs_found[npc_id] = {'name': npc_name, 'id': npc_id}
+                                    elif isinstance(npc, str):
+                                        npc_name = npc
+                                        npc_id = npc_name.lower().replace(' ', '_').replace("'", "").replace("-", "_")
+                                        if npc_id not in npcs_found:
+                                            npcs_found[npc_id] = {'name': npc_name, 'id': npc_id}
+
+        # Check portrait existence based on findings
+        npc_list = []
+        pack_npcs_dir = os.path.join('graphic_packs', pack_name, 'npcs')
+        local_npcs_dir = os.path.join('web', 'static', 'media', 'npcs')  # Correct NPC location
+        
+        for npc_id, npc_info in npcs_found.items():
+            result = {
+                'name': npc_info['name'],
+                'id': npc_id,
+                'has_portrait': False,
+                'is_local': False,
+                'pack_name': pack_name,
+            }
+
+            # Check 1: In the pack's 'npcs' folder
+            if os.path.exists(pack_npcs_dir):
+                for ext in ['.png', '.jpg', '_thumb.png', '_thumb.jpg']:
+                    if os.path.exists(os.path.join(pack_npcs_dir, f'{npc_id}{ext}')):
+                        result['has_portrait'] = True
+                        break
+
+            # Check 2: In the live 'web/static/media/npcs' folder (if requested)
+            if include_local:
+                # Check for any NPC asset in the game folder
+                if os.path.exists(local_npcs_dir):
+                    for ext in ['.png', '.jpg', '_thumb.png', '_thumb.jpg', '_video.mp4']:
+                        if os.path.exists(os.path.join(local_npcs_dir, f'{npc_id}{ext}')):
+                            result['is_local'] = True
+                            break
+
+            npc_list.append(result)
+        
+        npc_list.sort(key=lambda x: x['name'])
+        
+        info(f"TOOLKIT: Found {len(npc_list)} NPCs for module '{module_name}' (Include Local: {include_local})")
+        return jsonify(npc_list)
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get NPCs for module {module_name}: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/toolkit/npcs/fetch-descriptions', methods=['POST'])
+def fetch_npc_descriptions():
+    """
+    Receives a list of NPC names and starts a background task to generate descriptions.
+    """
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'}), 503
+    
+    data = request.json
+    module_name = data.get('module_name')
+    npcs = data.get('npcs', [])
+
+    if not module_name or not npcs:
+        return jsonify({'success': False, 'error': 'Missing module name or NPC list'}), 400
+
+    # Start background thread for description generation
+    def generate_descriptions():
+        try:
+            import time
+            from openai import OpenAI
+            from utils.file_operations import safe_read_json, safe_write_json
+            from utils.encoding_utils import sanitize_text
+            
+            # Get API key
+            try:
+                from config import OPENAI_API_KEY
+            except ImportError:
+                OPENAI_API_KEY = None
+                error("TOOLKIT: OpenAI API key not found")
+                return
+            
+            if not OPENAI_API_KEY:
+                error("TOOLKIT: OpenAI API key not configured")
+                return
+                
+            client = OpenAI(api_key=OPENAI_API_KEY)
+            
+            # Load or create descriptions file
+            descriptions_file = f'temp/npc_descriptions_{module_name}.json'
+            os.makedirs('temp', exist_ok=True)
+            
+            existing_descriptions = safe_read_json(descriptions_file) or {}
+            
+            # Extract module context
+            module_context = extract_module_context_for_npcs(module_name)
+            
+            # Generate description for each NPC
+            for i, npc_data in enumerate(npcs):
+                npc_name = npc_data['name']
+                npc_id = npc_data['id']
+                
+                # In toolkit mode, always regenerate descriptions
+                if npc_id in existing_descriptions:
+                    info(f"TOOLKIT: Overwriting existing description for {npc_name}")
+                
+                # Prepare a new, more directive prompt
+                prompt = f"""Generate a rich, descriptive prompt for an AI image generator to create a fantasy character portrait.
+
+NPC Name: {npc_name}
+Module Context: {module_context}
+
+The output should be a single paragraph (150-200 words) that is itself a high-quality image prompt. It must include:
+1.  **Physical Appearance:** Race, build, key features.
+2.  **Clothing & Gear:** Detailed description of their armor, clothes, and weapons (sheathed or at rest).
+3.  **Background/Setting:** A description of the environment (e.g., 'standing in a sun-dappled ancient forest', 'leaning against a table in a rustic tavern', 'in a dimly lit dungeon corridor').
+4.  **Atmosphere & Lighting:** Keywords for the mood (e.g., 'cinematic lighting', 'magical aura', 'dust motes in the air', 'soft morning light').
+
+The character must appear friendly, capable, and trustworthy, like a potential party ally. Do NOT use words like 'photorealistic', 'photo', 'cosplay', '3D render'. Focus on descriptive language for a digital painting.
+
+Example Output Format:
+"A stunning digital painting of Elara, a female wood elf ranger with emerald green eyes and long braided auburn hair. She wears masterfully crafted green leather armor with leaf-like patterns. A longbow is slung over her shoulder and a sheathed shortsword hangs at her hip. She stands in a misty, ancient forest at dawn, with golden morning light filtering through the canopy, creating a magical and serene atmosphere."
+"""
+
+                try:
+                    # Call OpenAI API with the new system message and prompt
+                    response = client.chat.completions.create(
+                        model="gpt-4o-mini",
+                        messages=[
+                            {"role": "system", "content": "You are an expert AI prompt engineer specializing in fantasy character art. Your task is to write image generation prompts, not narrative descriptions. The prompts you write will be used to create digital paintings."},
+                            {"role": "user", "content": prompt}
+                        ],
+                        temperature=0.8
+                    )
+                    
+                    description = response.choices[0].message.content
+                    description = sanitize_text(description)
+                    
+                    # Save description
+                    existing_descriptions[npc_id] = {
+                        'name': npc_name,
+                        'description': description,
+                        'generated_at': datetime.now().isoformat()
+                    }
+                    
+                    # Write back to file
+                    safe_write_json(descriptions_file, existing_descriptions)
+                    
+                    info(f"TOOLKIT: Generated description for {npc_name} ({i+1}/{len(npcs)})")
+                    
+                    # Emit progress via SocketIO
+                    socketio.emit('npc_description_progress', {
+                        'current': i + 1,
+                        'total': len(npcs),
+                        'npc_name': npc_name,
+                        'status': 'success'
+                    })
+                    
+                    # Rate limiting
+                    time.sleep(2)  # Wait 2 seconds between requests
+                    
+                except Exception as e:
+                    error(f"TOOLKIT: Failed to generate description for {npc_name}: {e}")
+                    socketio.emit('npc_description_progress', {
+                        'current': i + 1,
+                        'total': len(npcs),
+                        'npc_name': npc_name,
+                        'status': 'error',
+                        'error': str(e)
+                    })
+            
+            info(f"TOOLKIT: Completed description generation for module {module_name}")
+            
+        except Exception as e:
+            error(f"TOOLKIT: Description generation failed: {e}")
+    
+    # Start background thread
+    thread = threading.Thread(target=generate_descriptions)
+    thread.daemon = True
+    thread.start()
+    
+    info(f"TOOLKIT: Started description generation for {len(npcs)} NPCs in {module_name}")
+    return jsonify({'success': True, 'message': 'Description generation started.'})
+
+def extract_module_context_for_npcs(module_name):
+    """
+    Extracts the FULL context from a module, including the entire plot file
+    and all area files, to ensure maximum accuracy for NPC descriptions.
+    """
+    try:
+        from utils.file_operations import safe_read_json
+        import os
+        import json
+        
+        context_parts = []
+        
+        # Header for the entire context block
+        context_parts.append(f"--- START OF CONTEXT FOR MODULE: {module_name} ---")
+
+        # 1. Read and append the entire module plot file
+        plot_file = os.path.join('modules', module_name, 'module_plot.json')
+        if os.path.exists(plot_file):
+            plot_data = safe_read_json(plot_file)
+            if plot_data:
+                context_parts.append("\n--- MODULE PLOT FILE: module_plot.json ---")
+                context_parts.append(json.dumps(plot_data, indent=2))
+        
+        # 2. Read and append EVERY area file (_BU.json version)
+        areas_dir = os.path.join('modules', module_name, 'areas')
+        if os.path.exists(areas_dir):
+            area_files = sorted([f for f in os.listdir(areas_dir) if f.endswith('_BU.json')])
+            for filename in area_files:
+                area_path = os.path.join(areas_dir, filename)
+                area_data = safe_read_json(area_path)
+                if area_data:
+                    context_parts.append(f"\n--- AREA FILE: {filename} ---")
+                    context_parts.append(json.dumps(area_data, indent=2))
+        
+        context_parts.append(f"\n--- END OF CONTEXT FOR MODULE: {module_name} ---")
+        
+        # Join all parts into a single, massive string
+        full_context = "\n".join(context_parts)
+        info(f"TOOLKIT: Compiled full module context for '{module_name}', total length: {len(full_context)} characters.")
+        return full_context
+
+    except Exception as e:
+        error(f"Failed to extract full module context: {e}")
+        return f"Error building context for adventure module: {module_name}"
+
+@app.route('/api/toolkit/npcs/description', methods=['GET', 'POST'])
+def handle_npc_description():
+    """
+    Gets or sets a single NPC's description from the temporary JSON file.
+    """
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'}), 503
+
+    if request.method == 'GET':
+        module_name = request.args.get('module')
+        npc_id = request.args.get('npc_id')
+        
+        if not module_name or not npc_id:
+            return jsonify({'error': 'Missing module or NPC ID'}), 400
+        
+        try:
+            from utils.file_operations import safe_read_json
+            
+            descriptions_file = f'temp/npc_descriptions_{module_name}.json'
+            descriptions = safe_read_json(descriptions_file) or {}
+            
+            if npc_id in descriptions:
+                return jsonify({'description': descriptions[npc_id].get('description', '')})
+            else:
+                return jsonify({'description': ''})
+                
+        except Exception as e:
+            error(f"TOOLKIT: Failed to load NPC description: {e}")
+            return jsonify({'error': str(e)}), 500
+    
+    if request.method == 'POST':
+        data = request.json
+        module_name = data.get('module_name')
+        npc_id = data.get('npc_id')
+        npc_name = data.get('npc_name')
+        description = data.get('description')
+        
+        if not all([module_name, npc_id, description]):
+            return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+        
+        try:
+            from utils.file_operations import safe_read_json, safe_write_json
+            from utils.encoding_utils import sanitize_text
+            
+            descriptions_file = f'temp/npc_descriptions_{module_name}.json'
+            os.makedirs('temp', exist_ok=True)
+            
+            descriptions = safe_read_json(descriptions_file) or {}
+            descriptions[npc_id] = {
+                'name': npc_name,
+                'description': sanitize_text(description),
+                'updated_at': datetime.now().isoformat()
+            }
+            
+            safe_write_json(descriptions_file, descriptions)
+            
+            info(f"TOOLKIT: Description for NPC '{npc_name}' (ID: {npc_id}) was updated")
+            return jsonify({'success': True})
+            
+        except Exception as e:
+            error(f"TOOLKIT: Failed to save NPC description: {e}")
+            return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/toolkit/npcs/generate-portraits', methods=['POST'])
+def generate_npc_portraits():
+    """Generate portrait images for selected NPCs using NPCGenerator"""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'}), 503
+    
+    data = request.json
+    module_name = data.get('module_name')
+    pack_name = data.get('pack_name')
+    model = data.get('model', 'dall-e-3')
+    style = data.get('style', 'photorealistic')
+    style_prompt = data.get('style_prompt', '')
+    npcs = data.get('npcs', [])
+    
+    if not all([module_name, pack_name, npcs]):
+        return jsonify({'success': False, 'error': 'Missing required fields'}), 400
+    
+    # Start background thread for portrait generation
+    def generate_portraits():
+        try:
+            from core.toolkit.npc_generator import NPCGenerator
+            from utils.file_operations import safe_read_json
+            import asyncio
+            
+            # Get API key
+            try:
+                from config import OPENAI_API_KEY
+            except ImportError:
+                OPENAI_API_KEY = None
+                error("TOOLKIT: OpenAI API key not found")
+                return
+            
+            if not OPENAI_API_KEY:
+                error("TOOLKIT: OpenAI API key not configured")
+                return
+                
+            # Initialize NPC generator
+            generator = NPCGenerator(api_key=OPENAI_API_KEY)
+            
+            # Load descriptions
+            descriptions_file = f'temp/npc_descriptions_{module_name}.json'
+            descriptions = safe_read_json(descriptions_file) or {}
+            
+            # Prepare NPC data with descriptions
+            npcs_with_descriptions = []
+            for npc_data in npcs:
+                npc_id = npc_data['id']
+                npc_name = npc_data['name']
+                
+                # Get description
+                npc_desc_data = descriptions.get(npc_id, {})
+                description = npc_desc_data.get('description', f'A fantasy NPC named {npc_name}')
+                
+                npcs_with_descriptions.append({
+                    'id': npc_id,
+                    'name': npc_name,
+                    'description': description
+                })
+            
+            # Create progress callback
+            def progress_callback(progress_data):
+                socketio.emit('npc_portrait_progress', progress_data)
+            
+            # Run the async batch generation
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            
+            result = loop.run_until_complete(
+                generator.batch_generate_portraits(
+                    npcs=npcs_with_descriptions,
+                    pack_name=pack_name,
+                    style=style,
+                    model=model,
+                    progress_callback=progress_callback
+                )
+            )
+            
+            # Update pack manifest to include NPC count
+            update_pack_manifest_with_npcs(pack_name)
+            
+            # Log results
+            info(f"TOOLKIT: Completed portrait generation - {len(result['successful'])} successful, {len(result['failed'])} failed")
+            
+            # Emit completion with detailed results
+            socketio.emit('npc_generation_complete', {
+                'module_name': module_name,
+                'pack_name': pack_name,
+                'successful': result.get('successful', []),
+                'failed': result.get('failed', []),
+                'total': len(result.get('successful', [])) + len(result.get('failed', []))
+            })
+            
+        except Exception as e:
+            error(f"TOOLKIT: Portrait generation failed: {e}")
+    
+    # Start background thread
+    thread = threading.Thread(target=generate_portraits)
+    thread.daemon = True
+    thread.start()
+    
+    info(f"TOOLKIT: Started portrait generation for {len(npcs)} NPCs")
+    return jsonify({'success': True, 'message': 'Portrait generation started.'})
+
+def update_pack_manifest_with_npcs(pack_name):
+    """Update pack manifest to include NPC information"""
+    try:
+        from utils.file_operations import safe_read_json, safe_write_json
+        import os
+        
+        manifest_path = os.path.join('graphic_packs', pack_name, 'manifest.json')
+        manifest = safe_read_json(manifest_path) or {}
+        
+        # Count NPCs
+        npcs_dir = os.path.join('graphic_packs', pack_name, 'npcs')
+        npc_count = 0
+        npc_list = []
+        
+        if os.path.exists(npcs_dir):
+            for filename in os.listdir(npcs_dir):
+                if filename.endswith('.png') and not filename.endswith('_thumb.png'):
+                    npc_id = filename[:-4]  # Remove .png
+                    npc_list.append(npc_id)
+                    npc_count += 1
+        
+        # Update manifest
+        manifest['total_npcs'] = npc_count
+        manifest['npcs_included'] = sorted(npc_list)
+        manifest['last_modified'] = datetime.now().strftime("%Y-%m-%d")
+        
+        safe_write_json(manifest_path, manifest)
+        info(f"TOOLKIT: Updated manifest for pack '{pack_name}' with {npc_count} NPCs")
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to update pack manifest: {e}")
+
+def create_live_assets_backup_pack():
+    """
+    Creates a backup pack from the current live game assets.
+    This preserves ALL assets currently in use, regardless of their source.
+    """
+    try:
+        import os
+        import shutil
+        from datetime import datetime
+        import json
+        
+        # Generate backup pack name with timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_name = f"live_backup_{timestamp}"
+        backup_dir = os.path.join('graphic_packs', backup_name)
+        
+        # Create the backup pack directory
+        os.makedirs(backup_dir, exist_ok=True)
+        
+        # Define source and destination paths
+        live_monsters_dir = os.path.join('web', 'static', 'media', 'monsters')
+        live_npcs_dir = os.path.join('web', 'static', 'media', 'npcs')
+        backup_monsters_dir = os.path.join(backup_dir, 'monsters')
+        backup_npcs_dir = os.path.join(backup_dir, 'npcs')
+        
+        copied_monsters = 0
+        copied_npcs = 0
+        
+        # Copy monster assets if they exist
+        if os.path.exists(live_monsters_dir) and os.listdir(live_monsters_dir):
+            os.makedirs(backup_monsters_dir, exist_ok=True)
+            for filename in os.listdir(live_monsters_dir):
+                src_path = os.path.join(live_monsters_dir, filename)
+                dest_path = os.path.join(backup_monsters_dir, filename)
+                if os.path.isfile(src_path):
+                    shutil.copy2(src_path, dest_path)
+                    copied_monsters += 1
+        
+        # Copy NPC assets if they exist
+        if os.path.exists(live_npcs_dir) and os.listdir(live_npcs_dir):
+            os.makedirs(backup_npcs_dir, exist_ok=True)
+            for filename in os.listdir(live_npcs_dir):
+                src_path = os.path.join(live_npcs_dir, filename)
+                dest_path = os.path.join(backup_npcs_dir, filename)
+                if os.path.isfile(src_path):
+                    shutil.copy2(src_path, dest_path)
+                    copied_npcs += 1
+        
+        # Create manifest for the backup pack
+        manifest = {
+            "name": backup_name,
+            "display_name": f"Live Assets Backup ({datetime.now().strftime('%Y-%m-%d %H:%M')})",
+            "description": f"Automatic backup of all live game assets. Contains {copied_monsters} monster files and {copied_npcs} NPC files.",
+            "is_backup": True,
+            "backup_type": "live_assets",
+            "backup_date": datetime.now().isoformat(),
+            "monster_count": copied_monsters,
+            "npc_count": copied_npcs,
+            "created_by": "System"
+        }
+        
+        manifest_path = os.path.join(backup_dir, 'manifest.json')
+        with open(manifest_path, 'w') as f:
+            json.dump(manifest, f, indent=2)
+        
+        info(f"TOOLKIT: Created live assets backup pack '{backup_name}' with {copied_monsters} monsters and {copied_npcs} NPCs")
+        
+        return {
+            "success": True,
+            "backup_name": backup_name,
+            "monsters": copied_monsters,
+            "npcs": copied_npcs
+        }
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to create live assets backup: {e}")
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+def copy_pack_monsters_to_game(pack_name):
+    """
+    Replaces live monster assets with assets from the specified pack.
+    Note: Backup should be done at pack level before calling this.
+    """
+    try:
+        import os
+        import shutil
+
+        # Define source and destination paths
+        source_dir = os.path.join('graphic_packs', pack_name, 'monsters')
+        live_dir = os.path.join('web', 'static', 'media', 'monsters')
+
+        if not os.path.exists(source_dir):
+            info(f"TOOLKIT: Pack '{pack_name}' has no 'monsters' folder. Skipping monster asset copy.")
+            return
+
+        # Clear existing live directory
+        if os.path.exists(live_dir):
+            shutil.rmtree(live_dir)
+        
+        # Create fresh live directory
+        os.makedirs(live_dir, exist_ok=True)
+
+        # 3. Copy all files from the pack's monster folder to the live folder
+        copied_count = 0
+        for filename in os.listdir(source_dir):
+            src_path = os.path.join(source_dir, filename)
+            dest_path = os.path.join(live_dir, filename)
+            if os.path.isfile(src_path):
+                shutil.copy2(src_path, dest_path)
+                copied_count += 1
+        
+        info(f"TOOLKIT: Copied {copied_count} monster files from pack '{pack_name}' to live game folder.")
+
+    except Exception as e:
+        error(f"TOOLKIT: Failed to copy monster assets to game folder: {e}")
+
+def copy_pack_npcs_to_game(pack_name):
+    """
+    Replaces live NPC assets with assets from the specified pack.
+    Note: Backup should be done at pack level before calling this.
+    """
+    try:
+        import os
+        import shutil
+        
+        pack_npcs_dir = os.path.join('graphic_packs', pack_name, 'npcs')
+        game_npcs_dir = os.path.join('web', 'static', 'media', 'npcs')
+        
+        if not os.path.exists(pack_npcs_dir):
+            info(f"TOOLKIT: Pack '{pack_name}' has no NPCs folder")
+            return
+        
+        # Clear existing live directory
+        if os.path.exists(game_npcs_dir):
+            shutil.rmtree(game_npcs_dir)
+        
+        # Create fresh live directory
+        os.makedirs(game_npcs_dir, exist_ok=True)
+        
+        # Copy all NPC files to game folder
+        copied_count = 0
+        for filename in os.listdir(pack_npcs_dir):
+            src_path = os.path.join(pack_npcs_dir, filename)
+            dest_path = os.path.join(game_npcs_dir, filename)
+            
+            # Convert PNG thumbnails to JPG for game use
+            if filename.endswith('_thumb.png'):
+                from PIL import Image
+                img = Image.open(src_path)
+                if img.mode == 'RGBA':
+                    # Convert RGBA to RGB for JPG
+                    rgb_img = Image.new('RGB', img.size, (255, 255, 255))
+                    rgb_img.paste(img, mask=img.split()[3] if len(img.split()) > 3 else None)
+                    img = rgb_img
+                jpg_filename = filename[:-4] + '.jpg'  # Replace .png with .jpg
+                jpg_path = os.path.join(game_npcs_dir, jpg_filename)
+                img.save(jpg_path, 'JPEG', quality=85)
+                info(f"TOOLKIT: Converted {filename} to {jpg_filename}")
+            else:
+                # Copy other files as-is
+                shutil.copy2(src_path, dest_path)
+                copied_count += 1
+        
+        info(f"TOOLKIT: Copied {copied_count} NPC files from pack '{pack_name}' to game folder")
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to copy NPCs to game folder: {e}")
+
+@app.route('/api/toolkit/packs/<pack_name>/npcs/<npc_id>/thumbnail')
+def get_npc_thumbnail(pack_name, npc_id):
+    """Serve NPC thumbnail image from a specific graphic pack."""
+    if not TOOLKIT_AVAILABLE:
+        return '', 404
+    
+    try:
+        from flask import send_from_directory
+        import os
+        
+        npcs_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'npcs'))
+        
+        # Try to find a thumbnail first (png or jpg)
+        for ext in ['.png', '.jpg']:
+            thumb_filename = f'{npc_id}_thumb{ext}'
+            thumb_path = os.path.join(npcs_dir, thumb_filename)
+            if os.path.exists(thumb_path):
+                info(f"TOOLKIT: Serving NPC thumbnail {thumb_filename} from {pack_name}")
+                return send_from_directory(npcs_dir, thumb_filename)
+        
+        # If no thumbnail, try to find the full portrait
+        for ext in ['.png', '.jpg']:
+            portrait_filename = f'{npc_id}{ext}'
+            portrait_path = os.path.join(npcs_dir, portrait_filename)
+            if os.path.exists(portrait_path):
+                info(f"TOOLKIT: Serving NPC portrait {portrait_filename} from {pack_name}")
+                return send_from_directory(npcs_dir, portrait_filename)
+        
+        # If nothing is found, return a 404
+        warning(f"TOOLKIT: No image found for NPC {npc_id} in {pack_name}")
+        return '', 404
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to serve NPC thumbnail for {npc_id} in {pack_name}: {e}")
+        return '', 500
+
+@app.route('/api/toolkit/packs/<pack_name>/npcs/<npc_id>/image')
+def get_npc_image(pack_name, npc_id):
+    """Serve full NPC image from a specific graphic pack."""
+    if not TOOLKIT_AVAILABLE:
+        return '', 404
+    
+    try:
+        from flask import send_from_directory
+        import os
+        
+        npcs_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'npcs'))
+        
+        # Try to find the full image (png or jpg)
+        for ext in ['.png', '.jpg']:
+            image_filename = f'{npc_id}{ext}'
+            image_path = os.path.join(npcs_dir, image_filename)
+            if os.path.exists(image_path):
+                info(f"TOOLKIT: Serving NPC image {image_filename} from {pack_name}")
+                return send_from_directory(npcs_dir, image_filename)
+        
+        warning(f"TOOLKIT: No full image found for NPC {npc_id} in {pack_name}")
+        return '', 404
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to serve NPC image for {npc_id} in {pack_name}: {e}")
+        return '', 500
+
+@app.route('/api/toolkit/packs/<pack_name>/npcs/<npc_id>/video')
+def get_npc_video(pack_name, npc_id):
+    """Serve NPC video from a specific graphic pack."""
+    if not TOOLKIT_AVAILABLE:
+        return '', 404
+    
+    try:
+        from flask import send_from_directory
+        import os
+        
+        npcs_dir = os.path.abspath(os.path.join('graphic_packs', pack_name, 'npcs'))
+        
+        # Try to find video files with different naming patterns
+        video_patterns = [
+            f'{npc_id}_video.mp4',
+            f'{npc_id}_video_low.mp4',
+            f'{npc_id}.mp4'
+        ]
+        
+        for video_filename in video_patterns:
+            video_path = os.path.join(npcs_dir, video_filename)
+            if os.path.exists(video_path):
+                info(f"TOOLKIT: Serving NPC video {video_filename} from {pack_name}")
+                return send_from_directory(npcs_dir, video_filename)
+        
+        warning(f"TOOLKIT: No video found for NPC {npc_id} in {pack_name}")
+        return '', 404
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to serve NPC video for {npc_id} in {pack_name}: {e}")
+        return '', 500
+
+@app.route('/api/toolkit/npcs/export-to-pack', methods=['POST'])
+def export_npcs_to_pack():
+    """Copies selected NPC portraits from the live game folder to a specified pack."""
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'}), 503
+        
+    try:
+        import os
+        import shutil
+        
+        data = request.json
+        pack_name = data.get('pack_name')
+        npc_ids = data.get('npc_ids', [])
+
+        if not pack_name or not npc_ids:
+            return jsonify({'success': False, 'error': 'Missing pack name or NPC IDs.'}), 400
+
+        source_dir = os.path.join('web', 'static', 'media', 'npcs')  # Correct NPC location
+        dest_dir = os.path.join('graphic_packs', pack_name, 'npcs')
+        os.makedirs(dest_dir, exist_ok=True)
+
+        exported_count = 0
+        skipped_count = 0
+
+        for npc_id in npc_ids:
+            exported = False
+            # Try to export any NPC asset found (image, thumbnail, or video)
+            for ext in ['.png', '.jpg', '_thumb.png', '_thumb.jpg', '_video.mp4']:
+                source_file = os.path.join(source_dir, f"{npc_id}{ext}")
+                if os.path.exists(source_file):
+                    dest_file = os.path.join(dest_dir, f"{npc_id}{ext}")
+                    shutil.copy2(source_file, dest_file)
+                    if not exported:  # Count once per NPC, not per file
+                        exported_count += 1
+                        exported = True
+                    info(f"TOOLKIT: Exported NPC asset '{npc_id}{ext}' to pack '{pack_name}'")
+            
+            if not exported:
+                skipped_count += 1
+                warning(f"TOOLKIT: Could not find any assets for '{npc_id}' in local game files to export.")
+
+        # After exporting, update the destination pack's manifest
+        update_pack_manifest_with_npcs(pack_name)
+
+        info(f"TOOLKIT: Export complete - {exported_count} portraits exported, {skipped_count} skipped")
+        return jsonify({
+            'success': True,
+            'message': f"Exported {exported_count} NPC portraits to '{pack_name}'.",
+            'exported_count': exported_count,
+            'skipped_count': skipped_count
+        })
+
+    except Exception as e:
+        error(f"TOOLKIT: Failed to export NPCs to pack: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+# ============================================================================
+# MODULE BUILDER SOCKET HANDLERS
+# ============================================================================
+
+# In-memory state for the build process to handle cancellation
+build_process_thread = None
+cancel_build_flag = threading.Event()
+
+@socketio.on('request_module_list')
+def handle_request_module_list():
+    """Scans for modules using the ModuleStitcher and returns a detailed list."""
+    try:
+        # This function provides all the necessary details: level, areas, locations, etc.
+        from core.generators.module_stitcher import list_available_modules
+        
+        detailed_modules = list_available_modules()
+        info(f"MODULE_BUILDER: Found {len(detailed_modules)} modules to display.")
+        
+        # The frontend is already set up to handle this detailed data structure.
+        emit('module_list_response', detailed_modules)
+        
+    except Exception as e:
+        error(f"Error fetching detailed module list: {e}")
+        emit('module_list_response', [])  # Send an empty list on error
+
+def simulate_build_process(params):
+    """A target function for a thread that simulates module creation."""
+    global cancel_build_flag
+    cancel_build_flag.clear()
+
+    stages = [
+        (0, "Initializing", "Starting module creation..."),
+        (1, "Base Structure", "Generating core module files..."),
+        (2, "NPCs", "Creating unique NPCs and factions..."),
+        (3, "Monsters", "Populating bestiary for the module..."),
+        (4, "Areas", "Designing distinct areas and environments..."),
+        (5, "Plots", "Weaving main and side quests..."),
+        (6, "Connections", "Building the location graph..."),
+        (7, "Finalizing", "Compiling all module data..."),
+        (8, "Saving", "Saving module to disk..."),
+    ]
+    total_stages = len(stages)
+
+    try:
+        for i, (stage_num, stage_name, message) in enumerate(stages):
+            if cancel_build_flag.is_set():
+                socketio.emit('build_cancelled', {'message': 'Build cancelled by user.'})
+                return
+
+            percentage = ((i + 1) / total_stages) * 100
+            socketio.emit('module_progress', {
+                'stage': stage_num,
+                'stage_name': stage_name,
+                'percentage': percentage,
+                'message': message
+            })
+            time.sleep(2) # Simulate work
+
+        # Simulate creating the folder
+        module_dir = os.path.join('modules', params['module_name'])
+        os.makedirs(module_dir, exist_ok=True)
+        # Create a dummy manifest
+        dummy_manifest = {
+            "name": params['module_name'],
+            "display_name": params['module_name'].replace('_', ' ').title(),
+            "description": params['narrative'][:150] + '...',
+            "level_range": {"min": 1, "max": 5},
+            "area_count": params['num_areas'],
+            "location_count": params['num_areas'] * params['locations_per_area']
+        }
+        with open(os.path.join(module_dir, f"{params['module_name']}_manifest.json"), 'w') as f:
+            json.dump(dummy_manifest, f, indent=4)
+
+        socketio.emit('module_complete', {
+            'module_name': params['module_name'],
+            'message': 'Module generation finished.'
+        })
+
+    except Exception as e:
+        error(f"Module build failed: {e}")
+        socketio.emit('module_error', {'error': str(e)})
+
+
+@socketio.on('start_build')
+def handle_start_build(data):
+    """Starts the module build process in a background thread."""
+    global build_process_thread
+    if build_process_thread and build_process_thread.is_alive():
+        emit('module_error', {'error': 'A build is already in progress.'})
+        return
+
+    info(f"Starting build for module: {data.get('module_name')}")
+    emit('build_started', {'message': 'Build process initiated...'})
+    
+    build_process_thread = threading.Thread(target=simulate_build_process, args=(data,))
+    build_process_thread.start()
+
+@socketio.on('cancel_build')
+def handle_cancel_build():
+    """Sets a flag to cancel the ongoing build process."""
+    global cancel_build_flag
+    if build_process_thread and build_process_thread.is_alive():
+        info("Cancellation request received for module build.")
+        cancel_build_flag.set()
+    else:
+        emit('module_error', {'error': 'No active build to cancel.'})
 
 if __name__ == '__main__':
     # Create templates directory if it doesn't exist

@@ -311,3 +311,35 @@ modules/*/
 # Game state files - should NOT be tracked
 # modules/campaign.json
 # modules/world_registry.json
+.claude/
+kling_prompts/
+
+# Analysis and test scripts
+analyze_*.py
+generate_*.py
+process_*.py
+test_*.html
+test_*.json
+combat_output_*.txt
+outputs_*.txt
+model_performance_results.json
+compression_dictionary.txt
+consolidate_bestiary.py
+optimize_compression.py
+compare_monster_videos.py
+*_report_*.txt
+title_color_options.html
+dwarf_*_animation.html
+
+# Test videos (keep production videos)
+ashbound_bandit.mp4
+corrupted_ranger_thane.mp4
+module_builder.mp4
+ochre_jelly.mp4
+tainted_stirge.mp4
+old/
+
+# Graphic packs - only keep the primary photorealistic pack
+graphic_packs/*/
+!graphic_packs/photorealistic/
+graphic_packs/.deleted/

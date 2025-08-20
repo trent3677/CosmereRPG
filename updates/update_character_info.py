@@ -199,7 +199,8 @@ def find_character_file_fuzzy(character_name):
     # Try exact match first
     exact_match_file = os.path.join(character_dir, f"{normalized_name}.json")
     if os.path.exists(exact_match_file):
-        debug(f"FUZZY_MATCH: Exact match found for '{character_name}' -> '{normalized_name}'", category="character_updates")
+        # Suppress routine exact match logging - this is expected behavior
+        # debug(f"FUZZY_MATCH: Exact match found for '{character_name}' -> '{normalized_name}'", category="character_updates")
         return normalized_name
     
     # Prepare for fuzzy matching

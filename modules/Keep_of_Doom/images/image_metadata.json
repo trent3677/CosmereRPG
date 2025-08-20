@@ -1,0 +1,23 @@
+{
+  "images": [
+    {
+      "filename": "img_20250804_191701_game_1492_Springmonth_23_145300_A05.png",
+      "prompt": "Epic fantasy RPG scene: The Wyrd Lantern Inn is filled with the cozy hush of mid-afternoon. Lantern light glimmers off polished oak beams, and the comforting scent of spiced stew mingles with fresh bread from the kitchen. As you and your party enter, Cira the Innkeeper looks up from her post behind the bar, her eyes brightening as she recognizes you. \"Eirik! Thane, Elen, Kira! Welcome back, heroes. I've got the good ale on tap, and the fire's burning warm,\" she calls out, waving you over to a table near the hearth.\n\nYou settle in, the fire crackling at your side and casting golden light across the worn wood. Cira brings over a round of sturdy mugs, frothy with freshly poured ale. \"On the house,\" she says with a wink. \"You all have earned it.\"\n\nKira takes a long pull and sighs contentedly, her posture relaxing. Thane stretches his legs toward the fire, boots propped on the hearthstone, while Elen smiles, her eyes reflecting the dancing flames. The warmth, the camaraderie, and the ale settle your spirits after so many recent challenges.\n\nCira lingers nearby, polishing a glass and keeping a watchful eye on the room. \"If you need anything else, just holler. Word is, a few new faces in town have rumors worth hearing--but for now, enjoy the peace.\"\n\nFor a moment, the world outside seems far away. The inn, the fire, and the company offer a rare and welcome rest. What would you like to do next as you sit together in the glow of the Wyrd Lantern's hearth?. Medieval style, darker lighting, highly detailed fantasy art style, professional digital painting, atmospheric depth.",
+      "real_world_time": "2025-08-04T19:17:13.284026",
+      "game_time": {
+        "year": 1492,
+        "month": "Springmonth",
+        "day": 23,
+        "time": "14:53:00"
+      },
+      "location": {
+        "id": "A05",
+        "name": "The Wyrd Lantern Inn",
+        "area": "Harrow's Hollow",
+        "area_id": "HH001"
+      },
+      "module": "Keep_of_Doom",
+      "original_url": "https://oaidalleapiprodscus.blob.core.windows.net/private/org-UqCGk8z4VR4fgAlgOvC1WKsl/user-mGOSoCCRSAmU2NAyHhSAEXFD/img-TB7WMwPmcb04liDxdwoadJ8M.png?st=2025-08-05T01%3A17%3A02Z&se=2025-08-05T03%3A17%3A02Z&sp=r&sv=2024-08-04&sr=b&rscd=inline&rsct=image/png&skoid=8b33a531-2df9-46a3-bc02-d4b1430a422c&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-08-04T08%3A39%3A40Z&ske=2025-08-05T08%3A39%3A40Z&sks=b&skv=2024-08-04&sig=9HuCKHzra9xXJNJveC7mFld2VJPL3mr2ua49cWN0dpM%3D"
+    }
+  ]
+}

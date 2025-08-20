@@ -1,0 +1,36 @@
+{
+  "name": "super_anime",
+  "safe_name": "super_anime",
+  "display_name": "Super Anime",
+  "version": "1.0.0",
+  "author": "Me",
+  "description": "Test",
+  "style_template": "custom",
+  "created_date": "2025-08-15",
+  "last_modified": "2025-08-17",
+  "total_monsters": 5,
+  "monsters_included": [
+    "adult_black_dragon",
+    "adult_blue_dragon",
+    "adult_red_dragon",
+    "bandit_captain_gorvek",
+    "bone_devil"
+  ],
+  "file_structure": {
+    "images": "monsters/images/",
+    "videos": "monsters/videos/",
+    "thumbnails": "monsters/thumbnails/"
+  },
+  "metadata": {
+    "license": "Custom",
+    "compatible_version": "0.2.0+",
+    "tags": [
+      "custom"
+    ],
+    "preview_image": null
+  },
+  "total_npcs": 1,
+  "npcs_included": [
+    "captain_merek"
+  ]
+}

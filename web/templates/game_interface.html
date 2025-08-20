@@ -332,6 +332,34 @@
             transform: scale(1.05);
             box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
         }
+
+        /* Location NPC boxes (non-combat) */
+        .location-npc-item {
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            border: 2px solid #9C27B0;  /* Distinct purple border */
+            background-color: #1e1e1e;
+            color: white;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 4px;
+            padding: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            opacity: 0.8; /* Slightly faded to show they aren't party members */
+        }
+
+        .location-npc-item:hover {
+            transform: scale(1.05);
+            opacity: 1;
+            box-shadow: 0 0 10px rgba(156, 39, 176, 0.5);
+        }
         
         /* Initiative boxes (combat) */
         .initiative-item {
@@ -587,6 +615,37 @@
         
         .dice-clear-button:hover {
             background-color: #da190b;
+        }
+        
+        /* Module Toolkit Button - Themed with metallic grey */
+        .toolkit-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 10px;
+            margin-right: 0;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #555 0%, #333 100%); /* Metallic grey gradient */
+            color: #e0e0e0;
+            border: 1px solid #777;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        
+        .toolkit-button:hover {
+            transform: translateY(-2px);
+            border-color: #FFA500; /* Orange border on hover */
+            background: linear-gradient(135deg, #666 0%, #444 100%);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 0 10px rgba(255, 165, 0, 0.5); /* Orange glow */
+        }
+        
+        .toolkit-button svg {
+            width: 20px;
+            height: 20px;
         }
         
         .dice-results {
@@ -3731,6 +3790,45 @@
             border-left: 3px solid #d8cdaa;
             background: rgba(0,0,0,0.03);
         }
+        
+        /* --- NEW STYLES for Header Control Refactor --- */
+        
+        /* New container to stack the toggles vertically */
+        .toggle-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 4px; /* Creates a small space between the two toggles */
+            justify-content: center;
+        }
+        
+        /* Remove the default left margin from toggles now that they are stacked */
+        .toggle-stack .image-generation-toggle {
+            margin-left: 0;
+        }
+        
+        /* Shrink the toggle slider */
+        .toggle-stack .toggle-slider {
+            width: 34px;
+            height: 18px;
+        }
+        
+        /* Shrink the sliding circle inside the toggle */
+        .toggle-stack .toggle-slider::after {
+            width: 14px;
+            height: 14px;
+        }
+        
+        /* Adjust the sliding distance for the smaller toggle */
+        .toggle-stack input:checked + .toggle-slider::after {
+            transform: translateX(16px);
+        }
+        
+        /* Shrink the text next to the toggle */
+        .toggle-stack .toggle-text {
+            font-size: 12px;
+        }
+        
+        /* Remove duplicate style - now handled in main .toolkit-button definition above */
     </style>
 </head>
 <body>
@@ -3749,20 +3847,31 @@
                 <button class="load-button" id="load-button" onclick="openLoadDialog()" disabled title="Load Game">Load</button>
                 <button class="reset-button" id="reset-button" onclick="openResetDialog()" disabled title="Reset Campaign">Reset</button>
             </div>
-            <div class="image-generation-toggle">
-                <label class="toggle-label">
-                    <input type="checkbox" id="image-generation-toggle" checked>
-                    <span class="toggle-slider"></span>
-                    <span class="toggle-text">AI Images</span>
-                </label>
+            <div class="toggle-stack">
+                <div class="image-generation-toggle">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="image-generation-toggle" checked>
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-text">AI Images</span>
+                    </label>
+                </div>
+                <div class="image-generation-toggle">
+                    <label class="toggle-label" id="model-toggle-label">
+                        <input type="checkbox" id="model-toggle" unchecked>
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-text" id="model-toggle-text">GPT-4.1</span>
+                    </label>
+                </div>
             </div>
-            <div class="image-generation-toggle" style="margin-left: 15px;">
-                <label class="toggle-label" id="model-toggle-label">
-                    <input type="checkbox" id="model-toggle" unchecked>
-                    <span class="toggle-slider"></span>
-                    <span class="toggle-text" id="model-toggle-text">GPT-4.1</span>
-                </label>
-            </div>
+            
+            <!-- The relocated and modified Toolkit Button with anvil icon -->
+            <button class="toolkit-button" onclick="openToolkit()" title="Open Module Toolkit">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M22,2V8H20V4H17V2H22M2,8V2H7V4H4V8H2M20,13.09A2.5,2.5 0 0,0 22.5,15.59C22.5,16.9 21.4,18 20,18H4C2.6,18 1.5,16.9 1.5,15.59C1.5,14.09 2.59,12.83 4,12.5V10H20V13.09M20,16H4A1,1 0 0,1 3,15A1,1 0 0,1 4,14H20A1,1 0 0,1 21,15A1,1 0 0,1 20,16Z" />
+                </svg>
+                <span>Toolkit</span>
+            </button>
+            
             <button class="exit-button" id="exit-button" onclick="exitGame()" title="Exit Game">× Exit</button>
         </div>
     </div>
@@ -3805,6 +3914,7 @@
                             <button class="dice-clear-button" onclick="clearDiceResults()" title="Clear results">Clear</button>
                         </div>
                     </div>
+                    <!-- Module Toolkit Button moved to main header -->
                 </div>
             </div>
             
@@ -5283,7 +5393,8 @@
                 partyContainer.innerHTML = ''; // Clear existing content
                 partyContainer.style.display = 'flex'; // Show party display
                 
-                if (!response || !response.members || response.members.length === 0) {
+                if (!response || ((!response.members || response.members.length === 0) && 
+                    (!response.location_npcs || response.location_npcs.length === 0))) {
                     partyContainer.style.display = 'none';
                     return;
                 }
@@ -5415,6 +5526,38 @@
                     
                     partyContainer.appendChild(item);
                 });
+                
+                // Render location NPCs if present
+                if (response.location_npcs && response.location_npcs.length > 0) {
+                    response.location_npcs.forEach(npc => {
+                        const item = document.createElement('div');
+                        item.classList.add('location-npc-item');
+                        
+                        const npcFilename = npc.name.toLowerCase().replace(/\s+/g, '_').replace(/'/g, "");
+                        const portraitUrl = `/static/media/npcs/${npcFilename}_thumb.jpg`;
+                        
+                        item.style.backgroundImage = `url('${portraitUrl}')`;
+                        item.style.backgroundSize = 'cover';
+                        item.style.backgroundPosition = 'center';
+                        item.style.color = 'white';
+                        item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
+                        
+                        const textSpan = document.createElement('span');
+                        textSpan.classList.add('initiative-item-text');
+                        textSpan.textContent = npc.name;
+                        item.appendChild(textSpan);
+                        item.title = `${npc.name} (In Location)`;
+                        
+                        partyContainer.appendChild(item);
+                        
+                        // Handle missing thumbnail
+                        const img = new Image();
+                        img.onerror = () => {
+                            item.style.backgroundImage = '';
+                        };
+                        img.src = portraitUrl;
+                    });
+                }
             } else {
                 // Hide party display during combat
                 partyContainer.style.display = 'none';
@@ -5704,6 +5847,11 @@
 
         function closeNPCSpells() {
             document.getElementById('npc-spells-modal').style.display = 'none';
+        }
+        
+        // Open Module Toolkit in new window
+        function openToolkit() {
+            window.open('/toolkit', 'ModuleToolkit', 'width=1400,height=900');
         }
         
         let diceRolls = { d20: [], damage: [] };
