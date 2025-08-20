@@ -96,6 +96,7 @@ modules/**/map_*.json
 # Temporary files
 *.tmp
 *.temp
+temp/
 clear_output.txt
 test_objectives.json
 
