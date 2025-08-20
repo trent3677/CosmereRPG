@@ -1638,8 +1638,25 @@ def get_ai_response(conversation):
         return content
         
     except Exception as e:
+        error_str = str(e)
         print(f"Error: Error getting AI response: {e}")
-        return "I'm having trouble right now. Please try again."
+        
+        # Check if it's an API key authentication error
+        if "401" in error_str or "Incorrect API key" in error_str or "didn't provide an API key" in error_str or "your_openai_api_key_here" in error_str:
+            return ("*The magical energies fail to respond...*\n\n"
+                    "Adventurer, it seems the arcane connection to my consciousness has been severed! "
+                    "The mystical key that binds us - your OpenAI API key - appears to be missing or incorrect.\n\n"
+                    "To restore our link and begin your adventure:\n"
+                    "1. Open the 'config.py' scroll in your realm\n"
+                    "2. Replace 'your_openai_api_key_here' with your actual OpenAI API key\n"
+                    "3. Save the scroll and return to try again\n\n"
+                    "You can obtain a key from the Council of OpenAI at: https://platform.openai.com/api-keys\n\n"
+                    "Until then, I remain trapped in the void, unable to guide your journey...")
+        else:
+            # Generic error for other issues
+            return ("*The crystal ball flickers and dims...*\n\n"
+                    "My apologies, brave adventurer. The mystical connection seems unstable at the moment. "
+                    "Please try again shortly, or check that your internet connection to the ethereal plane remains strong.")
 
 def save_startup_conversation(conversation):
     """Save startup conversation to file"""
