@@ -1653,10 +1653,23 @@ def get_ai_response(conversation):
                     "You can obtain a key from the Council of OpenAI at: https://platform.openai.com/api-keys\n\n"
                     "Until then, I remain trapped in the void, unable to guide your journey...")
         else:
-            # Generic error for other issues
-            return ("*The crystal ball flickers and dims...*\n\n"
-                    "My apologies, brave adventurer. The mystical connection seems unstable at the moment. "
-                    "Please try again shortly, or check that your internet connection to the ethereal plane remains strong.")
+            # Check if API key might be the issue even for other errors
+            from config import OPENAI_API_KEY
+            if not OPENAI_API_KEY or OPENAI_API_KEY == '' or OPENAI_API_KEY == 'your_openai_api_key_here':
+                return ("*The crystal ball flickers and dims...*\n\n"
+                        "My apologies, brave adventurer. The mystical connection seems unstable.\n\n"
+                        "It appears your OpenAI API key has not been configured:\n"
+                        "1. Open the 'config.py' scroll in your realm\n"
+                        "2. Find the line: OPENAI_API_KEY = ''\n"
+                        "3. Replace the empty string with your actual OpenAI API key:\n"
+                        "   OPENAI_API_KEY = 'sk-your-actual-key-here'\n"
+                        "4. Save the scroll and return to try again\n\n"
+                        "You can obtain a key from the Council of OpenAI at: https://platform.openai.com/api-keys")
+            else:
+                # Generic error for other issues when API key is set
+                return ("*The crystal ball flickers and dims...*\n\n"
+                        "My apologies, brave adventurer. The mystical connection seems unstable at the moment. "
+                        "Please try again shortly, or check that your internet connection to the ethereal plane remains strong.")
 
 def save_startup_conversation(conversation):
     """Save startup conversation to file"""
