@@ -112,6 +112,7 @@ test_objectives.json
 !web/static/media/class_portraits/*.png
 !web/static/media/environment/*.jpg
 !web/static/media/npcs/*.jpg
+!web/static/media/npcs/*.png
 !web/static/media/npcs/*.mp4
 
 # Original uncompressed animation files (keep local only)
