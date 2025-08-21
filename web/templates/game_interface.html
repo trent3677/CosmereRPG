@@ -4122,10 +4122,14 @@
         
         // Video popup functions - hover-activated with requestAnimationFrame
         function showVideoPopup(targetElement, videoSrc) {
-            const popup = document.getElementById('video-popup');
+            const popup = document.getElementById('media-popup');
             const popupContent = popup.querySelector('.video-popup-content');
             const video = document.getElementById('popup-video');
+            const image = document.getElementById('popup-image');
             
+            // Hide image, show video
+            image.style.display = 'none';
+            video.style.display = 'block';
             video.src = videoSrc;
             popup.classList.add('visible');
 
@@ -4165,16 +4169,52 @@
 
         function hideVideoPopup() {
             clearTimeout(hoverTimer);
-            const popup = document.getElementById('video-popup');
+            const popup = document.getElementById('media-popup');
             const video = document.getElementById('popup-video');
+            const image = document.getElementById('popup-image');
             
             popup.classList.remove('visible');
             
             // Stop the video after a short delay to prevent it from playing while invisible
             setTimeout(() => {
                 video.pause();
-                video.src = ''; 
+                video.src = '';
+                video.style.display = 'none';
+                image.src = '';
+                image.style.display = 'none';
             }, 200); // This duration matches the CSS transition
+        }
+        
+        // New unified function to show images in the popup
+        function showImagePopup(targetElement, imageSrc) {
+            const popup = document.getElementById('media-popup');
+            const popupContent = popup.querySelector('.video-popup-content');
+            const video = document.getElementById('popup-video');
+            const image = document.getElementById('popup-image');
+            
+            // Hide video, show image
+            video.style.display = 'none';
+            image.style.display = 'block';
+            image.src = imageSrc;
+            popup.classList.add('visible');
+            
+            // Position the popup (same as video)
+            requestAnimationFrame(() => {
+                const targetRect = targetElement.getBoundingClientRect();
+                const popupRect = popupContent.getBoundingClientRect();
+                let top = targetRect.top - popupRect.height - 10;
+                if (top < 10) {
+                    top = targetRect.bottom + 10;
+                }
+                let left = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2);
+                if (left < 10) {
+                    left = 10;
+                } else if (left + popupRect.width > window.innerWidth - 10) {
+                    left = window.innerWidth - popupRect.width - 10;
+                }
+                popupContent.style.top = `${top}px`;
+                popupContent.style.left = `${left}px`;
+            });
         }
         
         // Auto-scroll to bottom function
@@ -5400,7 +5440,7 @@
             // Only show party display if not in combat
             if (initiativeContainer.style.display === 'none' || !initiativeContainer.children.length) {
                 // Check if we're hovering or video is playing - if so, skip update
-                const videoPopup = document.getElementById('video-popup');
+                const videoPopup = document.getElementById('media-popup');
                 if (isHoveringInitiative || (videoPopup && videoPopup.style.display === 'block')) {
                     // Either hovering (might show video soon) or video is playing, don't update
                     return;
@@ -5537,16 +5577,28 @@
                     }
                     item.title = `${member.name}${hpText}`;
                     
-                    // Add click handler to show full image
+                    // Add click handler to show video or image in popup
                     item.addEventListener('click', function() {
                         if (member.type === 'player') {
                             const cleanName = member.name.toLowerCase().replace(/[^a-z0-9]/g, '_');
-                            const basePath = `/static/portraits/${cleanName}`;
-                            showFullImage(basePath);
+                            const videoUrl = `/static/portraits/${cleanName}_video.mp4`;
+                            const imageUrl = `/static/portraits/${cleanName}.png`;
+                            
+                            // Try video first, fall back to image
+                            const video = document.createElement('video');
+                            video.src = videoUrl;
+                            video.onloadedmetadata = () => showVideoPopup(item, videoUrl);
+                            video.onerror = () => showImagePopup(item, imageUrl);
                         } else if (member.type === 'npc') {
                             const npcFilename = member.name.toLowerCase().replace(/\s+/g, '_');
-                            const basePath = `/static/media/npcs/${npcFilename}`;
-                            showFullImage(basePath);
+                            const videoUrl = `/static/media/npcs/${npcFilename}_video.mp4`;
+                            const imageUrl = `/static/media/npcs/${npcFilename}.jpg`;
+                            
+                            // Try video first, fall back to image
+                            const video = document.createElement('video');
+                            video.src = videoUrl;
+                            video.onloadedmetadata = () => showVideoPopup(item, videoUrl);
+                            video.onerror = () => showImagePopup(item, imageUrl);
                         }
                     });
                     
@@ -5605,10 +5657,16 @@
                             hideVideoPopup();
                         });
                         
-                        // Click to show full image or video
+                        // Click to show video or image in popup
                         item.addEventListener('click', function() {
-                            const fullImagePath = `/static/media/npcs/${npcFilename}`;
-                            showFullImage(fullImagePath);
+                            const videoUrl = `/static/media/npcs/${npcFilename}_video.mp4`;
+                            const imageUrl = `/static/media/npcs/${npcFilename}.jpg`;
+                            
+                            // Try video first, fall back to image
+                            const video = document.createElement('video');
+                            video.src = videoUrl;
+                            video.onloadedmetadata = () => showVideoPopup(item, videoUrl);
+                            video.onerror = () => showImagePopup(item, imageUrl);
                         });
                         
                         partyContainer.appendChild(item);
@@ -6756,14 +6814,11 @@
 
     </script>
     
-    <!-- Video Popup Modal -->
-    <div id="video-popup" class="video-popup">
+    <!-- Unified Media Popup Modal -->
+    <div id="media-popup" class="video-popup">
         <div class="video-popup-content">
-            <!-- The close button is removed, hiding is handled by mouse leave -->
-            <video id="popup-video" autoplay loop muted playsinline>
-                <!-- playsinline helps on mobile browsers -->
-                <source src="" type="video/mp4">
-            </video>
+            <video id="popup-video" style="display: none;" autoplay loop muted playsinline></video>
+            <img id="popup-image" style="display: none; width: 100%; height: auto; border-radius: 5px;" src="" alt="Character Portrait"/>
         </div>
     </div>
     
