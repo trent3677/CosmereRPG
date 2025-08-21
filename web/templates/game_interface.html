@@ -5551,18 +5551,55 @@
                         
                         const npcFilename = npc.name.toLowerCase().replace(/\s+/g, '_').replace(/'/g, "");
                         const portraitUrl = `/static/media/npcs/${npcFilename}_thumb.jpg`;
+                        const videoUrl = `/static/media/npcs/${npcFilename}_video.mp4`;
                         
                         item.style.backgroundImage = `url('${portraitUrl}')`;
                         item.style.backgroundSize = 'cover';
                         item.style.backgroundPosition = 'center';
                         item.style.color = 'white';
                         item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
+                        item.style.cursor = 'pointer';  // Show it's clickable
                         
                         const textSpan = document.createElement('span');
                         textSpan.classList.add('initiative-item-text');
                         textSpan.textContent = npc.name;
+                        
+                        // Dynamic font sizing based on name length
+                        if (npc.name.length <= 6) {
+                            textSpan.style.fontSize = '11px';
+                        } else if (npc.name.length <= 10) {
+                            textSpan.style.fontSize = '9px';
+                        } else {
+                            textSpan.style.fontSize = '8px';
+                        }
+                        
                         item.appendChild(textSpan);
                         item.title = `${npc.name} (In Location)`;
+                        
+                        // Check for video on hover
+                        item.addEventListener('mouseenter', function() {
+                            isHoveringInitiative = true;
+                            clearTimeout(hoverTimer);
+                            const video = document.createElement('video');
+                            video.src = videoUrl;
+                            video.onloadedmetadata = () => {
+                                hoverTimer = setTimeout(() => {
+                                    showVideoPopup(item, videoUrl);
+                                }, 1000);
+                            };
+                        });
+                        
+                        item.addEventListener('mouseleave', function() {
+                            isHoveringInitiative = false;
+                            clearTimeout(hoverTimer);
+                            hideVideoPopup();
+                        });
+                        
+                        // Click to show full image or video
+                        item.addEventListener('click', function() {
+                            const fullImagePath = `/static/media/npcs/${npcFilename}`;
+                            showFullImage(fullImagePath);
+                        });
                         
                         partyContainer.appendChild(item);
                         
