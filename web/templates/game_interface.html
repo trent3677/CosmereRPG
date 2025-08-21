@@ -5494,7 +5494,7 @@
                         
                         // If video loads, set timer to show video
                         video.onloadedmetadata = () => {
-                            hoverTimer = setTimeout(() => showVideoPopup(item, videoUrl), 1000);
+                            hoverTimer = setTimeout(() => showVideoPopup(item, videoUrl), 500);
                         };
                         
                         // If video fails, set timer to show the image instead
@@ -5502,13 +5502,13 @@
                             const imgJpg = new Image();
                             imgJpg.src = basePath + '.jpg';
                             imgJpg.onload = () => {
-                                hoverTimer = setTimeout(() => showImagePopup(item, imgJpg.src), 1000);
+                                hoverTimer = setTimeout(() => showImagePopup(item, imgJpg.src), 500);
                             };
                             imgJpg.onerror = () => {
                                 const imgPng = new Image();
                                 imgPng.src = basePath + '.png';
                                 imgPng.onload = () => {
-                                    hoverTimer = setTimeout(() => showImagePopup(item, imgPng.src), 1000);
+                                    hoverTimer = setTimeout(() => showImagePopup(item, imgPng.src), 500);
                                 };
                             };
                         };
