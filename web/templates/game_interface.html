@@ -5027,7 +5027,7 @@
                 html += `<img src="${portraitPath}_thumb.jpg" 
                          class="npc-portrait-img" 
                          style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #8B4513; border-radius: 5px; cursor: pointer;"
-                         onclick="showFullImage('${portraitPath}')"
+                         onclick="event.preventDefault();"
                          onerror="this.onerror=null; this.src='${portraitPath}_thumb.png' || this.style.display='none';"
                          alt="${npc.name}" />`;
                 html += `</div>`;
@@ -5579,27 +5579,27 @@
                     
                     // Add click handler to show video or image in popup
                     item.addEventListener('click', function() {
-                        if (member.type === 'player') {
-                            const cleanName = member.name.toLowerCase().replace(/[^a-z0-9]/g, '_');
-                            const videoUrl = `/static/portraits/${cleanName}_video.mp4`;
-                            const imageUrl = `/static/portraits/${cleanName}.png`;
-                            
-                            // Try video first, fall back to image
-                            const video = document.createElement('video');
-                            video.src = videoUrl;
-                            video.onloadedmetadata = () => showVideoPopup(item, videoUrl);
-                            video.onerror = () => showImagePopup(item, imageUrl);
-                        } else if (member.type === 'npc') {
-                            const npcFilename = member.name.toLowerCase().replace(/\s+/g, '_');
-                            const videoUrl = `/static/media/npcs/${npcFilename}_video.mp4`;
-                            const imageUrl = `/static/media/npcs/${npcFilename}.jpg`;
-                            
-                            // Try video first, fall back to image
-                            const video = document.createElement('video');
-                            video.src = videoUrl;
-                            video.onloadedmetadata = () => showVideoPopup(item, videoUrl);
-                            video.onerror = () => showImagePopup(item, imageUrl);
-                        }
+                        const cleanName = member.name.toLowerCase().replace(/\s+/g, '_').replace(/'/g, "");
+                        const basePath = member.type === 'player' ? `/static/portraits/${cleanName}` : `/static/media/npcs/${cleanName}`;
+                        const videoUrl = `${basePath}_video.mp4`;
+                        
+                        // Try video first
+                        const video = document.createElement('video');
+                        video.src = videoUrl;
+                        video.onloadedmetadata = () => showVideoPopup(item, videoUrl);
+                        video.onerror = () => {
+                            // Video failed, try images (JPG first, then PNG)
+                            const imgJpg = new Image();
+                            imgJpg.src = basePath + '.jpg';
+                            imgJpg.onload = () => showImagePopup(item, imgJpg.src);
+                            imgJpg.onerror = () => {
+                                // JPG failed, try PNG
+                                const imgPng = new Image();
+                                imgPng.src = basePath + '.png';
+                                imgPng.onload = () => showImagePopup(item, imgPng.src);
+                                imgPng.onerror = () => console.log('No media found for', member.name);
+                            };
+                        };
                     });
                     
                     partyContainer.appendChild(item);
@@ -5659,14 +5659,26 @@
                         
                         // Click to show video or image in popup
                         item.addEventListener('click', function() {
-                            const videoUrl = `/static/media/npcs/${npcFilename}_video.mp4`;
-                            const imageUrl = `/static/media/npcs/${npcFilename}.jpg`;
+                            const basePath = `/static/media/npcs/${npcFilename}`;
+                            const videoUrl = `${basePath}_video.mp4`;
                             
-                            // Try video first, fall back to image
+                            // Try video first
                             const video = document.createElement('video');
                             video.src = videoUrl;
                             video.onloadedmetadata = () => showVideoPopup(item, videoUrl);
-                            video.onerror = () => showImagePopup(item, imageUrl);
+                            video.onerror = () => {
+                                // Video failed, try images (JPG first, then PNG)
+                                const imgJpg = new Image();
+                                imgJpg.src = basePath + '.jpg';
+                                imgJpg.onload = () => showImagePopup(item, imgJpg.src);
+                                imgJpg.onerror = () => {
+                                    // JPG failed, try PNG
+                                    const imgPng = new Image();
+                                    imgPng.src = basePath + '.png';
+                                    imgPng.onload = () => showImagePopup(item, imgPng.src);
+                                    imgPng.onerror = () => console.log('No media found for', npc.name);
+                                };
+                            };
                         });
                         
                         partyContainer.appendChild(item);
@@ -5912,32 +5924,6 @@
         function closeNPCDetails() { document.getElementById('npc-details-modal').style.display = 'none'; }
         
         // Full image display functions
-        function showFullImage(basePath) {
-            const modal = document.getElementById('full-image-modal');
-            const img = document.getElementById('full-image-display');
-            
-            // Try JPG first, then PNG
-            const jpgPath = basePath + '.jpg';
-            const pngPath = basePath + '.png';
-            
-            // Create a test image to check which format exists
-            const testImg = new Image();
-            testImg.onload = function() {
-                img.src = jpgPath;
-                modal.style.display = 'block';
-            };
-            testImg.onerror = function() {
-                // JPG failed, try PNG
-                img.src = pngPath;
-                modal.style.display = 'block';
-            };
-            testImg.src = jpgPath;
-        }
-        
-        function closeFullImage() {
-            document.getElementById('full-image-modal').style.display = 'none';
-        }
-        
         function showGPT5Warning() {
             document.getElementById('gpt5-warning-modal').style.display = 'block';
         }
@@ -6084,7 +6070,6 @@
             if (event.target === document.getElementById('npc-inventory-modal')) closeNPCInventory();
             if (event.target === document.getElementById('npc-details-modal')) closeNPCDetails();
             if (event.target === document.getElementById('npc-spells-modal')) closeNPCSpells();
-            if (event.target === document.getElementById('full-image-modal')) closeFullImage();
             if (event.target === document.getElementById('search-popup')) closeSearchPopup();
             if (event.target === document.getElementById('storage-modal')) closeStorageView();
             if (event.target === document.getElementById('reset-dialog-overlay')) closeResetDialog();
@@ -6101,14 +6086,6 @@
     <div id="npc-inventory-modal" class="npc-inventory-modal"><div class="npc-inventory-modal-content"><div class="npc-inventory-header"><div id="npc-inventory-title" class="npc-inventory-title"></div><span class="npc-inventory-close" onclick="closeNPCInventory()">&times;</span></div><div id="npc-inventory-body" class="npc-inventory-body"></div></div></div>
     <div id="npc-details-modal" class="npc-details-modal"><div class="npc-details-modal-content"><div class="npc-details-header"><div id="npc-details-title" class="npc-details-title"></div><span class="npc-details-close" onclick="closeNPCDetails()">&times;</span></div><div id="npc-details-body" class="npc-details-body"></div></div></div>
     <div id="npc-spells-modal" class="npc-inventory-modal"><div class="npc-inventory-modal-content"><div class="npc-inventory-header"><div id="npc-spells-modal-title" class="npc-inventory-title">NPC Spells</div><span class="npc-inventory-close" onclick="closeNPCSpells()">&times;</span></div><div id="npc-spells-modal-body" class="npc-inventory-body"></div></div></div>
-    
-    <!-- Full Image Modal -->
-    <div id="full-image-modal" class="npc-details-modal" style="display: none; z-index: 10000;">
-        <div class="npc-details-modal-content" style="max-width: 90%; max-height: 90%; background: transparent; border: none; box-shadow: none; padding: 0;">
-            <span class="npc-details-close" onclick="closeFullImage()" style="position: fixed; right: 30px; top: 30px; font-size: 40px; color: white; text-shadow: 2px 2px 4px black;">&times;</span>
-            <img id="full-image-display" style="max-width: 100%; max-height: 90vh; display: block; margin: auto;" />
-        </div>
-    </div>
     
     <!-- Module Creation Progress Modal -->
     <div id="module-progress-modal" class="npc-details-modal" style="display: none;">
