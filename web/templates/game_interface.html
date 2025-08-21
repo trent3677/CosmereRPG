@@ -5439,15 +5439,13 @@
             
             // Only show party display if not in combat
             if (initiativeContainer.style.display === 'none' || !initiativeContainer.children.length) {
-                // Check if we're hovering or video is playing - if so, skip update
                 const videoPopup = document.getElementById('media-popup');
-                if (isHoveringInitiative || (videoPopup && videoPopup.style.display === 'block')) {
-                    // Either hovering (might show video soon) or video is playing, don't update
+                if (isHoveringInitiative || (videoPopup && videoPopup.classList.contains('visible'))) {
                     return;
                 }
                 
-                partyContainer.innerHTML = ''; // Clear existing content
-                partyContainer.style.display = 'flex'; // Show party display
+                partyContainer.innerHTML = '';
+                partyContainer.style.display = 'flex';
                 
                 if (!response || ((!response.members || response.members.length === 0) && 
                     (!response.location_npcs || response.location_npcs.length === 0))) {
@@ -5455,242 +5453,99 @@
                     return;
                 }
                 
-                // Create party member boxes
-                response.members.forEach(member => {
+                const renderMember = (member, isLocationNpc = false) => {
                     const item = document.createElement('div');
-                    item.classList.add('party-member-item', member.type);
-                    item.dataset.name = member.name;
+                    item.classList.add(isLocationNpc ? 'location-npc-item' : 'party-member-item', member.type);
                     
-                    // Handle player portraits
-                    if (member.type === 'player') {
-                        const cleanName = member.name.toLowerCase().replace(/[^a-z0-9]/g, '_');
-                        const portraitUrl = `/static/portraits/${cleanName}.png`;
-                        const videoUrl = `/static/portraits/${cleanName}_video.mp4`;
-                        
-                        item.style.backgroundImage = `url('${portraitUrl}')`;
-                        item.style.backgroundSize = 'cover';
-                        item.style.backgroundPosition = 'center';
-                        item.style.color = 'white';
-                        item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
-                        item.style.cursor = 'pointer';
-                        
-                        // Check for video on hover (same as NPCs)
-                        item.addEventListener('mouseenter', function() {
-                            isHoveringInitiative = true;
-                            clearTimeout(hoverTimer);
-                            const video = document.createElement('video');
-                            video.src = videoUrl;
-                            video.onloadedmetadata = () => {
-                                hoverTimer = setTimeout(() => {
-                                    showVideoPopup(item, videoUrl);
-                                }, 1000);
-                            };
-                        });
-                        
-                        item.addEventListener('mouseleave', function() {
-                            isHoveringInitiative = false;
-                            clearTimeout(hoverTimer);
-                            hideVideoPopup();
-                        });
-                        
-                        // Handle missing portrait
-                        const img = new Image();
-                        img.onerror = () => {
-                            item.style.backgroundImage = '';
-                        };
-                        img.src = portraitUrl;
-                    }
-                    
-                    // Handle NPC portraits and videos
-                    if (member.type === 'npc') {
-                        const npcFilename = member.name.toLowerCase().replace(/\s+/g, '_');
-                        const portraitUrl = `/static/media/npcs/${npcFilename}_thumb.jpg`;
-                        const videoUrl = `/static/media/npcs/${npcFilename}_video.mp4`;
-                        
-                        // Set thumbnail
-                        item.style.backgroundImage = `url('${portraitUrl}')`;
-                        item.style.backgroundSize = 'cover';
-                        item.style.backgroundPosition = 'center';
-                        item.style.color = 'white';
-                        item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
-                        item.style.cursor = 'pointer';
-                        
-                        // Check for video on hover
-                        item.addEventListener('mouseenter', function() {
-                            isHoveringInitiative = true;  // Prevent refresh while hovering
-                            clearTimeout(hoverTimer);
-                            const video = document.createElement('video');
-                            video.src = videoUrl;
-                            video.onloadedmetadata = () => {
-                                hoverTimer = setTimeout(() => {
-                                    showVideoPopup(item, videoUrl);
-                                }, 1000);
-                            };
-                        });
-                        
-                        item.addEventListener('mouseleave', function() {
-                            isHoveringInitiative = false;  // Allow refresh after hover ends
-                            clearTimeout(hoverTimer);
-                            hideVideoPopup();
-                        });
-                        
-                        // Handle missing thumbnail
-                        const img = new Image();
-                        img.onerror = () => {
-                            // Use class-based fallback
-                            const nameLower = member.name.toLowerCase();
-                            let fallbackPortrait = '/static/media/class_portraits/default_npc.png';
-                            
-                            if (nameLower.includes('ranger')) {
-                                fallbackPortrait = '/static/media/class_portraits/ranger.png';
-                            } else if (nameLower.includes('scout') || nameLower.includes('rogue')) {
-                                fallbackPortrait = '/static/media/class_portraits/rogue.png';
-                            } else if (nameLower.includes('cleric')) {
-                                fallbackPortrait = '/static/media/class_portraits/cleric.png';
-                            }
-                            
-                            item.style.backgroundImage = `url('${fallbackPortrait}')`;
-                        };
-                        img.src = portraitUrl;
-                    }
-                    
-                    // Add name text
+                    const cleanName = member.name.toLowerCase().replace(/\s+/g, '_').replace(/'/g, "");
+                    const basePath = member.type === 'player' ? `/static/portraits/${cleanName}` : `/static/media/npcs/${cleanName}`;
+                    const thumbUrl = member.type === 'player' ? `${basePath}.png` : `${basePath}_thumb.jpg`;
+                    const videoUrl = `${basePath}_video.mp4`;
+
+                    item.style.backgroundImage = `url('${thumbUrl}')`;
+                    item.style.backgroundSize = 'cover';
+                    item.style.backgroundPosition = 'center';
+                    item.style.color = 'white';
+                    item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
+                    item.style.cursor = 'pointer';
+
                     const textSpan = document.createElement('span');
                     textSpan.classList.add('initiative-item-text');
                     textSpan.textContent = member.name;
-                    
-                    // Dynamic font sizing
-                    if (member.name.length <= 6) {
-                        textSpan.style.fontSize = '11px';
-                    } else if (member.name.length <= 10) {
-                        textSpan.style.fontSize = '9px';
-                    } else {
-                        textSpan.style.fontSize = '8px';
-                    }
+
+                    if (member.name.length <= 6) textSpan.style.fontSize = '11px';
+                    else if (member.name.length <= 10) textSpan.style.fontSize = '9px';
+                    else textSpan.style.fontSize = '8px';
                     
                     item.appendChild(textSpan);
-                    
-                    // Add tooltip with HP info
-                    let hpText = '';
+
+                    let hpText = isLocationNpc ? ' (In Location)' : '';
                     if (member.currentHp !== undefined && member.maxHp !== undefined) {
-                        hpText = ` - HP: ${member.currentHp}/${member.maxHp}`;
+                        hpText += ` - HP: ${member.currentHp}/${member.maxHp}`;
                     }
                     item.title = `${member.name}${hpText}`;
-                    
-                    // Add click handler to show video or image in popup
-                    item.addEventListener('click', function() {
-                        const cleanName = member.name.toLowerCase().replace(/\s+/g, '_').replace(/'/g, "");
-                        const basePath = member.type === 'player' ? `/static/portraits/${cleanName}` : `/static/media/npcs/${cleanName}`;
-                        const videoUrl = `${basePath}_video.mp4`;
+
+                    // --- UNIFIED HOVER & CLICK LOGIC (FINAL VERSION) ---
+                    item.addEventListener('mouseenter', function() {
+                        isHoveringInitiative = true;
+                        clearTimeout(hoverTimer);
+                        const video = document.createElement('video');
+                        video.src = videoUrl;
                         
-                        // Try video first
+                        // If video loads, set timer to show video
+                        video.onloadedmetadata = () => {
+                            hoverTimer = setTimeout(() => showVideoPopup(item, videoUrl), 1000);
+                        };
+                        
+                        // If video fails, set timer to show the image instead
+                        video.onerror = () => {
+                            const imgJpg = new Image();
+                            imgJpg.src = basePath + '.jpg';
+                            imgJpg.onload = () => {
+                                hoverTimer = setTimeout(() => showImagePopup(item, imgJpg.src), 1000);
+                            };
+                            imgJpg.onerror = () => {
+                                const imgPng = new Image();
+                                imgPng.src = basePath + '.png';
+                                imgPng.onload = () => {
+                                    hoverTimer = setTimeout(() => showImagePopup(item, imgPng.src), 1000);
+                                };
+                            };
+                        };
+                    });
+                    
+                    item.addEventListener('mouseleave', function() {
+                        isHoveringInitiative = false;
+                        hideVideoPopup();
+                    });
+
+                    item.addEventListener('click', function() {
+                        // On click, check for video first. If it exists, show it.
+                        // If not, fall back to showing the full-size image.
                         const video = document.createElement('video');
                         video.src = videoUrl;
                         video.onloadedmetadata = () => showVideoPopup(item, videoUrl);
                         video.onerror = () => {
-                            // Video failed, try images (JPG first, then PNG)
                             const imgJpg = new Image();
                             imgJpg.src = basePath + '.jpg';
                             imgJpg.onload = () => showImagePopup(item, imgJpg.src);
                             imgJpg.onerror = () => {
-                                // JPG failed, try PNG
                                 const imgPng = new Image();
                                 imgPng.src = basePath + '.png';
                                 imgPng.onload = () => showImagePopup(item, imgPng.src);
-                                imgPng.onerror = () => console.log('No media found for', member.name);
                             };
                         };
                     });
-                    
+
                     partyContainer.appendChild(item);
-                });
-                
-                // Render location NPCs if present
-                if (response.location_npcs && response.location_npcs.length > 0) {
-                    response.location_npcs.forEach(npc => {
-                        const item = document.createElement('div');
-                        item.classList.add('location-npc-item');
-                        
-                        const npcFilename = npc.name.toLowerCase().replace(/\s+/g, '_').replace(/'/g, "");
-                        const portraitUrl = `/static/media/npcs/${npcFilename}_thumb.jpg`;
-                        const videoUrl = `/static/media/npcs/${npcFilename}_video.mp4`;
-                        
-                        item.style.backgroundImage = `url('${portraitUrl}')`;
-                        item.style.backgroundSize = 'cover';
-                        item.style.backgroundPosition = 'center';
-                        item.style.color = 'white';
-                        item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
-                        item.style.cursor = 'pointer';  // Show it's clickable
-                        
-                        const textSpan = document.createElement('span');
-                        textSpan.classList.add('initiative-item-text');
-                        textSpan.textContent = npc.name;
-                        
-                        // Dynamic font sizing based on name length
-                        if (npc.name.length <= 6) {
-                            textSpan.style.fontSize = '11px';
-                        } else if (npc.name.length <= 10) {
-                            textSpan.style.fontSize = '9px';
-                        } else {
-                            textSpan.style.fontSize = '8px';
-                        }
-                        
-                        item.appendChild(textSpan);
-                        item.title = `${npc.name} (In Location)`;
-                        
-                        // Check for video on hover
-                        item.addEventListener('mouseenter', function() {
-                            isHoveringInitiative = true;
-                            clearTimeout(hoverTimer);
-                            const video = document.createElement('video');
-                            video.src = videoUrl;
-                            video.onloadedmetadata = () => {
-                                hoverTimer = setTimeout(() => {
-                                    showVideoPopup(item, videoUrl);
-                                }, 1000);
-                            };
-                        });
-                        
-                        item.addEventListener('mouseleave', function() {
-                            isHoveringInitiative = false;
-                            clearTimeout(hoverTimer);
-                            hideVideoPopup();
-                        });
-                        
-                        // Click to show video or image in popup
-                        item.addEventListener('click', function() {
-                            const basePath = `/static/media/npcs/${npcFilename}`;
-                            const videoUrl = `${basePath}_video.mp4`;
-                            
-                            // Try video first
-                            const video = document.createElement('video');
-                            video.src = videoUrl;
-                            video.onloadedmetadata = () => showVideoPopup(item, videoUrl);
-                            video.onerror = () => {
-                                // Video failed, try images (JPG first, then PNG)
-                                const imgJpg = new Image();
-                                imgJpg.src = basePath + '.jpg';
-                                imgJpg.onload = () => showImagePopup(item, imgJpg.src);
-                                imgJpg.onerror = () => {
-                                    // JPG failed, try PNG
-                                    const imgPng = new Image();
-                                    imgPng.src = basePath + '.png';
-                                    imgPng.onload = () => showImagePopup(item, imgPng.src);
-                                    imgPng.onerror = () => console.log('No media found for', npc.name);
-                                };
-                            };
-                        });
-                        
-                        partyContainer.appendChild(item);
-                        
-                        // Handle missing thumbnail
-                        const img = new Image();
-                        img.onerror = () => {
-                            item.style.backgroundImage = '';
-                        };
-                        img.src = portraitUrl;
-                    });
-                }
+
+                    const img = new Image();
+                    img.onerror = () => item.style.backgroundImage = '';
+                    img.src = thumbUrl;
+                };
+
+                if (response.members) response.members.forEach(member => renderMember(member, false));
+                if (response.location_npcs) response.location_npcs.forEach(npc => renderMember(npc, true));
             } else {
                 // Hide party display during combat
                 partyContainer.style.display = 'none';
