@@ -5425,12 +5425,33 @@
                     if (member.type === 'player') {
                         const cleanName = member.name.toLowerCase().replace(/[^a-z0-9]/g, '_');
                         const portraitUrl = `/static/portraits/${cleanName}.png`;
+                        const videoUrl = `/static/portraits/${cleanName}_video.mp4`;
                         
                         item.style.backgroundImage = `url('${portraitUrl}')`;
                         item.style.backgroundSize = 'cover';
                         item.style.backgroundPosition = 'center';
                         item.style.color = 'white';
                         item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
+                        item.style.cursor = 'pointer';
+                        
+                        // Check for video on hover (same as NPCs)
+                        item.addEventListener('mouseenter', function() {
+                            isHoveringInitiative = true;
+                            clearTimeout(hoverTimer);
+                            const video = document.createElement('video');
+                            video.src = videoUrl;
+                            video.onloadedmetadata = () => {
+                                hoverTimer = setTimeout(() => {
+                                    showVideoPopup(item, videoUrl);
+                                }, 1000);
+                            };
+                        });
+                        
+                        item.addEventListener('mouseleave', function() {
+                            isHoveringInitiative = false;
+                            clearTimeout(hoverTimer);
+                            hideVideoPopup();
+                        });
                         
                         // Handle missing portrait
                         const img = new Image();
@@ -5452,6 +5473,7 @@
                         item.style.backgroundPosition = 'center';
                         item.style.color = 'white';
                         item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
+                        item.style.cursor = 'pointer';
                         
                         // Check for video on hover
                         item.addEventListener('mouseenter', function() {
@@ -5515,28 +5537,16 @@
                     }
                     item.title = `${member.name}${hpText}`;
                     
-                    // Add click handler to view character sheet
+                    // Add click handler to show full image
                     item.addEventListener('click', function() {
                         if (member.type === 'player') {
-                            // Switch to character tab
-                            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-                            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                            const charTab = Array.from(document.querySelectorAll('.tab-button')).find(btn => btn.textContent === 'Character');
-                            if (charTab) {
-                                charTab.classList.add('active');
-                                document.getElementById('character-tab').classList.add('active');
-                                loadCharacterStats();
-                            }
+                            const cleanName = member.name.toLowerCase().replace(/[^a-z0-9]/g, '_');
+                            const basePath = `/static/portraits/${cleanName}`;
+                            showFullImage(basePath);
                         } else if (member.type === 'npc') {
-                            // Switch to NPCs tab
-                            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-                            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                            const npcTab = Array.from(document.querySelectorAll('.tab-button')).find(btn => btn.textContent === 'NPCs');
-                            if (npcTab) {
-                                npcTab.classList.add('active');
-                                document.getElementById('npcs-tab').classList.add('active');
-                                loadNPCs();
-                            }
+                            const npcFilename = member.name.toLowerCase().replace(/\s+/g, '_');
+                            const basePath = `/static/media/npcs/${npcFilename}`;
+                            showFullImage(basePath);
                         }
                     });
                     
