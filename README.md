@@ -1,35 +1,29 @@
 # NeverEndingQuest
 
-**Version 0.1.0 (Alpha)**
+**Version 0.2.0 (Alpha)**
 
-An AI-powered Dungeon Master assistant for running 5th edition campaigns with infinite adventure potential. Built with innovative conversation compression and hub-and-spoke campaign architecture to overcome AI context limitations, enabling truly persistent worlds where every decision matters.
+An AI-powered Dungeon Master for running SRD 5.2.1 compatible tabletop RPG campaigns with infinite adventure potential. Experience the world's most popular roleplaying game with an intelligent AI that remembers every decision, adapts to your playstyle, and creates endless adventures tailored to your party.
 
-## Key Innovation: Overcoming AI Context Limitations
-
-NeverEndingQuest solves the fundamental challenge of AI memory constraints through:
-- **Intelligent Conversation Compression**: Automatically compresses gameplay into AI-generated chronicles
-- **Hub-and-Spoke Campaign Architecture**: Modular adventures with persistent context across regions
-- **Living World Memory**: NPCs remember your entire relationship history across thousands of interactions
+**NEW: Module Toolkit** - Create custom adventures, generate NPCs and monsters with portraits, manage graphic packs, and build your own content library!
 
 ## Table of Contents
 
 - [Quick Start](#quick-start)
-- [How It Overcomes AI Limitations](#how-it-overcomes-ai-limitations)
+- [Key Features](#key-features)
+- [Module Toolkit](#module-toolkit)
 - [Installation](#installation)
-- [Features Overview](#features-overview)
-- [How It Works](#how-it-works)
-- [Architecture & Design Philosophy](#architecture--design-philosophy)
+- [How It Overcomes AI Limitations](#how-it-overcomes-ai-limitations)
+- [Game Features](#game-features)
+- [Technical Architecture](#technical-architecture)
 - [Advanced Features](#advanced-features)
+- [Usage Examples](#usage-examples)
 - [Project Structure](#project-structure)
 - [Configuration](#configuration)
 - [Community Module Safety](#community-module-safety)
-- [Usage Examples](#usage-examples)
 - [Troubleshooting](#troubleshooting)
-- [🎮 Playtesting Call to Action](#-playtesting-call-to-action)
 - [Contributing](#contributing)
 - [License](#license)
 - [Recent Updates](#recent-updates)
-
 
 ## Quick Start
 
@@ -37,10 +31,87 @@ NeverEndingQuest solves the fundamental challenge of AI memory constraints throu
 
 1. **Install dependencies**: `pip install -r requirements.txt`
 2. **Add your OpenAI API key**: Copy `config_template.py` to `config.py` and add your key
-3. **Launch the game**: `python run_web.py` - opens the web interface in your browser
+3. **Launch the game**: `python run_web.py` - opens the web interface at http://localhost:8357
 4. **Start your adventure**: The AI will guide you through character creation and module selection
 
-> **Note**: The game is designed for the **web interface** which provides the optimal experience with real-time updates, character sheets, and enhanced UI.
+### Additional Launch Options
+
+- **Module Toolkit**: `python launch_toolkit.py` - Opens directly to the module creation interface
+- **Terminal Mode**: `python main.py` - Classic text-based interface (limited features)
+
+> **Note**: The game is designed for the **web interface** which provides the optimal experience with real-time updates, character sheets, visual portraits, and the module toolkit.
+
+## Key Features
+
+### Core Game Systems
+- **SRD 5.2.1 Rules Engine** - Complete 5th edition compatible mechanics
+- **AI Dungeon Master** - GPT-powered storytelling that adapts to your actions
+- **Turn-Based Combat** - Tactical combat with initiative tracking and AI validation
+- **Character Progression** - Full leveling system from 1-20 with all class features
+- **Party Management** - Recruit NPCs, manage equipment, track relationships
+- **Save/Load System** - Automatic progress saving with backup protection
+
+### Web Interface Features
+- **Real-Time Updates** - Live game state synchronization via SocketIO
+- **Character Sheets** - Interactive character information and inventory
+- **Portrait System** - Visual character portraits with hover video previews
+- **Combat Visualizer** - Turn-by-turn combat display with health tracking
+- **Module Browser** - View and select available adventures
+- **Settings Panel** - Customize game options and preferences
+
+### Included Adventure Modules
+- **The Thornwood Watch** (Level 1-2) - Defend a ranger outpost from bandits and corruption
+- **Keep of Doom** (Level 3-5) - Explore a haunted keep and establish your stronghold
+- **Shadows of Kharos** (Level 4-6) - Investigate a cursed lighthouse on a storm-wracked isle
+- **Plus unlimited AI-generated adventures** based on your choices and interests
+
+## Module Toolkit
+
+**NEW: Complete content creation suite for building custom adventures!**
+
+Access the toolkit from the web interface or launch directly with `python launch_toolkit.py`
+
+### Module Generator & Builder
+- **Visual Module Creation** - Web-based interface for creating complete adventures
+- **AI-Assisted Generation** - Describe your vision, AI creates the content
+- **Area & Location Builder** - Design interconnected regions with detailed locations
+- **Plot Generator** - Create main quests, side quests, and narrative hooks
+- **Module Stitching** - Seamlessly connect modules for epic campaigns
+- **Validation System** - Ensures all content follows SRD 5.2.1 schemas
+
+### NPC Generator
+- **Instant NPC Creation** - Generate unique NPCs with full stats and backstories
+- **Portrait Integration** - Automatic portrait assignment from graphic packs
+- **Personality System** - Rich personalities, goals, and motivations
+- **Relationship Tracking** - NPCs remember interactions across modules
+- **Party Recruitment Ready** - Any NPC can potentially join the party
+
+### Monster Generator  
+- **Custom Creature Creation** - Build unique monsters for your adventures
+- **Bestiary Management** - Import/export creatures from the master compendium
+- **CR Balancing** - Automatic challenge rating calculation
+- **Ability Generation** - Create unique abilities and attacks
+- **Visual Integration** - Assign portraits and animations from packs
+
+### Graphic Pack System
+- **Pack Manager** - Create, import, export, and manage visual content packs
+- **Photorealistic Pack Included** - High-quality portraits for characters and monsters
+- **Video Processing** - Convert character videos to animated portraits
+- **Style Templates** - Multiple visual styles (photorealistic, fantasy art, pixel art)
+- **Thumbnail Generation** - Automatic thumbnail creation for galleries
+- **Pack Merging** - Combine multiple packs into custom collections
+
+### Style Management
+- **Visual Themes** - Switch between different art styles
+- **Custom Styles** - Create your own visual themes
+- **Prompt Templates** - AI image generation prompts for consistency
+- **Style Preview** - See how content looks in different styles
+
+### Content Import/Export
+- **Bestiary Integration** - Access the complete monster compendium
+- **Module Sharing** - Export modules for community sharing
+- **Pack Distribution** - Share graphic packs as ZIP files
+- **Backup System** - Automatic backups of all custom content
 
 ## 📄 **Licensing**
 
@@ -54,7 +125,7 @@ The entire codebase including AI prompts, conversation compression, and all game
 - ❌ **Commercial competing use prohibited for 5 years**
 - ⏰ **Becomes Apache 2.0 (fully open source) after 5 years**
 
-### 📚 **D&D Content (CC-BY 4.0)**
+### 📚 **SRD Content (CC-BY 4.0)**
 Game mechanics use SRD 5.2.1 content from Wizards of the Coast.
 - ✅ **SRD content used with proper attribution**
 - ⚠️ **This is unofficial Fan Content**
@@ -62,32 +133,52 @@ Game mechanics use SRD 5.2.1 content from Wizards of the Coast.
 
 See [LICENSING.md](LICENSING.md) for complete details, FAQ, and legal information.
 
-The system automatically:
-- Detects available adventure modules
-- Selects appropriate starting locations
-- Creates your character through AI interview
-- Sets up the game world with weather and atmosphere
+## Installation
 
-### Developer Playthroughs & Mechanics Guides
-Learn advanced gameplay mechanics and creative problem-solving through these detailed module walkthroughs:
-- [**The Thornwood Watch Developer Guide**](modules/The_Thornwood_Watch/PLAYER_GUIDE.md) - Master environmental spellcasting, NPC recruitment, stealth tactics, and non-violent boss solutions
-- [**Keep of Doom Developer Guide**](modules/Keep_of_Doom/PLAYER_GUIDE.md) - Learn puzzle-solving, lore-based bypasses, tactical combat prioritization, and how to establish your own stronghold
+### Prerequisites
+- Python 3.9 or higher
+- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
+- 4GB+ RAM recommended
+- Modern web browser (Chrome, Firefox, Edge)
+- Windows, macOS, or Linux
 
-These guides showcase the flexibility of the AI DM and demonstrate how observation, creativity, and strategic thinking lead to unique solutions beyond simple combat.
+### Setup Steps
 
-### The Adventure Continues: Automatic Module Creation
-After completing both The Thornwood Watch and Keep of Doom, the game seamlessly continues through its innovative **AI-driven module generation system**. When players express interest in new adventures, the AI DM creates entirely new modules tailored to the party's level and interests.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/MoonlightByte/NeverEndingQuest.git
+   cd NeverEndingQuest
+   ```
 
-**Example: The Birth of Shadows of Kharos**
-Following the defeat of the cursed knight and establishment of a stronghold, our heroes found themselves in Harrow's Hollow's tavern. When talk turned to new adventures - specifically mentions of coastal mysteries and haunted lighthouses - the AI DM responded by procedurally generating an entirely new module: **Shadows of Kharos**.
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-The AI seamlessly wove this new adventure into the existing narrative, creating a level 4-6 coastal mystery featuring:
-- The storm-wracked Isle of Kharos with its cursed lighthouse
-- Three interconnected areas: Marrow's Rest village, the Abbey Ruins & Lighthouse, and the Drowned Catacombs  
-- A compelling plot involving a missing abbess, undead mariners, and an ancient drowned king
-- Full integration with the existing world, maintaining all character relationships and consequences
+3. **Configure OpenAI API**
+   ```bash
+   cp config_template.py config.py
+   # Edit config.py and add your OpenAI API key
+   ```
 
-This demonstrates the system's ability to create infinite adventures - each module builds upon your previous accomplishments while introducing fresh challenges. The AI analyzes party composition, level, expressed interests, and past decisions to craft perfectly tailored experiences that feel like natural continuations of your epic journey.
+4. **Launch the game**
+   ```bash
+   # Full game with web interface (recommended)
+   python run_web.py
+   # Opens at http://localhost:8357
+   
+   # Module Toolkit directly
+   python launch_toolkit.py
+   # Opens at http://localhost:8357/toolkit
+   
+   # Terminal interface (basic)
+   python main.py
+   ```
+
+### First Time Setup
+- The AI wizard will guide you through character creation
+- Choose from pre-built modules or generate a custom adventure
+- Web interface provides tutorial tooltips for new players
 
 ## How It Overcomes AI Limitations
 
@@ -149,172 +240,6 @@ Module Conversation Management:
 - **Visit Tracking**: System tracks `visitCount`, `firstVisitDate`, and `lastVisitDate` for each module
 - **Smart Context Injection**: Previous module summaries are injected as campaign context, excluding the current module to prevent duplication
 
-#### 4. **Module-Specific Conversation Management**
-```
-Active Module Conversation Structure:
-┌─────────────────┐
-│ System Prompts  │ (Base rules & character setup)
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Campaign Context│ (Living summaries from OTHER modules)
-│ Living Summary  │ • Module 1 - visitCount: 3, complete history
-│ Living Summary  │ • Module 2 - visitCount: 1, complete history  
-│ (Current module │ • [Current module excluded to prevent duplication]
-│  excluded)      │
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Module-Specific │ (This module's conversation history)
-│ Conversation    │ • Restored from archive (if returning)
-│                 │ • Fresh start (if first visit)
-│ "DM: You stand  │ • Full conversation context maintained
-│  at the castle  │ • No token contamination from other modules
-│  gates..."      │
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Current Action  │ (What's happening right now)
-└─────────────────┘
-
-Module Transition & Living Summary Process:
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│ Module A Active │────►│ Archive & Update│────►│ Clear & Load    │
-│ Conversation    │     │ Living Summary  │     │ Module B        │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-         │                       │                        │
-         ▼                       ▼                        ▼
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│ Detect Module   │     │ Save to:        │     │ Module B Active │
-│ Transition      │     │ • campaign_     │     │ Conversation    │
-│ (via location   │     │   archives/     │     │ (Restored from  │
-│  change)        │     │ • Update living │     │  archive or     │
-│                 │     │   summary_001   │     │  fresh start)   │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-
-Living Summary Evolution:
-Visit 1: ┌─────────────────┐ → ┌─────────────────┐
-         │ Fresh Module    │   │ Module_summary_ │
-         │ Conversation    │   │ 001.json        │
-         └─────────────────┘   │ visitCount: 1   │
-                               │ Complete summary│
-                               └─────────────────┘
-                                       ↓
-Visit 2: ┌─────────────────┐ → ┌─────────────────┐
-         │ Return Visit    │   │ Module_summary_ │
-         │ + New Adventures│   │ 001.json        │
-         └─────────────────┘   │ visitCount: 2   │
-                               │ REGENERATED     │
-                               │ Enhanced summary│
-                               └─────────────────┘
-
-Combat Isolation (unchanged):
-┌─────────────────┐     ┌─────────────────┐
-│ Main Timeline   │────►│ Combat Instance │
-│                 │     │ (Isolated)      │
-│ "Roll for       │     │ ┌─────────────┐ │
-│  initiative..." │     │ │Combat Prompt│ │
-│                 │     │ └──────┬──────┘ │
-│                 │     │        ▼        │
-│                 │◄────│ ┌─────────────┐ │
-│ "Victory!"      │     │ │ Turn-by-Turn│ │
-└─────────────────┘     │ │ Resolution  │ │
-                        │ └──────┬──────┘ │
-                        │        ▼        │
-                        │ ┌─────────────┐ │
-                        │ │  Summary    │ │
-                        │ └─────────────┘ │
-                        └─────────────────┘
-```
-
-- **Module-Specific Conversations**: Each module maintains its own conversation bubble, preventing token explosion across adventures
-- **Living Summary Evolution**: Single `_summary_001.json` per module regenerated completely on each visit with enhanced context
-- **Automatic Archive/Restore**: Module conversations saved to `campaign_archives/` on exit, restored on return
-- **Smart Context Injection**: Campaign summaries from OTHER modules injected as context (current module excluded)
-- **Visit Tracking**: Each summary tracks `visitCount`, `firstVisitDate`, and `lastVisitDate` for rich progression metadata
-- **Combat Isolation**: Each combat runs in its own context bubble, then returns a summary
-- **Token Efficiency**: Module separation prevents infinite context growth while maintaining complete adventure history
-- **Zero Context Contamination**: Visiting other modules briefly doesn't permanently expand your main adventure's context
-- **Complete History Preservation**: Full conversation context restored when returning to any previously visited module
-
-### Real-World Example
-```
-FIRST VISIT TO THORNWOOD WATCH:
-Session 1-5: 50,000 tokens of gameplay in Thornwood Watch
-    ↓ (Module Exit - Travel to Keep of Doom)
-Archive Process:
-• Full conversation → campaign_archives/Thornwood_Watch_conversation_001.json
-• Living Summary → campaign_summaries/Thornwood_Watch_summary_001.json
-  - visitCount: 1, firstVisitDate: 2024-01-15
-  - Complete adventure summary (5,000 tokens)
-• Clear conversation history (ready for new module)
-
-KEEP OF DOOM MODULE:
-• Fresh conversation context (0 tokens to start)
-• Campaign context injected: Thornwood Watch summary (5,000 tokens)
-• Session 6-10: New adventures without Thornwood's 50k tokens
-    ↓ (Return to Thornwood Watch after 6 months)
-
-RETURN VISIT TO THORNWOOD WATCH:
-Archive Restoration:
-• Load: Thornwood_Watch_conversation_001.json (full 50k token history restored)
-• Campaign context: Keep of Doom summary (excludes current Thornwood summary)
-• Session continues exactly where it left off with full NPC memory
-    ↓ (Exit after new adventures)
-Living Summary Update:
-• REGENERATE Thornwood_Watch_summary_001.json (not append!)
-  - visitCount: 2, lastVisitDate: 2024-07-20
-  - Enhanced summary incorporating both visits (6,000 tokens)
-
-Result: Each module maintains complete history while preventing token explosion
-Total per module: ~10,000 tokens (not 150,000+ from all adventures combined!)
-```
-
-### Module Transition System Details
-
-The enhanced module transition system ensures optimal performance and narrative continuity:
-
-#### 5-Step Transition Process
-1. **Immediate Detection**: Module changes detected instantly when `updatePartyTracker` changes current module
-2. **Archive & Summarize**: Current conversation archived to `campaign_archives/[Module_Name]_conversation_[sequence].json` and living summary regenerated in `campaign_summaries/[Module_Name]_summary_001.json`
-3. **Clear Conversation**: Current conversation history cleared to prevent token buildup
-4. **Restore Destination**: Load archived conversation for destination module (if returning) or start fresh (if first visit)
-5. **Inject Campaign Context**: Inject living summaries from OTHER modules as campaign context (current module excluded)
-
-#### Module-Specific Conversation Management
-Each module maintains its own "conversation bubble" that:
-- **Prevents Token Explosion**: Brief visits don't permanently add to main conversation
-- **Enables Quick Transitions**: Visit a shop in another module without context penalty
-- **Maintains Narrative Focus**: Each adventure keeps its own story thread
-- **Restores Completely**: Full conversation returns when you revisit
-
-#### Living Summary System
-- **Single File Per Module**: `[Module_Name]_summary_001.json` (always _001, never increments)
-- **Complete Regeneration**: Entire summary recreated fresh on each module exit
-- **Visit Metadata**: Tracks `visitCount`, `firstVisitDate`, `lastVisitDate`
-- **Rich Context**: Full adventure narrative available for other modules to reference
-
-Example Living Summary Evolution:
-```json
-// After First Visit (visitCount: 1)
-{
-  "module_name": "Thornwood_Watch",
-  "visitCount": 1,
-  "firstVisitDate": "2024-01-15",
-  "lastVisitDate": "2024-01-15",
-  "summary": "The party arrived at Rangers' Outpost and successfully defended it from bandit attacks. They formed strong relationships with Captain Thorne and the local rangers, securing the trade routes and establishing themselves as protectors of the Thornwood region."
-}
-
-// After Return Visit (visitCount: 2) - COMPLETELY REGENERATED
-{
-  "module_name": "Thornwood_Watch", 
-  "visitCount": 2,
-  "firstVisitDate": "2024-01-15",
-  "lastVisitDate": "2024-07-20",
-  "summary": "FIRST EXPEDITION: The party arrived as unknown adventurers and defended Rangers' Outpost from bandit attacks, earning the trust of Captain Thorne and establishing themselves as protectors of the region.\n\nRETURN AS HEROES: Six months later, the party returned as renowned heroes. The outpost had flourished under their protection, with new recruits and expanded defenses. Captain Thorne welcomed them warmly, and the party discovered new threats emerging from deeper in the Thornwood, leading to advanced adventures involving ancient druidic mysteries and corrupted forest spirits."
-}
-```
-
 ### Benefits
 - **Truly Infinite Campaigns**: Play for hundreds of hours without context loss across multiple adventures
 - **Persistent Relationships**: NPCs remember you after months of real-time play through living summaries
@@ -327,139 +252,114 @@ Example Living Summary Evolution:
 - **Visit Progression Tracking**: Rich metadata shows your journey across the world over time
 - **Reduced API Costs**: Efficient token management through intelligent conversation separation
 
-## Installation
+## Game Features
 
-### Prerequisites
-- Python 3.9 or higher
-- OpenAI API key ([Get one here](https://platform.openai.com/api-keys))
-- Windows, macOS, or Linux
+### SRD 5.2.1 Rules Implementation
+- **Complete Character System** - All classes, races, backgrounds from SRD
+- **Spell System** - Full spellcasting with components and concentration
+- **Combat Mechanics** - Actions, bonus actions, reactions, opportunity attacks
+- **Conditions & Effects** - All standard conditions tracked automatically
+- **Equipment & Magic Items** - Complete inventory with attunement rules
+- **Skill Checks & Saves** - Advantage/disadvantage, proficiency bonuses
 
-### Setup Steps
+### AI-Powered Features
+- **Adaptive Storytelling** - AI responds to creative solutions and unexpected actions
+- **Dynamic NPCs** - Characters with personalities that evolve based on interactions
+- **Tactical Combat AI** - Intelligent enemy behavior and positioning
+- **Content Generation** - Endless adventures created based on your interests
+- **Natural Language** - Use plain English, no commands to memorize
+- **Flexible Rules** - AI can be convinced, negotiated with, or surprised
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/MoonlightByte/NeverEndingQuest.git
-   cd NeverEndingQuest
-   ```
+### Module System
+- **Self-Contained Adventures** - Each module is a complete experience
+- **Seamless Transitions** - Travel between modules with full continuity
+- **Level Progression** - Modules scale from levels 1-20
+- **Geographic Regions** - Modules represent interconnected world areas
+- **Plot Integration** - Main quests span multiple modules
+- **Living World** - Completed modules permanently change the world state
 
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+### Party & NPC Systems
+- **Party Recruitment** - Convince any NPC to join your adventures
+- **Relationship Tracking** - NPCs remember all interactions and develop bonds
+- **Party Combat** - NPCs fight alongside you with unique abilities
+- **Character Arcs** - Party members have personal quests and growth
+- **Cross-Module Memory** - Companions remember adventures across regions
 
-3. **Configure OpenAI API**
-   ```bash
-   cp config_template.py config.py
-   # Edit config.py and add your OpenAI API key
-   ```
+### Inventory & Storage
+- **Natural Language Commands** - "I store my gold in a chest here"
+- **Location-Based Storage** - Create storage anywhere in the world
+- **Container Types** - Chests, barrels, lockboxes with different capacities
+- **Party Access** - Shared storage accessible by all party members
+- **Persistent Storage** - Items remain safe across sessions and modules
 
-4. **Start playing**
-   ```bash
-   # Terminal interface
-   python main.py
-   
-   # Web interface (recommended)
-   python run_web.py
-   ```
+### Player Housing & Hubs
+- **Claim Any Location** - Transform locations into permanent bases
+- **Hub Services** - Rest, storage, training, research facilities
+- **Multiple Bases** - Maintain strongholds across different regions
+- **Ownership Types** - Personal, party, or faction-controlled
+- **Base Upgrades** - Improve facilities as you progress
 
-### Verify Installation
-Run `python main.py` - you should see the AI startup wizard begin character creation.
+## Technical Architecture
 
-## Features Overview
+### Manager Pattern Implementation
+The codebase follows a clean Manager Pattern for all major subsystems:
 
-### Context Management Innovations
-- **[Conversation Compression](#intelligent-conversation-compression)**: Overcomes AI token limits with 85-90% compression
-- **[Hub-and-Spoke Design](#hub-and-spoke-architecture)**: Modular adventures with persistent shared context
-- **[Living World Memory](#living-world-persistence)**: NPCs and locations remember everything
-- **[Chronicle System](#chronicle-generation)**: Beautiful AI-generated summaries preserve your adventures
+- **CampaignManager** - Orchestrates module transitions and world state
+- **CombatManager** - Handles turn-based combat with validation
+- **StorageManager** - Manages player inventory and storage systems
+- **LocationManager** - Controls location features and transitions
+- **LevelUpManager** - Processes character progression in isolation
+- **StatusManager** - Provides real-time feedback across interfaces
+- **ModulePathManager** - Abstracts file system for module data
 
-### Core Gameplay
-- **[AI Dungeon Master](#ai-dungeon-master)**: Complete 5e campaign management with intelligent storytelling
-- **[Character System](#character-management)**: Full character creation, progression, and inventory management
-- **[Combat System](#combat-system)**: Turn-based combat with AI tactical decisions
-- **[Module System](#module-system)**: Self-contained adventures with seamless transitions
-
-### Advanced Features  
-- **[NPC Party Recruitment](#npc-party-recruitment-system)**: Ask any NPC to join your party with realistic AI evaluation
-- **[Player Housing & Storage](#player-housing--hub-system)**: Establish bases and store items across the world
-- **[Module Generation](#module-generation--management)**: AI creates new adventures based on your choices
-- **[Community Modules](#community-module-safety)**: Download and integrate player-created content safely
-
-### Technical Features
-- **Web Interface**: Modern browser-based interface with separate panels
-- **Save System**: Automatic progress saving with backup protection
-- **Cross-Platform**: Works on Windows, macOS, and Linux
-- **Schema Validation**: All game files follow strict 5e schemas for consistency
-
-## How It Works
-
-NeverEndingQuest provides a complete solo D&D experience with persistent world memory that grows with your adventures. Through intelligent conversation compression and modular design, the system maintains a "lived-in" contextual understanding where every NPC remembers you, every decision has consequences, and the world evolves based on your actions.
-
-**Design Philosophy**: The AI is intentionally flexible - you can convince it, negotiate with it, or play creatively. The software provides structure for consistent gameplay while maintaining the creative freedom that makes RPGs magical.
-
-### What Makes It Special
-
-#### **Lived-In Contextual Understanding**
-Unlike traditional AI systems that "forget" after a few interactions, NeverEndingQuest creates a truly persistent world:
-
-- **Relationship Memory**: That shopkeeper you helped in session 1? They'll remember and offer discounts 50 sessions later
-- **Consequence Persistence**: Saving a village affects trade routes, NPC attitudes, and available quests across all modules
-- **World Evolution**: Completed adventures permanently change the world state - defeated villains stay defeated
-- **Character Growth**: NPCs reference shared experiences, inside jokes, and memorable moments from your entire journey
-
-#### **How Context Accumulates**
+### Module-Centric Architecture
 ```
-First Visit to Thornwood (5 hours play) → 30,000 tokens
-  ↓ Module Completion
-Chronicle Summary → 3,000 tokens
-
-Return Visit Six Months Later:
-- Full chronicle loaded
-- NPCs remember everything
-- World shows your impact
-- New adventures build on history
-Total Context: 8,000 tokens (not 60,000!)
+modules/[module_name]/
+├── areas/              # Location files (area_id.json)
+├── characters/         # NPCs and party members
+├── monsters/           # Module-specific creatures
+├── encounters/         # Combat encounters
+├── images/            # Screenshots and portraits
+├── module_plot.json   # Quest progression
+├── party_tracker.json # Party state
+└── [name]_module.json # Module metadata
 ```
 
-This creates a living world where:
-- **Bartender**: "Hey, aren't you the one who saved us from those bandits last spring?"
-- **Guard Captain**: "After what you did for Thornwood, you're always welcome here."
-- **Merchant**: "I've expanded my shop thanks to the trade routes you secured!"
-- **Quest Giver**: "Since you dealt with the corruption, new problems have emerged..."
+### Atomic Operations
+All state modifications use atomic patterns:
+1. Create backup of affected files
+2. Perform operation with validation
+3. Verify final state integrity  
+4. Clean up on success OR restore on failure
 
-### Available Adventure Modules
+### Web Interface Architecture
+- **Flask Backend** - RESTful API for game operations
+- **SocketIO** - Real-time bidirectional communication
+- **Queue-Based Output** - Thread-safe console streaming
+- **Session Management** - Synchronized state across interfaces
+- **Static File Serving** - Efficient portrait and video delivery
 
-The system includes progressive adventures, both pre-built and dynamically generated:
+### AI Integration Patterns
+- **Specialized Models** - Different GPT models for different tasks
+- **Validation Layers** - AI responses validated before application
+- **Fallback Mechanisms** - Graceful degradation on AI failures
+- **Subprocess Isolation** - Complex operations in separate processes
+- **Token Management** - Intelligent context window optimization
 
-**Pre-Built Modules:**
-- **The Thornwood Watch** (Level 1-2): Starting adventure defending Rangers' Outpost
-- **Keep of Doom** (Level 3-5): Intermediate adventure in Harrow's Hollow  
+### Portrait System Integration
+The game features a sophisticated portrait system with video previews:
 
-**AI-Generated Modules:**
-- **Shadows of Kharos** (Level 4-6): Coastal mystery on a haunted island (generated based on player interest)
-- Additional modules created dynamically as your adventure continues
+- **Dynamic Portraits** - Characters display appropriate emotional states
+- **Video Previews** - Hover over portraits to see animated previews
+- **Pack Integration** - Portraits sourced from active graphic packs
+- **Fallback System** - Graceful degradation if media unavailable
+- **Unified Popups** - Consistent behavior across all character types
 
-### Creating New Adventures
+## Advanced Features
 
-Generate complete modules with:
-```bash
-python core/generators/module_builder.py
-```
-The AI helps create areas, locations, plots, and NPCs that integrate seamlessly with your existing world.
+### How the Campaign World Works
 
-## Architecture & Design Philosophy
-
-For a deep dive into how NeverEndingQuest works under the hood, including:
-- The conversation compression pipeline that enables infinite adventures
-- How the modular system maintains story continuity
-- Context management strategies for AI memory
-- Technical implementation details
-
-See the comprehensive [Architecture Documentation](ARCHITECTURE.md).
-
-## How the Campaign World Works
-
-### Location-Based Module System
+#### Location-Based Module System
 The game uses a revolutionary **geographic boundary system** instead of traditional campaign chapters:
 
 - **Modules as Geographic Regions**: Each adventure module represents a geographic area network (village + forest + dungeon)
@@ -467,7 +367,7 @@ The game uses a revolutionary **geographic boundary system** instead of traditio
 - **Automatic Transitions**: When you travel to a new area, the system automatically detects if you're entering a different module
 - **Living World Memory**: Every location remembers your visits and the world evolves based on accumulated decisions
 
-### How Modules Connect
+#### How Modules Connect
 ```
 Example World Evolution:
 Keep_of_Doom: Harrow's Hollow (village) → Gloamwood (forest) → Shadowfall Keep (ruins)
@@ -477,7 +377,7 @@ Keep_of_Doom: Harrow's Hollow (village) → Gloamwood (forest) → Shadowfall Ke
 
 The AI analyzes area descriptions and themes to suggest natural narrative bridges between modules.
 
-### Adventure Continuity
+#### Adventure Continuity
 - **Chronicle System**: When you leave a module, the system generates a beautiful prose summary of your adventure
 - **Context Accumulation**: Return visits include full history of previous adventures in that region
 - **Character Relationships**: NPCs remember you across modules and adventures continue to evolve
@@ -501,36 +401,25 @@ The AI analyzes area descriptions and themes to suggest natural narrative bridge
 - **Community Standards**: Built-in validation ensures your modules work perfectly for other players
 - **Organic Integration**: New modules connect naturally to existing worlds without manual configuration
 
-## Key Features
+### Key System Features
 
-### Context Management System
-- **Conversation Compression Pipeline**: Reduces gameplay sessions by 85-90% while preserving all story elements
-- **Chronicle Generation**: AI transforms thousands of messages into beautiful fantasy prose summaries
-- **Hub-and-Spoke Architecture**: Isolated modules share persistent character context and world state
-- **Living World Memory**: Complete NPC relationship history and consequence tracking across all adventures
-- **Automatic Compression Triggers**: Manages token limits seamlessly (12 transitions trigger, 6 compressed)
+#### Context Management System
+- **Conversation Compression Pipeline** - 85-90% token reduction
+- **Chronicle Generation** - Beautiful AI-generated adventure summaries
+- **Hub-and-Spoke Architecture** - Isolated modules with shared context
+- **Living World Memory** - Complete relationship and consequence tracking
+- **Automatic Compression** - Seamless token limit management
 
-### Module Generation & Management
-- **Web-Based Module Builder**: Launch with `python module_builder_web.py` for an interactive creation experience
-- **Context-Aware Generation**: Maintains consistency across all generated content
-- **Schema Compliance**: All files follow strict 5th edition JSON schemas
-- **Community Module Support**: Framework for sharing and auto-integrating downloaded adventures
-- **Safety Validation**: Automatic content review and conflict resolution for community modules
-- **AI Autonomous Creation**: When current adventures conclude, AI analyzes party history to craft new contextual modules
-- **Narrative-Driven Generation**: AI parses rich narrative descriptions to extract module parameters automatically
+#### Module Generation & Management
+- **Web Module Builder** - Interactive creation interface
+- **Context-Aware Generation** - Consistent content across modules
+- **Schema Compliance** - Strict SRD 5.2.1 validation
+- **Community Support** - Share and integrate player modules
+- **Safety Validation** - Automatic content review
+- **AI Auto-Creation** - Dynamic module generation based on play
+- **Narrative Parsing** - Natural language module descriptions
 
-### Gameplay Features
-- **Interactive Storytelling**: Dynamic narratives respond to accumulated player decisions across modules
-- **Combat System**: Turn-based combat with validation and AI simulation
-- **Character Management**: Unified character system supporting players, NPCs, and monsters
-- **World Exploration**: Navigate detailed locations with dynamic state and cross-module connections
-- **Plot Management**: Authoritative module_plot.json tracks main quests, side quests, and progression
-- **NPC System**: Persistent NPCs with personalities, goals, cross-module relationship tracking, and **party recruitment**
-- **Time Tracking**: Complete world time and condition management with realistic progression
-
-### Advanced Player Systems
-
-#### **🏠 Player Housing & Hub System**
+#### Player Housing & Hub System
 - **Establish Hubs**: Transform any location into a permanent base of operations
 - **Hub Services**: Rest, storage, gathering, training, research facilities automatically available
 - **Ownership Types**: Party-owned, shared arrangements, or individual strongholds
@@ -543,7 +432,7 @@ The AI analyzes area descriptions and themes to suggest natural narrative bridge
 - **Taverns**: Social hubs for information gathering and party meetings
 - **Specialized Facilities**: Wizard towers, temples, guildhalls with unique services
 
-#### **📦 Player Storage System**
+#### Player Storage System
 - **Natural Language Storage**: Use intuitive commands like "I store my gold in a chest here"
 - **Location-Based Containers**: Create storage at any location using available containers
 - **Persistent Storage**: Items remain safely stored across sessions and module transitions
@@ -556,7 +445,7 @@ The AI analyzes area descriptions and themes to suggest natural narrative bridge
 - **Secure Storage**: Containers tied to specific locations for security
 - **Visual Integration**: Storage automatically appears in location descriptions
 
-#### **👥 NPC Party Recruitment System**
+#### NPC Party Recruitment System
 
 **Build your party by recruiting NPCs you meet during your adventures!**
 
@@ -583,7 +472,7 @@ The AI analyzes area descriptions and themes to suggest natural narrative bridge
 - **Cross-Module Continuity**: Your companions remember adventures across different modules
 - **Character Development**: NPCs grow and change based on shared experiences
 
-#### **🎲 AI-Driven Module Auto-Generation**
+#### AI-Driven Module Auto-Generation
 - **Contextual Adventures**: AI analyzes party history to create personalized modules
 - **Seamless Integration**: New modules connect naturally to existing world geography
 - **Dynamic Scaling**: Adventures adjust to party level and accumulated experience
@@ -595,24 +484,81 @@ The AI analyzes area descriptions and themes to suggest natural narrative bridge
 - **World Events**: Major decisions trigger consequences in new regions
 - **Party Progression**: Level advancement unlocks higher-tier adventure options
 
-#### **🌍 Living Campaign World Integration**
+#### Living Campaign World Integration
 - **Isolated Module Architecture**: Each module operates independently while maintaining world coherence
 - **AI Travel Narration**: Seamless transitions between modules with atmospheric descriptions
 - **World Registry**: Central tracking of all modules, areas, and their relationships
 - **Cross-Module Consequences**: Actions in one module affect opportunities in others
 
+## Usage Examples
+
+### Starting Your Adventure
+```bash
+# Launch the web interface
+python run_web.py
+# Browser opens to http://localhost:8357
+# Follow the AI wizard for character creation
+```
+
+### Using the Module Toolkit
+```bash
+# Open toolkit directly
+python launch_toolkit.py
+# Or navigate to http://localhost:8357/toolkit
+
+# Create a new module:
+1. Click "Create Module"
+2. Enter module details and description
+3. AI generates complete adventure
+4. Review and customize as needed
+```
+
+### Managing Graphic Packs
+```python
+# From the toolkit interface:
+1. Go to "Graphic Packs" tab
+2. Create new pack or import ZIP
+3. Add monsters and NPCs
+4. Generate portraits with AI
+5. Export pack for sharing
+```
+
+### Natural Language Storage
+```
+Player: "I want to store my extra weapons in a chest here"
+AI: *Creates storage container and transfers items*
+
+Player: "What do we have stored at the keep?"
+AI: *Lists all containers and contents at that location*
+```
+
+### NPC Recruitment
+```
+Player: "Elena, would you join us on our quest?"
+AI: *Elena considers your relationship and her goals*
+AI: "After what you've done for this town, I'd be honored to join you."
+*Elena added to party with full stats*
+```
+
+### Combat Example
+```
+AI: "Roll for initiative!"
+Player: "I cast fireball at the grouped enemies"
+AI: *Calculates damage, saves, and effects*
+AI: "The explosion engulfs three goblins..."
+```
+
 ## Project Structure
 
-**Note: The codebase has been reorganized for better maintainability. All core functionality is now organized into logical directories.**
-
-### 📁 Directory Organization
+### Directory Organization
 ```
 /
 ├── core/                    # Core game engine modules
 │   ├── ai/                 # AI integration (action_handler, dm_wrapper, etc.)
 │   ├── generators/         # Content generation (module_builder, npc_builder, etc.)
 │   ├── managers/           # System management (combat_manager, storage_manager, etc.)
-│   └── validation/         # Data validation systems
+│   ├── validation/         # Data validation systems
+│   └── toolkit/           # Module toolkit components
 ├── utils/                  # Utility functions and helpers
 ├── updates/               # State update modules
 ├── web/                   # Web interface
@@ -621,58 +567,76 @@ The AI analyzes area descriptions and themes to suggest natural narrative bridge
 │   ├── campaign_archives/     # Archived module conversations
 │   ├── campaign_summaries/    # Living AI-generated summaries
 │   └── [module_name]/        # Individual adventure modules
+├── graphic_packs/         # Visual content packs
 ├── prompts/               # AI system prompts
 ├── schemas/               # JSON validation schemas
 └── data/                  # Game data files
 ```
 
 ### Core Systems
-- `main.py` - Main game loop and player interaction
-- `module_builder_web.py` - **Web interface for module creation** (run this to create modules)
-- `core/generators/module_builder.py` - Automated module generation system
-- `core/generators/module_stitcher.py` - Organic module integration
-- `core/managers/campaign_manager.py` - Hub-and-spoke campaign orchestration
-- `core/managers/combat_manager.py` - Combat system management
-- `core/ai/dm_wrapper.py` - AI Dungeon Master logic
+- **Entry Points**
+  - `main.py` - Terminal interface game loop
+  - `run_web.py` - Web interface launcher
+  - `launch_toolkit.py` - Module toolkit launcher
+  - `web/web_interface.py` - Flask server and routes
 
-### Content Generation
-- `core/generators/module_generator.py` - Module overview generation
-- `core/generators/area_generator.py` - Area and map generation
-- `core/generators/location_generator.py` - Detailed location generation
-- `core/generators/plot_generator.py` - Plot and quest generation
-- `core/generators/npc_builder.py` - NPC generation system
-- `core/generators/monster_builder.py` - Monster creation tools
+- **Core Modules** (`core/`)
+  - `ai/` - AI integration and DM logic
+  - `generators/` - Content generation systems
+  - `managers/` - System orchestration
+  - `validation/` - Data validation
+  - `toolkit/` - Module toolkit components
 
-### Game Management
-- `core/ai/conversation_utils.py` - Conversation tracking
-- `core/managers/storage_manager.py` - Player storage system
-- `core/ai/action_handler.py` - Command processing
-- `utils/player_stats.py` - Character statistics
-- `updates/` - Various state update modules
+- **Support Systems** (`utils/`)
+  - File operations and encoding
+  - Logging and debugging
+  - Character progression
+  - Module path management
 
-### Data Files
-- `schemas/*_schema.json` - JSON schemas for validation
-- `modules/conversation_history/` - Conversation history files
-- `modules/` - Generated module data
-- `*.json` - Character, location, and game state files
-- `player_storage.json` - Central player storage repository
-- `storage_action_schema.json` - Storage operation validation schema
+### Module Toolkit Components
+- `core/toolkit/monster_generator.py` - Creature creation
+- `core/toolkit/npc_generator.py` - NPC generation
+- `core/toolkit/pack_manager.py` - Graphic pack management
+- `core/toolkit/style_manager.py` - Visual style templates
+- `core/toolkit/video_processor.py` - Portrait video processing
+- `core/toolkit/pack_integration.py` - Pack activation system
+
+### Data Organization
+- `modules/` - Adventure modules and game data
+- `graphic_packs/` - Visual content packs
+- `data/bestiary/` - Monster compendium
+- `data/styles/` - Style templates
+- `schemas/` - JSON validation schemas
+- `prompts/` - AI system prompts
+- `templates/` - Web interface templates
 
 ## Configuration
 
-The system uses OpenAI GPT models configured in `config.py`:
+### OpenAI API Setup
+Edit `config.py` to configure AI models:
 
-- `DM_MAIN_MODEL` - Primary model for narration and generation
-- `DM_SUMMARIZATION_MODEL` - Conversation and event summarization
-- `DM_VALIDATION_MODEL` - Combat and rule validation
-- `DM_COMBAT_NARRATOR_MODEL` - Combat narration and description
-- Various other specialized models for different tasks
+```python
+# Primary models
+DM_MAIN_MODEL = "gpt-4o-mini"  # Main storytelling
+DM_SUMMARIZATION_MODEL = "gpt-4o-mini"  # Compression
+DM_VALIDATION_MODEL = "gpt-4o-mini"  # Rule validation
 
-## Requirements
+# Specialized models
+DM_COMBAT_NARRATOR_MODEL = "gpt-4o-mini"  # Combat
+MODULE_CREATION_MODEL = "gpt-4o-mini"  # Content generation
+```
 
-- Python 3.9+
-- OpenAI API key
-- Required packages listed in `requirements.txt`
+### Web Interface Settings
+- **Port**: 8357 (configurable in web_interface.py)
+- **Host**: localhost (network accessible with --host 0.0.0.0)
+- **Debug Mode**: Disabled by default for production
+
+### System Requirements
+- **Python**: 3.9 or higher
+- **RAM**: 4GB minimum, 8GB recommended
+- **Storage**: 2GB for base install, more for packs
+- **Network**: Internet connection for AI API
+- **Browser**: Chrome, Firefox, or Edge (latest versions)
 
 ## Community Module Safety
 
@@ -690,10 +654,12 @@ New module detected → Security scan → Content safety check → Schema valida
 ```
 
 ### For Module Creators
-- Use unique area IDs to avoid conflicts (avoid common patterns like HH001)
-- Keep files under 10MB and use only JSON/text formats
-- Create family-friendly content appropriate for all ages
-- Follow provided JSON schemas for compatibility
+- Use unique area IDs to avoid conflicts
+- Keep files under 10MB (JSON/text only)
+- Create family-friendly content
+- Follow SRD 5.2.1 schemas
+- Test with validation tools
+- Include module documentation
 
 ### For Players
 - Download modules from trusted sources
@@ -701,201 +667,34 @@ New module detected → Security scan → Content safety check → Schema valida
 - All community modules undergo validation before integration
 - Backup saves before adding new modules as good practice
 
-## Usage Examples
-
-### Generate a Module
-```bash
-python core/generators/module_builder.py
-# Follow prompts to create areas, locations, plots, and NPCs
-# System ensures consistency and schema compliance
-```
-
-### Start Playing
-```bash
-python main.py
-# System automatically detects and integrates any new modules
-# Begin adventure in your generated or downloaded module
-```
-
-### Add Community Modules
-```bash
-# Simply place module folder in modules/ directory
-# System automatically detects, validates, and integrates on next startup
-# AI generates narrative connections to existing world
-```
-
-### Player Housing & Storage Examples
-
-#### **Establish a Hub**
-```
-Player: "I want to claim this keep as our base of operations"
-AI: *Establishes Shadowfall Keep as a party stronghold with full services*
-```
-
-#### **Natural Language Storage**
-```
-Player: "I store my extra gold in a chest in the treasury"
-AI: *Creates storage container and transfers 500 gold coins*
-
-Player: "What's in our storage here?"
-AI: *Lists all containers and contents at current location*
-
-Player: "I get my healing potions from the chest we made"
-AI: *Retrieves potions and updates inventory automatically*
-```
-
-#### **NPC Party Recruitment**
-```
-Player: "Elara, you've helped us so much. Would you consider joining our party?"
-AI: *Elara considers your shared adventures and her own goals*
-AI: "I've grown fond of you all, and these dark times require brave souls to stand together. Yes, I'll join you."
-*Elara is added to your party with full character sheet and equipment*
-
-Player: "Marcus, we're heading to the Shadowlands. Your knowledge of undead could save lives."
-AI: *Marcus weighs the danger against his scholarly interests*
-AI: "The chance to study the necromantic energies there... yes, I'll come. But I'm not much of a fighter."
-*Marcus joins as a support character with unique magical knowledge*
-```
-
-#### **Hub Services**
-```
-Player: "I want to rest at our stronghold"
-AI: *Provides full rest benefits and hub-specific services*
-
-Player: "Let's gather at the tavern we established"
-AI: *Transitions party to hub location with full context*
-```
-
-### Creating Custom Modules
-
-#### **Web Module Builder (Recommended)**
-The easiest way to create custom modules is through the web interface:
-
-```bash
-python module_builder_web.py
-```
-
-This launches an interactive web interface that:
-- Auto-opens in your browser on a random port (7000-9000)
-- Provides real-time progress tracking with visual indicators
-- Shows existing modules with area counts and plot points
-- Guides you through module creation with AI assistance
-- Validates all generated content automatically
-
-**Web Builder Features:**
-- **Module Name**: Unique identifier for your adventure
-- **Number of Areas**: 1-10 distinct regions (default: 3)
-- **Locations per Area**: 1-30 locations per region (default: 5)
-- **AI Narrative Prompt**: Describe your module concept in detail
-- **Progress Tracking**: 9-stage visual progress bar showing generation status
-- **Module Library**: View all existing modules with statistics
-
-### AI Module Generation Examples
-
-#### **Contextual Adventure Creation**
-```
-AI: *Analyzes party completed Keep_of_Doom module*
-AI: *Detects themes: undead, curses, heroic rescue*
-AI: *Generates "Whispers of the Shadowlands" - related but escalated adventure*
-```
-
-#### **Dynamic World Building**
-```
-Player: "We've heard rumors of trouble in the northern mountains"
-AI: *Creates mountain-themed module tied to established lore*
-AI: *Connects via travel narration from current location*
-```
-
-#### **AI Flexibility Examples**
-
-**The AI adapts to your playstyle - strict or creative, it's your choice:**
-
-```
-Player: "I try to convince the shopkeeper that I'm nobility and deserve a discount"
-AI: *Evaluates your charisma, background, and story context*
-AI: "The shopkeeper seems skeptical but your confident bearing impresses them. 10% discount!"
-
-Player: "I search the dragon's lair thoroughly for any hidden treasure"
-AI: "Roll a perception check... Natural 20! You notice loose stones hiding a secret compartment with an ancient artifact."
-
-Player: "This quest is taking forever. Can we just say we completed it?"
-AI: "I understand you want to move the story along. Let's fast-forward through the completion and focus on the interesting parts!"
-
-Player: "I want that legendary sword the NPC mentioned. Can I convince them to give it to me?"
-AI: *Considers story logic, your relationship, and what would be interesting*
-AI: "It won't be easy, but if you can prove yourself worthy through a specific quest, they might consider it..."
-```
-
-**Remember: The AI wants you to have fun! It provides structure for consistency but adapts to your preferred style of play.**
-
 ## Troubleshooting
 
 ### Common Issues
 
-#### Installation Problems
-- **"Module not found" errors**: Ensure you've installed requirements with `pip install -r requirements.txt`
-- **OpenAI API errors**: Verify your API key is correct in `config.py` and has sufficient credits
-- **Python version**: Requires Python 3.9+ - check with `python --version`
+#### Installation
+- **Module not found**: Run `pip install -r requirements.txt`
+- **OpenAI API errors**: Check API key in `config.py`
+- **Python version**: Requires 3.9+ (`python --version`)
 
-#### Game Startup Issues
-- **No modules found**: Ensure the `modules/` directory exists with adventure modules
-- **Character creation fails**: Check that you have a valid OpenAI API key and internet connection
-- **Web interface won't start**: Try `python -m http.server` to test basic Python web functionality
+#### Startup Problems
+- **No modules**: Check `modules/` directory exists
+- **Web won't start**: Check port 8357 availability
+- **Toolkit unavailable**: Ensure `core/toolkit/` exists
 
-#### Performance Issues
-- **Slow AI responses**: This is normal - AI processing takes 10-30 seconds per response
-- **Memory usage**: Large conversation histories use more memory - restart periodically for long sessions
-- **File corruption**: The system creates automatic backups - check for `.backup` files if needed
+#### Performance
+- **Slow responses**: Normal (10-30s for AI)
+- **High memory**: Restart after long sessions
+- **File issues**: Check `.backup` files
 
-#### Windows-Specific
-- **Unicode errors**: Windows console has encoding limitations - use the web interface for best experience
-- **Path issues**: Use forward slashes or raw strings for file paths
-- **Permission errors**: Run as administrator if experiencing file access issues
+#### Platform-Specific
+- **Windows encoding**: Use web interface
+- **macOS permissions**: Check file access
+- **Linux paths**: Use absolute paths
 
 ### Getting Help
 - Check the [GitHub Issues](https://github.com/MoonlightByte/NeverEndingQuest/issues) for known problems
 - Create a new issue with your error message and system information
 - Include your Python version and operating system in bug reports
-
-## 🎮 Playtesting Call to Action
-
-**We need YOUR help testing different character classes!**
-
-### Current Testing Status
-- ✅ **Fighter** - Well-tested, combat mechanics working smoothly
-- ✅ **Cleric** - Extensively tested, spellcasting and healing validated
-- 🔶 **Rogue** - *Needs testing*: Sneak attack, stealth mechanics, skill checks
-- 🔶 **Wizard** - *Needs testing*: Spell slot management, ritual casting, spell preparation
-- 🔶 **Druid** - *Needs testing*: Wild shape, nature spells, concentration mechanics
-- 🔶 **Barbarian** - *Needs testing*: Rage mechanics, damage resistance
-- 🔶 **Ranger** - *Needs testing*: Favored enemy, tracking, dual wielding
-- 🔶 **Warlock** - *Needs testing*: Pact magic, invocations, short rest recovery
-- 🔶 **Monk** - *Needs testing*: Ki points, martial arts, stunning strike
-- 🔶 **Paladin** - *Needs testing*: Divine smite, lay on hands, auras
-- 🔶 **Sorcerer** - *Needs testing*: Metamagic, sorcery points, wild magic
-- 🔶 **Bard** - *Needs testing*: Bardic inspiration, jack of all trades
-
-### How You Can Help
-1. **Create a character** using one of the untested classes
-2. **Play through at least one combat encounter** to test class abilities
-3. **Report issues** with class features, spell casting, or special abilities
-4. **Share feedback** on the game flow and AI responses for your class
-
-### What We're Looking For
-- **Combat Mechanics**: Do class abilities trigger correctly?
-- **Resource Management**: Are spell slots, ki points, rage uses tracked properly?
-- **AI Understanding**: Does the DM correctly interpret and apply class features?
-- **Balance**: Does combat feel appropriately challenging for your class?
-- **Edge Cases**: Any weird interactions or bugs with specific abilities?
-
-### How to Report Feedback
-Create an issue on GitHub with:
-- Your character class and level
-- Description of what didn't work as expected
-- Steps to reproduce the issue
-- Screenshots or combat logs if available
-
-**Your playtesting helps make NeverEndingQuest better for everyone!** 🎲
 
 ## Contributing
 
@@ -911,7 +710,8 @@ We welcome contributions to NeverEndingQuest! This project thrives on community 
 5. **Submit a pull request** with a clear description of changes
 
 #### For Content Creators
-- **Create adventure modules** using the web module builder: `python module_builder_web.py`
+- **Create adventure modules** using the web module builder
+- **Design graphic packs** with unique visual styles
 - **Share your modules** with the community
 - **Report balance issues** or suggest improvements
 - **Write documentation** or tutorials
@@ -921,6 +721,7 @@ We welcome contributions to NeverEndingQuest! This project thrives on community 
 - **Suggest features** based on your gameplay experience
 - **Share feedback** on game balance and AI behavior
 - **Help new players** in discussions
+- **Test character classes** and abilities
 
 ### Development Setup
 ```bash
@@ -951,12 +752,14 @@ black .
 - **Licensing**: All contributions will be under Fair Source License 1.0 (transitioning to Apache 2.0 after 5 years)
 
 ### Areas Needing Help
-- **Web interface improvements** - Better UI/UX design
-- **Performance optimization** - Faster AI response times
-- **Module creation tools** - Better module builder interface
-- **Documentation** - More tutorials and examples
-- **Testing** - Automated test coverage
-- **Platform support** - Mobile interfaces, voice integration
+- **Module Toolkit** - Enhanced generators and templates
+- **Graphic Packs** - More visual styles and content
+- **Web Interface** - UI/UX improvements
+- **Documentation** - Tutorials and guides
+- **Testing** - Class mechanics validation
+- **Performance** - Response time optimization
+- **Accessibility** - Screen reader support
+- **Localization** - Multi-language support
 
 ## License
 
@@ -969,66 +772,50 @@ See the LICENSE and LICENSING.md files for complete details.
 - ❌ **Cannot create competing commercial services**
 - ⏰ **Becomes fully open source (Apache 2.0) after 5 years**
 
-### SRD Attribution
+### SRD 5.2.1 Attribution
 
-Game mechanics and content are derived from the System Reference Document 5.2.1 ("SRD 5.2.1") 
-by Wizards of the Coast LLC and available at https://dnd.wizards.com/resources/systems-reference-document. 
+This game implements mechanics from the System Reference Document 5.2.1 ("SRD 5.2.1") by Wizards of the Coast LLC, available at https://dnd.wizards.com/resources/systems-reference-document.
 
-The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License 
-available at https://creativecommons.org/licenses/by/4.0/legalcode.
+The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0): https://creativecommons.org/licenses/by/4.0/legalcode
 
-This work is not affiliated with, endorsed, sponsored, or specifically approved by 
-Wizards of the Coast LLC. This is unofficial Fan Content permitted under the 
-Creative Commons Attribution 4.0 International License and the Fair Source License.
+This is unofficial Fan Content and is not affiliated with, endorsed, sponsored, or approved by Wizards of the Coast LLC. NeverEndingQuest is an independent implementation compatible with 5th edition rules.
 
 ## Recent Updates
 
-### Major Features Added
-- **AI-Powered Startup Wizard**: Automatic module detection, level-based selection, and AI reasoning for optimal starting locations
-- **NPC Party Recruitment**: Ask any NPC to join your party with AI evaluation and persistent companions
-- **Hub & Housing System**: Transform any location into a permanent base with full services
-- **Player Storage System**: Complete natural language storage with atomic file protection
-- **Module Level Progression**: Intelligent 1-2 → 3-5 → 6-8 level-based adventure flow
-- **Community Module Compatibility**: Universal module support with automatic conflict resolution
-- **AI Auto-Generation**: Contextual module creation based on party history and preferences
-- **Isolated Module Architecture**: Clean module separation with AI travel narration
+### Version 0.2.0 - Module Toolkit Release
+- **Module Toolkit** - Complete content creation suite
+- **NPC Generator** - Create NPCs with portraits and backstories
+- **Monster Generator** - Build custom creatures with visuals
+- **Graphic Pack System** - Manage and share visual content
+- **Video Processing** - Convert videos to animated portraits
+- **Style Templates** - Multiple art styles supported
+- **Pack Import/Export** - Share content as ZIP files
+- **Bestiary Integration** - Access complete monster compendium
+- **Portrait System** - Unified hover previews across all characters
 
-### Technical Improvements
-- **Enhanced Module Stitcher**: Fixed areas/ subdirectory scanning with automatic ID conflict resolution
-- **Centralized AI Configuration**: Removed all hardcoded GPT models, now uses config.py for consistency
-- **Startup Wizard Architecture**: Complete rewrite with proper error handling and Windows compatibility
-- **Module Path Management**: Implemented `ModulePathManager` for centralized file path handling
-- **Combat System Fixes**: Fixed monster file loading in combat to use module directories
-- **Directory Structure**: All module-specific files now stored in organized module folders
-- **Legacy Cleanup**: Moved old files to legacy folder, cleaning up root directory
-- **Validation System**: Relaxed combat validation to focus on major errors only
-- **Equipment Syncing**: Verified arrow transfer sync between character files
+### Version 0.1.5 - Core Improvements
+- **Conversation Compression** - 85-90% token reduction
+- **Module Architecture** - Clean separation of adventures
+- **Living Summaries** - Dynamic adventure chronicles
+- **Atomic Operations** - Data integrity protection
+- **Manager Pattern** - Clean code architecture
+- **Web Interface** - Real-time updates via SocketIO
+- **Party Recruitment** - Any NPC can join adventures
+- **Storage System** - Natural language inventory management
 
-### Conversation Compression Improvements (v1.5)
-- **Module-Specific Conversation History**: Each module maintains separate conversation context to prevent infinite buildup
-- **Living Summary System**: Single, continuously updated summary per module instead of sequential files
-- **Smart Context Injection**: Campaign summaries exclude current module to prevent duplication
-- **Automatic Archive/Restore**: Module conversations archived on exit, restored on return
-- **Visit Tracking**: Added metadata tracking for module visits (count, first/last visit dates)
-- **Improved Transition Detection**: Module changes detected immediately via `updatePartyTracker`
-- **Campaign Archive Structure**: Organized storage in `campaign_archives/` and `campaign_summaries/`
-
-### Safety & Protection
-- **Atomic File Operations**: Backup/restore functionality prevents data corruption
-- **Schema Validation**: All operations validated against JSON schemas
-- **Context Contamination Prevention**: AI prompts prevent module creation conflicts
-- **Character File Protection**: Inventory changes safely backed up before modification
-
-## Future Development
-
-- Web interface for easier interaction
-- Voice integration for immersive gameplay
-- Image generation for scenes and characters
-- Additional ruleset support (Pathfinder, etc.)
-- Multi-player support
-- Campaign sharing and templates
+### Roadmap
+- **Mobile Support** - Responsive web interface
+- **Voice Integration** - Speech-to-text commands
+- **AI Image Generation** - Scene and character art
+- **Multiplayer** - Shared campaign sessions
+- **Cloud Sync** - Cross-device save games
+- **Additional Rulesets** - Pathfinder, OSR support
+- **Workshop Integration** - Community content hub
+- **Mod Support** - Custom rules and mechanics
 
 ---
 
-*Created by MoonlightByte*
-*Contributors: Claude AI Assistant*
+**Created by MoonlightByte**  
+*An AI-powered adventure that never ends*
+
+For support, bug reports, or contributions, visit our [GitHub repository](https://github.com/MoonlightByte/NeverEndingQuest).

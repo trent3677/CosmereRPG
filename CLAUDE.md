@@ -1,5 +1,5 @@
-Always provide a plan before startign to modify code to ensure you are aligned with the user's request.
-Beware of feature creep and don't ad dnew features unless specifically asked or approved. Feature creep is the enemy of shipping software.
+Always provide a plan before starting to modify code to ensure you are aligned with the user's request.
+Beware of feature creep and don't add new features unless specifically asked or approved. Feature creep is the enemy of shipping software.
 
 Don't add emojis or special characters anywhere in the game code.
 
@@ -113,9 +113,9 @@ Use `python validate_module_files.py` to check schema compatibility after making
 ## Directory Structure and Import Patterns
 The codebase has been comprehensively reorganized into a logical directory structure with 100% verified import functionality:
 
-### Core Directory Organization (70 Python modules total)
+### Core Directory Organization
 ```
-core/                     # Core game engine modules (41 files)
+core/                     # Core game engine modules (47 files)
 ├── __init__.py                   # Package initialization
 ├── ai/                  # AI integration and processing (10 files)
 │   ├── action_handler.py         # Command processing and system integration
@@ -153,18 +153,27 @@ core/                     # Core game engine modules (41 files)
 │   ├── storage_manager.py        # Player storage with atomic protection
 │   ├── storage_processor.py      # Storage transaction processing
 │   └── __init__.py               # Package initialization
-└── validation/          # AI-powered validation systems (7 files)
-    ├── character_effects_validator.py # Character effects validation
-    ├── character_validator.py    # Character data validation
-    ├── dm_complex_validator.py   # Complex game state validation
-    ├── dm_response_validator.py  # DM response validation
-    ├── npc_codex_generator.py    # NPC data validation and codex
-    ├── validate_module_files.py  # Module schema validation
-    └── __init__.py               # Package initialization
+├── validation/          # AI-powered validation systems (7 files)
+│   ├── character_effects_validator.py # Character effects validation
+│   ├── character_validator.py    # Character data validation
+│   ├── dm_complex_validator.py   # Complex game state validation
+│   ├── dm_response_validator.py  # DM response validation
+│   ├── npc_codex_generator.py    # NPC data validation and codex
+│   ├── validate_module_files.py  # Module schema validation
+│   └── __init__.py               # Package initialization
+└── toolkit/             # Module content generation toolkit (6 files)
+    ├── monster_generator.py      # Monster creation utilities
+    ├── npc_generator.py          # NPC generation tools
+    ├── pack_integration.py       # Content pack integration
+    ├── pack_manager.py           # Pack management system
+    ├── style_manager.py          # Visual style management
+    └── video_processor.py        # Video processing utilities
 
-utils/                   # Utility functions and core support (19 files)
+utils/                   # Utility functions and core support (27 files)
 ├── action_predictor.py           # AI action prediction optimization
 ├── analyze_module_options.py     # Module analysis tools
+├── bestiary_updater.py           # Monster data management
+├── calendar_migration.py         # Calendar system utilities
 ├── encoding_utils.py             # Text encoding and JSON safety
 ├── enhanced_logger.py            # Comprehensive logging system
 ├── file_operations.py            # Atomic file operations
@@ -172,20 +181,28 @@ utils/                   # Utility functions and core support (19 files)
 ├── location_path_finder.py       # Location pathfinding utilities
 ├── module_context.py             # Module context management
 ├── module_path_manager.py        # Module-centric path management
+├── npc_reconciler.py             # NPC state reconciliation
+├── openai_usage_tracker.py       # API usage tracking
 ├── player_stats.py               # Character statistics and progression
 ├── plot_formatting.py            # Plot text formatting for AI
+├── prompt_sanitizer.py           # Prompt text sanitization
+├── quest_player_formatter.py     # Quest formatting utilities
 ├── reconcile_location_state.py   # Location state reconciliation
 ├── redirect_debug_output.py      # Debug output redirection
 ├── reset_campaign.py             # Campaign reset utilities
 ├── startup_wizard.py             # Character creation wizard
 ├── sync_party_tracker.py         # Party tracker synchronization
+├── time_context.py               # World time management
 ├── token_estimator.py            # AI token usage estimation
+├── token_tracker.py              # Token usage tracking
 ├── xp.py                         # Experience point calculations
 └── __init__.py                   # Package initialization
 
-updates/                 # State update modules (7 files)
+updates/                 # State update modules (10 files)
 ├── plot_update.py                # Quest progression updates
+├── process_effect_expirations.py # Effect expiration processing
 ├── save_game_manager.py          # Save/load operations
+├── update_character_effects.py   # Character effects updates
 ├── update_character_info.py      # Character data updates
 ├── update_encounter.py           # Encounter state updates
 ├── update_party_tracker.py       # Party tracker updates
@@ -543,3 +560,123 @@ docs = write_documentation("module_builder.py", doc_type="docstrings")
 
 # Debug Message Format
 Debug messages that should appear in the debug screen must use: `print(f"DEBUG: [Category] Message...")`
+
+# AI Agent Coordination System
+
+## CRITICAL MODULE SYSTEM WARNING
+**ALWAYS check module_generator.py for area connectivity bugs, NOT module_builder.py**
+- module_builder.py = Orchestrator (calls other generators)
+- module_generator.py = Worker (contains actual implementation)
+- Area connections, location IDs, bidirectional links ALL in module_generator.py
+
+## Agent Decision Tree
+
+### START HERE: What are you doing?
+
+#### 1. BEFORE starting any task -> Consult codebase-expert
+```python
+# REQUIRED: Get implementation context first
+"Where is [feature] implemented?"
+"What patterns should I follow for [task]?"
+"Which files handle [functionality]?"
+```
+
+#### 2. Module/area generation issues -> module-toolkit-expert
+```python
+# For: connectivity bugs, location IDs, area transitions
+"Debug area connection between [A] and [B]"
+"Fix duplicate location ID issue"
+"Module transition not working"
+```
+
+#### 3. After implementing -> quality-control-enforcer
+```python
+# VALIDATION CHECKLIST:
+- [ ] Solution addresses root cause (not workaround)
+- [ ] No temporary hacks or bypasses
+- [ ] Follows established patterns
+- [ ] No technical debt introduced
+```
+
+#### 4. Documentation updates -> Specialized agents
+- Project docs changed -> claude-md-curator
+- README needed -> readme-documentation-expert
+
+## Common Anti-Patterns to Avoid
+
+### MODULE BUGS - Check RIGHT location:
+```python
+# WRONG: Editing module_builder.py for connectivity
+# RIGHT: Fix in module_generator.py._create_bidirectional_connection()
+
+# WRONG: Adding workarounds in action_handler.py
+# RIGHT: Fix root cause in module generation
+```
+
+### VALIDATION GATES - Required checks:
+```python
+# Before marking ANY task complete:
+1. Run: python validate_module_files.py  # Must pass 100%
+2. Test actual gameplay functionality
+3. Check no Unicode characters added
+4. Verify atomic operations used for state changes
+```
+
+## Agent Specializations
+
+### codebase-expert
+**Domain**: Architecture, patterns, file locations
+**Example Query**: "Show me all files that handle combat damage calculation"
+
+### module-toolkit-expert  
+**Domain**: Module generation, areas, locations, connections
+**Example Query**: "Why do areas A01 and B01 not connect properly?"
+
+### quality-control-enforcer
+**Domain**: Code quality, root cause analysis, technical debt
+**Example Query**: "Review this fix for the storage bug - is it addressing the root issue?"
+
+### claude-md-curator
+**Domain**: CLAUDE.md accuracy, documentation updates
+**Example Query**: "Update docs to reflect new storage_manager patterns"
+
+### readme-documentation-expert
+**Domain**: README files, user documentation
+**Example Query**: "Create installation guide for new users"
+
+## Multi-Agent Workflow Examples
+
+### Bug Fix Workflow:
+```python
+1. codebase-expert: "Where is the bug occurring?"
+2. [Fix implementation]
+3. quality-control-enforcer: "Is this a real fix or workaround?"
+4. claude-md-curator: "Update patterns if needed"
+```
+
+### New Feature Workflow:
+```python
+1. codebase-expert: "What's the architecture for this feature?"
+2. module-toolkit-expert: "How to integrate with modules?" (if needed)
+3. [Implement feature]
+4. quality-control-enforcer: "Review implementation quality"
+5. readme-documentation-expert: "Document for users"
+```
+
+### Module Generation Debug:
+```python
+1. module-toolkit-expert: "Diagnose connectivity issue"
+2. [Fix in module_generator.py]
+3. quality-control-enforcer: "Verify fix is complete"
+```
+
+## Quality Gates Checklist
+Before ANY code changes are finalized:
+- [ ] Consulted relevant expert agent for context
+- [ ] No Unicode characters in Python code
+- [ ] Schema validation passes (validate_module_files.py)
+- [ ] Atomic operations used for state changes
+- [ ] Root cause addressed (not workaround)
+- [ ] Follows Manager Pattern where applicable
+- [ ] Import patterns match standards
+
