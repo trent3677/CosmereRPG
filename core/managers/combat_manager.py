@@ -899,16 +899,33 @@ def summarize_dialogue(conversation_history_param, location_data, party_tracker_
             clean_conversation.append(f"Player: {message.get('content', '')}")
         elif message.get("role") == "assistant":
             content = message.get("content", "")
-            try:
-                # Try to parse JSON and extract narration
-                parsed = json.loads(content)
-                if isinstance(parsed, dict) and "narration" in parsed:
-                    clean_conversation.append(f"Dungeon Master: {parsed['narration']}")
-                else:
+            
+            # Check for the special "Combat Summary:" message format first
+            if content.strip().startswith("Combat Summary:"):
+                # Extract the JSON part of the string by removing the prefix
+                json_part = content.replace("Combat Summary:", "").strip()
+                try:
+                    parsed = json.loads(json_part)
+                    if isinstance(parsed, dict) and "narration" in parsed:
+                        # We found the final summary, use its clean narration
+                        clean_conversation.append(f"Dungeon Master: {parsed['narration']}")
+                    else:
+                        # The content after the prefix was not the expected JSON, use the raw content
+                        clean_conversation.append(f"Dungeon Master: {content}")
+                except json.JSONDecodeError:
+                    # If parsing the JSON part fails, use the raw content as fallback
                     clean_conversation.append(f"Dungeon Master: {content}")
-            except json.JSONDecodeError:
-                # If not JSON, use as-is
-                clean_conversation.append(f"Dungeon Master: {content}")
+            else:
+                # This is a normal combat turn response, not the final summary
+                try:
+                    parsed = json.loads(content)
+                    if isinstance(parsed, dict) and "narration" in parsed:
+                        clean_conversation.append(f"Dungeon Master: {parsed['narration']}")
+                    else:
+                        clean_conversation.append(f"Dungeon Master: {content}")
+                except json.JSONDecodeError:
+                    # If it's not JSON (e.g., an error message), use the raw content
+                    clean_conversation.append(f"Dungeon Master: {content}")
     
     clean_text = "\n\n".join(clean_conversation)
     
@@ -937,7 +954,18 @@ def summarize_dialogue(conversation_history_param, location_data, party_tracker_
     debug(f"STATE_CHANGE: Current location ID: {current_location_id}", category="encounter_setup")
 
     if location_data and location_data.get("locationId") == current_location_id:
-        encounter_id = party_tracker_data["worldConditions"]["activeCombatEncounter"]
+        encounter_id = party_tracker_data["worldConditions"].get("activeCombatEncounter", "")
+        
+        # Debug to identify why encounter_id might be empty
+        debug(f"[summarize_dialogue] Retrieved activeCombatEncounter ID: '{encounter_id}'", category="encounter_setup")
+        if not encounter_id:
+            error("[summarize_dialogue] activeCombatEncounter ID is EMPTY or None. This is the cause of missing encounter IDs.", category="encounter_setup")
+            # Try to generate a fallback ID if missing
+            existing_encounters = location_data.get("encounters", [])
+            next_num = len(existing_encounters) + 1
+            encounter_id = f"{current_location_id}-E{next_num}"
+            warning(f"[summarize_dialogue] Generated fallback encounter ID: {encounter_id}", category="encounter_setup")
+        
         new_encounter = {
             "encounterId": encounter_id,
             "summary": dialogue_summary,
@@ -952,10 +980,7 @@ def summarize_dialogue(conversation_history_param, location_data, party_tracker_
         if "encounters" not in location_data:
             location_data["encounters"] = []
         location_data["encounters"].append(new_encounter)
-        if not location_data.get("adventureSummary"):
-            location_data["adventureSummary"] = dialogue_summary
-        else:
-            location_data["adventureSummary"] += f"\n\n{dialogue_summary}"
+        # adventureSummary field is deprecated - no longer updated to prevent data bloat
 
         from utils.module_path_manager import ModulePathManager
         from utils.encoding_utils import safe_json_load
@@ -1830,7 +1855,9 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
            error("FAILURE: No monster templates were loaded!", category="file_operations")
            return None, None
        
-       conversation_history[4]["content"] = f"Location:\n{json.dumps(location_info, indent=2)}"
+       # Filter out adventureSummary from location data to reduce token usage (same as conversation_utils.py)
+       location_for_combat = {k: v for k, v in location_info.items() if k != 'adventureSummary'}
+       conversation_history[4]["content"] = f"Location:\n{json.dumps(location_for_combat, indent=2)}"
        
        # Add each NPC as a separate system message (matching conversation_utils format)
        # Get NPC roles from party tracker
@@ -2768,16 +2795,20 @@ Do not narrate or process any actions from the next round in this response. The 
 
        # STEP 3: If combat ended, perform final cleanup and exit the simulation.
        if is_combat_ending:
+           # Store the encounter ID before clearing it
+           last_encounter_id = party_tracker_data.get("worldConditions", {}).get("activeCombatEncounter", "")
+           
+           # IMPORTANT: Generate summary BEFORE clearing the active encounter ID
+           info("AI_CALL: Generating final combat summary...", category="ai_operations")
+           dialogue_summary_result = summarize_dialogue(conversation_history, location_info, party_tracker_data)
+           
+           # NOW clear the active encounter after summary is generated
            if 'worldConditions' in party_tracker_data and 'activeCombatEncounter' in party_tracker_data['worldConditions']:
-               last_encounter_id = party_tracker_data["worldConditions"]["activeCombatEncounter"]
                if last_encounter_id:
                    party_tracker_data["worldConditions"]["lastCompletedEncounter"] = last_encounter_id
                party_tracker_data['worldConditions']['activeCombatEncounter'] = ""
                debug(f"STATE_CHANGE: Cleared active combat encounter. Last completed is now {last_encounter_id}", category="combat_events")
                safe_write_json("party_tracker.json", party_tracker_data)
-
-           info("AI_CALL: Generating final combat summary...", category="ai_operations")
-           dialogue_summary_result = summarize_dialogue(conversation_history, location_info, party_tracker_data)
            
            info("FILE_OP: Saving final combat chat history log...", category="combat_logs")
            generate_chat_history(conversation_history, encounter_id)

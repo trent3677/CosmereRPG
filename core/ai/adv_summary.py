@@ -196,7 +196,7 @@ def update_location_json(adventure_summary, location_info, current_area_id_from_
         {"role": "system", "content": f"""Given an adventure summary and the current location information, update the JSON schema for the corresponding location.
         The location name is "{location_info['name']}" and should not be changed.
         Update all relevant fields based on the events that have occurred, including but not limited to:
-        - Update the 'adventureSummary' field with the new summary and game time.
+        - IMPORTANT: The 'adventureSummary' field is deprecated. DO NOT include it or modify it in your response.
         - Modify 'description' if the location has changed significantly.
         - Update 'npcs', 'monsters', 'resourcesAvailable', 'plotHooks', etc., based on recent events. Be aware of any mispellings of NPCs or monsters and make sure to not create new entities if the player commands it, directs it, or mispells. For example, if the area started with an NPC called Mordenkainen, and the player refers to the NPC as Mordy, don't add Mordy to the NPC list in addition to Mordenkainen.
         - Create a new 'encounter' entry for this update. The encounterId should be the location's locationId (e.g., 'R01', 'R02') appended with '-E' and then the next sequential number (e.g., if locationId is 'R01' and there are 2 existing encounters, the new encounterId should be 'R01-E3'). Do NOT include the area ID prefix.
@@ -405,18 +405,21 @@ def generate_adventure_summary(conversation_history_data, party_tracker_data, le
     messages = [
         {
             "role": "system",
-            "content": f"""You are a chronicler documenting the key events of a 5th Edition roleplaying game as a historical account. Generate a single, richly detailed narrative paragraph that describes all factual events that occurred within the location '{leaving_location_name}', and only within that location. This is a retrospective summary, like a journal or chronicle—focused entirely on what actually happened, in clear chronological order.
+            "content": f"""You are a chronicler documenting the key events of a 5th Edition roleplaying game as a historical account. Generate a single, richly detailed narrative paragraph that describes all factual events that occurred during this visit to '{leaving_location_name}'. This is a retrospective summary, like a journal or chronicle—focused entirely on what actually happened during this specific visit, in clear chronological order.
+
+Even if the visit was brief or just a pass-through, describe it from a narrative perspective. Note the atmosphere, any changes the party might have noticed since their last visit (if applicable), or their apparent purpose for moving through the area. The goal is to create a complete historical record for every time the party was present in this location.
 
 The summary must be written in third person and past tense, and should read like a complete account of the party's time at that location. Include:
-- Descriptions of the environment and ambiance.
-- Character actions and reactions.
+- Descriptions of the environment and ambiance, especially any changes from previous visits.
+- Character actions and reactions, even if minor (hurried passage, cautious observation, etc.).
 - Discoveries made and information gained.
 - Consequences of actions and decisions.
 - Emotional dynamics between characters (tension, trust, affection, conflict).
-- Notable NPC interactions.
+- Notable NPC interactions, or the absence of NPCs previously present.
 - Any interpersonal developments (e.g., flirtation, bonding, solemn moments).
+- The party's apparent purpose or destination if they're passing through.
 
-You may include brief direct quotes only when they are notable turning points, emotionally charged, or central to the scene’s meaning—such as symbolic phrases like 'playing house' or promises made. Keep these minimal and impactful.
+You may include brief direct quotes only when they are notable turning points, emotionally charged, or central to the scene's meaning—such as symbolic phrases like 'playing house' or promises made. Keep these minimal and impactful.
 
 Do NOT:
 - Include events from previous or future locations.

@@ -679,7 +679,7 @@ def process_action(action, party_tracker_data, location_data, conversation_histo
         updated_plot = update_plot(plot_point_id, new_status, plot_impact, plot_filename)
 
     elif action_type == ACTION_EXIT_GAME:
-        conversation_history.append({"role": "user", "content": "Dungeon Master Note: Resume the game, the player has returned."})
+        # Don't add return message here - it will be added when the player actually returns
         import sys
 
         if __name__ != "__main__":

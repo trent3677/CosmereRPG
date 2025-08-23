@@ -527,9 +527,12 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
 
     # Insert the most recent location information
     if current_location:
+        # Create a filtered copy for conversation history, omitting adventureSummary to reduce tokens
+        location_for_conversation = {k: v for k, v in current_location.items() if k != 'adventureSummary'}
+        
         new_history.append({
             "role": "system",
-            "content": f"Current Location:\n{compress_json_data(current_location)}\n"
+            "content": f"Current Location:\n{compress_json_data(location_for_conversation)}\n"
         })
 
     # COMMENTED OUT: Party tracker JSON insertion - redundant information now included in DM Note
