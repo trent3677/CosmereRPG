@@ -873,6 +873,24 @@ def process_conversation_history(history):
     debug("SUCCESS: Conversation history processing complete", category="conversation_management")
     return history
 
+def remove_duplicate_messages(conversation_history):
+    """Remove back-to-back duplicate messages from conversation history"""
+    if not conversation_history or len(conversation_history) < 2:
+        return conversation_history
+    
+    cleaned_history = []
+    for i, msg in enumerate(conversation_history):
+        # Always keep the first message
+        if i == 0:
+            cleaned_history.append(msg)
+        # Only add if different from previous message
+        elif msg != conversation_history[i-1]:
+            cleaned_history.append(msg)
+        else:
+            debug(f"Removed duplicate message at index {i}", category="conversation_management")
+    
+    return cleaned_history
+
 def truncate_dm_notes(conversation_history):
     for message in conversation_history:
         if message["role"] == "user" and message["content"].startswith("Dungeon Master Note:"):
@@ -2072,19 +2090,13 @@ def main_game_loop():
             # Ensure location_data passed here is the one loaded for the initial state
             process_ai_response(initial_ai_response, party_tracker_data, location_data, conversation_history) 
 
-        # Track if we should skip first iteration (when return message was just processed)
-        skip_first_iteration = was_injected
-        
         # Add safeguard against infinite loops in non-interactive environments
         empty_input_count = 0
         max_empty_inputs = 5
     
         while True:
-            # Skip the first iteration if we just processed a return message
-            if skip_first_iteration:
-                skip_first_iteration = False
-                continue  # Jump to next iteration, avoiding duplicate processing
             conversation_history = truncate_dm_notes(conversation_history)
+            conversation_history = remove_duplicate_messages(conversation_history)
 
             if needs_conversation_history_update:
                 debug("STATE_CHANGE: Reloading conversation history from disk due to needs_conversation_history_update flag", category="conversation_management")
@@ -2094,6 +2106,7 @@ def main_game_loop():
                 party_tracker_data = load_json_file("party_tracker.json")
                 print(f"DEBUG: [Main Loop] Reloaded party tracker after update. Module: {party_tracker_data.get('module', 'Unknown')}")
                 conversation_history = process_conversation_history(conversation_history)
+                conversation_history = remove_duplicate_messages(conversation_history)  # Clean any duplicates
                 save_conversation_history(conversation_history)
                 needs_conversation_history_update = False
 
