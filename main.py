@@ -2072,11 +2072,18 @@ def main_game_loop():
             # Ensure location_data passed here is the one loaded for the initial state
             process_ai_response(initial_ai_response, party_tracker_data, location_data, conversation_history) 
 
+        # Track if we should skip first iteration (when return message was just processed)
+        skip_first_iteration = was_injected
+        
         # Add safeguard against infinite loops in non-interactive environments
         empty_input_count = 0
         max_empty_inputs = 5
     
         while True:
+            # Skip the first iteration if we just processed a return message
+            if skip_first_iteration:
+                skip_first_iteration = False
+                continue  # Jump to next iteration, avoiding duplicate processing
             conversation_history = truncate_dm_notes(conversation_history)
 
             if needs_conversation_history_update:
