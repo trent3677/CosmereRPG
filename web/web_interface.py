@@ -69,7 +69,7 @@ install_debug_interceptor()
 # Import the main game module and reset logic
 import main as dm_main
 import utils.reset_campaign as reset_campaign
-from core.managers.status_manager import set_status_callback
+from core.managers.status_manager import set_status_callback, set_compression_callback
 from utils.enhanced_logger import debug, info, warning, error, set_script_name
 
 # Import toolkit components for API support
@@ -115,6 +115,13 @@ def emit_status_update(status_message, is_processing):
 
 # Set the status callback
 set_status_callback(emit_status_update)
+
+# Set the compression callback
+def emit_compression_event(event_type, data):
+    """Emit compression progress events to the web interface"""
+    socketio.emit(event_type, data)
+
+set_compression_callback(emit_compression_event)
 
 class WebOutputCapture:
     """Captures output and routes it to appropriate queues"""
@@ -2029,7 +2036,9 @@ def handle_party_data_request():
                             npc_name = npc.get('name') if isinstance(npc, dict) else npc
                             if npc_name:
                                 # Exclude NPCs that are already in the player's party
-                                if not any(member['name'] == npc_name for member in party_members):
+                                # Also exclude NPCs whose names are contained within any party member's name
+                                # Example: "Eirik" should be excluded if "Eirik Hearthwise" is in the party
+                                if not any(npc_name.lower() in member['name'].lower() for member in party_members):
                                     location_npcs.append({'name': npc_name, 'type': 'location_npc'})
         
         # Send both lists to the frontend

@@ -930,7 +930,7 @@ def summarize_dialogue(conversation_history_param, location_data, party_tracker_
     clean_text = "\n\n".join(clean_conversation)
     
     dialogue_summary_prompt = [
-        {"role": "system", "content": "Your task is to provide a concise summary of the combat encounter in the world's most popular 5th Edition roleplayign game dialogue between the dungeon master running the combat encounter and the player. Focus on capturing the key events, actions, and outcomes of the encounter. Be sure to include the experience points awarded, which will be provided in the conversation history. The summary should be written in a narrative style suitable for presenting to the main dungeon master. Include in your summary any defeated monsters or corpses left behind after combat."},
+        {"role": "system", "content": "Your task is to create a vivid, colorful narrative summary of this combat encounter. Capture the dramatic highs and lows - critical hits, narrow misses, clever tactics, desperate moments, and heroic actions. Write it as an exciting story paragraph that captures the flow and feel of the battle. Include: the initial setup, key turning points, memorable moments, the final blow, total XP awarded, and what remains after combat (defeated foes, environmental changes). Write in past tense as a complete narrative summary, not a play-by-play. Make it engaging and memorable - this will be the permanent record of this battle."},
         {"role": "user", "content": clean_text}
     ]
 
@@ -949,6 +949,17 @@ def summarize_dialogue(conversation_history_param, location_data, party_tracker_
             pass
 
     dialogue_summary = response.choices[0].message.content.strip()
+    
+    # Extract just the narration if the AI returned JSON
+    try:
+        import json
+        parsed_summary = json.loads(dialogue_summary)
+        if isinstance(parsed_summary, dict) and "narration" in parsed_summary:
+            dialogue_summary = parsed_summary["narration"]
+            debug("Extracted narration from JSON combat summary", category="combat_summary")
+    except (json.JSONDecodeError, KeyError):
+        # Not JSON or doesn't have narration field, use as-is
+        pass
 
     current_location_id = party_tracker_data["worldConditions"]["currentLocationId"]
     debug(f"STATE_CHANGE: Current location ID: {current_location_id}", category="encounter_setup")

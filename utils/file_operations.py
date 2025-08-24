@@ -194,7 +194,8 @@ class AtomicFileWriter:
             if os.name == 'nt' and os.path.exists(filepath):
                 os.unlink(filepath)
             os.rename(temp_path, filepath)
-            logger.info(f"Successfully wrote {filepath}")
+            # Suppress success messages - only log errors
+            # logger.info(f"Successfully wrote {filepath}")
             
             return True
             
@@ -249,7 +250,8 @@ class AtomicFileWriter:
             
             with open(filepath, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-                logger.debug(f"Successfully read {filepath}")
+                # Suppress success messages - only log errors
+                # logger.debug(f"Successfully read {filepath}")
                 return data
                 
         except json.JSONDecodeError as e:

@@ -9,6 +9,9 @@ venv/
 env/
 ENV/
 
+# Development and test files
+compression_development/
+
 # Configuration files
 config.py
 

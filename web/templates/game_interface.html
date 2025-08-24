@@ -3829,9 +3829,96 @@
         }
         
         /* Remove duplicate style - now handled in main .toolkit-button definition above */
+        
+        /* Compression Progress Bar Styles */
+        .compression-progress-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1e1e1e;
+            border: 3px solid #FFA500;
+            border-radius: 8px;
+            padding: 20px;
+            z-index: 10000;
+            min-width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+        
+        .compression-progress-container.active {
+            display: block;
+        }
+        
+        .compression-progress-title {
+            color: #FFA500;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .compression-progress-text {
+            color: #e0e0e0;
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-style: italic;
+            line-height: 1.4;
+        }
+        
+        .compression-progress-bar-container {
+            width: 100%;
+            height: 24px;
+            background-color: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .compression-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #2d7a2d, #4CAF50, #5cbf5c);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+        
+        .compression-progress-status {
+            color: #b0b0b0;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .compression-progress-bar.complete {
+            animation: pulse-glow 0.5s ease;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(76, 175, 80, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.8); }
+        }
     </style>
 </head>
 <body>
+    <!-- Compression Progress Bar -->
+    <div class="compression-progress-container" id="compression-progress">
+        <div class="compression-progress-title">Chronicle Compression</div>
+        <div class="compression-progress-text" id="compression-text">
+            The Dungeon Master weaves your tales into the grand tapestry...
+        </div>
+        <div class="compression-progress-bar-container">
+            <div class="compression-progress-bar" id="compression-bar"></div>
+        </div>
+        <div class="compression-progress-status" id="compression-status">
+            Preparing compression...
+        </div>
+    </div>
+    
     <div class="header">
         <h1>Never<span>Ending</span>Quest</h1>
         <div class="location-info" id="location-info">
@@ -4410,6 +4497,58 @@
             if (data.tpm !== undefined) document.getElementById('tpm-value').textContent = data.tpm.toLocaleString();
             if (data.rpm !== undefined) document.getElementById('rpm-value').textContent = data.rpm;
             if (data.total_tokens !== undefined) document.getElementById('total-tokens').textContent = data.total_tokens.toLocaleString();
+        });
+        
+        // Compression progress updates
+        socket.on('compression_start', (data) => {
+            const container = document.getElementById('compression-progress');
+            const textElement = document.getElementById('compression-text');
+            const statusElement = document.getElementById('compression-status');
+            const barElement = document.getElementById('compression-bar');
+            
+            container.classList.add('active');
+            
+            // DM-themed messages
+            const messages = [
+                "The Dungeon Master carefully inscribes your deeds into the eternal chronicle...",
+                "Ancient magics compress your adventures into mystical runes...",
+                "The scribes work tirelessly to record your legendary journey...",
+                "Your tales are being woven into the tapestry of heroes...",
+                "The chronicler's quill dances across enchanted parchment..."
+            ];
+            textElement.textContent = messages[Math.floor(Math.random() * messages.length)];
+            
+            statusElement.textContent = `Compressing ${data.total_sections} chronicle sections...`;
+            barElement.style.width = '0%';
+            barElement.classList.remove('complete');
+        });
+        
+        socket.on('compression_progress', (data) => {
+            const statusElement = document.getElementById('compression-status');
+            const barElement = document.getElementById('compression-bar');
+            
+            const percentage = Math.round((data.completed / data.total) * 100);
+            barElement.style.width = percentage + '%';
+            
+            if (data.from_cache) {
+                statusElement.textContent = `Section ${data.completed} of ${data.total} (retrieved from memory)`;
+            } else {
+                statusElement.textContent = `Compressing section ${data.completed} of ${data.total}...`;
+            }
+        });
+        
+        socket.on('compression_complete', (data) => {
+            const container = document.getElementById('compression-progress');
+            const statusElement = document.getElementById('compression-status');
+            const barElement = document.getElementById('compression-bar');
+            
+            barElement.style.width = '100%';
+            barElement.classList.add('complete');
+            statusElement.textContent = `Chronicle compression complete! Reduced by ${data.reduction_percentage}%`;
+            
+            setTimeout(() => {
+                container.classList.remove('active');
+            }, 2000);
         });
         
         // Image generation event handlers

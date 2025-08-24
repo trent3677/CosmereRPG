@@ -77,6 +77,7 @@ class StatusManager:
         self._is_processing = False
         self._lock = threading.Lock()
         self._status_callback = None
+        self._compression_callback = None  # For compression progress events
         
     def set_callback(self, callback: Callable[[str, bool], None]):
         """Set a callback function to be called when status changes
@@ -111,6 +112,27 @@ class StatusManager:
     def set_ready(self):
         """Set status to ready for input"""
         self.update_status("Enter your command:", False)
+    
+    def set_compression_callback(self, callback: Callable[[str, dict], None]):
+        """Set a callback for compression progress events
+        
+        Args:
+            callback: Function that takes (event_type, data) as arguments
+        """
+        self._compression_callback = callback
+    
+    def emit_compression_event(self, event_type: str, data: dict):
+        """Emit a compression progress event
+        
+        Args:
+            event_type: Type of event ('compression_start', 'compression_progress', 'compression_complete')
+            data: Event data dictionary
+        """
+        if self._compression_callback:
+            try:
+                self._compression_callback(event_type, data)
+            except:
+                pass  # Silently ignore callback errors
         
     def is_processing(self) -> bool:
         """Check if the system is currently processing"""
@@ -205,3 +227,11 @@ def set_status_callback(callback: Callable[[str, bool], None]):
         callback: Function that takes (status_message, is_processing) as arguments
     """
     status_manager.set_callback(callback)
+
+def set_compression_callback(callback: Callable[[str, dict], None]):
+    """Set the global compression callback function
+    
+    Args:
+        callback: Function that takes (event_type, data) as arguments
+    """
+    status_manager.set_compression_callback(callback)

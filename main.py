@@ -874,16 +874,32 @@ def process_conversation_history(history):
     return history
 
 def remove_duplicate_messages(conversation_history):
-    """Remove back-to-back duplicate messages from conversation history"""
+    """Remove duplicate messages from conversation history, specifically targeting combat system messages"""
     if not conversation_history or len(conversation_history) < 2:
         return conversation_history
     
     cleaned_history = []
+    seen_combat_system_messages = set()  # Track unique "[SYSTEM: Combat" messages
+    
     for i, msg in enumerate(conversation_history):
+        content = msg.get("content", "")
+        
+        # Check if this is a combat-related system message
+        is_combat_system_msg = content.startswith("[SYSTEM: Combat")
+        
         # Always keep the first message
         if i == 0:
             cleaned_history.append(msg)
-        # Only add if different from previous message
+            if is_combat_system_msg:
+                seen_combat_system_messages.add(content)
+        # For combat system messages, check if we've seen this exact message before
+        elif is_combat_system_msg:
+            if content not in seen_combat_system_messages:
+                cleaned_history.append(msg)
+                seen_combat_system_messages.add(content)
+            else:
+                debug(f"Removed duplicate combat system message at index {i}: {content[:60]}...", category="conversation_management")
+        # For all other messages, only check against previous message (original behavior)
         elif msg != conversation_history[i-1]:
             cleaned_history.append(msg)
         else:
@@ -1680,6 +1696,36 @@ def get_ai_response(conversation_history, validation_retry_count=0):
         else:
             print(f"DEBUG: MODEL ROUTING - Intelligent routing disabled, using FULL MODEL")
     
+    # Check if compression is enabled and apply if needed
+    try:
+        from model_config import COMPRESSION_ENABLED
+        if COMPRESSION_ENABLED:
+            # Use our parallel compressor with caching
+            from conversation_compressor_parallel import ParallelConversationCompressor
+            import json
+            from pathlib import Path
+            
+            # Save conversation to temp file
+            temp_file = Path("/tmp/temp_conversation_for_api.json")
+            with open(temp_file, 'w', encoding='utf-8') as f:
+                json.dump(conversation_history, f, indent=2, ensure_ascii=False)
+            
+            # Compress using our working compressor with settings from config
+            compressor = ParallelConversationCompressor()
+            messages_to_send = compressor.process_conversation_history(str(temp_file))
+            
+            # Clean up temp file
+            if temp_file.exists():
+                temp_file.unlink()
+                
+            print(f"DEBUG: Parallel compression applied successfully")
+        else:
+            messages_to_send = conversation_history
+    except Exception as e:
+        # If compression fails, use original history
+        print(f"WARNING: Compression failed: {e}")
+        messages_to_send = conversation_history
+    
     # Generate response with selected model
     if USE_GPT5_MODELS:
         # GPT-5: Always use mini, no temperature/max_tokens
@@ -1693,7 +1739,7 @@ def get_ai_response(conversation_history, validation_retry_count=0):
         print(f"DEBUG: [MAIN.PY] Using GPT-5 model: {selected_model}")
         response = client.chat.completions.create(
             model=selected_model,
-            messages=conversation_history
+            messages=messages_to_send  # Use potentially compressed messages
         )
         
         # Track token usage
@@ -1708,7 +1754,7 @@ def get_ai_response(conversation_history, validation_retry_count=0):
         response = client.chat.completions.create(
             model=selected_model,
             temperature=TEMPERATURE,
-            messages=conversation_history
+            messages=messages_to_send  # Use potentially compressed messages
         )
         
         # Track token usage
@@ -1747,11 +1793,23 @@ def ensure_main_system_prompt(conversation_history, main_system_prompt_text):
     # of the actual system prompt content
     main_prompt_start = main_system_prompt_text[:50]  # First 50 characters as identifier
     
-    # Filter out any system message that starts with our identifier
+    # Also check for old format system prompts that we want to remove
+    old_prompt_identifiers = [
+        "These are Ashiralis's Sowhains' game rules",
+        "## Section 1: Core Foundation"  # In case the old format started differently
+    ]
+    
+    # Filter out any system message that matches our criteria
     filtered_history = []
     for msg in conversation_history:
-        if msg["role"] == "system" and msg["content"].startswith(main_prompt_start):
-            continue  # Skip this message as it's likely our main system prompt
+        if msg["role"] == "system":
+            # Check if it's the current main prompt
+            if msg["content"].startswith(main_prompt_start):
+                continue  # Skip this message as it's our current main system prompt
+            # Check if it's an old format prompt
+            if any(msg["content"].startswith(old_id) for old_id in old_prompt_identifiers):
+                debug(f"Removing old format system prompt starting with: {msg['content'][:50]}...", category="conversation_management")
+                continue  # Skip old format prompts
         filtered_history.append(msg)
     
     # Always place the main system prompt at the beginning

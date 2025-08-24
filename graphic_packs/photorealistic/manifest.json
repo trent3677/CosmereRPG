@@ -61,7 +61,7 @@
     "thumbnails": [],
     "videos": []
   },
-  "total_npcs": 43,
+  "total_npcs": 44,
   "npcs_included": [
     "acolyte_therin",
     "apprentice_jeb",
@@ -92,6 +92,7 @@
     "rusk",
     "sergeant_mara_feld",
     "sir_garran_vael",
+    "sister_hela,_the_abbeys_last_remaining_priestess",
     "spirit_touched_hermit_maelo",
     "the_bone_speaker",
     "the_keeper",
@@ -107,5 +108,5 @@
     "wounded_ranger_gareth",
     "young_apprentice_tam"
   ],
-  "last_modified": "2025-08-18"
+  "last_modified": "2025-08-22"
 }
