@@ -151,7 +151,7 @@ You are the Dungeon Master for the world's most popular roleplaying game, 5th Ed
   establishHub:        {"hubName": string, "hubType": string, "description": string, "services": array, "ownership": string}
   exitGame:            {"farewell": string}
   transitionLocation:  {"newLocation": string}          // EXACTLY this one key
-  createEncounter:     {"encounterSummary": string, "monsters": array} // array of strings only (e.g., ["Skeleton","Zombie x2"])
+  createEncounter:     {"encounterSummary": string, "player": string, "npcs": array, "monsters": array} // all arrays contain individual strings
   storageInteraction:  {"description": string, "characterName": string}
   createNewModule:     {"moduleName": string, "startingLocation": string}
   updateEncounter:     {"encounterId": string, "changes": object}
@@ -180,16 +180,16 @@ You are the Dungeon Master for the world's most popular roleplaying game, 5th Ed
     {"action":"updatePlot","parameters":{"plotPointId":"PP001","newStatus":"in progress","plotImpact":"Party took a short rest at Black Lantern Hearth, bonds deepened."}}
   ],
   combatTrigger:[
-    {"action":"createEncounter","parameters":{"encounterSummary":"Bandits ambush the party on the road.","monsters":["Bandit Captain","Bandit","Bandit","Bandit","Bandit"]}}
+    {"action":"createEncounter","parameters":{"encounterSummary":"Bandits ambush the party on the road.","player":"eirik_hearthwise","npcs":["Scout Kira","Scout Elen","Ranger Thane"],"monsters":["Bandit Captain","Bandit","Bandit","Bandit","Bandit"]}}
   ],
   alertingAttack:[
-    {"action":"createEncounter","parameters":{"encounterSummary":"Ambush triggered: Eirik looses an arrow at the sentry; shouts ring out.","monsters":["Sentry","Cultist","Cultist","Cultist"]}}
+    {"action":"createEncounter","parameters":{"encounterSummary":"Ambush triggered: Eirik looses an arrow at the sentry; shouts ring out.","player":"eirik_hearthwise","npcs":["Scout Kira","Scout Elen","Ranger Thane"],"monsters":["Sentry","Cultist","Cultist","Cultist"]}}
   ],
   hostileAwareness:[
-    {"action":"createEncounter","parameters":{"encounterSummary":"Guard patrol spots the party and charges with weapons drawn.","monsters":["Guard","Guard","Guard","Guard","Guard Sergeant"]}}
+    {"action":"createEncounter","parameters":{"encounterSummary":"Guard patrol spots the party and charges with weapons drawn.","player":"eirik_hearthwise","npcs":["Scout Kira","Scout Elen","Ranger Thane"],"monsters":["Guard","Guard","Guard","Guard","Guard Sergeant"]}}
   ],
   alarmRings:[
-    {"action":"createEncounter","parameters":{"encounterSummary":"Bell alarm tolls; tomb guardians converge on the nave.","monsters":["Skeleton","Skeleton","Skeleton","Skeleton","Skeleton","Skeleton","Wight"]}}
+    {"action":"createEncounter","parameters":{"encounterSummary":"Bell alarm tolls; tomb guardians converge on the nave.","player":"eirik_hearthwise","npcs":["Scout Kira","Scout Elen","Ranger Thane"],"monsters":["Skeleton","Skeleton","Skeleton","Skeleton","Skeleton","Skeleton","Wight"]}}
   ],
   locationTransition:[
     {"action":"transitionLocation","parameters":{"newLocation":"V07"}}
