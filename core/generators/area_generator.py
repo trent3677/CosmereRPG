@@ -237,12 +237,46 @@ No explanations, just the JSON array of thematic location names."""
             x, y = room_positions[room_id]
             room_type = random.choice(self.room_types.get(area_type, ["room"]))
             
-            room_data.append({
+            # Get danger level from area context if available
+            danger_level = area_context.get('danger_level', 'medium') if area_context else 'medium'
+            
+            room = {
                 "id": room_id,
                 "type": room_type,
                 "connections": sorted(list(set(connections[room_id]))),
-                "coordinates": f"X{x}Y{y}"
-            })
+                "coordinates": f"X{x}Y{y}",
+                
+                # --- NEW optional fields for AI / navigation ---
+                "directions": {},             # filled later by helper
+                "tags": [],                   # e.g. ["hub","rest","landmark"]
+                "purpose": "unknown",         # e.g. "safe_haven","quest_goal","encounter"
+                "landmark": False,            # True for hubs/quests
+                "dangerLevel": danger_level   # Pull from area config
+            }
+            
+            # Auto-tag rooms for better AI understanding
+            deg = len(room["connections"])
+            if room_type in {"tavern", "campsite", "square", "gate", "entrance"}:
+                room["tags"].append("rest" if room_type in {"tavern", "campsite"} else "hub")
+            if deg >= 3:
+                room["tags"].append("hub")
+            if deg == 1:
+                room["landmark"] = True
+                room["tags"].append("dead_end")
+            
+            # Set purpose based on room type (normalize spaces for comparison)
+            normalized_type = room_type.replace(" ", "_")
+            if room["purpose"] == "unknown":
+                if normalized_type in {"throne_room", "treasure_room", "vault", "boss_chamber"}:
+                    room["purpose"] = "quest_goal"
+                elif room_type in {"cave", "lair", "prison", "hall", "dungeon", "laboratory"}:
+                    room["purpose"] = "encounter"
+                elif room_type in {"entrance", "exit", "gate", "portal", "crossroads"}:
+                    room["purpose"] = "transition"
+                elif "rest" in room["tags"]:  # Check tags after they're set
+                    room["purpose"] = "safe_haven"
+            
+            room_data.append(room)
         
         # Generate AI-powered thematic names if context provided
         if area_context:
@@ -263,12 +297,55 @@ No explanations, just the JSON array of thematic location names."""
         
         rooms = room_data
         
+        # Helper function for robust coordinate parsing
+        import re
+        def parse_xy(coord: str):
+            m = re.match(r"X(\d+)Y(\d+)$", coord)
+            if not m:
+                return 0, 0
+            return int(m.group(1)), int(m.group(2))
+        
+        # Map grid deltas to cardinal directions (Y increases going south in our grid)
+        delta_to_dir = {(0, -1): "north", (0, 1): "south", (1, 0): "east", (-1, 0): "west"}
+        
+        for r in rooms:
+            r["directions"] = {}
+            rx, ry = parse_xy(r["coordinates"])
+            for c in r["connections"]:
+                # Find the connected room
+                connected_room = next((rr for rr in rooms if rr["id"] == c), None)
+                if connected_room:
+                    cx, cy = parse_xy(connected_room["coordinates"])
+                    dx, dy = cx - rx, cy - ry
+                    if (dx, dy) in delta_to_dir:
+                        r["directions"][delta_to_dir[(dx, dy)]] = c
+        
+        # Smart startRoom selection
+        def pick_start_room(rooms_list):
+            # 1) Look for entrance type
+            for room in rooms_list:
+                if room.get("type") == "entrance":
+                    return room["id"]
+            # 2) Pick room with highest degree (most connected = hub)
+            rooms_by_degree = sorted(rooms_list, key=lambda r: len(r.get("connections", [])), reverse=True)
+            if rooms_by_degree:
+                return rooms_by_degree[0]["id"]
+            # 3) Fallback to first room
+            return rooms_list[0]["id"] if rooms_list else None
+        
+        start_room_id = pick_start_room(rooms)
+        
         return {
-            "mapId": f"MAP_{placed_rooms}",
+            "mapId": f"MAP_{prefix}_{placed_rooms}",  # Unique with prefix
             "mapName": f"{area_type.title()} Map",
             "totalRooms": placed_rooms,
             "rooms": rooms,
-            "layout": cleaned_grid
+            "layout": cleaned_grid,
+            
+            # --- NEW top-level metadata ---
+            "startRoom": start_room_id,
+            "version": "1.1",  # Version for future compatibility
+            "notes": "Extended schema with AI-friendly navigation fields"
         }
     
     def clean_grid(self, grid: List[List[str]]) -> List[List[str]]:

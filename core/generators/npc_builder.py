@@ -45,6 +45,13 @@ from config import OPENAI_API_KEY, NPC_BUILDER_MODEL # Assuming API key might al
 from utils.module_path_manager import ModulePathManager
 from utils.enhanced_logger import debug, info, warning, error, set_script_name
 
+# Token tracking import
+try:
+    from utils.openai_usage_tracker import track_response
+    USAGE_TRACKING_AVAILABLE = True
+except ImportError:
+    USAGE_TRACKING_AVAILABLE = False
+
 # Set script name for logging
 set_script_name("npc_builder")
 

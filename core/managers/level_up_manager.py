@@ -59,6 +59,13 @@ from updates.update_character_info import update_character_info, normalize_chara
 from utils.encoding_utils import safe_json_dump
 from utils.module_path_manager import ModulePathManager
 
+# Token tracking import
+try:
+    from utils.openai_usage_tracker import track_response
+    USAGE_TRACKING_AVAILABLE = True
+except ImportError:
+    USAGE_TRACKING_AVAILABLE = False
+
 # Initialize OpenAI client
 client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -196,6 +203,14 @@ class LevelUpSession:
                 messages=self.conversation,
                 temperature=0.7
             )
+            
+            # Track token usage
+            if USAGE_TRACKING_AVAILABLE:
+                try:
+                    track_response(response)
+                except:
+                    pass
+            
             return response.choices[0].message.content
         except Exception as e:
             print(f"[ERROR] Getting AI response: {e}")
@@ -216,6 +231,14 @@ class LevelUpSession:
                 messages=validation_messages,
                 temperature=0.2
             )
+            
+            # Track token usage
+            if USAGE_TRACKING_AVAILABLE:
+                try:
+                    track_response(response)
+                except:
+                    pass
+            
             validation_response = response.choices[0].message.content
             if validation_response and "VALID" in validation_response.upper():
                 return True, validation_response

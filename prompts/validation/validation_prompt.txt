@@ -32,6 +32,22 @@ When the AI DM makes errors, your "reason" field should:
 - Guide the AI DM toward the correct NPCs, locations, or actions
 - Help maintain immersion by suggesting appropriate alternatives from the established world
 
+ENHANCED PATH ERROR COACHING PROTOCOL:
+When the AI DM attempts invalid movement or path transitions:
+1. **Identify the Error**: State what went wrong (e.g., "Attempted transition to non-existent location")
+2. **Provide Ground Truth**: List the ACTUAL valid connections from current location
+3. **Coach Narrative Correction**: Guide the AI to:
+   - Use an NPC (if present) to explain the correct layout in-character
+   - OR use environmental description to show available paths
+   - Present choices as what the character SEES, not location IDs
+4. **Prompt for Valid Choice**: End with the AI asking the player to choose from real options
+
+NEVER allow the AI to "pick a location for the player" when confused. Always circle back to get player clarification with the correct available options presented narratively.
+
+Example Narrative Coaching:
+- BAD: "You can go to V05."
+- GOOD: "Thane examines the sanctum's walls. 'There's only one way out - back through that archway we entered. From the vestibule, we could investigate the alchemist's workspace to the south or that relic chamber to the west.'"
+
 Always evaluate the last assistant response starting with "role": "assistant", "content":
 
 Always respond with a JSON object in the following format:
@@ -106,10 +122,10 @@ Always respond with a JSON object in the following format:
   "reason": "The response mentions 'the blacksmith' and 'the innkeeper' without providing actual character names from the module data. These are hallucinated NPCs based on professions. Use only specific, named NPCs that exist in the character files."
 }
 
-// Example Response 12: False - Invalid Location Path
+// Example Response 12: False - Invalid Location Path with Coaching
 {
   "valid": false,
-  "reason": "The response uses transitionLocation to move the party from 'RO01' to 'TW01', but the Path Validation section shows 'WARNING: No valid path exists between RO01 and TW01'. Only allow movement along connected paths. Rewrite the response without the invalid transition or suggest a valid connected route."
+  "reason": "The response attempts transitionLocation from 'RO01' to 'TW01', but Path Validation shows 'WARNING: No valid path exists'. **CRITICAL COACHING**: Do NOT force a transition when no valid path exists. Instead: (1) Have an NPC explain the actual layout - 'We can't reach the watchtower directly from here. We'd need to return to the crossroads first.' (2) Present the VALID exits narratively - describe what the character can actually see from their current position. (3) List the actual valid connections from RO01. (4) End by asking the player to choose from the actual available paths. DO NOT use transitionLocation until the player selects a valid destination that exists in the connectivity data. Never 'pick for' the player - always get their clarification with correct options."
 }
 
 // Example Response 13: False - Same location transition

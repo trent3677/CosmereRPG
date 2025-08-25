@@ -62,6 +62,13 @@ from PIL import Image
 # Add parent directory to path so we can import from utils, core, etc.
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Token tracking import
+try:
+    from utils.openai_usage_tracker import track_response
+    USAGE_TRACKING_AVAILABLE = True
+except ImportError:
+    USAGE_TRACKING_AVAILABLE = False
+
 # Install debug interceptor before importing main
 from utils.redirect_debug_output import install_debug_interceptor, uninstall_debug_interceptor
 install_debug_interceptor()
@@ -1432,6 +1439,14 @@ def promote_to_bestiary():
             ],
             temperature=0.7
         )
+        
+        # Track token usage
+        if USAGE_TRACKING_AVAILABLE:
+            try:
+                track_response(response)
+            except:
+                pass
+        
         description = response.choices[0].message.content.strip()
 
         # 3. Create and add the new monster entry
@@ -2764,6 +2779,13 @@ Example Output Format:
                         ],
                         temperature=0.8
                     )
+                    
+                    # Track token usage
+                    if USAGE_TRACKING_AVAILABLE:
+                        try:
+                            track_response(response)
+                        except:
+                            pass
                     
                     description = response.choices[0].message.content
                     description = sanitize_text(description)

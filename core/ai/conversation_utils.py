@@ -83,6 +83,7 @@ from utils.module_path_manager import ModulePathManager
 from utils.encoding_utils import safe_json_load
 from utils.plot_formatting import format_plot_for_ai
 from utils.enhanced_logger import debug, info, warning, error, set_script_name
+from core.ai.atlas_builder import build_atlas_for_module, format_atlas_for_conversation
 
 # Set script name for logging
 set_script_name("conversation_utils")
@@ -491,17 +492,29 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
     current_area_id = party_tracker_data["worldConditions"]["currentAreaId"] if party_tracker_data else None
     current_location_id = party_tracker_data["worldConditions"]["currentLocationId"] if party_tracker_data else None
 
-    # Insert map data
-    if current_area_id:
-        # Use current module from party tracker for consistent path resolution
-        current_module_name = party_tracker_data.get("module", "").replace(" ", "_") if party_tracker_data else None
-        path_manager = ModulePathManager(current_module_name)
-        map_file = path_manager.get_map_path(current_area_id)
-        map_data = load_json_data(map_file)
-        if map_data:
-            map_message = "Here's the current map data:\n"
-            map_message += f"{map_data}\n"
-            new_history.append({"role": "system", "content": map_message})
+    # Insert atlas data BEFORE map data for navigation context
+    current_module_name = party_tracker_data.get("module", "").replace(" ", "_") if party_tracker_data else None
+    if current_module_name:
+        try:
+            atlas = build_atlas_for_module(current_module_name)
+            if atlas and atlas.get("areas"):
+                atlas_message = format_atlas_for_conversation(atlas)
+                new_history.append({"role": "system", "content": atlas_message})
+                debug(f"Inserted atlas with {atlas['statistics']['total_areas']} areas")
+        except Exception as e:
+            debug(f"Could not build atlas for {current_module_name}: {e}")
+
+    # DEPRECATED: Individual map data now replaced by comprehensive world atlas above
+    # The atlas provides complete module connectivity in a more readable format
+    # if current_area_id:
+    #     # Use current module from party tracker for consistent path resolution
+    #     path_manager = ModulePathManager(current_module_name)
+    #     map_file = path_manager.get_map_path(current_area_id)
+    #     map_data = load_json_data(map_file)
+    #     if map_data:
+    #         map_message = "Here's the current map data:\n"
+    #         map_message += f"{map_data}\n"
+    #         new_history.append({"role": "system", "content": map_message})
 
     # Load the area-specific JSON file
     if current_area_id:

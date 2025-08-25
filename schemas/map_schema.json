@@ -15,6 +15,18 @@
       "minimum": 1,
       "description": "The total number of rooms in the map"
     },
+    "startRoom": {
+      "type": "string",
+      "description": "ID of the starting room (optional, defaults to first room)"
+    },
+    "version": {
+      "type": "string",
+      "description": "Schema version (optional, for tracking updates)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes about the map (optional)"
+    },
     "rooms": {
       "type": "array",
       "items": {
@@ -38,6 +50,37 @@
           "coordinates": {
             "type": "string",
             "description": "Grid coordinates (e.g., 'X0Y1')"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of room (dungeon, tavern, shop, etc.) - optional for backward compatibility"
+          },
+          "directions": {
+            "type": "object",
+            "description": "Cardinal directions to connected rooms (optional)",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags for AI/gameplay (e.g., hub, rest, landmark) - optional"
+          },
+          "purpose": {
+            "type": "string",
+            "description": "Room purpose (e.g., safe_haven, quest_goal, encounter) - optional"
+          },
+          "landmark": {
+            "type": "boolean",
+            "description": "Whether this room is a landmark - optional"
+          },
+          "dangerLevel": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "extreme"],
+            "description": "Danger level of the room - optional"
           }
         },
         "required": ["id", "name", "connections", "coordinates"]
