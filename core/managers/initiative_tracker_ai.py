@@ -72,7 +72,7 @@ def extract_recent_combat_messages(conversation, current_round):
         if conversation[i]["role"] != "system":
             relevant_messages.append(conversation[i])
     
-    return relevant_messages[-20:]  # Limit to last 20 messages to stay within token limits
+    return relevant_messages[-6:]  # Limit to last 6 messages - enough for current round context
 
 def create_initiative_prompt(messages, creatures, current_round):
     """Create prompt for AI to analyze initiative."""

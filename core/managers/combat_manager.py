@@ -1594,9 +1594,15 @@ def compress_old_combat_rounds(conversation_history, current_round, keep_recent_
         for i, msg in enumerate(conversation_history):
             content = msg.get('content', '')
             
-            # Check for combat round markers in DM notes
-            if msg.get('role') == 'user' and 'COMBAT ROUND' in content:
+            # Check for combat round markers in user messages
+            # Look for both old format (COMBAT ROUND X) and new format (combat_round: X)
+            if msg.get('role') == 'user':
+                # Old format: COMBAT ROUND X
                 match = re.search(r'COMBAT ROUND (\d+)', content)
+                if not match:
+                    # New format from initiative tracker: combat_round: X
+                    match = re.search(r'combat_round:\s*(\d+)', content)
+                
                 if match:
                     round_num = int(match.group(1))
                     if round_num in rounds_to_compress:
@@ -1625,7 +1631,11 @@ def compress_old_combat_rounds(conversation_history, current_round, keep_recent_
                 round_boundaries[current_tracking_round].append(i)
                 
                 # Stop tracking when we hit the next round
+                # Check both old and new format
                 next_round_match = re.search(r'COMBAT ROUND (\d+)', content)
+                if not next_round_match:
+                    next_round_match = re.search(r'combat_round:\s*(\d+)', content)
+                
                 if next_round_match and int(next_round_match.group(1)) != current_tracking_round:
                     current_tracking_round = None
         
@@ -2409,8 +2419,8 @@ Player: {initial_prompt_text}"""
        live_tracker = None
        try:
            from .initiative_tracker_ai import generate_live_initiative_tracker
-           # Get recent conversation for analysis (last 20 messages)
-           recent_conversation = conversation_history[-20:] if len(conversation_history) > 20 else conversation_history
+           # Get recent conversation for analysis (last 6 messages - enough for current round context)
+           recent_conversation = conversation_history[-6:] if len(conversation_history) > 6 else conversation_history
            live_tracker = generate_live_initiative_tracker(encounter_data, recent_conversation, current_round)
            if live_tracker:
                debug("AI_TRACKER: Successfully generated live initiative tracker", category="combat_events")
