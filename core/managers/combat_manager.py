@@ -117,6 +117,7 @@ import time
 import re
 import random
 import subprocess
+from model_config import USE_COMPRESSED_COMBAT
 from datetime import datetime
 from utils.xp import main as calculate_xp
 from openai import OpenAI
@@ -340,6 +341,12 @@ def read_prompt_from_file(filename):
     # Prompts are now in the prompts/ directory at project root
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.join(script_dir, '..', '..')
+    
+    # Check if this is a combat prompt and use compressed version if toggle is on
+    if filename == 'combat/combat_sim_prompt.txt' and USE_COMPRESSED_COMBAT:
+        filename = 'combat/combat_sim_prompt_compressed.txt'
+        debug("Using compressed combat prompt", category="combat_events")
+    
     file_path = os.path.join(project_root, 'prompts', filename)
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -665,8 +672,14 @@ def validate_combat_response(response, encounter_data, user_input, conversation_
     except:
         debug("VALIDATION_CONTEXT: Unable to parse response JSON for context", category="combat_validation")
     
-    # Load validation prompt from file
-    validation_prompt = read_prompt_from_file('combat/combat_validation_prompt.txt')
+    # Load validation prompt from file (using toggle for compressed vs original)
+    from model_config import USE_COMPRESSED_COMBAT
+    if USE_COMPRESSED_COMBAT:
+        validation_prompt = read_prompt_from_file('combat/combat_validation_prompt_compressed.txt')
+        debug("Using compressed validation prompt", category="combat_validation")
+    else:
+        validation_prompt = read_prompt_from_file('combat/combat_validation_prompt.txt')
+        debug("Using original validation prompt", category="combat_validation")
     
     # Start with validation prompt
     validation_conversation = [
@@ -952,7 +965,6 @@ def summarize_dialogue(conversation_history_param, location_data, party_tracker_
     
     # Extract just the narration if the AI returned JSON
     try:
-        import json
         parsed_summary = json.loads(dialogue_summary)
         if isinstance(parsed_summary, dict) and "narration" in parsed_summary:
             dialogue_summary = parsed_summary["narration"]
@@ -1866,8 +1878,9 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
            error("FAILURE: No monster templates were loaded!", category="file_operations")
            return None, None
        
-       # Filter out adventureSummary from location data to reduce token usage (same as conversation_utils.py)
-       location_for_combat = {k: v for k, v in location_info.items() if k != 'adventureSummary'}
+       # Filter out adventureSummary and encounters from location data to reduce token usage (same as conversation_utils.py)
+       # Encounters are tracked separately and don't need to be in the location context
+       location_for_combat = {k: v for k, v in location_info.items() if k not in ['adventureSummary', 'encounters']}
        conversation_history[4]["content"] = f"Location:\n{json.dumps(location_for_combat, indent=2)}"
        
        # Add each NPC as a separate system message (matching conversation_utils format)
@@ -1955,7 +1968,7 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
    # Prepare initial dynamic state info for all creatures
    dynamic_state_parts = []
    
-   # Player info
+   # Player info - more compact format
    player_name_display = player_info["name"]
    current_hp = player_info.get("hitPoints", 0)
    max_hp = player_info.get("maxHitPoints", 0)
@@ -1963,12 +1976,30 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
    player_condition = player_info.get("condition", "none")
    player_conditions = player_info.get("condition_affected", [])
    
-   dynamic_state_parts.append(f"{player_name_display}:")
-   dynamic_state_parts.append(f"  - HP: {current_hp}/{max_hp}")
-   dynamic_state_parts.append(f"  - Status: {player_status}")
-   dynamic_state_parts.append(f"  - Condition: {player_condition}")
+   # Build compact state line
+   state_line = f"{player_name_display}: HP {current_hp}/{max_hp}, {player_status}"
+   if player_condition != "none":
+       state_line += f", {player_condition}"
    if player_conditions:
-       dynamic_state_parts.append(f"  - Active Conditions: {', '.join(player_conditions)}")
+       state_line += f", conditions: {','.join(player_conditions)}"
+   
+   # Add spell slots inline if player has spellcasting
+   spellcasting = player_info.get("spellcasting", {})
+   if spellcasting and "spellSlots" in spellcasting:
+       spell_slots = spellcasting["spellSlots"]
+       slot_parts = []
+       for level in range(1, 10):  # Spell levels 1-9
+           level_key = f"level{level}"
+           if level_key in spell_slots:
+               slot_data = spell_slots[level_key]
+               current_slots = slot_data.get("current", 0)
+               max_slots = slot_data.get("max", 0)
+               if max_slots > 0:  # Only show levels with available slots
+                   slot_parts.append(f"L{level}:{current_slots}/{max_slots}")
+       if slot_parts:
+           state_line += f", Spell Slots: {' '.join(slot_parts)}"
+   
+   dynamic_state_parts.append(state_line)
    
    # Creature info
    for creature in encounter_data["creatures"]:
@@ -1991,10 +2022,11 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
                # For monsters, use the encounter data
                creature_max_hp = creature.get("maxHitPoints", "Unknown")
            
-           dynamic_state_parts.append(f"\n{creature_name}:")
-           dynamic_state_parts.append(f"  - HP: {creature_hp}/{creature_max_hp}")
-           dynamic_state_parts.append(f"  - Status: {creature_status}")
-           dynamic_state_parts.append(f"  - Condition: {creature_condition}")
+           # Build compact creature state line
+           creature_line = f"{creature_name}: HP {creature_hp}/{creature_max_hp}, {creature_status}"
+           if creature_condition != "none":
+               creature_line += f", {creature_condition}"
+           dynamic_state_parts.append(creature_line)
    
    all_dynamic_state = "\n".join(dynamic_state_parts)
    
@@ -2257,7 +2289,7 @@ Player: {initial_prompt_text}"""
        if not user_input_text or not user_input_text.strip():
            continue
        
-       # Prepare dynamic state info for all creatures
+       # Prepare dynamic state info for all creatures - compact format
        dynamic_state_parts = []
        
        # Player info
@@ -2265,14 +2297,14 @@ Player: {initial_prompt_text}"""
        player_condition = player_info.get("condition", "none")
        player_conditions = player_info.get("condition_affected", [])
        
-       dynamic_state_parts.append(f"{player_name_display}:")
-       dynamic_state_parts.append(f"  - HP: {current_hp}/{max_hp}")
-       dynamic_state_parts.append(f"  - Status: {player_status}")
-       dynamic_state_parts.append(f"  - Condition: {player_condition}")
+       # Build compact state line
+       state_line = f"{player_name_display}: HP {current_hp}/{max_hp}, {player_status}"
+       if player_condition != "none":
+           state_line += f", {player_condition}"
        if player_conditions:
-           dynamic_state_parts.append(f"  - Active Conditions: {', '.join(player_conditions)}")
+           state_line += f", conditions: {','.join(player_conditions)}"
        
-       # Add spell slot information for player if they have spellcasting
+       # Add spell slots inline if player has spellcasting
        spellcasting = player_info.get("spellcasting", {})
        if spellcasting and "spellSlots" in spellcasting:
            spell_slots = spellcasting["spellSlots"]
@@ -2286,7 +2318,9 @@ Player: {initial_prompt_text}"""
                    if max_slots > 0:  # Only show levels with available slots
                        slot_parts.append(f"L{level}:{current_slots}/{max_slots}")
            if slot_parts:
-               dynamic_state_parts.append(f"  - Spell Slots: {' '.join(slot_parts)}")
+               state_line += f", Spell Slots: {' '.join(slot_parts)}"
+       
+       dynamic_state_parts.append(state_line)
        
        # Creature info
        for creature in encounter_data["creatures"]:
@@ -2310,12 +2344,12 @@ Player: {initial_prompt_text}"""
                    # For monsters, use the encounter data
                    creature_max_hp = creature.get("maxHitPoints", "Unknown")
                
-               dynamic_state_parts.append(f"\n{creature_name}:")
-               dynamic_state_parts.append(f"  - HP: {creature_hp}/{creature_max_hp}")
-               dynamic_state_parts.append(f"  - Status: {creature_status}")
-               dynamic_state_parts.append(f"  - Condition: {creature_condition}")
+               # Build compact creature state line
+               creature_line = f"{creature_name}: HP {creature_hp}/{creature_max_hp}, {creature_status}"
+               if creature_condition != "none":
+                   creature_line += f", {creature_condition}"
                
-               # Add spell slot information for NPCs if they have spellcasting
+               # Add spell slot information inline for NPCs if they have spellcasting
                if creature["type"] == "npc" and npc_data:
                    npc_spellcasting = npc_data.get("spellcasting", {})
                    if npc_spellcasting and "spellSlots" in npc_spellcasting:
@@ -2330,7 +2364,9 @@ Player: {initial_prompt_text}"""
                                if max_slots > 0:  # Only show levels with available slots
                                    npc_slot_parts.append(f"L{level}:{current_slots}/{max_slots}")
                        if npc_slot_parts:
-                           dynamic_state_parts.append(f"  - Spell Slots: {' '.join(npc_slot_parts)}")
+                           creature_line += f", Spell Slots: {' '.join(npc_slot_parts)}"
+               
+               dynamic_state_parts.append(creature_line)
        
        all_dynamic_state = "\n".join(dynamic_state_parts)
        
@@ -2381,42 +2417,94 @@ Player: {initial_prompt_text}"""
        except Exception as e:
            debug(f"AI_TRACKER: Failed to generate live tracker: {e}", category="combat_events")
        
-       # Use AI tracker if available, otherwise fall back to simple format
+       # Parse the tracker output for both markdown and JSON
+       turn_window_json = None
        if live_tracker:
-           initiative_display = live_tracker
+           # Extract markdown tracker (everything before ```json)
+           json_start = live_tracker.find("```json")
+           if json_start != -1:
+               initiative_display = live_tracker[:json_start].strip()
+               # Extract JSON metadata
+               json_end = live_tracker.find("```", json_start + 7)
+               if json_end != -1:
+                   json_str = live_tracker[json_start + 7:json_end].strip()
+                   try:
+                       turn_window_json = json.loads(json_str)
+                       debug(f"AI_TRACKER: Extracted turn window: {turn_window_json.get('turn_window', [])}", category="combat_events")
+                   except json.JSONDecodeError as e:
+                       debug(f"AI_TRACKER: Failed to parse JSON metadata: {e}", category="combat_events")
+           else:
+               # No JSON found, use whole output as markdown
+               initiative_display = live_tracker
        else:
-           debug("AI_TRACKER: Using fallback initiative order", category="combat_events")
-           initiative_order = get_initiative_order(encounter_data)
-           initiative_display = f"Initiative Order: {initiative_order}"
+           # Tracker is required for proper combat flow
+           error("AI_TRACKER: Failed to generate initiative tracker - combat cannot proceed properly", category="combat_events")
+           return None  # Exit early if tracker fails
        
-       # Create a focused, streamlined per-turn prompt
-       # Most rules are in the system prompt. This prompt focuses on DYNAMIC state.
-       user_input_with_note = f"""--- CURRENT COMBAT STATE ---
-Round: {current_round}
-{initiative_display}
-All Creatures State:
+       # Get the player's name from encounter data or turn_window JSON
+       player_character_name = None
+       if turn_window_json and "player_name" in turn_window_json:
+           player_character_name = turn_window_json["player_name"]
+       else:
+           for creature in encounter_data["creatures"]:
+               if creature["type"] == "player":
+                   player_character_name = creature["name"]
+                   break
+       
+       # Create a structured, machine-friendly prompt format
+       # DON'T add (player) markers - the tracker handles this properly now
+       marked_initiative_display = initiative_display
+       
+       # Extract current turn from initiative display if available
+       current_turn_marker = "[>]"
+       current_turn_line = ""
+       if current_turn_marker in marked_initiative_display:
+           for line in marked_initiative_display.split('\n'):
+               if current_turn_marker in line:
+                   current_turn_line = line.strip()
+                   break
+       
+       # Build turn window info if available
+       turn_window_text = ""
+       if turn_window_json:
+           turn_window_text = f"""
+--- TURN WINDOW ---
+process_until: {turn_window_json.get('process_until', 'unknown')}
+turn_window: {json.dumps(turn_window_json.get('turn_window', []))}
+"""
+       
+       # The tracker now always provides properly formatted output with ROUND INFO
+       # Don't duplicate sections - use the tracker output as-is
+       user_input_with_note = f"""{marked_initiative_display}
+--- CREATURE STATES ---
 {all_dynamic_state}
 
---- PRE-ROLLED DICE FOR NPCS/MONSTERS ---
-
-CRITICAL DICE USAGE - YOU MUST FOLLOW THESE RULES:
-1. For an NPC/Monster ATTACK ROLL: You MUST use a die from the '== CREATURE ATTACKS ==' list for that specific creature.
-2. For an NPC/Monster SAVING THROW: You MUST use a die from the '== SAVING THROWS ==' list for that specific creature.
-3. The '== GENERIC DICE ==' pool is ONLY for damage rolls, spell effects, or other non-attack/non-save rolls.
-FAILURE TO USE THE CORRECT POOL IS A CRITICAL ERROR.
+--- DICE POOLS ---
+Rules:
+- Player characters always roll their own dice
+- NPCs/monsters use pre-rolled dice pools exactly
+- Do not reuse dice; consume in order
+- For NPC/Monster ATTACK: use CREATURE ATTACKS list
+- For NPC/Monster SAVES: use SAVING THROWS list  
+- For damage/spells/other: use GENERIC DICE pool
 
 {preroll_text}
---- END OF STATE & DICE ---
 
-Player: {user_input_text}
+--- RULES ---
+- Initiative must be followed strictly
+- Only increment combat_round after all alive creatures have acted
+- Status updates must be reflected in JSON "actions"
+- Do not narrate beyond current round
 
-Now, continue the combat flow by narrating and resolving all remaining monster and NPC turns for the current round in initiative order until you get to my turn or, if I'm done this turn, then narrate the rest of this round.
+--- PLAYER ACTION ---
+{user_input_text}
 
-Your response narratively MUST stop at one of two points:
-1.  When you have resolved the turn for the LAST creature in the current round's initiative order.
-2.  When the initiative order returns to my turn again.
-
-Do not narrate or process any actions from the next round in this response. The goal is to complete the current round of actions and then pause. If you do need to stop, please engage me creatively so I don't get bored."""
+--- REQUIRED RESPONSE ---
+1. Narrate and resolve actions for all NPCs/monsters in initiative order until:
+   - The LAST creature in this round has acted, OR
+   - Initiative returns to the player
+2. Stop narration at that point
+3. Return structured JSON with plan, narration, combat_round, and actions"""
        
        # Clean old DM notes and combat state blocks before adding new user input
        conversation_history = clean_old_dm_notes(conversation_history)

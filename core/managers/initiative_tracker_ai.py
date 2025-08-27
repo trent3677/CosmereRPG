@@ -11,11 +11,23 @@ Used to enhance the combat state display with live turn tracking.
 
 import json
 import re
+import os
 from openai import OpenAI
 from config import OPENAI_API_KEY, DM_MAIN_MODEL
 import logging
 
 logger = logging.getLogger(__name__)
+
+# Load initiative tracker prompt from file (compressed version)
+INITIATIVE_TRACKER_PROMPT_PATH = os.path.join(os.path.dirname(__file__), "../../prompts/initiative_tracker_compressed.txt")
+
+try:
+    with open(INITIATIVE_TRACKER_PROMPT_PATH, 'r', encoding='utf-8') as f:
+        INITIATIVE_TRACKER_PROMPT = f.read()
+    logger.debug(f"Loaded compressed initiative tracker prompt from {INITIATIVE_TRACKER_PROMPT_PATH}")
+except FileNotFoundError:
+    logger.error(f"Initiative tracker prompt file not found at {INITIATIVE_TRACKER_PROMPT_PATH}")
+    raise FileNotFoundError(f"Required prompt file missing: {INITIATIVE_TRACKER_PROMPT_PATH}")
 
 def extract_recent_combat_messages(conversation, current_round):
     """Extract messages relevant to the current and previous round."""
@@ -64,13 +76,19 @@ def extract_recent_combat_messages(conversation, current_round):
 
 def create_initiative_prompt(messages, creatures, current_round):
     """Create prompt for AI to analyze initiative."""
-    # Format initiative order
+    
+    # Find the player character
+    player_character = next((c for c in creatures if c.get("type") == "player"), None)
+    player_name = player_character.get("name", "Unknown") if player_character else "Unknown"
+    
+    # Format initiative order WITHOUT role tags - clean names only
     initiative_order = []
     for creature in sorted(creatures, key=lambda x: x.get("initiative", 0), reverse=True):
         name = creature.get("name", "Unknown")
         init_value = creature.get("initiative", 0)
         status = creature.get("status", "alive")
-        initiative_order.append(f"{name} ({init_value}) - {status}")
+        # Clean format - no (player) or other role tags
+        initiative_order.append(f"- {name} ({init_value}) - {status}")
     
     # Format conversation
     conversation_text = ""
@@ -80,47 +98,23 @@ def create_initiative_prompt(messages, creatures, current_round):
     
     # Debug logging
     logger.debug(f"Initiative AI analyzing Round {current_round}")
+    logger.debug(f"Player identified as: {player_name}")
     logger.debug(f"Number of messages: {len(messages)}")
     if messages:
         logger.debug(f"Last message role: {messages[-1]['role']}")
         logger.debug(f"Last message preview: {messages[-1]['content'][:200]}...")
     
-    prompt = f"""You are analyzing combat in Round {current_round}. Your ONLY job is to determine who has acted and who hasn't acted yet in THIS SPECIFIC ROUND.
-
-CURRENT ROUND: {current_round}
+    # Return data in the format the compressed prompt expects
+    # NO formatting instructions - let the prompt handle everything
+    prompt = f"""--- ROUND INFO ---
+combat_round: {current_round}
+player_name: {player_name}
 
 INITIATIVE ORDER:
 {chr(10).join(initiative_order)}
 
-RECENT COMBAT CONVERSATION:
-{conversation_text}
-
-Based on the conversation above, create a **Live Initiative Tracker** showing who has acted in Round {current_round}:
-
-**Live Initiative Tracker:**
-- [X] CreatureName (Initiative) - Acted
-- [>] **CurrentCreature (Initiative) - CURRENT TURN**
-- [ ] NextCreature (Initiative) - Waiting
-- [D] DeadCreature (Initiative) - Dead
-- [S] StunnedCreature (Initiative) - Skipped (Stunned)
-- [P] ParalyzedCreature (Initiative) - Skipped (Paralyzed)
-- [U] UnconsciousCreature (Initiative) - Skipped (Unconscious)
-- [-] OtherCondition (Initiative) - Skipped (Condition Name)
-
-IMPORTANT INSTRUCTIONS:
-1. List ALL creatures from the initiative order above (highest to lowest)
-2. Use [X] followed by "Acted" for creatures who have ALREADY ACTED in Round {current_round}
-3. Use [>] and bold followed by "CURRENT TURN" for the creature whose turn it is RIGHT NOW
-4. Use [ ] followed by "Waiting" for creatures who HAVE NOT ACTED YET in Round {current_round}
-5. Use [D] followed by "Dead" for creatures that are dead (0 HP and failed death saves)
-6. Use [S] followed by "Skipped (Stunned)" for stunned creatures who couldn't act
-7. Use [P] followed by "Skipped (Paralyzed)" for paralyzed creatures who couldn't act
-8. Use [U] followed by "Skipped (Unconscious)" for unconscious creatures (0 HP but not dead)
-9. Use [-] followed by "Skipped (Condition)" for any other condition preventing action (incapacitated, petrified, etc.)
-10. DO NOT determine the round number - it is Round {current_round}
-11. ONLY look at actions taken in Round {current_round}, ignore previous rounds
-12. Always include the status description after the name and initiative
-13. If a creature was skipped due to a condition, show the condition that caused the skip"""
+--- RECENT COMBAT CONVERSATION ---
+{conversation_text}"""
     
     return prompt
 
@@ -165,7 +159,7 @@ def generate_live_initiative_tracker(encounter_data, conversation_history, curre
         response = client.chat.completions.create(
             model=DM_MAIN_MODEL,
             messages=[
-                {"role": "system", "content": "You are an initiative tracker. Your ONLY job is to identify who has acted and who hasn't in the specified round. Format your response EXACTLY as requested with the Live Initiative Tracker format using [X], [>], [ ], [D], [S], [P], [U], and [-] markers for different creature states. Do not provide any other information."},
+                {"role": "system", "content": INITIATIVE_TRACKER_PROMPT},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.1
@@ -174,31 +168,12 @@ def generate_live_initiative_tracker(encounter_data, conversation_history, curre
         # Extract the tracker from response
         tracker_text = response.choices[0].message.content
         
-        # Validate that we got a properly formatted tracker
+        # The compressed prompt returns the tracker with instruction blocks
+        # Just return the full response as it includes important turn window info
         if "**Live Initiative Tracker:**" in tracker_text:
-            # Extract just the tracker portion
-            tracker_start = tracker_text.find("**Live Initiative Tracker:**")
-            tracker = tracker_text[tracker_start:]
-            
-            # Clean up any extra text after the tracker
-            lines = tracker.split('\n')
-            cleaned_lines = []
-            valid_markers = ['[X]', '[>]', '[ ]', '[D]', '[S]', '[P]', '[U]', '[-]']
-            
-            for line in lines:
-                if line.strip() and (
-                    line.strip().startswith('**Live Initiative Tracker:**') or
-                    any(line.strip().startswith(f'- {marker}') for marker in valid_markers)
-                ):
-                    cleaned_lines.append(line)
-                elif cleaned_lines and not line.strip():
-                    # Keep empty lines within the tracker
-                    cleaned_lines.append(line)
-                elif cleaned_lines and not any(line.strip().startswith(f'- {marker}') for marker in valid_markers):
-                    # Stop if we hit non-tracker content
-                    break
-            
-            return '\n'.join(cleaned_lines)
+            # Return the full tracker output including instruction blocks
+            # The combat sim needs the instruction blocks to know what to process
+            return tracker_text.strip()
         else:
             logger.warning("AI response did not contain properly formatted tracker")
             return None
