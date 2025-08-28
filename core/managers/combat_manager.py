@@ -151,6 +151,8 @@ from utils.encoding_utils import safe_json_load
 from utils.file_operations import safe_write_json
 import core.ai.cumulative_summary as cumulative_summary
 from utils.enhanced_logger import debug, info, warning, error, game_event, set_script_name
+# Import combat message compressor for optimizing conversation history
+from combat_compressor_user_message import CombatUserMessageCompressor
 
 # Set script name for logging
 set_script_name(__name__)
@@ -216,6 +218,9 @@ third_model_history_file = "modules/conversation_history/third_model_history.jso
 
 # Create a combat_logs directory if it doesn't exist
 os.makedirs("combat_logs", exist_ok=True)
+
+# Initialize combat message compressor
+combat_message_compressor = CombatUserMessageCompressor()
 
 # Constants for chat history generation
 HISTORY_TIMESTAMP_FORMAT = "%Y%m%d_%H%M%S"
@@ -435,7 +440,7 @@ def clean_combat_state_blocks(conversation_history):
 def clean_old_dm_notes(conversation_history):
     """
     Clean up old Dungeon Master Notes from conversation history while preserving critical information.
-    Keeps round tracking, HP status, and basic combat state for the last 3 rounds.
+    Keeps round tracking, HP status, and basic combat state for the last 2 rounds.
     This reduces token usage while maintaining enough context for proper combat flow.
     """
     # Find all DM note indices
@@ -2074,19 +2079,23 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
            if USE_GPT5_MODELS:
                # GPT-5: Use mini model for re-engagement
                print(f"DEBUG: [COMBAT RE-ENGAGE] Using GPT-5 model: {GPT5_MINI_MODEL}")
+               # Compress conversation history before sending to AI
+               messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
                response = client.chat.completions.create(
                    model=GPT5_MINI_MODEL,
-                   messages=conversation_history
+                   messages=messages_to_send
                )
            else:
                # GPT-4.1: Use temperature
                temperature_used = get_combat_temperature(encounter_data, validation_attempt=0)
                
                print(f"DEBUG: [COMBAT RE-ENGAGE] Using GPT-4.1 model: {COMBAT_MAIN_MODEL} (temp: {temperature_used})")
+               # Compress conversation history before sending to AI
+               messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
                response = client.chat.completions.create(
                    model=COMBAT_MAIN_MODEL,
                    temperature=temperature_used,
-                   messages=conversation_history
+                   messages=messages_to_send
                )
            
            # Track usage if available
@@ -2150,10 +2159,13 @@ Player: {initial_prompt_text}"""
                # Calculate temperature with attempt number for dynamic adjustment
                temperature_used = get_combat_temperature(encounter_data, validation_attempt=attempt)
                
+               # Compress conversation history before sending to AI
+               messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
+               
                response = client.chat.completions.create(
                    model=COMBAT_MAIN_MODEL, 
                    temperature=temperature_used, 
-                   messages=conversation_history
+                   messages=messages_to_send
                )
                
                # Track usage
@@ -2553,27 +2565,33 @@ Rules:
                    # After first failure, use high reasoning effort
                    if attempt >= 1 and GPT5_USE_HIGH_REASONING_ON_RETRY:
                        print(f"DEBUG: [COMBAT] GPT-5 - Using HIGH reasoning effort after {attempt} attempts")
+                       # Compress conversation history before sending to AI
+                       messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
                        response = client.chat.completions.create(
                            model=combat_model,
-                           messages=conversation_history,
+                           messages=messages_to_send,
                            reasoning={"effort": "high"}
                        )
                    else:
                        # Default is medium reasoning (no need to specify)
                        print(f"DEBUG: [COMBAT] Using GPT-5 model: {combat_model} (default medium reasoning)")
+                       # Compress conversation history before sending to AI
+                       messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
                        response = client.chat.completions.create(
                            model=combat_model,
-                           messages=conversation_history
+                           messages=messages_to_send
                        )
                else:
                    # GPT-4.1: Keep existing temperature escalation
                    temperature_used = get_combat_temperature(encounter_data, validation_attempt=attempt)
                    
                    print(f"DEBUG: [COMBAT] Using GPT-4.1 model: {COMBAT_MAIN_MODEL} (temp: {temperature_used})")
+                   # Compress conversation history before sending to AI
+                   messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
                    response = client.chat.completions.create(
                        model=COMBAT_MAIN_MODEL,
                        temperature=temperature_used,
-                       messages=conversation_history
+                       messages=messages_to_send
                    )
                
                # Track usage
@@ -2793,8 +2811,8 @@ Rules:
                    # Save the updated encounter data
                    save_json_file(f"modules/encounters/encounter_{encounter_id}.json", encounter_data)
                    
-                   # Compress old combat rounds if we're at round 3 or higher
-                   if new_round >= 3:
+                   # Compress old combat rounds if we're at round 2 or higher
+                   if new_round >= 2:
                        debug(f"COMPRESSION: Checking for round compression (current round: {new_round})", category="combat_events")
                        debug(f"COMPRESSION: About to call compress_old_combat_rounds with round {new_round}", category="combat_events")
                        compressed_history = compress_old_combat_rounds(
