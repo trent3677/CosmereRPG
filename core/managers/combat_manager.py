@@ -691,20 +691,14 @@ def validate_combat_response(response, encounter_data, user_input, conversation_
         {"role": "system", "content": validation_prompt}
     ]
     
-    # Dynamic context based on encounter size
+    # Fixed context size - always use 12 messages (6 pairs)
+    context_pairs = 6  # 12 messages total
     num_creatures = len(encounter_data.get("creatures", []))
-    if num_creatures > 6:
-        # For large encounters (7+ participants), provide more context
-        context_pairs = 20  # 40 messages = ~2.5 rounds for 8 participants
-        debug(f"VALIDATION: Using extended context ({context_pairs} pairs) for large encounter with {num_creatures} creatures", category="combat_validation")
-    else:
-        # Standard encounters can use less context
-        context_pairs = 12  # 24 messages = ~2 rounds for 4-6 participants
-        debug(f"VALIDATION: Using standard context ({context_pairs} pairs) for encounter with {num_creatures} creatures", category="combat_validation")
+    debug(f"VALIDATION: Using fixed context ({context_pairs} pairs) for encounter with {num_creatures} creatures", category="combat_validation")
     
-    # Add previous user/assistant pairs for context
+    # Add previous user/assistant pairs for context with compression
     if conversation_history and len(conversation_history) > (context_pairs * 2):
-        # Get the messages based on context size
+        # Get the last 12 messages (6 pairs)
         # +1 to exclude current user input since we'll add it separately
         recent_messages = conversation_history[-(context_pairs * 2 + 1):-1]
         
@@ -712,14 +706,43 @@ def validate_combat_response(response, encounter_data, user_input, conversation_
         context_messages = [
             msg for msg in recent_messages 
             if msg["role"] in ["user", "assistant"]
-        ][-(context_pairs * 2):]  # Ensure we only get the right number of pairs
+        ][-(context_pairs * 2):]  # Ensure we only get exactly 12 messages
         
-        # Add context header and messages
+        # Apply compression to user messages except the last 2
+        compressed_context = []
+        user_message_count = 0
+        total_user_messages = sum(1 for msg in context_messages if msg["role"] == "user")
+        
+        for msg in context_messages:
+            if msg["role"] == "user":
+                user_message_count += 1
+                # Compress all user messages except the last 2
+                if user_message_count <= total_user_messages - 2:
+                    # Check if this is a combat message that should be compressed
+                    if combat_message_compressor.should_compress_user_message(msg, 0, 999):  # Use dummy index since we're just checking content
+                        compressed_content = combat_message_compressor.compress_message((0, msg["content"]))[1]
+                        compressed_context.append({
+                            "role": "user",
+                            "content": compressed_content
+                        })
+                        debug(f"VALIDATION: Compressed user message {user_message_count}/{total_user_messages}", category="combat_validation")
+                    else:
+                        # Not a combat message, keep as-is
+                        compressed_context.append(msg)
+                else:
+                    # Keep last 2 user messages uncompressed
+                    compressed_context.append(msg)
+                    debug(f"VALIDATION: Keeping user message {user_message_count}/{total_user_messages} uncompressed", category="combat_validation")
+            else:
+                # Keep assistant messages as-is
+                compressed_context.append(msg)
+        
+        # Add context header and compressed messages
         validation_conversation.append({
             "role": "system", 
-            "content": f"=== PREVIOUS COMBAT CONTEXT (last {context_pairs} exchanges) ==="
+            "content": f"=== PREVIOUS COMBAT CONTEXT (last {context_pairs} exchanges with compression) ==="
         })
-        validation_conversation.extend(context_messages)
+        validation_conversation.extend(compressed_context)
     
     # Add current validation data
     validation_conversation.extend([
@@ -728,6 +751,15 @@ def validate_combat_response(response, encounter_data, user_input, conversation_
         {"role": "user", "content": f"Player Input: {user_input}"},
         {"role": "assistant", "content": response}
     ])
+
+    # Export validation conversation for review
+    with open("validation_messages_to_api.json", "w", encoding="utf-8") as f:
+        json.dump(validation_conversation, f, indent=2, ensure_ascii=False)
+    
+    # Calculate size for debugging
+    validation_size = sum(len(json.dumps(msg)) for msg in validation_conversation)
+    print(f"DEBUG: [VALIDATION] Exported validation messages to validation_messages_to_api.json")
+    print(f"DEBUG: [VALIDATION] Total validation context size: {validation_size:,} characters ({len(validation_conversation)} messages)")
 
     max_validation_retries = 5
     for attempt in range(max_validation_retries):

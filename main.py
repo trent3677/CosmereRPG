@@ -1421,6 +1421,15 @@ def process_ai_response(response, party_tracker_data, location_data, conversatio
         debug(f"STATE_CHANGE: Separated into {len(char_update_actions)} character updates and {len(other_actions)} other actions", category="character_updates")
         print(f"DEBUG: STATE_CHANGE: Separated into {len(char_update_actions)} character updates and {len(other_actions)} other actions")
         
+        # If there are no actions at all, signal that processing is complete
+        if len(actions) == 0:
+            try:
+                from core.managers.status_manager import status_manager
+                status_manager.update_status("Ready for input", is_processing=False)
+                debug("STATE_CHANGE: No actions to process, setting status to ready", category="character_updates")
+            except Exception as e:
+                debug(f"Could not update status: {e}", category="status")
+        
         # Process character updates concurrently if there are multiple
         if len(char_update_actions) > 1:
             debug(f"STATE_CHANGE: Processing {len(char_update_actions)} character updates concurrently", category="character_updates")
@@ -2170,12 +2179,26 @@ def main_game_loop():
 
             # Your essential cleanup script remains here, running every cycle.
             # Loop until all unprocessed location transitions are handled
+            transitions_were_processed = False
             while True:
                 original_length = len(conversation_history)
                 conversation_history = check_and_process_location_transitions(conversation_history, party_tracker_data, path_manager)
                 if len(conversation_history) == original_length:
                     break  # No compression occurred, we're done
+                else:
+                    transitions_were_processed = True  # Mark that we did actual work
             save_conversation_history(conversation_history)
+            
+            # Only check for chunked compression if we actually processed transitions
+            if transitions_were_processed:
+                try:
+                    from core.ai.chunked_compression_integration import check_and_perform_chunked_compression
+                    if check_and_perform_chunked_compression():
+                        debug("SUCCESS: Chunked compression performed after processing old transitions", category="conversation_management")
+                        # Reload the compressed history
+                        conversation_history = load_json_file(json_file) or conversation_history
+                except Exception as e:
+                    error(f"FAILURE: Chunked compression check failed", exception=e, category="conversation_management")
         
             # DISABLED: Module summary insertion now handled by inject_campaign_summaries with separate system messages
             # conversation_history = check_and_process_module_transitions(conversation_history, party_tracker_data)
