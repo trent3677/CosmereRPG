@@ -16,12 +16,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 from datetime import datetime
 
-# Add parent directory to path for imports
-sys.path.append('/mnt/c/dungeon_master_v1')
-sys.path.append('/mnt/c/dungeon_master_v1/compression_development')
-
-# Import the combat compressor
-from combat_compressor_final import CombatCompressor
+# Import the combat compression engine from same directory
+from core.ai.combat_compression_engine import CombatCompressor
 
 class CombatUserMessageCompressor:
     """Compress user combat messages in parallel for AI consumption."""

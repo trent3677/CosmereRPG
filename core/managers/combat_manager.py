@@ -152,7 +152,7 @@ from utils.file_operations import safe_write_json
 import core.ai.cumulative_summary as cumulative_summary
 from utils.enhanced_logger import debug, info, warning, error, game_event, set_script_name
 # Import combat message compressor for optimizing conversation history
-from combat_compressor_user_message import CombatUserMessageCompressor
+from core.ai.combat_compressor import CombatUserMessageCompressor
 
 # Set script name for logging
 set_script_name(__name__)
@@ -2081,6 +2081,12 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
                print(f"DEBUG: [COMBAT RE-ENGAGE] Using GPT-5 model: {GPT5_MINI_MODEL}")
                # Compress conversation history before sending to AI
                messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
+               
+               # Export compressed conversation for review
+               with open("combat_messages_to_api.json", "w", encoding="utf-8") as f:
+                   json.dump(messages_to_send, f, indent=2, ensure_ascii=False)
+               print(f"DEBUG: [COMBAT] Exported compressed messages to combat_messages_to_api.json")
+               
                response = client.chat.completions.create(
                    model=GPT5_MINI_MODEL,
                    messages=messages_to_send
@@ -2092,6 +2098,12 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
                print(f"DEBUG: [COMBAT RE-ENGAGE] Using GPT-4.1 model: {COMBAT_MAIN_MODEL} (temp: {temperature_used})")
                # Compress conversation history before sending to AI
                messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
+               
+               # Export compressed conversation for review
+               with open("combat_messages_to_api.json", "w", encoding="utf-8") as f:
+                   json.dump(messages_to_send, f, indent=2, ensure_ascii=False)
+               print(f"DEBUG: [COMBAT] Exported compressed messages to combat_messages_to_api.json")
+               
                response = client.chat.completions.create(
                    model=COMBAT_MAIN_MODEL,
                    temperature=temperature_used,
@@ -2161,6 +2173,11 @@ Player: {initial_prompt_text}"""
                
                # Compress conversation history before sending to AI
                messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
+               
+               # Export compressed conversation for review
+               with open("combat_messages_to_api.json", "w", encoding="utf-8") as f:
+                   json.dump(messages_to_send, f, indent=2, ensure_ascii=False)
+               print(f"DEBUG: [COMBAT] Exported compressed messages to combat_messages_to_api.json")
                
                response = client.chat.completions.create(
                    model=COMBAT_MAIN_MODEL, 
@@ -2567,6 +2584,12 @@ Rules:
                        print(f"DEBUG: [COMBAT] GPT-5 - Using HIGH reasoning effort after {attempt} attempts")
                        # Compress conversation history before sending to AI
                        messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
+                       
+                       # Export compressed conversation for review
+                       with open("combat_messages_to_api.json", "w", encoding="utf-8") as f:
+                           json.dump(messages_to_send, f, indent=2, ensure_ascii=False)
+                       print(f"DEBUG: [COMBAT] Exported compressed messages to combat_messages_to_api.json")
+                       
                        response = client.chat.completions.create(
                            model=combat_model,
                            messages=messages_to_send,
@@ -2577,6 +2600,12 @@ Rules:
                        print(f"DEBUG: [COMBAT] Using GPT-5 model: {combat_model} (default medium reasoning)")
                        # Compress conversation history before sending to AI
                        messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
+                       
+                       # Export compressed conversation for review
+                       with open("combat_messages_to_api.json", "w", encoding="utf-8") as f:
+                           json.dump(messages_to_send, f, indent=2, ensure_ascii=False)
+                       print(f"DEBUG: [COMBAT] Exported compressed messages to combat_messages_to_api.json")
+                       
                        response = client.chat.completions.create(
                            model=combat_model,
                            messages=messages_to_send
@@ -2588,6 +2617,12 @@ Rules:
                    print(f"DEBUG: [COMBAT] Using GPT-4.1 model: {COMBAT_MAIN_MODEL} (temp: {temperature_used})")
                    # Compress conversation history before sending to AI
                    messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
+                   
+                   # Export compressed conversation for review
+                   with open("combat_messages_to_api.json", "w", encoding="utf-8") as f:
+                       json.dump(messages_to_send, f, indent=2, ensure_ascii=False)
+                   print(f"DEBUG: [COMBAT] Exported compressed messages to combat_messages_to_api.json")
+                   
                    response = client.chat.completions.create(
                        model=COMBAT_MAIN_MODEL,
                        temperature=temperature_used,
