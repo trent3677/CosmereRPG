@@ -773,12 +773,49 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
             debug(f"VALIDATION: Message {i+1}: {msg['role']}: {msg['content'][:100]}...", category="ai_validation")
         debug("VALIDATION: *** END VALIDATION DEBUG ***", category="ai_validation")
 
+    # Apply compression to validation messages if enabled
+    from model_config import COMPRESSION_ENABLED
+    if COMPRESSION_ENABLED:
+        try:
+            # Use the ParallelConversationCompressor to compress validation messages
+            # This will automatically detect and compress location summaries, module contexts, etc.
+            # The cache will prevent double-compression of already compressed content
+            from conversation_compressor_parallel import ParallelConversationCompressor
+            import json
+            from pathlib import Path
+            
+            # Save validation conversation to temp file
+            temp_file = Path("/tmp/temp_validation_for_api.json")
+            with open(temp_file, 'w', encoding='utf-8') as f:
+                json.dump(validation_conversation, f, indent=2, ensure_ascii=False)
+            
+            # Compress using the parallel compressor with caching
+            compressor = ParallelConversationCompressor()
+            validation_messages_to_send = compressor.process_conversation_history(str(temp_file))
+            
+            # Clean up temp file
+            if temp_file.exists():
+                temp_file.unlink()
+            
+            debug("VALIDATION: Applied parallel compression to validation messages", category="ai_validation")
+        except Exception as e:
+            # If compression fails, use original messages
+            warning(f"VALIDATION: Compression failed, using original messages: {e}", category="ai_validation")
+            validation_messages_to_send = validation_conversation
+    else:
+        validation_messages_to_send = validation_conversation
+    
+    # Export validation messages for debugging
+    with open("main_validation_messages_to_api.json", "w", encoding="utf-8") as f:
+        json.dump(validation_messages_to_send, f, indent=2, ensure_ascii=False)
+    print(f"DEBUG: [MAIN VALIDATION] Exported validation messages to main_validation_messages_to_api.json")
+    
     max_validation_retries = 3
     for attempt in range(max_validation_retries):
         validation_result = client.chat.completions.create(
             model=DM_VALIDATION_MODEL, # Use imported model name
             temperature=TEMPERATURE,
-            messages=validation_conversation
+            messages=validation_messages_to_send
         )
         
         # Track token usage
@@ -822,7 +859,14 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
     return True
 
 def load_validation_prompt():
-    with open("prompts/validation/validation_prompt.txt", "r", encoding="utf-8") as file:
+    from model_config import COMPRESSION_ENABLED
+    if COMPRESSION_ENABLED:
+        # Use compressed validation prompt when compression is enabled
+        prompt_file = "prompts/validation/validation_prompt_compressed.txt"
+    else:
+        prompt_file = "prompts/validation/validation_prompt.txt"
+    
+    with open(prompt_file, "r", encoding="utf-8") as file:
         return file.read().strip()
 
 def load_json_file(file_path):
