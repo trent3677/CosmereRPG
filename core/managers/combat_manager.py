@@ -774,10 +774,12 @@ def validate_combat_response(response, encounter_data, user_input, conversation_
                 messages=validation_conversation
             )
             
-            # Track usage
+            # Track usage with context for telemetry
             if USAGE_TRACKING_AVAILABLE:
                 try:
-                    track_response(validation_result)
+                    from utils.openai_usage_tracker import get_global_tracker
+                    tracker = get_global_tracker()
+                    tracker.track(validation_result, context={'endpoint': 'combat_validation', 'purpose': 'validate_combat_response'})
                 except:
                     pass
 
@@ -1782,10 +1784,12 @@ Focus on mechanical accuracy for the actions. For narrative_highlights, extract 
             response_format={"type": "json_object"}
         )
         
-        # Track usage
+        # Track usage with context for telemetry
         if USAGE_TRACKING_AVAILABLE:
             try:
-                track_response(response)
+                from utils.openai_usage_tracker import get_global_tracker
+                tracker = get_global_tracker()
+                tracker.track(response, context={'endpoint': 'combat_dm', 'purpose': 'combat_turn_processing', 'model': selected_model})
             except:
                 pass
         

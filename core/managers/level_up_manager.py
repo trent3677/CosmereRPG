@@ -204,10 +204,12 @@ class LevelUpSession:
                 temperature=0.7
             )
             
-            # Track token usage
+            # Track token usage with context for telemetry
             if USAGE_TRACKING_AVAILABLE:
                 try:
-                    track_response(response)
+                    from utils.openai_usage_tracker import get_global_tracker
+                    tracker = get_global_tracker()
+                    tracker.track(response, context={'endpoint': 'level_up', 'purpose': 'level_up_processing', 'character': character_name})
                 except:
                     pass
             
@@ -232,10 +234,12 @@ class LevelUpSession:
                 temperature=0.2
             )
             
-            # Track token usage
+            # Track token usage with context for telemetry
             if USAGE_TRACKING_AVAILABLE:
                 try:
-                    track_response(response)
+                    from utils.openai_usage_tracker import get_global_tracker
+                    tracker = get_global_tracker()
+                    tracker.track(response, context={'endpoint': 'level_up', 'purpose': 'level_up_processing', 'character': character_name})
                 except:
                     pass
             

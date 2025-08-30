@@ -1440,10 +1440,12 @@ def promote_to_bestiary():
             temperature=0.7
         )
         
-        # Track token usage
+        # Track token usage with context for telemetry
         if USAGE_TRACKING_AVAILABLE:
             try:
-                track_response(response)
+                from utils.openai_usage_tracker import get_global_tracker
+                tracker = get_global_tracker()
+                tracker.track(response, context={'endpoint': 'web_dm', 'purpose': 'web_interface_response', 'interface': 'web'})
             except:
                 pass
         
@@ -2783,7 +2785,9 @@ Example Output Format:
                     # Track token usage
                     if USAGE_TRACKING_AVAILABLE:
                         try:
-                            track_response(response)
+                            from utils.openai_usage_tracker import get_global_tracker
+                            tracker = get_global_tracker()
+                            tracker.track(response, context={'endpoint': 'web_validation', 'purpose': 'validate_web_response', 'interface': 'web'})
                         except:
                             pass
                     

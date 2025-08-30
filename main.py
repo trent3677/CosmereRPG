@@ -315,10 +315,12 @@ def generate_arrival_narration(departure_narration, party_tracker_data, conversa
             messages=narration_request_messages
         )
         
-        # Track token usage
+        # Track token usage with context for telemetry
         if USAGE_TRACKING_AVAILABLE:
             try:
-                track_response(response)
+                from utils.openai_usage_tracker import get_global_tracker
+                tracker = get_global_tracker()
+                tracker.track(response, context={'endpoint': 'narration_generator', 'purpose': 'generate_narrative_summary'})
             except:
                 pass
         
@@ -385,10 +387,12 @@ Now, provide the rewritten, seamless narration.
             ]
         )
         
-        # Track token usage
+        # Track token usage with context for telemetry
         if USAGE_TRACKING_AVAILABLE:
             try:
-                track_response(response)
+                from utils.openai_usage_tracker import get_global_tracker
+                tracker = get_global_tracker()
+                tracker.track(response, context={'endpoint': 'narrative_stitching', 'purpose': 'stitch_location_descriptions'})
             except:
                 pass
         
@@ -818,10 +822,12 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
             messages=validation_messages_to_send
         )
         
-        # Track token usage
+        # Track token usage with context for telemetry
         if USAGE_TRACKING_AVAILABLE:
             try:
-                track_response(validation_result)
+                from utils.openai_usage_tracker import get_global_tracker
+                tracker = get_global_tracker()
+                tracker.track(validation_result, context={'endpoint': 'validation', 'purpose': 'validate_dm_response'})
             except:
                 pass
 
@@ -1263,10 +1269,12 @@ Write a compelling chronicle of these actual events:"""
                     temperature=0.7
                 )
                 
-                # Track token usage
+                # Track token usage with context for telemetry
                 if USAGE_TRACKING_AVAILABLE:
                     try:
-                        track_response(response)
+                        from utils.openai_usage_tracker import get_global_tracker
+                        tracker = get_global_tracker()
+                        tracker.track(response, context={'endpoint': 'module_summary', 'purpose': 'generate_module_summary', 'module': module_name})
                     except:
                         pass
                 
@@ -1810,10 +1818,12 @@ def get_ai_response(conversation_history, validation_retry_count=0):
             messages=messages_to_send  # Use potentially compressed messages
         )
         
-        # Track token usage
+        # Track token usage with context for telemetry
         if USAGE_TRACKING_AVAILABLE:
             try:
-                track_response(response)
+                from utils.openai_usage_tracker import get_global_tracker
+                tracker = get_global_tracker()
+                tracker.track(response, context={'endpoint': 'main_dm', 'purpose': 'primary_game_response', 'model': selected_model})
             except:
                 pass
     content = response.choices[0].message.content.strip()

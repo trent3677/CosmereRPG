@@ -167,7 +167,9 @@ class AICharacterValidator:
             # Track usage if available
             if USAGE_TRACKING_AVAILABLE:
                 try:
-                    track_response(response)
+                    from utils.openai_usage_tracker import get_global_tracker
+                    tracker = get_global_tracker()
+                    tracker.track(response, context={'endpoint': 'character_validation', 'purpose': 'validate_character_data'})
                 except:
                     pass
             
@@ -214,7 +216,9 @@ class AICharacterValidator:
                 # Track usage if available
                 if USAGE_TRACKING_AVAILABLE:
                     try:
-                        track_response(response)
+                        from utils.openai_usage_tracker import get_global_tracker
+                        tracker = get_global_tracker()
+                        tracker.track(response, context={'endpoint': 'character_validation', 'purpose': 'validate_character_effects'})
                     except:
                         pass
                 
@@ -760,7 +764,9 @@ IMPORTANT: Return ONLY the items that need their item_type corrected. Do not inc
             # Track usage if available
             if USAGE_TRACKING_AVAILABLE:
                 try:
-                    track_response(response)
+                    from utils.openai_usage_tracker import get_global_tracker
+                    tracker = get_global_tracker()
+                    tracker.track(response, context={'endpoint': 'character_validation', 'purpose': 'validate_character_data'})
                 except:
                     pass
             
@@ -1122,7 +1128,9 @@ Remember to return a single JSON response with all four validation results."""
                 # Track usage if available
                 if USAGE_TRACKING_AVAILABLE:
                     try:
-                        track_response(response)
+                        from utils.openai_usage_tracker import get_global_tracker
+                        tracker = get_global_tracker()
+                        tracker.track(response, context={'endpoint': 'character_validation', 'purpose': 'validate_character_effects'})
                     except:
                         pass
                 
