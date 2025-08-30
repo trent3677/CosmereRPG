@@ -744,10 +744,14 @@ def validate_combat_response(response, encounter_data, user_input, conversation_
         })
         validation_conversation.extend(compressed_context)
     
-    # Add current validation data
+    # Add current validation data BEFORE the response to validate
     validation_conversation.extend([
         {"role": "system", "content": "=== CURRENT VALIDATION DATA ==="},
-        {"role": "system", "content": f"Encounter Data:\n{json.dumps(encounter_data, indent=2)}"},
+        {"role": "system", "content": f"Encounter Data:\n{json.dumps(encounter_data, indent=2)}"}
+    ])
+    
+    # Now add the user input and AI response to validate
+    validation_conversation.extend([
         {"role": "user", "content": f"Player Input: {user_input}"},
         {"role": "assistant", "content": response}
     ])
