@@ -46,7 +46,7 @@ from config import OPENAI_API_KEY, ACTION_PREDICTION_MODEL
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 # Action prediction system prompt (condensed from full system analysis)
-ACTION_PREDICTION_PROMPT = """You are an action prediction agent for a D&D 5e AI system. Analyze user input to determine if it requires JSON actions in the AI response.
+ACTION_PREDICTION_PROMPT = """You are an action prediction agent for the world's most popular 5th edition roleplaying game AI system. Analyze user input to determine if it requires JSON actions in the AI response.
 
 RETURN TRUE if input requires any of these JSON actions:
 - updateCharacterInfo: inventory changes, stat modifications, item use
