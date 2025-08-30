@@ -269,11 +269,55 @@
             min-width: 0; /* Critical for flexbox to allow shrinking */
             justify-content: flex-start;
             margin: 0 10px 0 0;
-            overflow-x: auto;
+            overflow-x: scroll; /* Allow programmatic scrolling */
             overflow-y: hidden; /* Prevent vertical overflow */
             padding-bottom: 0;
             max-height: 60px; /* Match the box height */
+            
+            /* Hide the default scrollbar */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
         }
+        
+        .party-display-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, and Opera */
+        }
+        
+        /* --- START: Styles for Custom Scroller Arrows --- */
+        .scroller-wrapper {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .scroller-content {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden; /* This is crucial to hide the overflowing content */
+            display: flex;
+        }
+
+        .scroll-arrow {
+            background-color: rgba(44, 44, 44, 0.8);
+            border: 1px solid #666;
+            color: #e0e0e0;
+            cursor: pointer;
+            width: 20px; /* Narrow as requested */
+            height: 60px; /* Match the item height */
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 10;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+            padding: 0;
+            line-height: 58px; /* Center the arrow vertically */
+        }
+
+        .scroll-arrow:hover {
+            background-color: #555;
+        }
+        /* --- END: Styles for Custom Scroller Arrows --- */
         
         /* Initiative Tracker Styles (combat) */
         .initiative-tracker-container {
@@ -284,10 +328,18 @@
             min-width: 0; /* Critical for flexbox to allow shrinking */
             justify-content: flex-start;
             margin: 0 10px 0 0;
-            overflow-x: auto;
+            overflow-x: scroll; /* Allow programmatic scrolling */
             overflow-y: hidden; /* Prevent vertical overflow */
             padding-bottom: 0;  /* Removed bottom padding */
             max-height: 60px; /* Match the box height */
+            
+            /* Hide the default scrollbar */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+        }
+        
+        .initiative-tracker-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, and Opera */
         }
         
         #panel-header-label {
@@ -3979,11 +4031,18 @@
                     <img id="time-background" class="time-image" src="/static/media/environment/midday.jpg" alt="">
                 </div>
                 
-                <!-- Party Display Container (shown when not in combat) -->
-                <div id="party-display-container" class="party-display-container"></div>
-                
-                <!-- Initiative Tracker Container (shown during combat) -->
-                <div id="initiative-tracker-container" class="initiative-tracker-container" style="display: none;"></div>
+                <!-- START: New Scroller Structure -->
+                <div class="scroller-wrapper">
+                    <button class="scroll-arrow left-arrow" id="scroll-left-btn" style="display: none;">&lt;</button>
+                    <div class="scroller-content">
+                        <!-- Party Display Container (now inside the wrapper) -->
+                        <div id="party-display-container" class="party-display-container"></div>
+                        <!-- Initiative Tracker Container (now inside the wrapper) -->
+                        <div id="initiative-tracker-container" class="initiative-tracker-container" style="display: none;"></div>
+                    </div>
+                    <button class="scroll-arrow right-arrow" id="scroll-right-btn" style="display: none;">&gt;</button>
+                </div>
+                <!-- END: New Scroller Structure -->
                 
                 <!-- Dice Rolling Strip -->
                 <div class="dice-strip-inline">
@@ -4444,6 +4503,51 @@
         }
         
 
+        // --- START: Custom Scroller Logic ---
+        function setupScrollers() {
+            const leftBtn = document.getElementById('scroll-left-btn');
+            const rightBtn = document.getElementById('scroll-right-btn');
+            const partyScroller = document.getElementById('party-display-container');
+            const combatScroller = document.getElementById('initiative-tracker-container');
+
+            // Determine which scroller is currently visible
+            const activeScroller = combatScroller.style.display !== 'none' ? combatScroller : partyScroller;
+
+            const updateArrowVisibility = () => {
+                if (!activeScroller) return;
+                const hasOverflow = activeScroller.scrollWidth > activeScroller.clientWidth;
+                
+                if (!hasOverflow) {
+                    leftBtn.style.display = 'none';
+                    rightBtn.style.display = 'none';
+                    return;
+                }
+
+                // Show/hide left arrow
+                leftBtn.style.display = activeScroller.scrollLeft > 0 ? 'block' : 'none';
+
+                // Show/hide right arrow
+                const maxScrollLeft = activeScroller.scrollWidth - activeScroller.clientWidth;
+                rightBtn.style.display = activeScroller.scrollLeft < (maxScrollLeft - 1) ? 'block' : 'none';
+            };
+
+            // Attach event listeners
+            leftBtn.onclick = () => {
+                activeScroller.scrollBy({ left: -200, behavior: 'smooth' });
+            };
+            rightBtn.onclick = () => {
+                activeScroller.scrollBy({ left: 200, behavior: 'smooth' });
+            };
+
+            // Update arrows when scrolling (e.g., with a trackpad)
+            partyScroller.onscroll = updateArrowVisibility;
+            combatScroller.onscroll = updateArrowVisibility;
+
+            // Set initial state
+            // Use a small timeout to ensure the DOM has rendered the new items
+            setTimeout(updateArrowVisibility, 100);
+        }
+        // --- END: Custom Scroller Logic ---
         
         // Socket event handlers
         socket.on('connect', () => {
@@ -5569,6 +5673,9 @@
 
             // This ensures the highlight is correct as soon as the tracker is drawn.
             highlightCurrentTurn();
+            
+            // Setup the custom scroll arrows
+            setupScrollers();
         });
         
         // Socket listener for party data (non-combat display)
@@ -5689,6 +5796,9 @@
                 // Hide party display during combat
                 partyContainer.style.display = 'none';
             }
+            
+            // Setup the custom scroll arrows
+            setupScrollers();
         });
         
         setInterval(() => {
