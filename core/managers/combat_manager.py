@@ -490,7 +490,10 @@ def clean_old_dm_notes(conversation_history):
             if cleaned_parts:
                 message["content"] = f"Dungeon Master Note: {'. '.join(cleaned_parts)}"
             else:
-                message["content"] = "Dungeon Master Note: [Previous turn]"
+                # Keep the original message to see what's not being extracted
+                # This helps identify what other user messages are in the conversation
+                # (e.g., "resuming combat", system messages, etc.)
+                pass  # Don't modify the message - keep original content
     
     return conversation_history
 

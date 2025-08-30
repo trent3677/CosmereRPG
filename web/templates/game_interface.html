@@ -492,7 +492,6 @@
             width: 100%;
             height: 100%;
             z-index: 10000;
-            pointer-events: none; /* Allows mouse events to pass through the overlay */
             
             /* Control visibility with opacity and a transition */
             opacity: 0;
@@ -514,6 +513,7 @@
             background: #1a1a1a;
             padding: 5px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.7);
+            pointer-events: auto; /* Ensure clicks on content don't close popup */
         }
 
         #popup-video {
@@ -3644,6 +3644,58 @@
             margin-top: 10px;
         }
         
+        /* --- START: Styles for New Stats Tooltip --- */
+        .stats-tooltip {
+            position: fixed;
+            z-index: 2000;
+            background-color: #1f1f1f;
+            border: 1px solid #4a90e2; /* Blue border to differentiate from spell tooltips */
+            border-radius: 6px;
+            padding: 10px;
+            width: 220px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            color: #e0e0e0;
+            font-family: 'Crimson Text', Georgia, serif;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s ease-in-out;
+            visibility: hidden;
+        }
+
+        .stats-tooltip.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .stats-tooltip-header {
+            font-family: 'Cinzel', Georgia, serif;
+            font-size: 16px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #444;
+            text-transform: capitalize;
+        }
+
+        .stats-tooltip-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3px 2px;
+            font-size: 15px;
+        }
+
+        .stats-tooltip-label {
+            color: #aaa;
+        }
+
+        .stats-tooltip-value {
+            color: #e0e0e0;
+            font-weight: bold;
+        }
+        /* --- END: Styles for New Stats Tooltip --- */
+        
         /* --- NEW STORAGE BUTTON AND MODAL STYLES --- */
         .storage-button {
             padding: 6px 12px;
@@ -4362,6 +4414,67 @@
                 popupContent.style.left = `${left}px`;
             });
         }
+        
+        // --- START: Stats Tooltip Functions ---
+        let currentStatsTooltip = null;
+
+        function createStatsTooltip(stats) {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'stats-tooltip';
+            
+            let html = `<div class="stats-tooltip-header">${stats.name.replace(/_/g, ' ')}</div>`;
+            
+            // Display HP if available
+            if (stats.currentHp !== undefined && stats.maxHp !== undefined) {
+                html += `<div class="stats-tooltip-row">
+                            <span class="stats-tooltip-label">HP:</span>
+                            <span class="stats-tooltip-value">${stats.currentHp} / ${stats.maxHp}</span>
+                         </div>`;
+            }
+
+            // Display Initiative only if it's a combatant
+            if (stats.initiative !== undefined) {
+                html += `<div class="stats-tooltip-row">
+                            <span class="stats-tooltip-label">Initiative:</span>
+                            <span class="stats-tooltip-value">${stats.initiative}</span>
+                         </div>`;
+            }
+
+            tooltip.innerHTML = html;
+            return tooltip;
+        }
+
+        function showStatsTooltip(event) {
+            hideStatsTooltip(); // Hide any existing tooltip first
+            const target = event.currentTarget;
+            const stats = JSON.parse(target.dataset.stats || '{}');
+
+            if (!stats.name) return; // Don't show if there's no data
+
+            currentStatsTooltip = createStatsTooltip(stats);
+            document.body.appendChild(currentStatsTooltip);
+            positionTooltip(target, currentStatsTooltip); // Reuse existing positioning logic
+            
+            // Add visible class after a small delay to trigger animation
+            setTimeout(() => {
+                if (currentStatsTooltip) {
+                    currentStatsTooltip.classList.add('visible');
+                }
+            }, 10);
+        }
+
+        function hideStatsTooltip() {
+            if (currentStatsTooltip) {
+                currentStatsTooltip.classList.remove('visible');
+                setTimeout(() => {
+                    if (currentStatsTooltip) {
+                        currentStatsTooltip.remove();
+                        currentStatsTooltip = null;
+                    }
+                }, 150); // Match transition duration
+            }
+        }
+        // --- END: Stats Tooltip Functions ---
         
         // Auto-scroll to bottom function
         function scrollToBottom(contentElementId) {
@@ -5262,19 +5375,6 @@
                 
                 html += `<div class="npc-character-sheet">`;
                 
-                // Add NPC portrait
-                const npcFilename = npc.name.toLowerCase().replace(/\s+/g, '_');
-                const portraitPath = `/static/media/npcs/${npcFilename}`;
-                
-                html += `<div class="npc-portrait-container" style="float: left; margin-right: 20px; margin-bottom: 10px;">`;
-                html += `<img src="${portraitPath}_thumb.jpg" 
-                         class="npc-portrait-img" 
-                         style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #8B4513; border-radius: 5px; cursor: pointer;"
-                         onclick="event.preventDefault();"
-                         onerror="this.onerror=null; this.src='${portraitPath}_thumb.png' || this.style.display='none';"
-                         alt="${npc.name}" />`;
-                html += `</div>`;
-                
                 html += `<div class="npc-header">`;
                 html += `<div class="npc-header-main"><div class="npc-name">${npc.name}</div><div class="npc-details">${npc.race} ${npc.class} • Level ${npc.level} • ${capitalizeWords(npc.alignment)}</div></div>`;
                 
@@ -5289,9 +5389,6 @@
                     html += `<div class="npc-header-currency"><div class="currency-grid"><div class="currency-item"><span class="currency-amount">${npc.currency.gold || 0}</span><span class="currency-type">GP</span></div><div class="currency-item"><span class="currency-amount">${npc.currency.silver || 0}</span><span class="currency-type">SP</span></div><div class="currency-item"><span class="currency-amount">${npc.currency.copper || 0}</span><span class="currency-type">CP</span></div></div></div>`;
                 }
                 html += `</div>`;
-                
-                // Clear the float from the portrait
-                html += `<div style="clear: both;"></div>`;
                 
                 if (npc.abilities) {
                     html += '<div class="npc-abilities">';
@@ -5525,19 +5622,11 @@
                     item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
                     item.style.cursor = 'pointer';
                     
-                    // Add hover for video (assume it exists if thumbnail exists)
-                    item.addEventListener('mouseenter', (event) => {
-                        isHoveringInitiative = true;
-                        clearTimeout(hoverTimer);
-                        hoverTimer = setTimeout(() => {
-                            showVideoPopup(event.currentTarget, monsterVideoUrl);
-                        }, 1000);
-                    });
-                    
-                    item.addEventListener('mouseleave', () => {
-                        isHoveringInitiative = false;
-                        clearTimeout(hoverTimer);
-                        hideVideoPopup();
+                    // NEW: Show stats on hover, media on click
+                    item.addEventListener('mouseenter', showStatsTooltip);
+                    item.addEventListener('mouseleave', hideStatsTooltip);
+                    item.addEventListener('click', (event) => {
+                        showVideoPopup(event.currentTarget, monsterVideoUrl);
                     });
                     
                     // Silently validate the thumbnail exists
@@ -5620,26 +5709,21 @@
                     item.style.cursor = 'pointer';
                     const npcVideoUrl = `/static/media/npcs/${npcFilename}_video.mp4`;
                     
+                    // NEW: Always add stats tooltip on hover
+                    item.addEventListener('mouseenter', showStatsTooltip);
+                    item.addEventListener('mouseleave', hideStatsTooltip);
+                    
                     // Check if video exists by trying to load it
                     const videoTest = document.createElement('video');
                     videoTest.src = npcVideoUrl;
                     videoTest.onloadedmetadata = () => {
-                        // Video exists, add hover handlers
-                        item.addEventListener('mouseenter', (event) => {
-                            isHoveringInitiative = true;  // Prevent refresh while hovering
-                            clearTimeout(hoverTimer);
-                            hoverTimer = setTimeout(() => {
-                                showVideoPopup(event.currentTarget, npcVideoUrl);
-                            }, 1000);
-                        });
-                        item.addEventListener('mouseleave', () => {
-                            isHoveringInitiative = false;  // Allow refresh after hover ends
-                            clearTimeout(hoverTimer);
-                            hideVideoPopup();
+                        // Video exists, add click handler for video
+                        item.addEventListener('click', (event) => {
+                            showVideoPopup(event.currentTarget, npcVideoUrl);
                         });
                     };
                     videoTest.onerror = () => {
-                        // No video, just use static image
+                        // No video, clicking will do nothing
                         item.style.cursor = 'default';
                     };
                     
@@ -5667,7 +5751,10 @@
                 }
                 
                 item.appendChild(textSpan);
-                item.title = `${combatant.name.replace(/_/g, ' ')} (Initiative: ${combatant.initiative})${hpText}`;
+                
+                // Store stats data for tooltip
+                item.dataset.stats = JSON.stringify(combatant);
+                
                 container.appendChild(item);
             });
 
@@ -5729,41 +5816,13 @@
                     if (member.currentHp !== undefined && member.maxHp !== undefined) {
                         hpText += ` - HP: ${member.currentHp}/${member.maxHp}`;
                     }
-                    item.title = `${member.name}${hpText}`;
-
-                    // --- UNIFIED HOVER & CLICK LOGIC (FINAL VERSION) ---
-                    item.addEventListener('mouseenter', function() {
-                        isHoveringInitiative = true;
-                        clearTimeout(hoverTimer);
-                        const video = document.createElement('video');
-                        video.src = videoUrl;
-                        
-                        // If video loads, set timer to show video
-                        video.onloadedmetadata = () => {
-                            hoverTimer = setTimeout(() => showVideoPopup(item, videoUrl), 500);
-                        };
-                        
-                        // If video fails, set timer to show the image instead
-                        video.onerror = () => {
-                            const imgJpg = new Image();
-                            imgJpg.src = basePath + '.jpg';
-                            imgJpg.onload = () => {
-                                hoverTimer = setTimeout(() => showImagePopup(item, imgJpg.src), 500);
-                            };
-                            imgJpg.onerror = () => {
-                                const imgPng = new Image();
-                                imgPng.src = basePath + '.png';
-                                imgPng.onload = () => {
-                                    hoverTimer = setTimeout(() => showImagePopup(item, imgPng.src), 500);
-                                };
-                            };
-                        };
-                    });
                     
-                    item.addEventListener('mouseleave', function() {
-                        isHoveringInitiative = false;
-                        hideVideoPopup();
-                    });
+                    // Store stats data for tooltip
+                    item.dataset.stats = JSON.stringify(member);
+
+                    // NEW: Show stats on hover, media on click
+                    item.addEventListener('mouseenter', showStatsTooltip);
+                    item.addEventListener('mouseleave', hideStatsTooltip);
 
                     item.addEventListener('click', function() {
                         // On click, check for video first. If it exists, show it.
@@ -5772,10 +5831,12 @@
                         video.src = videoUrl;
                         video.onloadedmetadata = () => showVideoPopup(item, videoUrl);
                         video.onerror = () => {
+                            // Video failed, try JPG image
                             const imgJpg = new Image();
                             imgJpg.src = basePath + '.jpg';
                             imgJpg.onload = () => showImagePopup(item, imgJpg.src);
                             imgJpg.onerror = () => {
+                                // JPG failed, try PNG image
                                 const imgPng = new Image();
                                 imgPng.src = basePath + '.png';
                                 imgPng.onload = () => showImagePopup(item, imgPng.src);
@@ -5925,6 +5986,17 @@
                     }, 3000); // Show completion for 3 seconds
                 }
             });
+            
+            // --- START: Additions for Robust Media Popup Closing ---
+            const mediaPopup = document.getElementById('media-popup');
+            mediaPopup.addEventListener('click', (event) => {
+                // This ensures we only hide the popup if the user clicks on the dark
+                // overlay itself, not on the video/image content.
+                if (event.target === mediaPopup) {
+                    hideVideoPopup();
+                }
+            });
+            // --- END: Additions for Robust Media Popup Closing ---
         });
         
         // Function to update image button visibility
@@ -6181,6 +6253,10 @@
         
         window.onkeydown = function(event) {
             if (event.key === 'Escape') {
+                // Check and close media popup if visible
+                if (document.getElementById('media-popup').classList.contains('visible')) {
+                    hideVideoPopup();
+                }
                 if (document.getElementById('search-popup').style.display === 'block') closeSearchPopup();
                 if (document.getElementById('reset-dialog-overlay').style.display === 'flex') closeResetDialog();
             }
