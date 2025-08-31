@@ -785,7 +785,6 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
             # This will automatically detect and compress location summaries, module contexts, etc.
             # The cache will prevent double-compression of already compressed content
             from conversation_compressor_parallel import ParallelConversationCompressor
-            import json
             from pathlib import Path
             
             # Save validation conversation to temp file

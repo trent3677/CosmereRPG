@@ -4417,6 +4417,7 @@
         
         // --- START: Stats Tooltip Functions ---
         let currentStatsTooltip = null;
+        let tooltipHideTimer = null; // Timer to manage tooltip hide delay
 
         function createStatsTooltip(stats) {
             const tooltip = document.createElement('div');
@@ -4445,33 +4446,41 @@
         }
 
         function showStatsTooltip(event) {
-            hideStatsTooltip(); // Hide any existing tooltip first
+            clearTimeout(tooltipHideTimer); // Cancel any pending hide action
+            hideStatsTooltip(true); // Immediately remove any old tooltip to prevent overlap
+
             const target = event.currentTarget;
             const stats = JSON.parse(target.dataset.stats || '{}');
 
-            if (!stats.name) return; // Don't show if there's no data
+            if (!stats.name) return;
 
             currentStatsTooltip = createStatsTooltip(stats);
             document.body.appendChild(currentStatsTooltip);
-            positionTooltip(target, currentStatsTooltip); // Reuse existing positioning logic
-            
-            // Add visible class after a small delay to trigger animation
-            setTimeout(() => {
-                if (currentStatsTooltip) {
-                    currentStatsTooltip.classList.add('visible');
-                }
-            }, 10);
+            positionTooltip(target, currentStatsTooltip); // This function already handles the fade-in
         }
 
-        function hideStatsTooltip() {
-            if (currentStatsTooltip) {
-                currentStatsTooltip.classList.remove('visible');
-                setTimeout(() => {
+        function hideStatsTooltip(immediate = false) {
+            clearTimeout(tooltipHideTimer); // Always clear any previous timer
+
+            if (immediate) {
+                if (currentStatsTooltip) {
+                    currentStatsTooltip.remove();
+                    currentStatsTooltip = null;
+                }
+            } else {
+                // Set a timer to hide the tooltip after a short delay (e.g., 100ms)
+                tooltipHideTimer = setTimeout(() => {
                     if (currentStatsTooltip) {
-                        currentStatsTooltip.remove();
-                        currentStatsTooltip = null;
+                        currentStatsTooltip.classList.remove('visible');
+                        // Remove from DOM after the fade-out animation completes
+                        setTimeout(() => {
+                            if (currentStatsTooltip) {
+                                currentStatsTooltip.remove();
+                                currentStatsTooltip = null;
+                            }
+                        }, 150); // This should match your CSS transition duration
                     }
-                }, 150); // Match transition duration
+                }, 100);
             }
         }
         // --- END: Stats Tooltip Functions ---
@@ -6659,8 +6668,8 @@
             tooltipElement.style.top = `${top}px`;
 
             setTimeout(() => {
-                if (currentTooltip) {
-                    currentTooltip.classList.add('visible');
+                if (tooltipElement) {
+                    tooltipElement.classList.add('visible');
                 }
             }, 10);
         }
