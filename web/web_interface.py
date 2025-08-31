@@ -1991,8 +1991,8 @@ def handle_party_data_request():
                         party_members.append({
                             'name': player_data.get('name', player_name),
                             'type': 'player',
-                            'currentHp': player_data.get('currentHp', 0),
-                            'maxHp': player_data.get('maxHp', 0)
+                            'currentHp': player_data.get('hitPoints', player_data.get('currentHp', 0)),
+                            'maxHp': player_data.get('maxHitPoints', player_data.get('maxHp', 0))
                         })
             except:
                 # Fallback if can't load player data
@@ -2016,8 +2016,8 @@ def handle_party_data_request():
                             party_members.append({
                                 'name': npc_data.get('name', npc_name),
                                 'type': 'npc',
-                                'currentHp': npc_data.get('currentHp', 0),
-                                'maxHp': npc_data.get('maxHp', 0)
+                                'currentHp': npc_data.get('hitPoints', npc_data.get('currentHp', 0)),
+                                'maxHp': npc_data.get('maxHitPoints', npc_data.get('maxHp', 0))
                             })
                             continue
             except:
@@ -2056,7 +2056,20 @@ def handle_party_data_request():
                                 # Also exclude NPCs whose names are contained within any party member's name
                                 # Example: "Eirik" should be excluded if "Eirik Hearthwise" is in the party
                                 if not any(npc_name.lower() in member['name'].lower() for member in party_members):
-                                    location_npcs.append({'name': npc_name, 'type': 'location_npc'})
+                                    # Try to load NPC data for HP info
+                                    npc_data_dict = {'name': npc_name, 'type': 'location_npc'}
+                                    try:
+                                        matched_name = find_character_file_fuzzy(npc_name)
+                                        if matched_name:
+                                            npc_file = path_manager.get_character_path(matched_name)
+                                            if os.path.exists(npc_file):
+                                                npc_data = safe_read_json(npc_file)
+                                                if npc_data:
+                                                    npc_data_dict['currentHp'] = npc_data.get('hitPoints', npc_data.get('currentHp', 0))
+                                                    npc_data_dict['maxHp'] = npc_data.get('maxHitPoints', npc_data.get('maxHp', 0))
+                                    except:
+                                        pass
+                                    location_npcs.append(npc_data_dict)
         
         # Send both lists to the frontend
         emit('party_data_response', {'members': party_members, 'location_npcs': location_npcs})

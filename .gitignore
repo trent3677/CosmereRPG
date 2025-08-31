@@ -356,3 +356,42 @@ graphic_packs/*/
 !graphic_packs/photorealistic/**/*.mp4
 !graphic_packs/photorealistic/**/*.json
 graphic_packs/.deleted/
+extracted_combat_entries.json
+
+# Development/utility scripts
+convert_jsonl_to_json.py
+count_combat_calls.py
+extract_combat_entries.py
+extract_combat_logs.py
+extract_for_hardcode.py
+reformat_combat_logs.py
+
+# Test and extraction files that may contain sensitive data
+extracted_combat_entries.json
+combat_test_user_messages.json
+combat_user_messages_*.json
+combat_compressed_test_*.json
+combat_conversation_compressed_test.json
+combat_messages_to_api.json
+validation_messages_to_api.json
+combat_prompt_comparison_*.json
+validator_test_results_*.jsonl
+
+# Test result directories
+test_results/
+old_test_files/
+
+# Kharos module and related files (test module)
+modules/Kharos*/
+kharos*.txt
+*kharos*.txt
+
+# Temporary atlas/output files
+*_atlas.txt
+*_atlas_output.txt
+
+# Initialization test files
+init_prompt_test_history.json
+
+# Sample files
+sample_current_location.md
