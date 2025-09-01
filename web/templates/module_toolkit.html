@@ -1885,6 +1885,63 @@
             display: block;
         }
 
+        /* === Enhanced Video Upload Area === */
+        .upload-area {
+            border: 2px dashed #555;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #1a1a1a;
+            transition: border-color 0.3s, background-color 0.3s;
+            display: flex; /* Use flexbox to center everything */
+            align-items: center;
+            justify-content: center;
+            min-height: 150px; /* Give the box some height */
+        }
+
+        /* Add a nice glow effect when hovering or dragging a file over */
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #FFA500; /* Use your theme's orange color */
+            background-color: #222;
+        }
+
+        /* This is the container for our icon and text */
+        .upload-area-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px; /* Adds space between the icon and text */
+            color: #888; /* A muted color for the default state */
+            transition: color 0.3s;
+        }
+
+        .upload-area:hover .upload-area-content {
+            color: #ccc; /* Brighten the content on hover */
+        }
+
+        /* Style the filmstrip icon */
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            fill: currentColor; /* The icon will use the color of its parent */
+        }
+
+        /* Style the main text */
+        .upload-text {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #e0e0e0; /* Make the main text stand out */
+            margin: 0;
+        }
+
+        /* Style the smaller sub-text */
+        .upload-subtext {
+            font-size: 0.9em;
+            font-style: italic;
+            margin: 0;
+        }
+
     </style>
 </head>
 <body>
@@ -2280,7 +2337,15 @@
                                 </select>
                             </div>
                             <div class="upload-area" id="videoUploadArea">
-                                <p>Drag and drop video files here or click to browse</p>
+                                <!-- START: New icon and text structure -->
+                                <div class="upload-area-content">
+                                    <svg class="upload-icon" viewBox="0 0 24 24">
+                                        <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4zM4 18V8h16v10H4z"/>
+                                    </svg>
+                                    <p class="upload-text">Drag & Drop Videos Here</p>
+                                    <p class="upload-subtext">or click to browse for files</p>
+                                </div>
+                                <!-- END: New structure -->
                                 <input type="file" id="videoFiles" multiple accept="video/*" style="display:none" onchange="addVideos(this.files)">
                             </div>
                             <!-- START: Video upload details wrapper -->
