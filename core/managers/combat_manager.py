@@ -219,8 +219,8 @@ third_model_history_file = "modules/conversation_history/third_model_history.jso
 # Create a combat_logs directory if it doesn't exist
 os.makedirs("combat_logs", exist_ok=True)
 
-# Initialize combat message compressor
-combat_message_compressor = CombatUserMessageCompressor()
+# Initialize combat message compressor with API key
+combat_message_compressor = CombatUserMessageCompressor(api_key=OPENAI_API_KEY)
 
 # Constants for chat history generation
 HISTORY_TIMESTAMP_FORMAT = "%Y%m%d_%H%M%S"
@@ -1598,19 +1598,20 @@ def filter_encounter_for_system_prompt(encounter_data):
     debug("STATE_CHANGE: Created minimal encounter data for system prompt", category="combat_events")
     return minimal_data
 
-def compress_old_combat_rounds(conversation_history, current_round, keep_recent_rounds=2):
+def compress_old_combat_rounds(conversation_history, current_round, keep_recent_rounds=1):
     """
     Compress old combat rounds in conversation history to reduce token usage.
     Keeps the last 'keep_recent_rounds' rounds uncompressed for context.
+    With keep_recent_rounds=1: Round 2 keeps round 1, Round 3 compresses round 1, etc.
     """
     try:
         # Debug logging
         debug(f"COMPRESSION: Called with current_round={current_round}, keep_recent_rounds={keep_recent_rounds}", category="combat_events")
         debug(f"COMPRESSION: Conversation history has {len(conversation_history)} messages", category="combat_events")
         
-        # Don't compress if we're in early rounds
-        if current_round <= keep_recent_rounds:
-            debug(f"COMPRESSION: Skipping - too early (round {current_round} <= {keep_recent_rounds})", category="combat_events")
+        # Don't compress if we're in early rounds (need at least 2 rounds to start compressing)
+        if current_round <= keep_recent_rounds + 1:
+            debug(f"COMPRESSION: Skipping - too early (round {current_round} <= {keep_recent_rounds + 1})", category="combat_events")
             return conversation_history
         
         # Check if compression is needed
@@ -2905,14 +2906,15 @@ Rules:
                    # Save the updated encounter data
                    save_json_file(f"modules/encounters/encounter_{encounter_id}.json", encounter_data)
                    
-                   # Compress old combat rounds if we're at round 2 or higher
+                   # Compress old combat rounds more aggressively - compress after each round
+                   # When we start round 3, compress round 1; when we start round 4, compress round 2, etc.
                    if new_round >= 2:
                        debug(f"COMPRESSION: Checking for round compression (current round: {new_round})", category="combat_events")
                        debug(f"COMPRESSION: About to call compress_old_combat_rounds with round {new_round}", category="combat_events")
                        compressed_history = compress_old_combat_rounds(
                            conversation_history, 
                            new_round, 
-                           keep_recent_rounds=2
+                           keep_recent_rounds=1  # Changed from 2 to 1 for more aggressive compression
                        )
                        
                        # Save compressed history

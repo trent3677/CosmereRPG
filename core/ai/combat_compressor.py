@@ -22,7 +22,7 @@ from core.ai.combat_compression_engine import CombatCompressor
 class CombatUserMessageCompressor:
     """Compress user combat messages in parallel for AI consumption."""
     
-    def __init__(self, cache_file: str = "modules/conversation_history/combat_user_message_cache.json", max_workers: int = 4):
+    def __init__(self, api_key: str = None, cache_file: str = "modules/conversation_history/combat_user_message_cache.json", max_workers: int = 4):
         """Initialize with cache file and thread pool settings."""
         self.cache_file = cache_file
         self.cache = self.load_cache()
@@ -31,7 +31,7 @@ class CombatUserMessageCompressor:
         self.progress_lock = threading.Lock()  # Thread safety for progress tracking
         self.completed_count = 0
         self.total_messages = 0
-        self.combat_compressor = CombatCompressor(enable_caching=False)  # We handle caching ourselves
+        self.combat_compressor = CombatCompressor(api_key=api_key, enable_caching=False)  # Pass API key, we handle caching ourselves
         
     def load_cache(self) -> Dict[str, str]:
         """Load existing cache from file."""
