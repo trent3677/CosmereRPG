@@ -107,7 +107,8 @@
   damage_on_hit_only: "Only roll/consume damage dice if attack >= AC after bonuses",
   damage_source: "Use GENERIC DIE matching action.damageDice (e.g., 1d6) + action.damageBonus",
   dr_modifiers: "Apply vulnerabilities/resistances/immunities after base damage",
-  consolidate: "Consolidate enemy changes into a single updateEncounter per response"
+  consolidate: "Consolidate enemy changes into a single updateEncounter per response",
+  ammunition: "Remove arrows/bolts/ammo from PC/NPC inventory when used via updateCharacterInfo ('Reduced arrow count by 1')"
 }
 
 @SAVE_PAUSE={

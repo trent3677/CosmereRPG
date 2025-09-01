@@ -555,7 +555,7 @@ def create_module_validation_context(party_tracker_data, path_manager):
                 if npc_name and npc_name not in current_location_npcs:
                     current_location_npcs.append(npc_name)
             
-            validation_context += f"VALID LOCATIONS in {current_area_id}:\n"
+            validation_context += f"VALID LOCATIONS in current area ({current_area_id}):\n"
             if valid_locations:
                 validation_context += "\n".join([f"- {loc}" for loc in valid_locations])
             else:
@@ -564,6 +564,34 @@ def create_module_validation_context(party_tracker_data, path_manager):
                 
         except (FileNotFoundError, json.JSONDecodeError):
             validation_context += f"ERROR: Could not load area data for {current_area_id}\n\n"
+        
+        # Add ALL accessible locations from the entire module using LocationGraph
+        try:
+            all_accessible_locations = []
+            areas_included = set()
+            
+            # Get all locations from the location graph
+            for loc_id, node_info in location_graph.nodes.items():
+                area_id = node_info.get('area_id', '')
+                location_name = node_info.get('location_name', '')
+                if area_id and location_name:
+                    areas_included.add(area_id)
+                    all_accessible_locations.append(f"{loc_id} ({location_name}) in area {area_id}")
+            
+            validation_context += f"ALL ACCESSIBLE LOCATIONS (across {len(areas_included)} areas):\n"
+            if all_accessible_locations:
+                # Sort by area for clarity
+                all_accessible_locations.sort()
+                validation_context += "\n".join([f"- {loc}" for loc in all_accessible_locations[:50]])  # Limit to first 50 to avoid huge context
+                if len(all_accessible_locations) > 50:
+                    validation_context += f"\n... and {len(all_accessible_locations) - 50} more locations"
+            else:
+                validation_context += "- No locations found in location graph"
+            validation_context += "\n\n"
+            validation_context += "MULTI-AREA TRAVEL NOTE: transitionLocation can target ANY accessible location above, not just those in the current area.\n\n"
+                
+        except Exception as e:
+            validation_context += f"ERROR: Could not load location graph data: {str(e)}\n\n"
         
         # Get all valid NPCs from ALL module codexes
         try:

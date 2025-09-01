@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "created": "2025-08-13",
-  "total_monsters": 163,
+  "total_monsters": 165,
   "monsters": {
     "bandit_sentry": {
       "name": "Bandit Sentry",
@@ -1751,7 +1751,35 @@
       ],
       "source_file": "bestiary_updater.py",
       "generated_date": "2025-08-18T19:57:03.447962"
+    },
+    "grick": {
+      "name": "Grick",
+      "type": "monstrosity",
+      "description": "Emerging from the shadowed recesses of the Cursed Cliffs, the Grick is a grotesque amalgamation of sinewy muscle and writhing tentacles, its body a mottled green-gray that blends seamlessly into the damp stone. With a serpentine form stretching nearly ten feet in length, its segmented body undulates with a sinister grace, while its bulbous head boasts a mouth lined with razor-sharp teeth that glisten with a viscous sheen. Two eyeless sockets radiate an unsettling intelligence, and its skin is slick with brine, enhancing its ability to slide silently along the moss-choked passages of the forsaken lighthouse. \n\nThe Grick's tentacles extend from its body, each one adorned with barbed suckers that grasp and ensnare the unwary. As it lurks in the shadows of the Ashen Cloister Walk, the air around it grows heavy and damp, thick with the scent of decay and the distant echo of crashing waves. When it strikes, it does so with an explosive burst of speed, its movements a blur against the backdrop of the crumbling architecture. Flickering moonlight casts eerie shadows of its undulating form across the salt-bitten stone, heightening the tension as it waits for the perfect moment to pounce, blending predator and prey in a deadly dance with the remnants of the past.",
+      "tags": [
+        "Grick",
+        "monstrosity",
+        "Cursed Cliffs",
+        "dungeon",
+        "creeping horror"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-31T23:13:16.269760"
+    },
+    "sahuagin_priestess": {
+      "name": "Sahuagin Priestess",
+      "type": "humanoid",
+      "description": "Emerging from the shadows of the Cursed Cliffs, the Sahuagin Priestess stands as a nightmarish fusion of predator and priestess. Her skin is a sickly blue-green, glistening with brine and slick as an eel, marred by barnacles and salt crusts that cling to her sinewy form. Long, sharp claws extend from webbed fingers, and her eyes shimmer with bioluminescent intensity, reflecting the eerie light of the cursed lighthouse above. A crown of twisted coral and kelp adorns her head, marking her as a high priestess of the Drowned King.\n\nHer robes, woven from tattered seaweed and remnants of ancient nets, flow around her like a living shroud, blending with the damp shadows of the ruined sanctum. When she speaks, her voice echoes like the distant murmur of waves crashing against the cliffs, laced with an unsettling charm that draws the unwary closer. The air around her is thick with the scent of saltwater mingled with incense, a reminder of her dark rituals to the abyssal depths.\n\nAs she moves, her presence commands the attention of the salt-encrusted statues that line the throne room, and the ambient sounds of the ocean seem to swell in response to her calls. With a flick of her clawed hands, she conjures spectral images of her drowned kin, their mournful wails resonating through the air, creating an atmosphere of dread and despair, and reminding all who dare approach of the fate that awaits those who defy the Drowned King.",
+      "tags": [
+        "sahuagin",
+        "priestess",
+        "undead",
+        "cursed",
+        "dark magic"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-08-31T23:13:24.790090"
     }
   },
-  "last_updated": "2025-08-18T19:57:03.464037"
+  "last_updated": "2025-08-31T23:13:24.797288"
 }
