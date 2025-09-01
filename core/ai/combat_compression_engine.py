@@ -148,10 +148,19 @@ class CombatCompressor:
         if self.enable_caching:
             content_hash = self._get_content_hash(content)
             if content_hash in self.cache:
-                return self.cache[content_hash]
+                cached_value = self.cache[content_hash]
+                # Validate cached content is actually compressed
+                if cached_value.startswith("@T=CS/v2"):
+                    return cached_value
+                else:
+                    # Remove corrupted cache entry
+                    print(f"[WARNING] Removing corrupted cache entry (not compressed format)")
+                    del self.cache[content_hash]
+                    self._save_cache()
         
         try:
             # Call AI for compression
+            print(f"[DEBUG] Calling AI compression with model: {self.model}")
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
@@ -174,16 +183,40 @@ class CombatCompressor:
             if compressed.startswith("```"):
                 compressed = re.sub(r"^```.*?\n|```$", "", compressed, flags=re.MULTILINE).strip()
             
-            # Cache result
+            # Validate compression actually happened
+            if not compressed.startswith("@T=CS/v2"):
+                print(f"[ERROR] AI returned invalid compression format")
+                print(f"[ERROR] Expected @T=CS/v2, got: {compressed[:100]}...")
+                return content  # Return original, don't cache
+            
+            # Validate compression actually reduced size
+            if len(compressed) >= len(content):
+                print(f"[WARNING] Compression didn't reduce size: {len(content)} -> {len(compressed)}")
+                # Still cache if format is valid but size didn't reduce
+            
+            # Cache result ONLY if valid compression
             if self.enable_caching:
                 content_hash = self._get_content_hash(content)
                 self.cache[content_hash] = compressed
                 self._save_cache()
+                print(f"[DEBUG] Cached compressed content: {len(content)} -> {len(compressed)} chars")
             
             return compressed
             
         except Exception as e:
-            # Return original if compression fails
+            # Log the error for debugging
+            print(f"[ERROR] Combat compression failed: {e}")
+            print(f"[ERROR] Model: {self.model}")
+            print(f"[ERROR] Content length: {len(content)} chars")
+            
+            # Check if it's an API key issue
+            if "api_key" in str(e).lower() or "authentication" in str(e).lower():
+                print(f"[ERROR] API key issue detected - check OPENAI_API_KEY")
+            elif "rate" in str(e).lower():
+                print(f"[ERROR] Rate limit issue - compression will be skipped")
+            
+            # DO NOT cache failed compressions!
+            # Return original without caching
             return content
 
 def compress_combat_message(content: str) -> str:

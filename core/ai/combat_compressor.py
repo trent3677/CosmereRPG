@@ -221,10 +221,18 @@ class CombatUserMessageCompressor:
                 original_len = len(messages_to_send[idx]["content"])
                 compressed_len = len(compressed_content)
                 
-                # Only replace if compression actually reduced size
-                if compressed_len < original_len:
+                # Replace if we have valid compressed format (starts with @T=CS/v2)
+                # Even if size didn't reduce much, the structured format is better for AI
+                if compressed_content.startswith("@T=CS/v2"):
                     messages_to_send[idx]["content"] = compressed_content
                     replacements += 1
+                    if compressed_len >= original_len:
+                        print(f"  [INFO] Message {idx}: Using compressed format despite size ({original_len} -> {compressed_len})")
+                elif compressed_len < original_len:
+                    # Fallback: If not proper format but smaller, still use it
+                    messages_to_send[idx]["content"] = compressed_content
+                    replacements += 1
+                    print(f"  [WARNING] Message {idx}: Non-standard compression used")
         
         # Save cache after all processing
         self.save_cache()

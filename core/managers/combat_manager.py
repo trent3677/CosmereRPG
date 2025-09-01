@@ -1927,7 +1927,23 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
    
    # Populate the system messages
    if not is_resuming:
-       # New combat - create fresh system messages
+       # New combat - create fresh system messages and clear compression caches
+       print("[COMBAT_MANAGER] Starting new combat - clearing compression caches")
+       
+       # Clear combat compression caches for fresh start
+       cache_files = [
+           "modules/conversation_history/combat_compression_cache.json",
+           "modules/conversation_history/combat_user_message_cache.json"
+       ]
+       
+       for cache_file in cache_files:
+           if os.path.exists(cache_file):
+               try:
+                   os.remove(cache_file)
+                   print(f"[COMBAT_MANAGER] Cleared cache: {cache_file}")
+               except Exception as e:
+                   print(f"[COMBAT_MANAGER] Warning: Could not clear cache {cache_file}: {e}")
+       
        # Format player character using the same function as NPCs
        formatted_player = format_character_for_combat(player_info, char_type="player")
        conversation_history[2]["content"] = f"Here's the player character data:\n\n{formatted_player}\n"
