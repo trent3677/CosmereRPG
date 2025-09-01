@@ -54,13 +54,14 @@
   schema_keys: ["plan","narration","combat_round","actions"],
   single_block: "Return exactly ONE JSON object; no markdown wrapping",
   round_increment: "Increment ONLY after all living have acted once",
-  action_types: "updateCharacterInfo for PCs/NPCs; updateEncounter for enemies; exit REQUIRED when ALL hostiles dead/defeated",
+  action_types: "PCs/NPCs -> updateCharacterInfo; Enemies -> updateEncounter; exit REQUIRED when ALL hostiles defeated. NEVER put PC/NPC HP/conditions in updateEncounter. NEVER put enemy HP/conditions in updateCharacterInfo.",
   ascii_requirement: "Use ONLY ASCII characters in all fields. No em-dashes, smart quotes, or special characters",
   ascii_only: "All output MUST be plain ASCII; no curly quotes or em/en dashes",
   text_filter: "Apply @TEXT_FILTER replacements before returning output",
   plan_initiative: "At combat start (no actions taken yet), plan MUST echo the full initiative order exactly as in ROUND INFO",
   plan_window: "plan MUST echo the full turn_window list being processed this response as a flat ordered list",
-  stop_reason: "When stopping, plan MUST state 'stopping because next actor is <player_name>' OR 'end of round'"
+  stop_reason: "When stopping, plan MUST state 'stopping because next actor is <player_name>' OR 'end of round'",
+  plan_must_include: "List each affected target with the action type that will log their change: 'Kira takes 6 -> updateCharacterInfo'; 'Skeleton_3 expends attack -> updateEncounter'."
 }
 
 @STRICTNESS={
@@ -70,6 +71,19 @@
   save_pause: "Follow @SAVE_PAUSE exactly",
   ascii_only: "All output MUST use plain ASCII characters. Replace em-dashes with '--', curly quotes with plain quotes",
   ascii_enforcement: "Reject/replace non-ASCII punctuation; use -- and straight quotes only"
+}
+
+@ROUTING_RULES={
+  rule: "Route updates by the TARGET whose state is changing",
+  mapping: [
+    "Enemy damaged/healed/status change -> updateEncounter (ONE consolidated action per response)",
+    "PC or allied NPC damaged/healed/status change -> updateCharacterInfo (one per affected character)"
+  ],
+  NEVER: [
+    "Never log PC/NPC HP/conditions in updateEncounter",
+    "Never log enemy HP/conditions in updateCharacterInfo"
+  ],
+  plan_note: "In plan, explicitly state the routing for each affected target"
 }
 
 @TEXT_FILTER={
@@ -107,8 +121,8 @@
   damage_on_hit_only: "Only roll/consume damage dice if attack >= AC after bonuses",
   damage_source: "Use GENERIC DIE matching action.damageDice (e.g., 1d6) + action.damageBonus",
   dr_modifiers: "Apply vulnerabilities/resistances/immunities after base damage",
-  consolidate: "Consolidate enemy changes into a single updateEncounter per response",
-  ammunition: "ALWAYS track ranged weapon ammo (bow/crossbow/sling): In updateCharacterInfo changes field include 'Expended 1 [arrow/bolt/bullet]' regardless of hit/miss. Track EVERY shot fired"
+  consolidate: "Consolidate enemy STATE CHANGES (enemy HP/conditions only) into exactly ONE updateEncounter per response",
+  ammunition: "PCs/allied NPCs firing ranged weapons: log ammo in their updateCharacterInfo changes ('Expended 1 arrow/bolt/bullet'). Enemies firing ranged weapons: note ammo usage inside the single updateEncounter changes."
 }
 
 @SAVE_PAUSE={
@@ -315,7 +329,7 @@
   v_json: "Output matches @RESPONSE_SCHEMA exactly",
   v_round: "combat_round increments only at boundary",
   v_sync: "Narrated changes match actions[]",
-  v_type: "updateCharacterInfo vs updateEncounter split is correct",
+  v_type: "Invalid if any PC/NPC HP/conditions logged via updateEncounter OR any enemy HP/conditions logged via updateCharacterInfo",
   v_parameter_keys: "updateCharacterInfo MUST use 'characterName' (not 'character') as parameter",
   v_exit: "Exit only if all hostiles resolved",
   v_preroll: "NPC/monster rolls use correct pools; players never consume prerolls",
@@ -343,10 +357,13 @@
   hit_monster: {
     input:"R2; [>] Skeleton_3; shortbow vs Kira with creature_attacks[3]; dmg generic d6[4]+2=6",
     output:{
-      plan:"R2. Skeleton_3 acts with preroll attack. Hit -> 6 dmg",
+      plan:"R2. Skeleton_3 acts using its attack preroll. Hit -> 6 dmg to Kira. Routing: Kira -> updateCharacterInfo; enemy state -> updateEncounter.",
       narration:"The skeleton looses an arrow toward Kira...",
       combat_round:2,
-      actions:[{"action":"updateEncounter","parameters":{"encounterId":"L05-E2","changes":"Kira takes 6 piercing if hit"}}]
+      actions:[
+        {"action":"updateEncounter","parameters":{"encounterId":"L05-E2","changes":"Skeleton_3 expends shortbow attack preroll [3]."}},
+        {"action":"updateCharacterInfo","parameters":{"characterName":"Scout Kira","changes":"Takes 6 piercing (HP 45->39)."}}
+      ]
     }
   },
   save_pause_pc: {

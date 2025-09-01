@@ -2154,8 +2154,12 @@ def main_game_loop():
             )
             process_ai_response(ai_response_after_combat, party_tracker_data, location_data_post_combat, conversation_history)
         
+        print("[DEBUG] Combat resumption complete - should enter main game loop now")
+        debug("CRITICAL: Combat resumption complete - attempting to enter main loop", category="session_management")
+        
     # --- END: COMBAT RESUMPTION LOGIC ---
     else:
+        print("[DEBUG] Normal startup path - will enter main game loop")
         # Normal game loop (when not resuming from combat)
         validation_prompt_text = load_validation_prompt() 
 
@@ -2247,7 +2251,9 @@ def main_game_loop():
         empty_input_count = 0
         max_empty_inputs = 5
     
+        print("[DEBUG] ENTERING MAIN GAME LOOP - while True")
         while True:
+            print("[DEBUG] Top of main game loop iteration")
             conversation_history = truncate_dm_notes(conversation_history)
             conversation_history = remove_duplicate_messages(conversation_history)
 
@@ -2342,8 +2348,10 @@ def main_game_loop():
                 time_display = f"{current_time_str[:5]} ({time_context})"  # Show HH:MM (context)
                 stats_display = f"{LIGHT_OFF_GREEN}[{time_display}][HP:{current_hp}/{max_hp}][XP:{current_xp}/{next_level_xp}]{RESET_COLOR}"
                 player_name_display = f"{SOLID_GREEN}{player_name_actual}{RESET_COLOR}"
+                print("[DEBUG] About to show input prompt with stats")
                 user_input_text = input(f"{stats_display} {player_name_display}: ")
             else:
+                print("[DEBUG] About to show basic input prompt")
                 user_input_text = input("User: ")
 
             # Skip processing if input is empty or only whitespace
