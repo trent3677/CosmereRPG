@@ -124,11 +124,11 @@
     "updateEncounter must describe enemy changes only"
   ],
   invalid_cases: [
+    "updateEncounter.changes mentions any PC/allied NPC name (player_name or titled NPCs such as Scout/Ranger)",
     "updateCharacterInfo applied to enemy",
     "updateEncounter changing PC/NPC HP",
     "Multiple updateEncounter actions (must be consolidated into ONE)",
-    "updateCharacterInfo using 'character' instead of 'characterName' parameter",
-    "updateEncounter.changes mentions any PC/allied NPC name (player_name or titled NPCs such as Scout/Ranger)"
+    "updateCharacterInfo using 'character' instead of 'characterName' parameter"
   ]
 }
 
@@ -150,7 +150,7 @@
 
 @JSON_REQUIREMENTS={
   required_fields: ["narration","combat_round","actions"],
-  plan_optional: "plan is optional but recommended",
+  plan_optional: "Plan optional unless a turn_window is present; when present, plan is REQUIRED and must echo order and routing",
   plan_expectations: "If plan present, it must reflect true round/order/HP and WAITING states when applicable"
 }
 
