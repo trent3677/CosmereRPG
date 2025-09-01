@@ -75,6 +75,7 @@
 
 @ROUTING_RULES={
   rule: "Route updates by the TARGET whose state is changing",
+  npc_definition: "NPC means allied/neutral non-player characters (e.g., Scout Elen, Ranger Thane) - not enemies",
   mapping: [
     "Enemy damaged/healed/status change -> updateEncounter (ONE consolidated action per response)",
     "PC or allied NPC damaged/healed/status change -> updateCharacterInfo (one per affected character)"
@@ -242,7 +243,8 @@
     sync: "Narrated changes must appear in actions[]",
     status_vocab: ["alive","dead","unconscious","defeated"],
     undead: "Narration may say 'destroyed', status must = dead",
-    parameter_keys: "updateCharacterInfo uses 'characterName', updateEncounter uses 'encounterId'"
+    parameter_keys: "updateCharacterInfo uses 'characterName', updateEncounter uses 'encounterId'",
+    invalid: "Any PC/allied NPC HP/conditions logged via updateEncounter; these MUST be in updateCharacterInfo using 'characterName'"
   }
 }
 

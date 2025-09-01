@@ -28,7 +28,8 @@
     }
   },
   single_block: "Return exactly one JSON object matching the shape above",
-  ascii_only: "Do not output Unicode"
+  ascii_only: "Do not output Unicode",
+  plan_required: "Plan REQUIRED when turn_window present; must echo order and routing"
 }
 
 @MAJOR_ISSUES={
@@ -100,7 +101,7 @@
   required_when_present: "If turn_window present in user message, model MUST process each listed actor exactly once",
   error_if_partial: "Invalid: Turn window actors missing: {missing_list}. All actors in turn_window must be processed",
   error_if_extra: "Invalid: Processed actors not in turn_window: {extra_list}",
-  plan_must_echo: "Plan must echo the turn_window actors being processed",
+  plan_must_echo: "Plan must echo turn_window and list routing: e.g., 'Kira takes 6 -> updateCharacterInfo; Skeleton_3 expends attack -> updateEncounter'",
   example_error: "Turn window was ['Skeleton', 'Scout Elen', 'Skeleton_2'] but only processed ['Skeleton']. Missing: ['Scout Elen', 'Skeleton_2']"
 }
 
@@ -109,6 +110,7 @@
   updateEncounter: "Monsters/enemies ONLY (uses changes text)",
   never_cross: "Do not use updateCharacterInfo for monsters; do not use updateEncounter for players/NPCs",
   consolidation_rule: "EXACTLY ONE updateEncounter per response consolidating ALL enemy changes",
+  allied_npc_ammo: "If an allied NPC fires a ranged weapon, REQUIRE their updateCharacterInfo to include ammo expenditure in changes",
   parameter_validation: {
     updateCharacterInfo: "Invalid if uses 'character' instead of 'characterName' as parameter key",
     updateEncounter: "Must use 'encounterId' and 'changes' as parameter keys"
@@ -125,7 +127,8 @@
     "updateCharacterInfo applied to enemy",
     "updateEncounter changing PC/NPC HP",
     "Multiple updateEncounter actions (must be consolidated into ONE)",
-    "updateCharacterInfo using 'character' instead of 'characterName' parameter"
+    "updateCharacterInfo using 'character' instead of 'characterName' parameter",
+    "updateEncounter.changes mentions any PC/allied NPC name (player_name or titled NPCs such as Scout/Ranger)"
   ]
 }
 
