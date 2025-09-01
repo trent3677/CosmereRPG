@@ -1100,6 +1100,8 @@ def process_video():
         file = request.files['video']
         monster_id = request.form.get('monster_id')
         pack_name = request.form.get('pack_name')
+        copy_to_monsters = request.form.get('copy_to_monsters', 'false').lower() == 'true'
+        copy_to_npcs = request.form.get('copy_to_npcs', 'false').lower() == 'true'
         
         if not monster_id or not pack_name:
             return jsonify({'success': False, 'error': 'Missing monster_id or pack_name'})
@@ -1125,7 +1127,9 @@ def process_video():
                 input_path=tmp_file,
                 monster_id=monster_id,
                 pack_name=pack_name,
-                skip_compression=False  # Enable compression
+                skip_compression=False,  # Enable compression
+                copy_to_monsters=copy_to_monsters,
+                copy_to_npcs=copy_to_npcs
             )
             
             # Try to clean up temp file with retries for Windows

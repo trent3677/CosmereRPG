@@ -2203,6 +2203,18 @@
                             <div class="file-list" id="videoList">
                                 <!-- Video files will be listed here -->
                             </div>
+                            <div class="form-group" style="margin-top: 20px;">
+                                <label style="display: flex; align-items: center; margin-bottom: 10px;">
+                                    <input type="checkbox" id="copyToMonsters" style="margin-right: 10px;">
+                                    Copy to Monsters Folder
+                                    <span class="tooltip-trigger" data-tooltip="Copy processed videos to web/static/media/monsters for immediate use with monster encounters" style="margin-left: 5px;">?</span>
+                                </label>
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" id="copyToNpcs" style="margin-right: 10px;">
+                                    Copy to NPCs Folder
+                                    <span class="tooltip-trigger" data-tooltip="Copy processed videos to web/static/media/npcs for immediate use with NPC interactions" style="margin-left: 5px;">?</span>
+                                </label>
+                            </div>
                             <button class="btn btn-primary" style="margin-top: 20px;" onclick="processVideos()">Process Videos</button>
                         </div>
                     </div>
@@ -3531,6 +3543,8 @@
         
         async function processVideos() {
             const pack = document.getElementById('videoPack').value;
+            const copyToMonsters = document.getElementById('copyToMonsters').checked;
+            const copyToNpcs = document.getElementById('copyToNpcs').checked;
             const videos = [];
             
             document.querySelectorAll('.monster-id').forEach(input => {
@@ -3558,6 +3572,8 @@
                 formData.append('video', file);
                 formData.append('monster_id', monster_id);
                 formData.append('pack_name', pack);
+                formData.append('copy_to_monsters', copyToMonsters);
+                formData.append('copy_to_npcs', copyToNpcs);
                 
                 try {
                     const response = await fetch('/api/toolkit/process-video', {
