@@ -7,7 +7,7 @@
   "style": "photorealistic",
   "created_at": "2025-08-14T10:00:00Z",
   "monsters": {},
-  "total_monsters": 45,
+  "total_monsters": 47,
   "total_videos": 0,
   "monsters_included": [
     "acid_slime",
@@ -34,9 +34,11 @@
     "flesh_golem",
     "ghost",
     "gnoll",
+    "grick",
     "lord_thaddeus_greymont",
     "phantom_torturer",
     "restless_spirit",
+    "sahuagin_priestess",
     "salt_wraiths",
     "shadow_cage",
     "shadow_corrupted_wolf",
@@ -108,5 +110,5 @@
     "wounded_ranger_gareth",
     "young_apprentice_tam"
   ],
-  "last_modified": "2025-08-22"
+  "last_modified": "2025-08-31"
 }
