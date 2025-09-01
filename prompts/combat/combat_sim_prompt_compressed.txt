@@ -151,7 +151,8 @@
   rule: "If '--- PLAYER ACTION ---' contains an actual action (not empty/waiting), treat as already resolved",
   behavior: "After resolving player's provided action, continue processing ALL remaining NPCs/monsters in initiative",
   stop_when: "Action section empty OR says 'waiting' OR all creatures acted OR next is another player",
-  example: "Player: 'I attack for 8 damage' -> Resolve damage, then continue to next NPC's turn"
+  example: "Player: 'I attack for 8 damage' -> Resolve damage, then continue to next NPC's turn",
+  spell_damage_timing: "IMMEDIATE damage spells (Fireball, Lightning Bolt, Burning Hands, Scorching Ray, Guiding Bolt, Inflict Wounds, Thunderwave, Shatter): Roll damage NOW on player's turn. ONGOING/TRIGGERED damage (Spirit Guardians, Wall of Fire, Moonbeam, Cloud of Daggers, Spike Growth, Entangle): Damage occurs on enemy's turn or start/end of turn as specified"
 }
 
 @PLAYER_QUERY_BRANCH={
