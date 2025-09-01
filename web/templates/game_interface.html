@@ -5634,8 +5634,32 @@
                     // NEW: Show stats on hover, media on click
                     item.addEventListener('mouseenter', showStatsTooltip);
                     item.addEventListener('mouseleave', hideStatsTooltip);
-                    item.addEventListener('click', (event) => {
-                        showVideoPopup(event.currentTarget, monsterVideoUrl);
+                    item.addEventListener('click', function() {
+                        // On click, check for video first. If it exists, show it.
+                        // If not, fall back to showing the full-size image.
+                        const video = document.createElement('video');
+                        video.src = monsterVideoUrl;
+                        video.onloadedmetadata = () => showVideoPopup(item, monsterVideoUrl);
+                        video.onerror = () => {
+                            // Video failed, try full-size JPG image
+                            const imgJpg = new Image();
+                            imgJpg.src = `/static/media/monsters/${monsterType}.jpg`;
+                            imgJpg.onload = () => showImagePopup(item, imgJpg.src);
+                            imgJpg.onerror = () => {
+                                // JPG failed, try PNG image
+                                const imgPng = new Image();
+                                imgPng.src = `/static/media/monsters/${monsterType}.png`;
+                                imgPng.onload = () => showImagePopup(item, imgPng.src);
+                                imgPng.onerror = () => {
+                                    // No media available, show the thumbnail if it exists
+                                    if (item.style.backgroundImage) {
+                                        // Extract the URL from the background-image style
+                                        const bgUrl = item.style.backgroundImage.slice(5, -2);
+                                        showImagePopup(item, bgUrl);
+                                    }
+                                };
+                            };
+                        };
                     });
                     
                     // Silently validate the thumbnail exists
