@@ -76,13 +76,15 @@ class VideoProcessor:
             }
         
         # Prepare output paths - simplified structure with all files in monsters folder
+        # Ensure monster_id is lowercase for consistent file naming
+        monster_id_lower = monster_id.lower()
         pack_dir = Path(f"graphic_packs/{pack_name}")
         monsters_dir = pack_dir / "monsters"
         
         monsters_dir.mkdir(parents=True, exist_ok=True)
         
-        output_video = monsters_dir / f"{monster_id}_video.mp4"
-        output_thumb = monsters_dir / f"{monster_id}_thumb.jpg"
+        output_video = monsters_dir / f"{monster_id_lower}_video.mp4"
+        output_thumb = monsters_dir / f"{monster_id_lower}_thumb.jpg"
         
         print(f"\nProcessing video for {monster_id}...")
         print(f"Input: {input_path}")
@@ -459,6 +461,7 @@ class VideoProcessor:
             size_mb = video_file.stat().st_size / (1024 * 1024)
             total_size += size_mb
             
+            # Extract monster_id (already lowercase from filename)
             monster_id = video_file.stem.replace("_video", "")
             videos.append({
                 "monster_id": monster_id,

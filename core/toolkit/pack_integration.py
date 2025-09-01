@@ -41,19 +41,21 @@ class PackIntegration:
         Returns:
             Path to the image file or None if not found
         """
+        # Convert monster_id to lowercase for consistent file naming
+        monster_id_lower = monster_id.lower()
         # Check active pack first
-        image_path = Path(f"graphic_packs/{self.active_pack}/monsters/images/{monster_id}.png")
+        image_path = Path(f"graphic_packs/{self.active_pack}/monsters/images/{monster_id_lower}.png")
         if image_path.exists():
             return str(image_path)
         
         # Fall back to default pack
         if self.active_pack != self.DEFAULT_PACK:
-            default_path = Path(f"graphic_packs/{self.DEFAULT_PACK}/monsters/images/{monster_id}.png")
+            default_path = Path(f"graphic_packs/{self.DEFAULT_PACK}/monsters/images/{monster_id_lower}.png")
             if default_path.exists():
                 return str(default_path)
         
         # Check legacy location in web/static/monsters
-        legacy_path = Path(f"web/static/monsters/{monster_id}.png")
+        legacy_path = Path(f"web/static/monsters/{monster_id_lower}.png")
         if legacy_path.exists():
             return str(legacy_path)
         
@@ -69,19 +71,21 @@ class PackIntegration:
         Returns:
             Path to the video file or None if not found
         """
+        # Convert monster_id to lowercase for consistent file naming
+        monster_id_lower = monster_id.lower()
         # Check active pack first
-        video_path = Path(f"graphic_packs/{self.active_pack}/monsters/videos/{monster_id}_video.mp4")
+        video_path = Path(f"graphic_packs/{self.active_pack}/monsters/videos/{monster_id_lower}_video.mp4")
         if video_path.exists():
             return str(video_path)
         
         # Fall back to default pack
         if self.active_pack != self.DEFAULT_PACK:
-            default_path = Path(f"graphic_packs/{self.DEFAULT_PACK}/monsters/videos/{monster_id}_video.mp4")
+            default_path = Path(f"graphic_packs/{self.DEFAULT_PACK}/monsters/videos/{monster_id_lower}_video.mp4")
             if default_path.exists():
                 return str(default_path)
         
         # Check legacy location in web/static/media/monsters
-        legacy_path = Path(f"web/static/media/monsters/{monster_id}_video.mp4")
+        legacy_path = Path(f"web/static/media/monsters/{monster_id_lower}_video.mp4")
         if legacy_path.exists():
             return str(legacy_path)
         
@@ -97,19 +101,21 @@ class PackIntegration:
         Returns:
             Path to the thumbnail file or None if not found
         """
+        # Convert monster_id to lowercase for consistent file naming
+        monster_id_lower = monster_id.lower()
         # Check active pack first
-        thumb_path = Path(f"graphic_packs/{self.active_pack}/monsters/thumbnails/{monster_id}_thumb.jpg")
+        thumb_path = Path(f"graphic_packs/{self.active_pack}/monsters/thumbnails/{monster_id_lower}_thumb.jpg")
         if thumb_path.exists():
             return str(thumb_path)
         
         # Fall back to default pack
         if self.active_pack != self.DEFAULT_PACK:
-            default_path = Path(f"graphic_packs/{self.DEFAULT_PACK}/monsters/thumbnails/{monster_id}_thumb.jpg")
+            default_path = Path(f"graphic_packs/{self.DEFAULT_PACK}/monsters/thumbnails/{monster_id_lower}_thumb.jpg")
             if default_path.exists():
                 return str(default_path)
         
         # Check legacy location
-        legacy_path = Path(f"web/static/media/monsters/{monster_id}_thumb.jpg")
+        legacy_path = Path(f"web/static/media/monsters/{monster_id_lower}_thumb.jpg")
         if legacy_path.exists():
             return str(legacy_path)
         
