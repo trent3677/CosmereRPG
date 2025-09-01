@@ -102,7 +102,6 @@ class VideoProcessor:
             if skip_compression:
                 # Just copy the video without compression
                 print(f"[INFO] Skipping compression, copying video directly...")
-                import shutil
                 shutil.copy2(input_path, str(output_video))
                 compressed_path = str(output_video)
             else:
