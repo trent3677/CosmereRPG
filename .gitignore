@@ -374,6 +374,8 @@ combat_compressed_test_*.json
 combat_conversation_compressed_test.json
 combat_messages_to_api.json
 validation_messages_to_api.json
+main_validation_messages_to_api.json
+main_conversation_messages_to_api.json
 combat_prompt_comparison_*.json
 validator_test_results_*.jsonl
 

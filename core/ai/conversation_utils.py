@@ -493,8 +493,35 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
     current_location_id = party_tracker_data["worldConditions"]["currentLocationId"] if party_tracker_data else None
 
     # Insert atlas data BEFORE map data for navigation context
+    # First, check if atlas exists in either new_history or original conversation_history
+    atlas_exists = False
+    
+    # Check new_history for atlas
+    atlas_indices_new = []
+    for i, msg in enumerate(new_history):
+        if msg.get("role") == "system" and "COMPLETE MODULE WORLD ATLAS" in msg.get("content", ""):
+            atlas_indices_new.append(i)
+    
+    # Check original conversation_history for atlas (to avoid re-adding)
+    for msg in conversation_history:
+        if msg.get("role") == "system" and "COMPLETE MODULE WORLD ATLAS" in msg.get("content", ""):
+            atlas_exists = True
+            debug(f"Atlas already exists in original conversation history, skipping")
+            break
+    
+    # If we have duplicates in new_history, remove all but the first
+    if len(atlas_indices_new) > 1:
+        debug(f"Found {len(atlas_indices_new)} atlas copies in new_history, removing {len(atlas_indices_new) - 1} duplicates")
+        # Remove from back to front to preserve indices
+        for idx in reversed(atlas_indices_new[1:]):
+            del new_history[idx]
+        atlas_exists = True
+    elif len(atlas_indices_new) == 1:
+        atlas_exists = True
+        debug(f"Atlas already exists in new_history, skipping duplicate")
+    
     current_module_name = party_tracker_data.get("module", "").replace(" ", "_") if party_tracker_data else None
-    if current_module_name:
+    if current_module_name and not atlas_exists:
         try:
             atlas = build_atlas_for_module(current_module_name)
             if atlas and atlas.get("areas"):
@@ -584,6 +611,18 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
         debug("VALIDATION: No module transition messages found in preserved history", category="module_management")
     new_history.extend(updated_history)
 
+    # Final cleanup: Remove any duplicate atlas messages that slipped through
+    final_atlas_indices = []
+    for i, msg in enumerate(new_history):
+        if msg.get("role") == "system" and "COMPLETE MODULE WORLD ATLAS" in msg.get("content", ""):
+            final_atlas_indices.append(i)
+    
+    if len(final_atlas_indices) > 1:
+        debug(f"Final cleanup: Found {len(final_atlas_indices)} atlas copies, keeping only the first")
+        # Remove all but the first, going backwards to preserve indices
+        for idx in reversed(final_atlas_indices[1:]):
+            del new_history[idx]
+    
     # Generate lightweight chat history for debugging
     generate_chat_history(new_history)
 

@@ -54,7 +54,7 @@
   schema_keys: ["plan","narration","combat_round","actions"],
   single_block: "Return exactly ONE JSON object; no markdown wrapping",
   round_increment: "Increment ONLY after all living have acted once",
-  action_types: "updateCharacterInfo for PCs/NPCs; updateEncounter for enemies; exit only when all hostiles resolved",
+  action_types: "updateCharacterInfo for PCs/NPCs; updateEncounter for enemies; exit REQUIRED when ALL hostiles dead/defeated",
   ascii_requirement: "Use ONLY ASCII characters in all fields. No em-dashes, smart quotes, or special characters",
   ascii_only: "All output MUST be plain ASCII; no curly quotes or em/en dashes",
   text_filter: "Apply @TEXT_FILTER replacements before returning output",
@@ -132,6 +132,8 @@
   on_fail: "Status becomes dead",
   narration_note: "Describe the creature shuddering and refusing to fall (no rules-speak), but never say the feature name in narration"
 }
+
+@SPIRIT_GUARDIANS="Enemy starting turn within 15ft: WIS save vs caster DC or 3d8 radiant (half on save), use GENERIC DIE, log damage in plan+updateCharacterInfo"
 
 @HOLDING={
   trigger: "Player declares action out-of-turn",

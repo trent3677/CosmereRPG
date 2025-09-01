@@ -1786,6 +1786,11 @@ def get_ai_response(conversation_history, validation_retry_count=0):
         print(f"WARNING: Compression failed: {e}")
         messages_to_send = conversation_history
     
+    # Export main conversation messages for debugging
+    with open("main_conversation_messages_to_api.json", "w", encoding="utf-8") as f:
+        json.dump(messages_to_send, f, indent=2, ensure_ascii=False)
+    print(f"DEBUG: [MAIN CONVERSATION] Exported conversation messages to main_conversation_messages_to_api.json")
+    
     # Generate response with selected model
     if USE_GPT5_MODELS:
         # GPT-5: Always use mini, no temperature/max_tokens

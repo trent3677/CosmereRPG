@@ -249,12 +249,26 @@ class ParallelConversationCompressor:
             print(f"\nProcessing {len(work_items)} sections in parallel...")
             print("-" * 60)
         
+        # Check if any work item is a cache miss before showing UI
+        self.needs_active_compression = False  # Store as instance variable for later use
+        if len(work_items) > 0:
+            for item in work_items:
+                _, _, section_id, _, narrative = item
+                content_hash = self.get_section_hash(narrative)
+                cache_key = f"{section_id}_{content_hash}"
+                if cache_key not in self.cache:
+                    self.needs_active_compression = True
+                    print("Cache miss detected. Active compression is required.")
+                    break
+            if not self.needs_active_compression:
+                print("All sections are cached. Compression will be silent.")
+        
         # Reset progress tracking
         self.completed_count = 0
         self.total_sections = len(work_items)
         
-        # Only emit start event if there's work to do
-        if len(work_items) > 0:
+        # Only emit start event if there's actual compression work
+        if self.needs_active_compression:
             try:
                 from core.managers.status_manager import status_manager
                 status_manager.emit_compression_event('compression_start', {
@@ -344,8 +358,8 @@ class ParallelConversationCompressor:
         elapsed = (datetime.now() - start_time).total_seconds()
         print(f"\nTotal processing time: {elapsed:.1f} seconds")
         
-        # Calculate compression statistics and emit completion event only if compression occurred
-        if self.total_sections > 0:
+        # Calculate compression statistics and emit completion event only if active compression occurred
+        if self.total_sections > 0 and hasattr(self, 'needs_active_compression') and self.needs_active_compression:
             try:
                 from core.managers.status_manager import status_manager
                 original_size = sum(len(json.dumps(m)) for m in conversation)

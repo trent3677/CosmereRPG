@@ -41,14 +41,14 @@
   plan_alignment: "Plan must match actual state (round, HP, order, who acted)",
   status_vocab: "Status must be one of: alive, dead, unconscious, defeated",
   undead_status_rule: "If narration says 'destroyed', status must still be 'dead'",
-  exit_condition: "exit only when ALL enemies are dead/unconscious/defeated"
+  exit_condition: "exit REQUIRED when ALL enemies are dead/unconscious/defeated; flag INVALID if combat ends without exit"
 }
 
 @FLOW_RULES={
   golden_rule: "Process ALL non-player turns in order before stopping; only stop at player's turn or for saves",
   turn_processing: "Immediately reflect results after each damaging action in narration",
   dead_skip: "Dead creatures are not targeted and do not act",
-  exit_when: "If no enemy remains alive -> must call exit",
+  exit_when: "If no enemy remains alive -> MUST call exit action immediately",
   player_turn_pause: "When it becomes player's turn, stop and await input",
   player_stop_check: "Invalid if the model stops before reaching player_name when NPCs/monsters remain to act"
 }
@@ -221,7 +221,7 @@
     "8) Round tracking: no premature increment; boundary handled",
     "9) Preroll usage: correct pools, sequential, PCs never use",
     "10) Action typing and entity targeting correct",
-    "11) Exit correctness: only when all enemies resolved",
+    "11) Exit correctness: MUST exit when all enemies dead/defeated; flag if missing",
     "12) ONE updateEncounter rule: all enemy changes consolidated"
   ]
 }
