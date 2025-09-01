@@ -176,6 +176,26 @@ def generate_live_initiative_tracker(encounter_data, conversation_history, curre
         # Extract the tracker from response
         tracker_text = response.choices[0].message.content
         
+        # Append the assistant's response to the debug file
+        try:
+            # Read the existing debug file
+            with open("initiative_messages_to_api.json", "r", encoding="utf-8") as f:
+                debug_data = json.load(f)
+            
+            # Add the assistant's response
+            debug_data.append({
+                "role": "assistant",
+                "content": tracker_text
+            })
+            
+            # Write back the complete conversation including response
+            with open("initiative_messages_to_api.json", "w", encoding="utf-8") as f:
+                json.dump(debug_data, f, indent=2, ensure_ascii=False)
+            print(f"DEBUG: [INITIATIVE] Added assistant response to initiative_messages_to_api.json")
+            
+        except Exception as e:
+            logger.error(f"Failed to append initiative response: {e}")
+        
         # The compressed prompt returns the tracker with instruction blocks
         # Just return the full response as it includes important turn window info
         if "**Live Initiative Tracker:**" in tracker_text:

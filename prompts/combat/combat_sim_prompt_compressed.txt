@@ -223,6 +223,7 @@
   pc_or_npc: "updateCharacterInfo (MUST use 'characterName' parameter, not 'character')",
   enemy: "updateEncounter",
   exit: "exit only when all hostiles defeated",
+  npc_damage: "Allied NPCs taking damage or using ammo MUST use updateCharacterInfo with BOTH HP and ammo changes",
   rules: {
     sync: "Narrated changes must appear in actions[]",
     status_vocab: ["alive","dead","unconscious","defeated"],
@@ -246,8 +247,9 @@
   updateCharacterInfo: {
     multiple_allowed: "Can have multiple for different PCs/NPCs",
     scope: "Player characters and allied NPCs only",
-    required_params: {"characterName": "exact name of PC/NPC", "changes": "HP/status/condition changes"},
-    example: {"action":"updateCharacterInfo","parameters":{"characterName":"Scout Elen","changes":"Takes 7 damage (HP 36->29)"}}
+    required_params: {"characterName": "exact name of PC/NPC", "changes": "ALL changes: HP damage/healing, status changes, conditions, AND ammunition expenditure"},
+    npc_requirement: "For NPCs taking damage or firing ranged weapons, MUST include BOTH HP changes AND ammo in same action",
+    example: {"action":"updateCharacterInfo","parameters":{"characterName":"Guard Marcus","changes":"Takes 7 damage (HP 36->29). Expended 1 arrow."}}
   }
 }
 
