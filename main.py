@@ -2741,7 +2741,7 @@ def main_game_loop():
                     "levelUp for advancement, "
                     "establishHub when the party gains ownership or control of a location that could serve as a base of operations (stronghold, tavern, keep, etc.) - example: establishHub('The Silver Swan Inn', {hubType: 'tavern', description: 'Our permanent base of operations', services: ['rest', 'information'], ownership: 'party'}), "
                     "exitGame for ending sessions, and "
-                    "transitionLocation should always be used when the player expresses a desire to move to an adjacent location to their current location, "
+                    "transitionLocation should always be used when the player expresses a desire to move to a new location, "
                     "Always roleplay the NPC and NPC party rolls without asking the player. "
                     "Always ask the player character to roll for skill checks and other actions. "
                     "Proactively narrate location NPCs, start conversations, and weave plot elements into the adventure. "
