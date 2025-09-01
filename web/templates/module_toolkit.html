@@ -1802,6 +1802,23 @@
             font-size: 20px;
         }
 
+        /* === Styles for Video Processor Layout === */
+        .video-upload-details {
+            display: flex;             /* Puts the file list and checkboxes side-by-side */
+            align-items: flex-start;   /* Aligns items to the top */
+            gap: 30px;                 /* Adds some space between the two items */
+            margin-top: 15px;          /* Adds space above the whole group */
+        }
+
+        .video-upload-details .file-list {
+            flex-grow: 1;      /* Allows the file list to take up any extra space */
+            min-height: 80px;  /* Ensures the area has some height even when empty */
+        }
+
+        .video-upload-details .form-group {
+            flex-shrink: 0;    /* Prevents the checkbox group from getting squished */
+        }
+
     </style>
 </head>
 <body>
@@ -2200,21 +2217,25 @@
                                 <p>Drag and drop video files here or click to browse</p>
                                 <input type="file" id="videoFiles" multiple accept="video/*" style="display:none" onchange="addVideos(this.files)">
                             </div>
-                            <div class="file-list" id="videoList">
-                                <!-- Video files will be listed here -->
+                            <!-- START: Video upload details wrapper -->
+                            <div class="video-upload-details">
+                                <div class="file-list" id="videoList">
+                                    <!-- Video files will be listed here -->
+                                </div>
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; margin-bottom: 10px;">
+                                        <input type="checkbox" id="copyToMonsters" style="margin-right: 10px;">
+                                        Copy to Monsters Folder
+                                        <span class="tooltip-trigger" data-tooltip="Copy processed videos to web/static/media/monsters for immediate use with monster encounters" style="margin-left: 5px;">?</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center;">
+                                        <input type="checkbox" id="copyToNpcs" style="margin-right: 10px;">
+                                        Copy to NPCs Folder
+                                        <span class="tooltip-trigger" data-tooltip="Copy processed videos to web/static/media/npcs for immediate use with NPC interactions" style="margin-left: 5px;">?</span>
+                                    </label>
+                                </div>
                             </div>
-                            <div class="form-group" style="margin-top: 20px;">
-                                <label style="display: flex; align-items: center; margin-bottom: 10px;">
-                                    <input type="checkbox" id="copyToMonsters" style="margin-right: 10px;">
-                                    Copy to Monsters Folder
-                                    <span class="tooltip-trigger" data-tooltip="Copy processed videos to web/static/media/monsters for immediate use with monster encounters" style="margin-left: 5px;">?</span>
-                                </label>
-                                <label style="display: flex; align-items: center;">
-                                    <input type="checkbox" id="copyToNpcs" style="margin-right: 10px;">
-                                    Copy to NPCs Folder
-                                    <span class="tooltip-trigger" data-tooltip="Copy processed videos to web/static/media/npcs for immediate use with NPC interactions" style="margin-left: 5px;">?</span>
-                                </label>
-                            </div>
+                            <!-- END: Video upload details wrapper -->
                             <button class="btn btn-primary" style="margin-top: 20px;" onclick="processVideos()">Process Videos</button>
                         </div>
                     </div>
