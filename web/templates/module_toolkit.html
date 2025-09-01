@@ -1819,6 +1819,72 @@
             flex-shrink: 0;    /* Prevents the checkbox group from getting squished */
         }
 
+        /* === Custom Checkbox Styles for Video Processor === */
+
+        /* Style the container for the copy options */
+        .video-copy-options {
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 0; /* Remove default margin */
+            margin-bottom: 0; /* Remove default margin */
+        }
+
+        /* This is the main label container */
+        .custom-checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+        .custom-checkbox-label:not(:last-child) {
+            margin-bottom: 15px; /* Add space between the two checkboxes */
+        }
+
+        /* Hide the ugly default checkbox */
+        .custom-checkbox-label input[type="checkbox"] {
+            display: none;
+        }
+
+        /* This is the empty <span> we added, styled to look like a box */
+        .checkbox-visual {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: #222;
+            border: 2px solid #555;
+            border-radius: 4px;
+            margin-right: 12px;
+            position: relative; /* Needed to position the checkmark inside */
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        /* When the hidden checkbox is checked, change the color of our fake box */
+        .custom-checkbox-label input[type="checkbox"]:checked + .checkbox-visual {
+            background-color: var(--color-primary); /* Use the nice blue from your theme */
+            border-color: var(--color-primary);
+        }
+
+        /* Create the checkmark using CSS borders */
+        .checkbox-visual::after {
+            content: '';
+            position: absolute;
+            display: none; /* The checkmark is hidden by default */
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            transform: rotate(45deg);
+        }
+
+        /* Show the checkmark when the hidden checkbox is checked */
+        .custom-checkbox-label input[type="checkbox"]:checked + .checkbox-visual::after {
+            display: block;
+        }
+
     </style>
 </head>
 <body>
@@ -2222,14 +2288,16 @@
                                 <div class="file-list" id="videoList">
                                     <!-- Video files will be listed here -->
                                 </div>
-                                <div class="form-group">
-                                    <label style="display: flex; align-items: center; margin-bottom: 10px;">
-                                        <input type="checkbox" id="copyToMonsters" style="margin-right: 10px;">
+                                <div class="form-group video-copy-options">
+                                    <label class="custom-checkbox-label">
+                                        <input type="checkbox" id="copyToMonsters">
+                                        <span class="checkbox-visual"></span>
                                         Copy to Monsters Folder
                                         <span class="tooltip-trigger" data-tooltip="Copy processed videos to web/static/media/monsters for immediate use with monster encounters" style="margin-left: 5px;">?</span>
                                     </label>
-                                    <label style="display: flex; align-items: center;">
-                                        <input type="checkbox" id="copyToNpcs" style="margin-right: 10px;">
+                                    <label class="custom-checkbox-label">
+                                        <input type="checkbox" id="copyToNpcs">
+                                        <span class="checkbox-visual"></span>
                                         Copy to NPCs Folder
                                         <span class="tooltip-trigger" data-tooltip="Copy processed videos to web/static/media/npcs for immediate use with NPC interactions" style="margin-left: 5px;">?</span>
                                     </label>
