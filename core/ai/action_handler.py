@@ -928,8 +928,22 @@ Please use a valid location that exists in the current area ({current_area_id}) 
                 error(f"FAILURE: Exception in character update", exception=e, category="character_updates")
                 # Use print with separate arguments to avoid format string interpretation
                 print("ERROR: Failed to update character info:", str(e))
+            finally:
+                # Always reset status after character update completes
+                try:
+                    from core.managers.status_manager import status_ready
+                    status_ready()
+                    debug("STATE_CHANGE: Status reset after character update", category="character_updates")
+                except Exception:
+                    pass
         else:
             print("ERROR: No character name provided and no player found in party tracker.")
+            # Reset status even if no character was found
+            try:
+                from core.managers.status_manager import status_ready
+                status_ready()
+            except Exception:
+                pass
 
 
     elif action_type == ACTION_UPDATE_PARTY_NPCS:
