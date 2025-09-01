@@ -49,7 +49,9 @@ class VideoProcessor:
         monster_id: str,
         pack_name: str,
         custom_settings: Optional[Dict] = None,
-        skip_compression: bool = False
+        skip_compression: bool = False,
+        copy_to_monsters: bool = False,
+        copy_to_npcs: bool = False
     ) -> Dict:
         """
         Process a monster video file
@@ -59,6 +61,9 @@ class VideoProcessor:
             monster_id: ID of the monster
             pack_name: Name of the graphic pack
             custom_settings: Optional custom compression settings
+            skip_compression: Skip video compression
+            copy_to_monsters: Copy to web/static/media/monsters for immediate monster use
+            copy_to_npcs: Copy to web/static/media/npcs for immediate NPC use
             
         Returns:
             Dictionary with processing results
@@ -147,6 +152,37 @@ class VideoProcessor:
             
             # Update pack manifest
             self._update_pack_manifest(pack_name, monster_id, "video")
+            
+            # Copy to game folders if requested
+            if copy_to_monsters:
+                game_monsters_dir = Path("web/static/media/monsters")
+                game_monsters_dir.mkdir(parents=True, exist_ok=True)
+                
+                # Copy video
+                game_video_path = game_monsters_dir / f"{monster_id_lower}_video.mp4"
+                shutil.copy2(str(output_video), str(game_video_path))
+                
+                # Copy thumbnail
+                game_thumb_path = game_monsters_dir / f"{monster_id_lower}_thumb.jpg"
+                shutil.copy2(str(output_thumb), str(game_thumb_path))
+                
+                print(f"  Copied to monsters folder: {game_video_path}")
+                result["copied_to_monsters"] = True
+            
+            if copy_to_npcs:
+                game_npcs_dir = Path("web/static/media/npcs")
+                game_npcs_dir.mkdir(parents=True, exist_ok=True)
+                
+                # Copy video
+                game_video_path = game_npcs_dir / f"{monster_id_lower}_video.mp4"
+                shutil.copy2(str(output_video), str(game_video_path))
+                
+                # Copy thumbnail
+                game_thumb_path = game_npcs_dir / f"{monster_id_lower}_thumb.jpg"
+                shutil.copy2(str(output_thumb), str(game_thumb_path))
+                
+                print(f"  Copied to NPCs folder: {game_video_path}")
+                result["copied_to_npcs"] = True
             
             print(f"[OK] Successfully processed {monster_id}")
             print(f"  Compression: {compression_ratio:.1f}% reduction")
@@ -290,7 +326,9 @@ class VideoProcessor:
         self,
         video_files: List[Tuple[str, str]],
         pack_name: str,
-        progress_callback=None
+        progress_callback=None,
+        copy_to_monsters: bool = False,
+        copy_to_npcs: bool = False
     ) -> Dict:
         """
         Process multiple video files in batch
@@ -299,6 +337,8 @@ class VideoProcessor:
             video_files: List of (input_path, monster_id) tuples
             pack_name: Name of the graphic pack
             progress_callback: Optional callback for progress updates
+            copy_to_monsters: Copy to web/static/media/monsters for immediate use
+            copy_to_npcs: Copy to web/static/media/npcs for immediate use
             
         Returns:
             Dictionary with batch results
@@ -325,7 +365,9 @@ class VideoProcessor:
             result = self.process_monster_video(
                 input_path=input_path,
                 monster_id=monster_id,
-                pack_name=pack_name
+                pack_name=pack_name,
+                copy_to_monsters=copy_to_monsters,
+                copy_to_npcs=copy_to_npcs
             )
             
             if result["success"]:
@@ -487,6 +529,10 @@ def main():
     parser.add_argument("monster", help="Monster ID")
     parser.add_argument("--pack", default="default_photorealistic", help="Pack name")
     parser.add_argument("--bitrate", help="Custom bitrate (e.g., 1500k)")
+    parser.add_argument("--copy-to-monsters", action="store_true", 
+                        help="Copy to web/static/media/monsters for immediate use")
+    parser.add_argument("--copy-to-npcs", action="store_true", 
+                        help="Copy to web/static/media/npcs for immediate use")
     
     args = parser.parse_args()
     
@@ -502,7 +548,9 @@ def main():
         input_path=args.input,
         monster_id=args.monster,
         pack_name=args.pack,
-        custom_settings=custom_settings
+        custom_settings=custom_settings,
+        copy_to_monsters=args.copy_to_monsters,
+        copy_to_npcs=args.copy_to_npcs
     )
     
     if result["success"]:
