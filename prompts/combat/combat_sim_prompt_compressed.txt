@@ -108,7 +108,7 @@
   damage_source: "Use GENERIC DIE matching action.damageDice (e.g., 1d6) + action.damageBonus",
   dr_modifiers: "Apply vulnerabilities/resistances/immunities after base damage",
   consolidate: "Consolidate enemy changes into a single updateEncounter per response",
-  ammunition: "Remove arrows/bolts/ammo from PC/NPC inventory when used via updateCharacterInfo ('Reduced arrow count by 1')"
+  ammunition: "ALWAYS track ranged weapon ammo (bow/crossbow/sling): In updateCharacterInfo changes field include 'Expended 1 [arrow/bolt/bullet]' regardless of hit/miss. Track EVERY shot fired"
 }
 
 @SAVE_PAUSE={
@@ -152,7 +152,8 @@
   behavior: "After resolving player's provided action, continue processing ALL remaining NPCs/monsters in initiative",
   stop_when: "Action section empty OR says 'waiting' OR all creatures acted OR next is another player",
   example: "Player: 'I attack for 8 damage' -> Resolve damage, then continue to next NPC's turn",
-  spell_damage_timing: "IMMEDIATE damage spells (Fireball, Lightning Bolt, Burning Hands, Scorching Ray, Guiding Bolt, Inflict Wounds, Thunderwave, Shatter): Roll damage NOW on player's turn. ONGOING/TRIGGERED damage (Spirit Guardians, Wall of Fire, Moonbeam, Cloud of Daggers, Spike Growth, Entangle): Damage occurs on enemy's turn or start/end of turn as specified"
+  spell_damage_timing: "IMMEDIATE damage spells (Fireball, Lightning Bolt, Burning Hands, Scorching Ray, Guiding Bolt, Inflict Wounds, Thunderwave, Shatter): Roll damage NOW on player's turn. ONGOING/TRIGGERED damage (Spirit Guardians, Wall of Fire, Moonbeam, Cloud of Daggers, Spike Growth, Entangle): Damage occurs on enemy's turn or start/end of turn as specified",
+  ranged_ammo_tracking: "When player fires bow/crossbow/sling, ALWAYS add 'Expended 1 [arrow/bolt/bullet]' to updateCharacterInfo changes, whether hit or miss"
 }
 
 @PLAYER_QUERY_BRANCH={
