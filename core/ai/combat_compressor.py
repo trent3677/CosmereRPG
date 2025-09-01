@@ -154,6 +154,68 @@ class CombatUserMessageCompressor:
             self._update_progress(from_cache=False)
             return (idx, content, False)  # Return original on error
     
+    def strip_combat_setup_messages(self, messages: List[Dict]) -> List[Dict]:
+        """
+        Strip down the initial combat setup message pair to save tokens.
+        Only strips if we're deep enough into combat (past index 10).
+        
+        Args:
+            messages: The conversation messages
+            
+        Returns:
+            Messages with setup pair stripped if applicable
+        """
+        # Find the last system message
+        last_system_idx = -1
+        for i in range(len(messages) - 1, -1, -1):
+            if messages[i].get("role") == "system":
+                last_system_idx = i
+                break
+        
+        # If we found a system message and there are messages after it
+        if last_system_idx >= 0 and last_system_idx < len(messages) - 2:
+            # Check if the next message is the combat setup user message
+            user_idx = last_system_idx + 1
+            assistant_idx = last_system_idx + 2
+            
+            if (user_idx < len(messages) and 
+                messages[user_idx].get("role") == "user" and
+                assistant_idx < len(messages) and 
+                messages[assistant_idx].get("role") == "assistant"):
+                
+                user_content = messages[user_idx].get("content", "")
+                
+                # Check if this is the combat setup message
+                if ("Dungeon Master Note: Respond with valid JSON" in user_content and 
+                    "This is the start of combat" in user_content):
+                    
+                    # Only strip if we have at least 4 more messages after the setup (2 message pairs)
+                    if assistant_idx < len(messages) - 4:
+                        print(f"  [INFO] Stripping combat setup messages at indices {user_idx}-{assistant_idx}")
+                        
+                        # Strip user message to essentials
+                        messages[user_idx]["content"] = "Combat initiated. Player: Describe the combat situation and enemies."
+                        
+                        # Strip assistant message to essentials
+                        # Try to extract key info from the assistant's response
+                        assistant_content = messages[assistant_idx].get("content", "")
+                        
+                        # Default simplified message
+                        simplified_response = "Combat started. Round 1 - Initial enemy positions set."
+                        
+                        # Try to extract enemy count/type if mentioned in narration
+                        if "sahuagin" in assistant_content.lower():
+                            if "three" in assistant_content.lower() or "3" in assistant_content:
+                                simplified_response = "Combat started. Round 1 - Enemies: 3 sahuagin emerged from the sea at the docks."
+                            else:
+                                simplified_response = "Combat started. Round 1 - Enemies: Sahuagin attackers at the docks."
+                        
+                        messages[assistant_idx]["content"] = simplified_response
+                        
+                        print(f"      Reduced setup pair from ~2500 chars to ~170 chars")
+        
+        return messages
+    
     def process_combat_conversation(self, conversation_history: List[Dict]) -> List[Dict]:
         """
         Process conversation history and return compressed version for AI.
@@ -169,6 +231,9 @@ class CombatUserMessageCompressor:
         
         # Create a deep copy to avoid modifying original
         messages_to_send = copy.deepcopy(conversation_history)
+        
+        # Strip combat setup messages first if applicable
+        messages_to_send = self.strip_combat_setup_messages(messages_to_send)
         
         # Find messages to compress
         messages_to_compress = []

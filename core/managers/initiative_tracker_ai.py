@@ -154,14 +154,22 @@ def generate_live_initiative_tracker(encounter_data, conversation_history, curre
         # Create prompt
         prompt = create_initiative_prompt(relevant_messages, creatures, current_round)
         
+        # Prepare messages for API
+        api_messages = [
+            {"role": "system", "content": INITIATIVE_TRACKER_PROMPT},
+            {"role": "user", "content": prompt}
+        ]
+        
+        # Export initiative tracker messages for debugging (same pattern as combat/validation)
+        with open("initiative_messages_to_api.json", "w", encoding="utf-8") as f:
+            json.dump(api_messages, f, indent=2, ensure_ascii=False)
+        print(f"DEBUG: [INITIATIVE] Exported messages to initiative_messages_to_api.json")
+        
         # Query AI model
         client = OpenAI(api_key=OPENAI_API_KEY)
         response = client.chat.completions.create(
             model=DM_MAIN_MODEL,
-            messages=[
-                {"role": "system", "content": INITIATIVE_TRACKER_PROMPT},
-                {"role": "user", "content": prompt}
-            ],
+            messages=api_messages,
             temperature=0.1
         )
         

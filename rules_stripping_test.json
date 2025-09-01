@@ -1,0 +1,29 @@
+{
+  "rules_messages_found": 4,
+  "rules_indices": [
+    11,
+    13,
+    15,
+    17
+  ],
+  "sample_compressed": [
+    {
+      "index": 11,
+      "original_length": 4471,
+      "compressed_length": 925,
+      "compressed_content": "@T=CS/v2\n@ROUND=1\n@PLAYER=Eirik Hearthwise\n@PROCESS=[Thane:19]\n@STOP=Eirik Hearthwise\n@STATUS=acted[],dead[],after_player[Sahuagin,Sahuagin_2,Scout Kira,Scout Elen,Sahuagin_3],waiting[Thane,Eirik Hearthwise]\n@ROSTER=[Thane:ally:Ranger:Ranger Thane, Eirik Hearthwise:player:PC:Eirik Hearthwise, Sahuagin:enemy:Sahuagin:Sahuagin, Sahuagin_2:enemy:Sahuagin:Sahuagin_2, Scout Kira:ally:Scout:Scout Kira, Scout Elen:ally:Scout:Scout Elen, Sahuagin_3:enemy:Sahuagin:Sahuagin_3]\n@HP=[Eirik Hearthwise:27/45,..."
+    },
+    {
+      "index": 13,
+      "original_length": 4384,
+      "compressed_length": 899,
+      "compressed_content": "@T=CS/v2\n@ROUND=1\n@PLAYER=Eirik Hearthwise\n@PROCESS=[Eirik Hearthwise:12]\n@STOP=Eirik Hearthwise\n@STATUS=acted[Ranger Thane],dead[],after_player[],waiting[Eirik Hearthwise,Sahuagin,Sahuagin_2,Scout Kira,Scout Elen,Sahuagin_3]\n@ROSTER=[Eirik Hearthwise:player:PC:Eirik Hearthwise,Ranger Thane:ally:Ranger:Ranger Thane,Sahuagin:enemy:Sahuagin:Sahuagin,Sahuagin_2:enemy:Sahuagin:Sahuagin_2,Scout Kira:ally:Scout:Scout Kira,Scout Elen:ally:Scout:Scout Elen,Sahuagin_3:enemy:Sahuagin:Sahuagin_3]\n@HP=[Eiri..."
+    },
+    {
+      "index": 15,
+      "original_length": 4275,
+      "compressed_length": 3236,
+      "compressed_content": "--- ROUND INFO ---\ncombat_round: 1\nplayer_name: Eirik Hearthwise\n\n--- LIVE TRACKER ---\n**Live Initiative Tracker:**\n- [X] Ranger Thane (19) - Acted\n- [X] Eirik Hearthwise (12) - Acted\n- [ ] Sahuagin (10) - Waiting\n- [ ] Sahuagin_2 (8) - Waiting\n- [ ] Scout Kira (7) - Waiting\n- [ ] Scout Elen (4) - Waiting\n- [ ] Sahuagin_3 (1) - Waiting\n\n>>> PROCESS ALL OF THESE IN ONE RESPONSE (Initiative Order):\n- Sahuagin (10)\n- Sahuagin_2 (8)\n- Scout Kira (7)\n- Scout Elen (4)\n- Sahuagin_3 (1)\n>>> THEN: End Ro..."
+    }
+  ]
+}

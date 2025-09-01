@@ -1,0 +1,28 @@
+{
+  "test_timestamp": "1756748370.0848556",
+  "original_message_count": 19,
+  "compressed_message_count": 19,
+  "setup_pair_found": true,
+  "sample_compressed_messages": [
+    {
+      "role": "system",
+      "content": "Encounter Details:\n{\n  \"encounterId\": \"L03-E2\",\n  \"encounterSummary\": \"Three more Sahuagin emerge from the dark waters and attack the party on the Salt-Crusted Docks. Hostility and awareness are mutual; the party is ready for battle.\",\n  \"creatures\": [\n    {\n      \"name\": \"Eirik Hearthwise\",\n      \"type\": \"player\",\n      \"armorClass\": 17,\n      \"actions\": {\n        \"actionType\": \"\",\n        \"target\": \"\"\n      }\n    },\n    {\n      \"name\": \"Sahuagin\",\n      \"type\": \"enemy\",\n      \"monsterType\": \"sahuagin\",\n      \"actions\": {\n        \"actionType\": \"\",\n        \"target\": \"\"\n      }\n    },\n    {\n      \"name\": \"Sahuagin_2\",\n      \"type\": \"enemy\",\n      \"monsterType\": \"sahuagin\",\n      \"actions\": {\n        \"actionType\": \"\",\n        \"target\": \"\"\n      }\n    },\n    {\n      \"name\": \"Sahuagin_3\",\n      \"type\": \"enemy\",\n      \"monsterType\": \"sahuagin\",\n      \"actions\": {\n        \"actionType\": \"\",\n        \"target\": \"\"\n      }\n    },\n    {\n      \"name\": \"Scout Kira\",\n      \"type\": \"npc\",\n      \"npcType\": \"scout_kira\",\n      \"armorClass\": 16,\n      \"actions\": {\n        \"actionType\": \"\",\n        \"target\": \"\"\n      }\n    },\n    {\n      \"name\": \"Scout Elen\",\n      \"type\": \"npc\",\n      \"npcType\": \"scout_elen\",\n      \"armorClass\": 16,\n      \"actions\": {\n        \"actionType\": \"\",\n        \"target\": \"\"\n      }\n    },\n    {\n      \"name\": \"Ranger Thane\",\n      \"type\": \"npc\",\n      \"npcType\": \"ranger_thane\",\n      \"armorClass\": 15,\n      \"actions\": {\n        \"actionType\": \"\",\n        \"target\": \"\"\n      }\n    }\n  ]\n}"
+    },
+    {
+      "role": "user",
+      "content": "Combat initiated. Player: Describe the combat situation and enemies."
+    },
+    {
+      "role": "assistant",
+      "content": "Combat started. Round 1 - Enemies: 3 sahuagin emerged from the sea at the docks."
+    },
+    {
+      "role": "user",
+      "content": "@T=CS/v2\n@ROUND=1\n@PLAYER=Eirik Hearthwise\n@PROCESS=[Thane:19]\n@STOP=Eirik Hearthwise\n@STATUS=acted[],dead[],after_player=[Sahuagin:10,Sahuagin_2:8,Kira:7,Elen:4,Sahuagin_3:1],waiting=[Thane:19,Eirik Hearthwise:12]\n@ROSTER=[Thane:ally:Ranger:Ranger Thane,Sahuagin:enemy:Sahuagin:Sahuagin,Sahuagin_2:enemy:Sahuagin:Sahuagin_2,Kira:ally:Scout:Scout Kira,Elen:ally:Scout:Scout Elen,Sahuagin_3:enemy:Sahuagin:Sahuagin_3,Eirik Hearthwise:player:PC:Eirik Hearthwise]\n@HP=[Eirik Hearthwise:27/45,Thane:48/55,Sahuagin:22/22,Sahuagin_2:22/22,Kira:45/45,Elen:36/36,Sahuagin_3:22/22]\n@ATK=[Thane:[12,11]]\n@DICE={d4:[2,4,1,2,4,2,4,3], d6:[2,1,6,5,4,3,5,2], d8:[7,7,6,7,1,5]}\n@SLOTS=[Eirik Hearthwise:L1:1/4,Eirik Hearthwise:L2:2/3,Eirik Hearthwise:L3:0/2,Elen:L1:3/4,Elen:L2:2/2]\n@RULES=player_rolls,enforce_pools,inc_round_all\n@ACTION=I guess we're not done with these beasts yet! Thane, lead the way into battle!"
+    },
+    {
+      "role": "assistant",
+      "content": "{\n  \"plan\": \"Ranger Thane acts first per initiative. He will loose a longbow shot at the lead sahuagin (the priestess), using his first attack preroll. No other NPCs or monsters act yet. Initiative stops at Eirik Hearthwise (player). Initiative order window processed: [Ranger Thane].\",\n  \"narration\": \"Thane's boots grind into the warped planks as he raises his longbow, eyes narrowing against the salt spray. \\\"For the outpost!\\\" he growls. The string thrums and an arrow whistles through the lantern-lit gloom, aimed straight at the priestess's gaping maw. Wind howls between the gaps in the dock as the arrow flashes past rusted chains and tangled ropes. Kira and Elen tense at your flanks, ready to follow your lead. The battle begins with a snap of bowstring and a heartbeat of hope.\",\n  \"combat_round\": 1,\n  \"actions\": [\n    {\n      \"action\": \"updateEncounter\",\n      \"parameters\": {\n        \"encounterId\": \"L03-E2\",\n        \"changes\": \"Sahuagin takes 7 piercing damage from Thane's longbow (HP 22->15).\"\n      }\n    }\n  ]\n}"
+    }
+  ]
+}

@@ -7,9 +7,10 @@
   "style": "photorealistic",
   "created_at": "2025-08-14T10:00:00Z",
   "monsters": {},
-  "total_monsters": 47,
+  "total_monsters": 50,
   "total_videos": 0,
   "monsters_included": [
+    "Sahuagin",
     "acid_slime",
     "air_elemental",
     "alchemical_homunculus",
@@ -38,6 +39,8 @@
     "lord_thaddeus_greymont",
     "phantom_torturer",
     "restless_spirit",
+    "sahaugin",
+    "sahuagin",
     "sahuagin_priestess",
     "salt_wraiths",
     "shadow_cage",
@@ -61,7 +64,12 @@
   "media_stats": {
     "images": [],
     "thumbnails": [],
-    "videos": []
+    "videos": [
+      "Sahuagin",
+      "sahuagin",
+      "sahaugin",
+      "sahuagin_priestess"
+    ]
   },
   "total_npcs": 44,
   "npcs_included": [
@@ -110,5 +118,5 @@
     "wounded_ranger_gareth",
     "young_apprentice_tam"
   ],
-  "last_modified": "2025-08-31"
+  "last_modified": "2025-09-01"
 }
