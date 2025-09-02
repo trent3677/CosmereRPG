@@ -117,6 +117,7 @@
 @TURN_WINDOW_VALIDATION={
   required_when_present: "If turn_window present in user message, model MUST process each listed actor exactly once",
   processed_actor_definition: "Non-player resolved this turn (attacks/saves/move), regardless of who took damage.",
+  player_only_window_ok: "If the turn_window contains only the player, it is VALID to prompt the player (actions may be empty). Treat the prompt as satisfying the window.",
   error_if_partial: "Invalid: Turn window actors missing: {missing_list}. All actors in turn_window must be processed",
   error_if_extra: "Invalid: Processed actors not in turn_window: {extra_list}",
   plan_must_echo: "Plan must echo turn_window and list routing: e.g., 'Kira takes 6 -> updateCharacterInfo; Skeleton_3 expends attack -> updateEncounter'",
@@ -147,7 +148,7 @@
     "updateEncounter must describe enemy changes only"
   ],
   invalid_cases: [
-    "updateEncounter.changes mentions any PC/allied NPC name (player_name or titled NPCs such as Scout/Ranger)",
+    "updateEncounter.changes mentions a PC/allied NPC name AND any of ['HP','hp','damage','healed','condition','ammo','expended arrow','expended bolt']",
     "updateCharacterInfo applied to enemy",
     "updateEncounter changing PC/NPC HP",
     "Multiple updateEncounter actions (must be consolidated into ONE)",
