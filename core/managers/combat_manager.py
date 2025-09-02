@@ -2572,13 +2572,56 @@ process_until: {turn_window_json.get('process_until', 'unknown')}
 turn_window: {json.dumps(turn_window_json.get('turn_window', []))}
 """
        
+       # Generate AC block from encounter data
+       ac_block = ""
+       ac_values = {}
+       
+       # First pass: Get AC from encounter data
+       for creature in encounter_data.get('creatures', []):
+           name = creature.get('name')
+           ac = creature.get('armorClass')
+           
+           if name and ac is not None:
+               ac_values[name] = ac
+           elif name and creature.get('type') == 'enemy':
+               # Try to get AC from monster file
+               monster_type = creature.get('monsterType', '').lower()
+               if monster_type:
+                   try:
+                       path_manager = ModulePathManager(party_tracker_data.get("module", "").replace(" ", "_"))
+                       monster_file = path_manager.get_monster_path(monster_type)
+                       
+                       if os.path.exists(monster_file):
+                           monster_data = safe_json_load(monster_file)
+                           if monster_data and 'armorClass' in monster_data:
+                               ac_values[name] = monster_data['armorClass']
+                   except:
+                       # Silently skip if we can't load the monster file
+                       pass
+       
+       # Build the AC block if we have values
+       if ac_values:
+           ac_block = "=== ARMOR CLASS (AC) ===\n"
+           # Sort creatures by initiative (highest first)
+           sorted_creatures = sorted(
+               encounter_data.get('creatures', []), 
+               key=lambda x: x.get('initiative', 0), 
+               reverse=True
+           )
+           
+           for creature in sorted_creatures:
+               name = creature.get('name')
+               if name in ac_values:
+                   ac_block += f"{name}: {ac_values[name]}\n"
+           ac_block += "\n"
+       
        # The tracker now always provides properly formatted output with ROUND INFO
        # Don't duplicate sections - use the tracker output as-is
        user_input_with_note = f"""{marked_initiative_display}
 --- CREATURE STATES ---
 {all_dynamic_state}
 
---- DICE POOLS ---
+{ac_block}--- DICE POOLS ---
 Rules:
 - Player characters always roll their own dice
 - NPCs/monsters use pre-rolled dice pools exactly
