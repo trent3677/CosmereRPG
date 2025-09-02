@@ -2043,13 +2043,35 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
    # Prepare initial dynamic state info for all creatures
    dynamic_state_parts = []
    
-   # Player info - more compact format
+   # Player info - ALWAYS reload from character file for current HP (source of truth)
    player_name_display = player_info["name"]
-   current_hp = player_info.get("hitPoints", 0)
-   max_hp = player_info.get("maxHitPoints", 0)
-   player_status = player_info.get("status", "alive")
-   player_condition = player_info.get("condition", "none")
-   player_conditions = player_info.get("condition_affected", [])
+   player_file = path_manager.get_character_path(normalize_character_name(player_name_display))
+   try:
+       fresh_player_data = safe_json_load(player_file)
+       if fresh_player_data:
+           # Use fresh data from character file
+           current_hp = fresh_player_data.get("hitPoints", 0)
+           max_hp = fresh_player_data.get("maxHitPoints", 0)
+           player_status = fresh_player_data.get("status", "alive")
+           player_condition = fresh_player_data.get("condition", "none")
+           player_conditions = fresh_player_data.get("condition_affected", [])
+           # Also update spell slots from fresh data
+           player_info["spellcasting"] = fresh_player_data.get("spellcasting", {})
+       else:
+           # Fallback to stale data if load fails
+           current_hp = player_info.get("hitPoints", 0)
+           max_hp = player_info.get("maxHitPoints", 0)
+           player_status = player_info.get("status", "alive")
+           player_condition = player_info.get("condition", "none")
+           player_conditions = player_info.get("condition_affected", [])
+   except Exception as e:
+       error(f"Failed to reload player data for initial CREATURE STATES", exception=e, category="combat_events")
+       # Fallback to stale data
+       current_hp = player_info.get("hitPoints", 0)
+       max_hp = player_info.get("maxHitPoints", 0)
+       player_status = player_info.get("status", "alive")
+       player_condition = player_info.get("condition", "none")
+       player_conditions = player_info.get("condition_affected", [])
    
    # Build compact state line
    state_line = f"{player_name_display}: HP {current_hp}/{max_hp}, {player_status}"
@@ -2391,10 +2413,30 @@ Player: {initial_prompt_text}"""
        # Prepare dynamic state info for all creatures - compact format
        dynamic_state_parts = []
        
-       # Player info
-       player_status = player_info.get("status", "alive")
-       player_condition = player_info.get("condition", "none")
-       player_conditions = player_info.get("condition_affected", [])
+       # Player info - ALWAYS reload from character file for current HP (source of truth)
+       player_file = path_manager.get_character_path(normalize_character_name(player_name_display))
+       try:
+           fresh_player_data = safe_json_load(player_file)
+           if fresh_player_data:
+               # Use fresh data from character file
+               current_hp = fresh_player_data.get("hitPoints", 0)
+               max_hp = fresh_player_data.get("maxHitPoints", 0)
+               player_status = fresh_player_data.get("status", "alive")
+               player_condition = fresh_player_data.get("condition", "none")
+               player_conditions = fresh_player_data.get("condition_affected", [])
+               # Also update spell slots from fresh data
+               player_info["spellcasting"] = fresh_player_data.get("spellcasting", {})
+           else:
+               # Fallback to stale data if load fails
+               player_status = player_info.get("status", "alive")
+               player_condition = player_info.get("condition", "none")
+               player_conditions = player_info.get("condition_affected", [])
+       except Exception as e:
+           error(f"Failed to reload player data for CREATURE STATES", exception=e, category="combat_events")
+           # Fallback to stale data
+           player_status = player_info.get("status", "alive")
+           player_condition = player_info.get("condition", "none")
+           player_conditions = player_info.get("condition_affected", [])
        
        # Build compact state line
        state_line = f"{player_name_display}: HP {current_hp}/{max_hp}, {player_status}"
