@@ -63,6 +63,14 @@
   preroll_presence: "If prerolls exist, still wait for player rolls for PC actions"
 }
 
+@STOP_VALIDATION={
+  pass_if_any: [
+    "plan contains 'Stopping because next actor is ' + <player_name>",
+    "plan contains 'WAITING for ' + <player_name>",
+    "last processed actor is immediately before <player_name> and no later actors are processed"
+  ]
+}
+
 @PREROLL_VALIDATION={
   npc_attack_saves_only: "d20 prerolls used only for NPC/monster attacks and saves",
   damage_pools: "Use damage prerolls for NPC/monster damage only, never for players",
@@ -76,6 +84,15 @@
   plan_timing: "If plan mentions damage, it must first show a hit (attack >= AC after bonuses); otherwise do not mention/consume damage",
   miss_rule: "On a miss, no damage dice should be consumed from pools and no damage should be narrated",
   validation_check: "Verify: attack roll + bonus >= target AC before any damage is mentioned"
+}
+
+@ATTACK_TRACE={
+  critical_if: [
+    "HP change applied AND AC present AND no attack reference at all",
+    "damage dice drawn from wrong pool",
+    "dice total contradicts applied HP delta"
+  ],
+  warn_if_missing: ["'vs AC <N>' line", "'DMG: d<size>[index]=val' line"]
 }
 
 @ROUND_VALIDATION={
@@ -99,6 +116,7 @@
 
 @TURN_WINDOW_VALIDATION={
   required_when_present: "If turn_window present in user message, model MUST process each listed actor exactly once",
+  processed_actor_definition: "Non-player resolved this turn (attacks/saves/move), regardless of who took damage.",
   error_if_partial: "Invalid: Turn window actors missing: {missing_list}. All actors in turn_window must be processed",
   error_if_extra: "Invalid: Processed actors not in turn_window: {extra_list}",
   plan_must_echo: "Plan must echo turn_window and list routing: e.g., 'Kira takes 6 -> updateCharacterInfo; Skeleton_3 expends attack -> updateEncounter'",
@@ -114,7 +132,12 @@
   parameter_validation: {
     updateCharacterInfo: "Invalid if uses 'character' instead of 'characterName' as parameter key",
     updateEncounter: "Must use 'encounterId' and 'changes' as parameter keys"
-  }
+  },
+  accept_text_patterns: ["HP <old>-><new>", "Takes <num> <type>", "reduce hp by <num>"]
+}
+
+@ROUTING_RULES={
+  valid_enemy_turn_pc_damage: "Enemy turn that only damages PCs/NPCs: updateEncounter may be housekeeping-only; PC/NPC HP MUST be in updateCharacterInfo."
 }
 
 @ENTITY_TYPE_VALIDATION={
