@@ -61,7 +61,7 @@
   plan_initiative: "At combat start (no actions taken yet), plan MUST echo the full initiative order exactly as in ROUND INFO",
   plan_window: "plan MUST echo the full turn_window list being processed this response as a flat ordered list",
   stop_reason: "When stopping, plan MUST state 'stopping because next actor is <player_name>' OR 'end of round'",
-  plan_must_include: "List each affected target with the action type that will log their change: 'Kira takes 6 -> updateCharacterInfo'; 'Skeleton_3 expends attack -> updateEncounter'."
+  plan_must_include: "List each affected target with the action type that will log their change: 'Kira takes 6 -> updateCharacterInfo'; 'Skeleton_3 expends attack -> updateEncounter'. When player casts leveled spell, note slot deduction: 'Kira casts Fireball -> expend level 3 slot'"
 }
 
 @STRICTNESS={
@@ -165,10 +165,13 @@
 @PLAYER_ACTION_RESOLUTION={
   rule: "If '--- PLAYER ACTION ---' contains an actual action (not empty/waiting), treat as already resolved",
   behavior: "After resolving player's provided action, continue processing ALL remaining NPCs/monsters in initiative",
-  stop_when: "Action section empty OR says 'waiting' OR all creatures acted OR next is another player",
+  stop_when: "Stop if (a) last processed actor is immediately before the player, OR (b) plan explicitly says 'WAITING for <player>', OR (c) all alive creatures have acted this round.",
   example: "Player: 'I attack for 8 damage' -> Resolve damage, then continue to next NPC's turn",
   spell_damage_timing: "IMMEDIATE damage spells (Fireball, Lightning Bolt, Burning Hands, Scorching Ray, Guiding Bolt, Inflict Wounds, Thunderwave, Shatter): Roll damage NOW on player's turn. ONGOING/TRIGGERED damage (Spirit Guardians, Wall of Fire, Moonbeam, Cloud of Daggers, Spike Growth, Entangle): Damage occurs on enemy's turn or start/end of turn as specified",
-  ranged_ammo_tracking: "When player fires bow/crossbow/sling, ALWAYS add 'Expended 1 [arrow/bolt/bullet]' to updateCharacterInfo changes, whether hit or miss"
+  ranged_ammo_tracking: "When player fires bow/crossbow/sling, ALWAYS add 'Expended 1 [arrow/bolt/bullet]' to updateCharacterInfo changes, whether hit or miss",
+  spell_slots_auto: "When player casts a leveled spell (levels 1-9, not cantrips), ALWAYS expend the appropriate or higher spell slot in updateCharacterInfo. If lowest available slot > spell level, use lowest available and narrate upcasting. If no slots remain at any level >= spell's minimum, action fails with 'No spell slots available'",
+  healing_rolls_required: "Healing spells ALWAYS require dice rolls from player. When player casts Cure Wounds/Healing Word/etc, WAIT for dice result before applying healing. Prompt: 'Roll [XdY+Z] for healing' then stop",
+  spiritual_weapon: "Spiritual Weapon is a bonus action spell (2nd level slot on cast). After casting, its attacks are bonus actions but do NOT consume additional spell slots"
 }
 
 @PLAYER_QUERY_BRANCH={
@@ -245,7 +248,9 @@
     undead: "Narration may say 'destroyed', status must = dead",
     parameter_keys: "updateCharacterInfo uses 'characterName', updateEncounter uses 'encounterId'",
     invalid: "Any PC/allied NPC HP/conditions logged via updateEncounter; these MUST be in updateCharacterInfo using 'characterName'"
-  }
+  },
+  spell_slot_accounting: "When player casts leveled spell, updateCharacterInfo.changes MUST include 'Expended level [N] spell slot' or 'Expended level [N] spell slot (upcasting from level [M])'",
+  healing_deferral: "When player casts healing spell, updateCharacterInfo.changes = 'Casting [spell name], awaiting healing roll'. Do NOT apply healing until dice provided"
 }
 
 @CRITICAL_CONSTRAINTS={
@@ -272,7 +277,8 @@
 @PLAYER_DICE={
   pc: "Players roll attacks/damage/saves/checks",
   npc: "NPCs/monsters use prerolls only",
-  adv: "When asking player to roll, state DC/ability/mod/adv-disadv explicitly"
+  adv: "When asking player to roll, state DC/ability/mod/adv-disadv explicitly",
+  healing_and_spell_attacks: "Healing spells: WAIT for dice (e.g., 'Roll 1d8+3 for Cure Wounds'). Spell attacks (Spiritual Weapon, Eldritch Blast): player rolls attack and damage"
 }
 
 @NAME_POLICY={
