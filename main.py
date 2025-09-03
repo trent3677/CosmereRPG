@@ -2088,6 +2088,20 @@ def main_game_loop():
     party_tracker_data = load_json_file("party_tracker.json")
     combat_was_resumed = False  # Track if we resumed from combat
     
+    # Initialize variables needed in main loop for both paths (combat resume and normal startup)
+    module_name = party_tracker_data.get("module", "").replace(" ", "_") if party_tracker_data else ""
+    path_manager = ModulePathManager(module_name)
+    debug(f"INITIALIZATION: Path manager initialized for module: '{module_name}'", category="module_management")
+    
+    # Load validation prompt for both paths - needed in main loop
+    validation_prompt_text = load_validation_prompt()
+    debug("INITIALIZATION: Validation prompt loaded for both paths", category="initialization")
+    
+    # Load main system prompt for both paths - also needed in main loop
+    with open("prompts/system_prompt.txt", "r", encoding="utf-8") as file:
+        main_system_prompt_text = file.read()
+    debug("INITIALIZATION: Main system prompt loaded for both paths", category="initialization")
+    
     if party_tracker_data and party_tracker_data["worldConditions"].get("activeCombatEncounter"):
         active_encounter_id = party_tracker_data["worldConditions"]["activeCombatEncounter"]
         print(colored(f"[SYSTEM] Active combat encounter '{active_encounter_id}' detected. Resuming combat...", "yellow"))
@@ -2161,10 +2175,7 @@ def main_game_loop():
     else:
         print("[DEBUG] Normal startup path - will enter main game loop")
         # Normal game loop (when not resuming from combat)
-        validation_prompt_text = load_validation_prompt() 
-
-        with open("prompts/system_prompt.txt", "r", encoding="utf-8") as file:
-            main_system_prompt_text = file.read() 
+        # validation_prompt_text and main_system_prompt_text already loaded above for both paths 
 
         conversation_history = load_json_file(json_file) or []
     
@@ -2192,13 +2203,9 @@ def main_game_loop():
             print("[ERROR] Party tracker not found after setup. Something went wrong.")
             return
     
-        # Extract module name from party tracker data first
-        module_name = party_tracker_data.get("module", "").replace(" ", "_")
-        debug(f"INITIALIZATION: Initializing path_manager with module: '{module_name}'", category="module_management")
-    
-        # Initialize path manager with the correct module name
-        path_manager = ModulePathManager(module_name)
-        debug(f"INITIALIZATION: Path manager initialized - module_name: '{path_manager.module_name}', module_dir: '{path_manager.module_dir}'", category="module_management")
+        # Path manager already initialized above for both paths
+        # Just verify it's using the correct module
+        debug(f"INITIALIZATION: Path manager already initialized - module_name: '{path_manager.module_name}', module_dir: '{path_manager.module_dir}'", category="module_management")
     
         current_area_id = party_tracker_data["worldConditions"]["currentAreaId"]
         location_data = location_manager.get_location_info( 

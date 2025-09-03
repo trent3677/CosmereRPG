@@ -11,7 +11,8 @@
   impact: "Show weight and consequence: bones shatter, weapons clash, bodies reel, tides shift",
   environment: "Use the setting: stairs, walls, windows, dust, echoes amplify the action",
   emotion: "Add battle cries, prayers, roars, gasps - characters aren't silent automatons",
-  example: "Not 'You hit for 8 damage' but 'Your mace crashes down with a thunderous crack, shattering ribs and sending bone fragments clattering'"
+  example: "Not 'You hit for 8 damage' but 'Your mace crashes down with a thunderous crack, shattering ribs and sending bone fragments clattering'",
+  engagement: "End EVERY narration with tactical question or ally dialogue: 'What's your move?' / 'Kira: Should we flank?' / 'The beast staggers--press the advantage?'"
 }
 
 @SOURCE_OF_TRUTH={
