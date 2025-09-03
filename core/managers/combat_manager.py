@@ -2144,16 +2144,25 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
    if is_resuming:
        # This is a resumed session. Inject a message to get a re-engagement narration.
        print("[COMBAT_MANAGER] Injecting 'player has returned' message to re-engage AI.")
+       debug("RESUME: Starting combat resume flow", category="combat_events")
+       print("DEBUG: [RESUME] Starting combat resume flow")
        resume_prompt = "Dungeon Master Note: The game session is resuming after a pause. The player has returned. Please provide a brief narration to re-establish the scene and prompt the player for their next action, based on the last known state from the conversation history."
        
        # Add the resume prompt to the history only if it's not already the last message.
        if not conversation_history or conversation_history[-1].get('content') != resume_prompt:
+           debug("RESUME: Adding resume prompt to conversation history", category="combat_events")
+           print("DEBUG: [RESUME] Adding resume prompt to conversation history")
            conversation_history.append({"role": "user", "content": resume_prompt})
            save_json_file(conversation_history_file, conversation_history)
+       else:
+           debug("RESUME: Resume prompt already exists, skipping", category="combat_events")
+           print("DEBUG: [RESUME] Resume prompt already exists, skipping")
 
        # Get the AI's re-engagement response
        try:
            print("[COMBAT_MANAGER] Getting re-engagement narration from AI...")
+           debug("RESUME: Requesting AI re-engagement response", category="combat_events")
+           print("DEBUG: [RESUME] About to call AI for re-engagement")
            # Use base temperature for re-engagement (no validation failures)
            # Import GPT-5 config
            from config import USE_GPT5_MODELS, GPT5_MINI_MODEL
@@ -2200,6 +2209,8 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
                    pass  # Silently ignore tracking errors
            
            resume_response_content = response.choices[0].message.content.strip()
+           debug(f"RESUME: Got AI response, length: {len(resume_response_content)}", category="combat_events")
+           print(f"DEBUG: [RESUME] Got AI response, length: {len(resume_response_content)}")
            
            conversation_history.append({"role": "assistant", "content": resume_response_content})
            save_json_file(conversation_history_file, conversation_history)
@@ -2207,12 +2218,18 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
            parsed_response = json.loads(resume_response_content)
            narration = parsed_response.get("narration", "The battle continues! What do you do?")
            print(f"Dungeon Master: {narration}")
+           import sys
+           sys.stdout.flush()  # Ensure narration is displayed before waiting for input
+           debug("RESUME: Successfully displayed re-engagement narration", category="combat_events")
+           print("DEBUG: [RESUME] Successfully displayed re-engagement narration and flushed output")
 
        except Exception as e:
            error("FAILURE: Could not get re-engagement narration.", exception=e, category="combat_events")
+           print(f"DEBUG: [RESUME] Error getting re-engagement: {str(e)}")
            print("Dungeon Master: The battle continues! What will you do next?")
            import sys
            sys.stdout.flush()
+           debug(f"RESUME: Using fallback narration due to error: {str(e)}", category="combat_events")
    else:
        # This is a new combat. Use the original logic to get the initial scene.
        debug("AI_CALL: Getting initial scene description...", category="combat_events")
@@ -2319,6 +2336,9 @@ Player: {initial_prompt_text}"""
    
    # Combat loop
    debug("[COMBAT_MANAGER] Entering main combat loop", category="combat_events")
+   print("DEBUG: [COMBAT_LOOP] Entering main while True combat loop")
+   if is_resuming:
+       print("DEBUG: [RESUME] Successfully reached main combat loop after resume")
    
    # Update status to show combat is active
    try:
@@ -2329,6 +2349,7 @@ Player: {initial_prompt_text}"""
    while True:
        # Ensure all character data is synced to the encounter
        debug("[COMBAT_MANAGER] Syncing character data to encounter", category="combat_events")
+       print("DEBUG: [COMBAT_LOOP] Top of while loop - syncing character data")
        
        # Clear processing status when ready for player input
        try:
@@ -2400,10 +2421,15 @@ Player: {initial_prompt_text}"""
        
        stats_display = f"[{current_time_str}][HP:{current_hp}/{max_hp}][XP:{current_xp}/{next_level_xp}]"
        
+       print("DEBUG: [COMBAT_LOOP] About to request player input")
+       debug("COMBAT_LOOP: Requesting player input", category="combat_events")
        try:
            user_input_text = input(f"{stats_display} {player_name_display}: ")
+           print(f"DEBUG: [COMBAT_LOOP] Got player input: {user_input_text[:50]}..." if len(user_input_text) > 50 else f"DEBUG: [COMBAT_LOOP] Got player input: {user_input_text}")
+           debug(f"COMBAT_LOOP: Received player input of length {len(user_input_text)}", category="combat_events")
        except EOFError:
            error("FAILURE: EOF when reading a line in run_combat_simulation", category="combat_events")
+           print("DEBUG: [COMBAT_LOOP] EOF encountered, breaking loop")
            break
        
        # Skip empty input to prevent infinite loop

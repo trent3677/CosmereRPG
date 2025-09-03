@@ -2247,665 +2247,668 @@ def main_game_loop():
             # Ensure location_data passed here is the one loaded for the initial state
             process_ai_response(initial_ai_response, party_tracker_data, location_data, conversation_history) 
 
-        # Add safeguard against infinite loops in non-interactive environments
-        empty_input_count = 0
-        max_empty_inputs = 5
+    # Add safeguard against infinite loops in non-interactive environments
+    empty_input_count = 0
+    max_empty_inputs = 5
     
-        print("[DEBUG] ENTERING MAIN GAME LOOP - while True")
+    print("[DEBUG] ENTERING MAIN GAME LOOP - while True")
+    if combat_was_resumed:
+        print("[DEBUG] SUCCESS: Main loop reached after combat resumption!")
+        debug("SUCCESS: Main game loop reached after combat resumption", category="session_management")
+    while True:
+        print("[DEBUG] Top of main game loop iteration")
+        conversation_history = truncate_dm_notes(conversation_history)
+        conversation_history = remove_duplicate_messages(conversation_history)
+
+        if needs_conversation_history_update:
+            debug("STATE_CHANGE: Reloading conversation history from disk due to needs_conversation_history_update flag", category="conversation_management")
+            # Reload conversation history from disk to get any changes made during actions
+            conversation_history = load_json_file("modules/conversation_history/conversation_history.json") or []
+            # CRITICAL: Also reload party tracker to get the latest module information
+            party_tracker_data = load_json_file("party_tracker.json")
+            print(f"DEBUG: [Main Loop] Reloaded party tracker after update. Module: {party_tracker_data.get('module', 'Unknown')}")
+            conversation_history = process_conversation_history(conversation_history)
+            conversation_history = remove_duplicate_messages(conversation_history)  # Clean any duplicates
+            save_conversation_history(conversation_history)
+            needs_conversation_history_update = False
+
+        # Your essential cleanup script remains here, running every cycle.
+        # Loop until all unprocessed location transitions are handled
+        transitions_were_processed = False
         while True:
-            print("[DEBUG] Top of main game loop iteration")
-            conversation_history = truncate_dm_notes(conversation_history)
-            conversation_history = remove_duplicate_messages(conversation_history)
-
-            if needs_conversation_history_update:
-                debug("STATE_CHANGE: Reloading conversation history from disk due to needs_conversation_history_update flag", category="conversation_management")
-                # Reload conversation history from disk to get any changes made during actions
-                conversation_history = load_json_file("modules/conversation_history/conversation_history.json") or []
-                # CRITICAL: Also reload party tracker to get the latest module information
-                party_tracker_data = load_json_file("party_tracker.json")
-                print(f"DEBUG: [Main Loop] Reloaded party tracker after update. Module: {party_tracker_data.get('module', 'Unknown')}")
-                conversation_history = process_conversation_history(conversation_history)
-                conversation_history = remove_duplicate_messages(conversation_history)  # Clean any duplicates
-                save_conversation_history(conversation_history)
-                needs_conversation_history_update = False
-
-            # Your essential cleanup script remains here, running every cycle.
-            # Loop until all unprocessed location transitions are handled
-            transitions_were_processed = False
-            while True:
-                original_length = len(conversation_history)
-                conversation_history = check_and_process_location_transitions(conversation_history, party_tracker_data, path_manager)
-                if len(conversation_history) == original_length:
-                    break  # No compression occurred, we're done
-                else:
-                    transitions_were_processed = True  # Mark that we did actual work
-            save_conversation_history(conversation_history)
-            
-            # Only check for chunked compression if we actually processed transitions
-            if transitions_were_processed:
-                try:
-                    from core.ai.chunked_compression_integration import check_and_perform_chunked_compression
-                    if check_and_perform_chunked_compression():
-                        debug("SUCCESS: Chunked compression performed after processing old transitions", category="conversation_management")
-                        # Reload the compressed history
-                        conversation_history = load_json_file(json_file) or conversation_history
-                except Exception as e:
-                    error(f"FAILURE: Chunked compression check failed", exception=e, category="conversation_management")
+            original_length = len(conversation_history)
+            conversation_history = check_and_process_location_transitions(conversation_history, party_tracker_data, path_manager)
+            if len(conversation_history) == original_length:
+                break  # No compression occurred, we're done
+            else:
+                transitions_were_processed = True  # Mark that we did actual work
+        save_conversation_history(conversation_history)
         
-            # DISABLED: Module summary insertion now handled by inject_campaign_summaries with separate system messages
-            # conversation_history = check_and_process_module_transitions(conversation_history, party_tracker_data)
-            save_conversation_history(conversation_history)
-        
-            # Check for expired temporary effects
+        # Only check for chunked compression if we actually processed transitions
+        if transitions_were_processed:
             try:
-                from updates.process_effect_expirations import process_all_effect_expirations
-                debug("EFFECTS: Checking for expired effects", category="effects_tracking")
-                process_all_effect_expirations()
+                from core.ai.chunked_compression_integration import check_and_perform_chunked_compression
+                if check_and_perform_chunked_compression():
+                    debug("SUCCESS: Chunked compression performed after processing old transitions", category="conversation_management")
+                    # Reload the compressed history
+                    conversation_history = load_json_file(json_file) or conversation_history
             except Exception as e:
-                debug(f"EFFECTS: Failed to process effect expirations: {str(e)}", category="effects_tracking")
-                # Don't break the game if effects processing fails
+                error(f"FAILURE: Chunked compression check failed", exception=e, category="conversation_management")
+    
+        # DISABLED: Module summary insertion now handled by inject_campaign_summaries with separate system messages
+        # conversation_history = check_and_process_module_transitions(conversation_history, party_tracker_data)
+        save_conversation_history(conversation_history)
+    
+        # Check for expired temporary effects
+        try:
+            from updates.process_effect_expirations import process_all_effect_expirations
+            debug("EFFECTS: Checking for expired effects", category="effects_tracking")
+            process_all_effect_expirations()
+        except Exception as e:
+            debug(f"EFFECTS: Failed to process effect expirations: {str(e)}", category="effects_tracking")
+            # Don't break the game if effects processing fails
 
 
-            # Set status to ready before accepting input
-            status_ready()
+        # Set status to ready before accepting input
+        status_ready()
 
-            # Check if stdin is available (prevent infinite loops in non-interactive environments)
-            if hasattr(sys.stdin, 'isatty') and not sys.stdin.isatty():
-                warning("INITIALIZATION: Running in non-interactive environment. Stdin is not a terminal.", category="startup")
-                print("Game loop stopped to prevent infinite empty input cycle.")
-                print("To run interactively, ensure the program is run from a proper terminal.")
-                break
+        # Check if stdin is available (prevent infinite loops in non-interactive environments)
+        if hasattr(sys.stdin, 'isatty') and not sys.stdin.isatty():
+            warning("INITIALIZATION: Running in non-interactive environment. Stdin is not a terminal.", category="startup")
+            print("Game loop stopped to prevent infinite empty input cycle.")
+            print("To run interactively, ensure the program is run from a proper terminal.")
+            break
 
-            # --- Post-Combat State Refresh & UI Display ---
-            # This is the core fix. After combat, we MUST reload all data from disk
-            # to avoid using stale in-memory data from before the fight.
-            if hasattr(process_ai_response, '_just_finished_combat') and process_ai_response._just_finished_combat:
-                info("STATE_REFRESH: Post-combat state refresh triggered. Reloading data from disk.", category="game_loop")
-                # Reload the party tracker first, as it's the source of truth.
-                party_tracker_data = load_json_file("party_tracker.json")
-                # Reset the flag so this only runs once per combat.
-                process_ai_response._just_finished_combat = False
-        
-            # Now, get the player's name and load their character file for the UI.
-            # This data will now be fresh if a refresh was just triggered.
-            player_name_actual = party_tracker_data["partyMembers"][0]
-            from updates.update_character_info import normalize_character_name
-            player_name_normalized = normalize_character_name(player_name_actual)
-            player_data_file = path_manager.get_character_path(player_name_normalized)
-            player_data_current = load_json_file(player_data_file)
-        
-            # Display the prompt with the (now correct) stats.
-            if player_data_current:
-                current_hp = player_data_current.get("hitPoints", "N/A")
-                max_hp = player_data_current.get("maxHitPoints", "N/A")
-                current_xp = player_data_current.get("experience_points", "N/A")
-                next_level_xp = player_data_current.get("exp_required_for_next_level", "N/A")
-                # Get time with context for display
-                from utils.time_context import get_time_context
-                current_time_str = party_tracker_data["worldConditions"]["time"]
-                time_context = get_time_context(current_time_str)
-                # Show both time and context in prompt
-                time_display = f"{current_time_str[:5]} ({time_context})"  # Show HH:MM (context)
-                stats_display = f"{LIGHT_OFF_GREEN}[{time_display}][HP:{current_hp}/{max_hp}][XP:{current_xp}/{next_level_xp}]{RESET_COLOR}"
-                player_name_display = f"{SOLID_GREEN}{player_name_actual}{RESET_COLOR}"
-                print("[DEBUG] About to show input prompt with stats")
-                user_input_text = input(f"{stats_display} {player_name_display}: ")
-            else:
-                print("[DEBUG] About to show basic input prompt")
-                user_input_text = input("User: ")
+        # --- Post-Combat State Refresh & UI Display ---
+        # This is the core fix. After combat, we MUST reload all data from disk
+        # to avoid using stale in-memory data from before the fight.
+        if hasattr(process_ai_response, '_just_finished_combat') and process_ai_response._just_finished_combat:
+            info("STATE_REFRESH: Post-combat state refresh triggered. Reloading data from disk.", category="game_loop")
+            # Reload the party tracker first, as it's the source of truth.
+            party_tracker_data = load_json_file("party_tracker.json")
+            # Reset the flag so this only runs once per combat.
+            process_ai_response._just_finished_combat = False
+    
+        # Now, get the player's name and load their character file for the UI.
+        # This data will now be fresh if a refresh was just triggered.
+        player_name_actual = party_tracker_data["partyMembers"][0]
+        from updates.update_character_info import normalize_character_name
+        player_name_normalized = normalize_character_name(player_name_actual)
+        player_data_file = path_manager.get_character_path(player_name_normalized)
+        player_data_current = load_json_file(player_data_file)
+    
+        # Display the prompt with the (now correct) stats.
+        if player_data_current:
+            current_hp = player_data_current.get("hitPoints", "N/A")
+            max_hp = player_data_current.get("maxHitPoints", "N/A")
+            current_xp = player_data_current.get("experience_points", "N/A")
+            next_level_xp = player_data_current.get("exp_required_for_next_level", "N/A")
+            # Get time with context for display
+            from utils.time_context import get_time_context
+            current_time_str = party_tracker_data["worldConditions"]["time"]
+            time_context = get_time_context(current_time_str)
+            # Show both time and context in prompt
+            time_display = f"{current_time_str[:5]} ({time_context})"  # Show HH:MM (context)
+            stats_display = f"{LIGHT_OFF_GREEN}[{time_display}][HP:{current_hp}/{max_hp}][XP:{current_xp}/{next_level_xp}]{RESET_COLOR}"
+            player_name_display = f"{SOLID_GREEN}{player_name_actual}{RESET_COLOR}"
+            print("[DEBUG] About to show input prompt with stats")
+            user_input_text = input(f"{stats_display} {player_name_display}: ")
+        else:
+            print("[DEBUG] About to show basic input prompt")
+            user_input_text = input("User: ")
 
-            # Skip processing if input is empty or only whitespace
-            if not user_input_text or not user_input_text.strip():
-                continue
-            else:
-                # Reset counter on valid input
-                empty_input_count = 0
-        
-            party_tracker_data = load_json_file("party_tracker.json") 
-        
-            # Remove duplicate NPCs if any exist
-            party_tracker_data, npcs_were_cleaned = remove_duplicate_npcs(party_tracker_data)
-            if npcs_were_cleaned:
-                # Save the cleaned party tracker back to file
-                safe_write_json("party_tracker.json", party_tracker_data)
-                debug("FILE_OP: Updated party_tracker.json with duplicate NPCs removed", category="npc_management")
+        # Skip processing if input is empty or only whitespace
+        if not user_input_text or not user_input_text.strip():
+            continue
+        else:
+            # Reset counter on valid input
+            empty_input_count = 0
+    
+        party_tracker_data = load_json_file("party_tracker.json") 
+    
+        # Remove duplicate NPCs if any exist
+        party_tracker_data, npcs_were_cleaned = remove_duplicate_npcs(party_tracker_data)
+        if npcs_were_cleaned:
+            # Save the cleaned party tracker back to file
+            safe_write_json("party_tracker.json", party_tracker_data)
+            debug("FILE_OP: Updated party_tracker.json with duplicate NPCs removed", category="npc_management")
 
-            party_members_stats = []
-            for member_name_iter in party_tracker_data["partyMembers"]:
-                member_file_path = path_manager.get_character_path(member_name_iter)
-                member_data_iter = load_json_file(member_file_path)
-                if member_data_iter:
+        party_members_stats = []
+        for member_name_iter in party_tracker_data["partyMembers"]:
+            member_file_path = path_manager.get_character_path(member_name_iter)
+            member_data_iter = load_json_file(member_file_path)
+            if member_data_iter:
+                stats = {
+                    "name": member_name_iter,  # Keep original case to match file names
+                    "display_name": member_name_iter.capitalize(),  # For display purposes
+                    "level": member_data_iter.get("level", "N/A"),
+                    "xp": member_data_iter.get("experience_points", "N/A"),
+                    "hp": member_data_iter.get("hitPoints", "N/A"),
+                    "max_hp": member_data_iter.get("maxHitPoints", "N/A")
+                }
+                party_members_stats.append(stats)
+
+        try:
+            for npc_info_iter in party_tracker_data["partyNPCs"]:
+                debug(f"STATE_CHANGE: Processing NPC: {npc_info_iter['name']}", category="npc_management")
+                npc_name_iter = npc_info_iter["name"]
+                npc_data_file = path_manager.get_character_path(npc_name_iter)
+                debug(f"FILE_OP: NPC file path: {npc_data_file}", category="npc_management")
+                npc_data_iter = load_json_file(npc_data_file)
+                debug(f"FILE_OP: NPC data loaded: {npc_data_iter is not None}", category="npc_management")
+                if npc_data_iter:
                     stats = {
-                        "name": member_name_iter,  # Keep original case to match file names
-                        "display_name": member_name_iter.capitalize(),  # For display purposes
-                        "level": member_data_iter.get("level", "N/A"),
-                        "xp": member_data_iter.get("experience_points", "N/A"),
-                        "hp": member_data_iter.get("hitPoints", "N/A"),
-                        "max_hp": member_data_iter.get("maxHitPoints", "N/A")
+                        "name": npc_info_iter["name"],
+                        "display_name": npc_info_iter["name"].capitalize(),  # For display purposes
+                        "level": npc_data_iter.get("level", npc_info_iter.get("level", "N/A")),
+                        "xp": npc_data_iter.get("experience_points", "N/A"),
+                        "hp": npc_data_iter.get("hitPoints", "N/A"),
+                        "max_hp": npc_data_iter.get("maxHitPoints", "N/A")
                     }
                     party_members_stats.append(stats)
+                    debug(f"STATE_CHANGE: Added NPC stats: {stats}", category="npc_management")
+        except Exception as e:
+            error(f"FAILURE: Error processing NPCs", exception=e, category="npc_management")
+            import traceback
+            traceback.print_exc()
+    
+        # Reload current location_data for the DM note based on party_tracker
+        # This ensures location_data is fresh for each DM note construction
+        current_area_id = party_tracker_data["worldConditions"]["currentAreaId"] 
+        location_data = location_manager.get_location_info( 
+            party_tracker_data["worldConditions"]["currentLocation"],
+            party_tracker_data["worldConditions"]["currentArea"],
+            current_area_id
+        )
 
+        if party_members_stats:
+            world_conditions = party_tracker_data["worldConditions"]
+            # Use enhanced time formatting with context
+            from utils.time_context import format_time_with_context
+            date_time_str = format_time_with_context(world_conditions)
+            party_stats_formatted = []
+            for stats_item in party_members_stats:
+                # Check if this is a player or an NPC
+                if stats_item['name'] in party_tracker_data["partyMembers"]:
+                    member_data_for_note = load_json_file(path_manager.get_character_path(stats_item['name']))
+                else:
+                    member_data_for_note = load_json_file(path_manager.get_character_path(stats_item['name']))
+                if member_data_for_note:
+                    abilities = member_data_for_note.get("abilities", {})
+                    ability_str = f"STR:{abilities.get('strength', 'N/A')} DEX:{abilities.get('dexterity', 'N/A')} CON:{abilities.get('constitution', 'N/A')} INT:{abilities.get('intelligence', 'N/A')} WIS:{abilities.get('wisdom', 'N/A')} CHA:{abilities.get('charisma', 'N/A')}"
+                    next_level_xp_note = member_data_for_note.get("exp_required_for_next_level", "N/A")
+                    display_name = stats_item.get('display_name', stats_item['name'].capitalize())
+                
+                    # Extract spell slot information if character has spellcasting
+                    spell_slots_str = ""
+                    spellcasting = member_data_for_note.get("spellcasting", {})
+                    if spellcasting and "spellSlots" in spellcasting:
+                        spell_slots = spellcasting["spellSlots"]
+                        slot_parts = []
+                        for level in range(1, 10):  # Spell levels 1-9
+                            level_key = f"level{level}"
+                            if level_key in spell_slots:
+                                slot_data = spell_slots[level_key]
+                                current = slot_data.get("current", 0)
+                                maximum = slot_data.get("max", 0)
+                                if maximum > 0:  # Only show levels with available slots
+                                    slot_parts.append(f"L{level}:{current}/{maximum}")
+                        if slot_parts:
+                            spell_slots_str = f", Spell Slots: {' '.join(slot_parts)}"
+                
+                    party_stats_formatted.append(f"{display_name}: Level {stats_item['level']}, XP {stats_item['xp']}/{next_level_xp_note}, HP {stats_item['hp']}/{stats_item['max_hp']}, {ability_str}{spell_slots_str}")
+
+            party_stats_str = "; ".join(party_stats_formatted)
+            current_location_name_note = world_conditions["currentLocation"]
+            current_location_id_note = world_conditions["currentLocationId"]
+        
+            # --- CONNECTIVITY SECTION ---
+            connected_locations_display_str = "None listed"
+            connected_areas_display_str = "" # Initialize as empty
+
+            if location_data: # Ensure location_data is not None
+                # Get connections within the current area
+                if "connectivity" in location_data and location_data["connectivity"]:
+                    connected_ids_current_area = location_data["connectivity"]
+                    connected_names_current_area = []
+                    # Load the current area's full data to get names from IDs
+                    current_area_full_data = load_json_file(path_manager.get_area_path(current_area_id))
+                    if current_area_full_data and "locations" in current_area_full_data:
+                        for loc_id in connected_ids_current_area:
+                            found_loc = next((l["name"] for l in current_area_full_data["locations"] if l["locationId"] == loc_id), loc_id)
+                            connected_names_current_area.append(found_loc)
+                    if connected_names_current_area:
+                         connected_locations_display_str = ", ".join(connected_names_current_area)
+            
+                # Get connections to other areas
+                if "areaConnectivityId" in location_data and location_data["areaConnectivityId"]:
+                    # Use the global location_graph to get info about connected locations
+                    connected_area_details = []
+                    for connected_loc_id in location_data["areaConnectivityId"]:
+                        # Get the full info for the connected location
+                        conn_loc_info = location_graph.get_location_info(connected_loc_id)
+                        if conn_loc_info:
+                            conn_loc_name = conn_loc_info['location_name']
+                            conn_area_name = location_graph.get_area_name_from_location_id(connected_loc_id)
+                            connected_area_details.append(f"{conn_loc_name} (in {conn_area_name})")
+                
+                    if connected_area_details:
+                        connected_areas_display_str = ". Connects to other areas via: " + ", ".join(connected_area_details)
+        
+            # --- INTER-MODULE CONNECTIVITY SECTION ---
+            available_modules_str = ""
             try:
-                for npc_info_iter in party_tracker_data["partyNPCs"]:
-                    debug(f"STATE_CHANGE: Processing NPC: {npc_info_iter['name']}", category="npc_management")
-                    npc_name_iter = npc_info_iter["name"]
-                    npc_data_file = path_manager.get_character_path(npc_name_iter)
-                    debug(f"FILE_OP: NPC file path: {npc_data_file}", category="npc_management")
-                    npc_data_iter = load_json_file(npc_data_file)
-                    debug(f"FILE_OP: NPC data loaded: {npc_data_iter is not None}", category="npc_management")
-                    if npc_data_iter:
-                        stats = {
-                            "name": npc_info_iter["name"],
-                            "display_name": npc_info_iter["name"].capitalize(),  # For display purposes
-                            "level": npc_data_iter.get("level", npc_info_iter.get("level", "N/A")),
-                            "xp": npc_data_iter.get("experience_points", "N/A"),
-                            "hp": npc_data_iter.get("hitPoints", "N/A"),
-                            "max_hp": npc_data_iter.get("maxHitPoints", "N/A")
-                        }
-                        party_members_stats.append(stats)
-                        debug(f"STATE_CHANGE: Added NPC stats: {stats}", category="npc_management")
+                # Load world registry to get all available modules
+                world_registry_path = "modules/world_registry.json"
+                world_registry = safe_read_json(world_registry_path)
+            
+                if world_registry and 'modules' in world_registry:
+                    current_module = party_tracker_data.get('module', '').replace(' ', '_')
+                    all_modules = list(world_registry['modules'].keys())
+                    other_modules = [m for m in all_modules if m != current_module]
+                
+                    if other_modules:
+                        # Get areas from other modules
+                        other_module_areas = []
+                        for module_name in other_modules:
+                            module_info = world_registry['modules'][module_name]
+                            # Get the areas for this module from the areas section
+                            module_areas = []
+                            for area_id, area_info in world_registry.get('areas', {}).items():
+                                if area_info.get('module') == module_name:
+                                    area_name = area_info.get('areaName', area_id)
+                                    module_areas.append(f"{area_name} ({area_id})")
+                        
+                            if module_areas:
+                                level_range = module_info.get('levelRange', {})
+                                level_str = f"Level {level_range.get('min', '?')}-{level_range.get('max', '?')}"
+                            
+                                # Get starting location for this module
+                                try:
+                                    start_location_id, start_location_name, start_area_id, start_area_name = action_handler.get_module_starting_location(module_name)
+                                    starting_info = f" (Starting location: {start_location_name} [{start_location_id}] in {start_area_name} [{start_area_id}])"
+                                except Exception as e:
+                                    print(f"Warning: Could not get starting location for {module_name}: {e}")
+                                    starting_info = ""
+                            
+                                module_description = f"{module_name} [{level_str}]: {', '.join(module_areas[:3])}{starting_info}"
+                                other_module_areas.append(module_description)
+                    
+                        if other_module_areas:
+                            available_modules_str = ". Available modules for travel: " + "; ".join(other_module_areas)
             except Exception as e:
-                error(f"FAILURE: Error processing NPCs", exception=e, category="npc_management")
+                error(f"FAILURE: Failed to load inter-module connectivity", exception=e, category="module_management")
+            # --- END OF INTER-MODULE CONNECTIVITY SECTION ---
+            # --- END OF CONNECTIVITY SECTION ---
+        
+            # Use current module from party tracker for plot data
+            current_module_for_plot = party_tracker_data.get("module", "").replace(" ", "_")
+            current_plot_manager = ModulePathManager(current_module_for_plot)
+            plot_data_for_note = load_json_file(current_plot_manager.get_plot_path())
+            debug(f"FILE_OP: Plot file path: {current_plot_manager.get_plot_path()}", category="module_management")
+            debug(f"FILE_OP: Plot data loaded: {plot_data_for_note is not None}", category="module_management")
+            if plot_data_for_note:
+                debug(f"FILE_OP: Plot data keys: {list(plot_data_for_note.keys())}", category="module_management")
+            else:
+                debug("FILE_OP: No plot data loaded - plot_data_for_note is None", category="module_management") 
+            current_plot_points = []
+            all_active_plot_points = []
+            if plot_data_for_note and "plotPoints" in plot_data_for_note:
+                # Get plot points for current location
+                current_plot_points = [
+                    point for point in plot_data_for_note["plotPoints"]
+                    if point.get("location") == current_area_id and point["status"] != "completed"
+                ]
+                # Get ALL active plot points in the module
+                all_active_plot_points = [
+                    point for point in plot_data_for_note["plotPoints"]
+                    if point["status"] != "completed"
+                ]
+        
+            # Format plot points - show current location plots first, then other active plots
+            plot_points_parts = []
+            if current_plot_points:
+                plot_points_parts.append("At this location:")
+                plot_points_parts.extend([f"- {point['id']}: {point['title']} [{point.get('status', 'active')}]" for point in current_plot_points])
+        
+            # Add other active plots from different locations
+            other_plots = [p for p in all_active_plot_points if p not in current_plot_points]
+            if other_plots:
+                if plot_points_parts:  # Add separator if we have location plots
+                    plot_points_parts.append("\nActive elsewhere in module:")
+                plot_points_parts.extend([f"- {point['id']}: {point['title']} [{point.get('status', 'active')}] @{point.get('location', 'Unknown')}" for point in other_plots])
+        
+            plot_points_str = "\n".join(plot_points_parts) if plot_points_parts else "None active"
+        
+            side_quests = []
+            # Get ALL side quests from ALL plot points (not just current location)
+            for point in plot_data_for_note.get("plotPoints", []):
+                for quest in point.get("sideQuests", []):
+                    if quest["status"] != "completed":
+                        location_info = f" [Location: {point.get('location', 'Unknown')}]" if point.get('location') != current_area_id else ""
+                        side_quests.append(f"- {quest['id']}: {quest['title']} [{quest['status']}]{location_info}")
+            side_quests_str = "\n".join(side_quests) if side_quests else "None active"
+
+            traps_str = "None listed"
+            if location_data and "traps" in location_data: 
+                traps = location_data.get("traps", [])
+                if traps:
+                    traps_str = "\n".join([
+                        f"- {trap.get('name', 'Unknown Trap')}: {trap.get('description', 'No description')} (Detect DC: {trap.get('detectDC', 'N/A')}, Disable DC: {trap.get('disableDC', 'N/A')}, Trigger DC: {trap.get('triggerDC', 'N/A')}, Damage: {trap.get('damage', 'N/A')})"
+                        for trap in traps
+                    ])
+
+            monsters_str = "None listed"
+            if location_data and "monsters" in location_data:
+                monsters = location_data.get("monsters", [])
+            
+                # Bulletproof check: ensure monsters is actually a list/array
+                if not isinstance(monsters, (list, tuple)):
+                    monsters_str = f"Invalid monster data format: {type(monsters)}"
+                elif monsters:
+                    monster_list = []
+                    for monster in monsters:
+                        # Graceful handling for different monster formats
+                        if isinstance(monster, str):
+                            # Handle legacy string format (just use the string)
+                            monster_list.append(f"- {monster}")
+                        elif isinstance(monster, dict):
+                            # Handle dictionary format (multiple schema versions)
+                            name = monster.get('name', 'Unknown')
+                        
+                            # Try different quantity field names
+                            qty = None
+                            qty_str = "1"
+                        
+                            if 'quantity' in monster:
+                                # Standard schema: {"quantity": {"min": 1, "max": 1}}
+                                qty = monster.get('quantity', {})
+                                if isinstance(qty, dict):
+                                    qty_str = f"{qty.get('min', 1)}-{qty.get('max', 1)}"
+                                else:
+                                    qty_str = str(qty)
+                            elif 'number' in monster:
+                                # Keep of Doom schema: {"number": "2d4"}
+                                qty_str = str(monster.get('number', 1))
+                            elif 'count' in monster:
+                                # Silver Vein schema: {"count": 2}
+                                qty_str = str(monster.get('count', 1))
+                        
+                            monster_list.append(f"- {name} ({qty_str})")
+                        else:
+                            # Handle unexpected types
+                            monster_list.append(f"- Unknown monster type: {type(monster)}")
+                    monsters_str = "\n".join(monster_list)
+
+            # Check ALL modules for plot completion before suggesting module creation
+            module_creation_prompt = ""
+            should_inject_creation_prompt = False  # Initialize for later use
+            try:
+                # Debug current module detection
+                current_module = party_tracker_data.get('module', '').replace(' ', '_')
+                debug(f"STATE_CHANGE: Current module from party tracker: '{current_module}'", category="module_management")
+            
+                # Use new comprehensive module completion checker
+                all_modules_completion = check_all_modules_plot_completion()
+            
+                # Extract results
+                all_modules_complete = all_modules_completion["all_complete"]
+                modules_checked = all_modules_completion["modules_checked"]
+                completion_summary = all_modules_completion["completion_summary"]
+            
+                # Print summary of all modules
+                debug("STATE_CHANGE: === ALL MODULES COMPLETION SUMMARY ===", category="module_management")
+                print("DEBUG: [Module Manager] === MODULE COMPLETION SUMMARY ===")
+                for module_name, summary in completion_summary.items():
+                    status = "COMPLETE" if summary["is_complete"] else "INCOMPLETE"
+                    debug(f"STATE_CHANGE: {module_name}: {summary['completed_plots']}/{summary['total_plots']} plots - {status}", category="module_management")
+                    print(f"DEBUG: [Module Manager] {module_name}: {summary['completed_plots']}/{summary['total_plots']} plots - {status}")
+                debug("STATE_CHANGE: === END SUMMARY ===", category="module_management")
+            
+                # Determine if we should inject module creation prompt
+                # Only suggest module creation if ALL modules are complete
+                should_inject_creation_prompt = all_modules_complete and len(modules_checked) > 0
+            
+                debug(f"STATE_CHANGE: All modules complete: {all_modules_complete}", category="module_management")
+                debug(f"STATE_CHANGE: Should inject module creation prompt: {should_inject_creation_prompt}", category="module_management")
+                print(f"DEBUG: [Module Manager] All modules complete: {all_modules_complete}")
+                print(f"DEBUG: [Module Manager] Module transfer available: {should_inject_creation_prompt}")
+            
+                # If ALL modules are complete, inject creation prompt
+                if should_inject_creation_prompt:
+                    debug("STATE_CHANGE: *** MODULE CREATION PROMPT INJECTION TRIGGERED ***", category="module_management")
+                    debug("STATE_CHANGE: All available modules have completed plots - suggesting new module creation", category="module_management")
+                    # Load the module creation prompt
+                    import os
+                    if os.path.exists("prompts/generators/module_creation_prompt.txt"):
+                        with open("prompts/generators/module_creation_prompt.txt", "r", encoding="utf-8") as f:
+                            module_creation_prompt = "\n\n" + f.read()
+                        debug(f"FILE_OP: Module creation prompt loaded ({len(module_creation_prompt)} characters)", category="module_management")
+                    else:
+                        warning("FILE_OP: module_creation_prompt.txt not found!", category="module_management")
+                else:
+                    incomplete_modules = [name for name, summary in completion_summary.items() if not summary["is_complete"]]
+                    if incomplete_modules:
+                        debug(f"STATE_CHANGE: Module creation prompt NOT injected - incomplete modules: {incomplete_modules}", category="module_management")
+                    else:
+                        debug("STATE_CHANGE: Module creation prompt NOT injected - no modules found to check", category="module_management")
+                
+            except Exception as e:
+                error(f"FAILURE: Module completion check failed", exception=e, category="module_management")
                 import traceback
                 traceback.print_exc()
         
-            # Reload current location_data for the DM note based on party_tracker
-            # This ensures location_data is fresh for each DM note construction
-            current_area_id = party_tracker_data["worldConditions"]["currentAreaId"] 
-            location_data = location_manager.get_location_info( 
-                party_tracker_data["worldConditions"]["currentLocation"],
-                party_tracker_data["worldConditions"]["currentArea"],
-                current_area_id
-            )
-
-            if party_members_stats:
-                world_conditions = party_tracker_data["worldConditions"]
-                # Use enhanced time formatting with context
-                from utils.time_context import format_time_with_context
-                date_time_str = format_time_with_context(world_conditions)
-                party_stats_formatted = []
-                for stats_item in party_members_stats:
-                    # Check if this is a player or an NPC
-                    if stats_item['name'] in party_tracker_data["partyMembers"]:
-                        member_data_for_note = load_json_file(path_manager.get_character_path(stats_item['name']))
-                    else:
-                        member_data_for_note = load_json_file(path_manager.get_character_path(stats_item['name']))
-                    if member_data_for_note:
-                        abilities = member_data_for_note.get("abilities", {})
-                        ability_str = f"STR:{abilities.get('strength', 'N/A')} DEX:{abilities.get('dexterity', 'N/A')} CON:{abilities.get('constitution', 'N/A')} INT:{abilities.get('intelligence', 'N/A')} WIS:{abilities.get('wisdom', 'N/A')} CHA:{abilities.get('charisma', 'N/A')}"
-                        next_level_xp_note = member_data_for_note.get("exp_required_for_next_level", "N/A")
-                        display_name = stats_item.get('display_name', stats_item['name'].capitalize())
-                    
-                        # Extract spell slot information if character has spellcasting
-                        spell_slots_str = ""
-                        spellcasting = member_data_for_note.get("spellcasting", {})
-                        if spellcasting and "spellSlots" in spellcasting:
-                            spell_slots = spellcasting["spellSlots"]
-                            slot_parts = []
-                            for level in range(1, 10):  # Spell levels 1-9
-                                level_key = f"level{level}"
-                                if level_key in spell_slots:
-                                    slot_data = spell_slots[level_key]
-                                    current = slot_data.get("current", 0)
-                                    maximum = slot_data.get("max", 0)
-                                    if maximum > 0:  # Only show levels with available slots
-                                        slot_parts.append(f"L{level}:{current}/{maximum}")
-                            if slot_parts:
-                                spell_slots_str = f", Spell Slots: {' '.join(slot_parts)}"
-                    
-                        party_stats_formatted.append(f"{display_name}: Level {stats_item['level']}, XP {stats_item['xp']}/{next_level_xp_note}, HP {stats_item['hp']}/{stats_item['max_hp']}, {ability_str}{spell_slots_str}")
-
-                party_stats_str = "; ".join(party_stats_formatted)
-                current_location_name_note = world_conditions["currentLocation"]
-                current_location_id_note = world_conditions["currentLocationId"]
-            
-                # --- CONNECTIVITY SECTION ---
-                connected_locations_display_str = "None listed"
-                connected_areas_display_str = "" # Initialize as empty
-
-                if location_data: # Ensure location_data is not None
-                    # Get connections within the current area
-                    if "connectivity" in location_data and location_data["connectivity"]:
-                        connected_ids_current_area = location_data["connectivity"]
-                        connected_names_current_area = []
-                        # Load the current area's full data to get names from IDs
-                        current_area_full_data = load_json_file(path_manager.get_area_path(current_area_id))
-                        if current_area_full_data and "locations" in current_area_full_data:
-                            for loc_id in connected_ids_current_area:
-                                found_loc = next((l["name"] for l in current_area_full_data["locations"] if l["locationId"] == loc_id), loc_id)
-                                connected_names_current_area.append(found_loc)
-                        if connected_names_current_area:
-                             connected_locations_display_str = ", ".join(connected_names_current_area)
-                
-                    # Get connections to other areas
-                    if "areaConnectivityId" in location_data and location_data["areaConnectivityId"]:
-                        # Use the global location_graph to get info about connected locations
-                        connected_area_details = []
-                        for connected_loc_id in location_data["areaConnectivityId"]:
-                            # Get the full info for the connected location
-                            conn_loc_info = location_graph.get_location_info(connected_loc_id)
-                            if conn_loc_info:
-                                conn_loc_name = conn_loc_info['location_name']
-                                conn_area_name = location_graph.get_area_name_from_location_id(connected_loc_id)
-                                connected_area_details.append(f"{conn_loc_name} (in {conn_area_name})")
-                    
-                        if connected_area_details:
-                            connected_areas_display_str = ". Connects to other areas via: " + ", ".join(connected_area_details)
-            
-                # --- INTER-MODULE CONNECTIVITY SECTION ---
-                available_modules_str = ""
-                try:
-                    # Load world registry to get all available modules
-                    world_registry_path = "modules/world_registry.json"
-                    world_registry = safe_read_json(world_registry_path)
-                
-                    if world_registry and 'modules' in world_registry:
-                        current_module = party_tracker_data.get('module', '').replace(' ', '_')
-                        all_modules = list(world_registry['modules'].keys())
-                        other_modules = [m for m in all_modules if m != current_module]
-                    
-                        if other_modules:
-                            # Get areas from other modules
-                            other_module_areas = []
-                            for module_name in other_modules:
-                                module_info = world_registry['modules'][module_name]
-                                # Get the areas for this module from the areas section
-                                module_areas = []
-                                for area_id, area_info in world_registry.get('areas', {}).items():
-                                    if area_info.get('module') == module_name:
-                                        area_name = area_info.get('areaName', area_id)
-                                        module_areas.append(f"{area_name} ({area_id})")
-                            
-                                if module_areas:
-                                    level_range = module_info.get('levelRange', {})
-                                    level_str = f"Level {level_range.get('min', '?')}-{level_range.get('max', '?')}"
-                                
-                                    # Get starting location for this module
-                                    try:
-                                        start_location_id, start_location_name, start_area_id, start_area_name = action_handler.get_module_starting_location(module_name)
-                                        starting_info = f" (Starting location: {start_location_name} [{start_location_id}] in {start_area_name} [{start_area_id}])"
-                                    except Exception as e:
-                                        print(f"Warning: Could not get starting location for {module_name}: {e}")
-                                        starting_info = ""
-                                
-                                    module_description = f"{module_name} [{level_str}]: {', '.join(module_areas[:3])}{starting_info}"
-                                    other_module_areas.append(module_description)
-                        
-                            if other_module_areas:
-                                available_modules_str = ". Available modules for travel: " + "; ".join(other_module_areas)
-                except Exception as e:
-                    error(f"FAILURE: Failed to load inter-module connectivity", exception=e, category="module_management")
-                # --- END OF INTER-MODULE CONNECTIVITY SECTION ---
-                # --- END OF CONNECTIVITY SECTION ---
-            
-                # Use current module from party tracker for plot data
-                current_module_for_plot = party_tracker_data.get("module", "").replace(" ", "_")
-                current_plot_manager = ModulePathManager(current_module_for_plot)
-                plot_data_for_note = load_json_file(current_plot_manager.get_plot_path())
-                debug(f"FILE_OP: Plot file path: {current_plot_manager.get_plot_path()}", category="module_management")
-                debug(f"FILE_OP: Plot data loaded: {plot_data_for_note is not None}", category="module_management")
-                if plot_data_for_note:
-                    debug(f"FILE_OP: Plot data keys: {list(plot_data_for_note.keys())}", category="module_management")
-                else:
-                    debug("FILE_OP: No plot data loaded - plot_data_for_note is None", category="module_management") 
-                current_plot_points = []
-                all_active_plot_points = []
-                if plot_data_for_note and "plotPoints" in plot_data_for_note:
-                    # Get plot points for current location
-                    current_plot_points = [
-                        point for point in plot_data_for_note["plotPoints"]
-                        if point.get("location") == current_area_id and point["status"] != "completed"
-                    ]
-                    # Get ALL active plot points in the module
-                    all_active_plot_points = [
-                        point for point in plot_data_for_note["plotPoints"]
-                        if point["status"] != "completed"
-                    ]
-            
-                # Format plot points - show current location plots first, then other active plots
-                plot_points_parts = []
-                if current_plot_points:
-                    plot_points_parts.append("At this location:")
-                    plot_points_parts.extend([f"- {point['id']}: {point['title']} [{point.get('status', 'active')}]" for point in current_plot_points])
-            
-                # Add other active plots from different locations
-                other_plots = [p for p in all_active_plot_points if p not in current_plot_points]
-                if other_plots:
-                    if plot_points_parts:  # Add separator if we have location plots
-                        plot_points_parts.append("\nActive elsewhere in module:")
-                    plot_points_parts.extend([f"- {point['id']}: {point['title']} [{point.get('status', 'active')}] @{point.get('location', 'Unknown')}" for point in other_plots])
-            
-                plot_points_str = "\n".join(plot_points_parts) if plot_points_parts else "None active"
-            
-                side_quests = []
-                # Get ALL side quests from ALL plot points (not just current location)
-                for point in plot_data_for_note.get("plotPoints", []):
-                    for quest in point.get("sideQuests", []):
-                        if quest["status"] != "completed":
-                            location_info = f" [Location: {point.get('location', 'Unknown')}]" if point.get('location') != current_area_id else ""
-                            side_quests.append(f"- {quest['id']}: {quest['title']} [{quest['status']}]{location_info}")
-                side_quests_str = "\n".join(side_quests) if side_quests else "None active"
-
-                traps_str = "None listed"
-                if location_data and "traps" in location_data: 
-                    traps = location_data.get("traps", [])
-                    if traps:
-                        traps_str = "\n".join([
-                            f"- {trap.get('name', 'Unknown Trap')}: {trap.get('description', 'No description')} (Detect DC: {trap.get('detectDC', 'N/A')}, Disable DC: {trap.get('disableDC', 'N/A')}, Trigger DC: {trap.get('triggerDC', 'N/A')}, Damage: {trap.get('damage', 'N/A')})"
-                            for trap in traps
-                        ])
-
-                monsters_str = "None listed"
-                if location_data and "monsters" in location_data:
-                    monsters = location_data.get("monsters", [])
-                
-                    # Bulletproof check: ensure monsters is actually a list/array
-                    if not isinstance(monsters, (list, tuple)):
-                        monsters_str = f"Invalid monster data format: {type(monsters)}"
-                    elif monsters:
-                        monster_list = []
-                        for monster in monsters:
-                            # Graceful handling for different monster formats
-                            if isinstance(monster, str):
-                                # Handle legacy string format (just use the string)
-                                monster_list.append(f"- {monster}")
-                            elif isinstance(monster, dict):
-                                # Handle dictionary format (multiple schema versions)
-                                name = monster.get('name', 'Unknown')
-                            
-                                # Try different quantity field names
-                                qty = None
-                                qty_str = "1"
-                            
-                                if 'quantity' in monster:
-                                    # Standard schema: {"quantity": {"min": 1, "max": 1}}
-                                    qty = monster.get('quantity', {})
-                                    if isinstance(qty, dict):
-                                        qty_str = f"{qty.get('min', 1)}-{qty.get('max', 1)}"
-                                    else:
-                                        qty_str = str(qty)
-                                elif 'number' in monster:
-                                    # Keep of Doom schema: {"number": "2d4"}
-                                    qty_str = str(monster.get('number', 1))
-                                elif 'count' in monster:
-                                    # Silver Vein schema: {"count": 2}
-                                    qty_str = str(monster.get('count', 1))
-                            
-                                monster_list.append(f"- {name} ({qty_str})")
-                            else:
-                                # Handle unexpected types
-                                monster_list.append(f"- Unknown monster type: {type(monster)}")
-                        monsters_str = "\n".join(monster_list)
-
-                # Check ALL modules for plot completion before suggesting module creation
-                module_creation_prompt = ""
-                should_inject_creation_prompt = False  # Initialize for later use
-                try:
-                    # Debug current module detection
-                    current_module = party_tracker_data.get('module', '').replace(' ', '_')
-                    debug(f"STATE_CHANGE: Current module from party tracker: '{current_module}'", category="module_management")
-                
-                    # Use new comprehensive module completion checker
-                    all_modules_completion = check_all_modules_plot_completion()
-                
-                    # Extract results
-                    all_modules_complete = all_modules_completion["all_complete"]
-                    modules_checked = all_modules_completion["modules_checked"]
-                    completion_summary = all_modules_completion["completion_summary"]
-                
-                    # Print summary of all modules
-                    debug("STATE_CHANGE: === ALL MODULES COMPLETION SUMMARY ===", category="module_management")
-                    print("DEBUG: [Module Manager] === MODULE COMPLETION SUMMARY ===")
-                    for module_name, summary in completion_summary.items():
-                        status = "COMPLETE" if summary["is_complete"] else "INCOMPLETE"
-                        debug(f"STATE_CHANGE: {module_name}: {summary['completed_plots']}/{summary['total_plots']} plots - {status}", category="module_management")
-                        print(f"DEBUG: [Module Manager] {module_name}: {summary['completed_plots']}/{summary['total_plots']} plots - {status}")
-                    debug("STATE_CHANGE: === END SUMMARY ===", category="module_management")
-                
-                    # Determine if we should inject module creation prompt
-                    # Only suggest module creation if ALL modules are complete
-                    should_inject_creation_prompt = all_modules_complete and len(modules_checked) > 0
-                
-                    debug(f"STATE_CHANGE: All modules complete: {all_modules_complete}", category="module_management")
-                    debug(f"STATE_CHANGE: Should inject module creation prompt: {should_inject_creation_prompt}", category="module_management")
-                    print(f"DEBUG: [Module Manager] All modules complete: {all_modules_complete}")
-                    print(f"DEBUG: [Module Manager] Module transfer available: {should_inject_creation_prompt}")
-                
-                    # If ALL modules are complete, inject creation prompt
-                    if should_inject_creation_prompt:
-                        debug("STATE_CHANGE: *** MODULE CREATION PROMPT INJECTION TRIGGERED ***", category="module_management")
-                        debug("STATE_CHANGE: All available modules have completed plots - suggesting new module creation", category="module_management")
-                        # Load the module creation prompt
-                        import os
-                        if os.path.exists("prompts/generators/module_creation_prompt.txt"):
-                            with open("prompts/generators/module_creation_prompt.txt", "r", encoding="utf-8") as f:
-                                module_creation_prompt = "\n\n" + f.read()
-                            debug(f"FILE_OP: Module creation prompt loaded ({len(module_creation_prompt)} characters)", category="module_management")
-                        else:
-                            warning("FILE_OP: module_creation_prompt.txt not found!", category="module_management")
-                    else:
-                        incomplete_modules = [name for name, summary in completion_summary.items() if not summary["is_complete"]]
-                        if incomplete_modules:
-                            debug(f"STATE_CHANGE: Module creation prompt NOT injected - incomplete modules: {incomplete_modules}", category="module_management")
-                        else:
-                            debug("STATE_CHANGE: Module creation prompt NOT injected - no modules found to check", category="module_management")
-                    
-                except Exception as e:
-                    error(f"FAILURE: Module completion check failed", exception=e, category="module_management")
-                    import traceback
-                    traceback.print_exc()
-            
-                # Sanitize location name before using in DM note
-                current_location_name_note = sanitize_text(current_location_name_note)
-            
-                # Get current module, season, and area for enhanced DM note
-                current_module_name = party_tracker_data.get('module', 'Unknown')
-                current_season = world_conditions.get('season', 'Unknown')
-                current_area_name = world_conditions.get('currentArea', 'Unknown')
-            
-                # Format party members and NPCs for DM note
-                party_members_list = party_tracker_data.get('partyMembers', [])
-                party_members_str = ", ".join(party_members_list) if party_members_list else "None"
-            
-                party_npcs_list = party_tracker_data.get('partyNPCs', [])
-                party_npcs_formatted = []
-                for npc in party_npcs_list:
-                    party_npcs_formatted.append(f"{npc['name']} ({npc['role']})") 
-                party_npcs_str = ", ".join(party_npcs_formatted) if party_npcs_formatted else "None"
-            
-                # Build DM note - exclude plot/quest info when module creation is active
-                if should_inject_creation_prompt:
-                    # Simplified DM note for module creation - no confusing plot/quest info
-                    dm_note = (f"Dungeon Master Note: Current date and time: {date_time_str}, {current_season} season. "
-                        f"Current module: {current_module_name}. "
-                        f"Current location: {current_location_name_note} ({current_location_id_note}) in the {current_area_name} area. "
-                        f"Party members: {party_members_str}. "
-                        f"Party NPCs: {party_npcs_str}. "
-                        f"Party stats: {party_stats_str}. "
-                        f"Adjacent locations in this area: {connected_locations_display_str}{connected_areas_display_str}{available_modules_str}.\n")
-                else:
-                    # Normal DM note with all plot/quest/monster info
-                    dm_note = (f"Dungeon Master Note: Current date and time: {date_time_str}, {current_season} season. "
-                        f"Current module: {current_module_name}. "
-                        f"Current location: {current_location_name_note} ({current_location_id_note}) in the {current_area_name} area. "
-                        f"Party members: {party_members_str}. "
-                        f"Party NPCs: {party_npcs_str}. "
-                        f"Party stats: {party_stats_str}. "
-                        # --- MODIFIED LINE TO INCLUDE CONNECTIVITY ---
-                        f"Adjacent locations in this area: {connected_locations_display_str}{connected_areas_display_str}{available_modules_str}.\n"
-                        # --- END OF MODIFIED LINE ---
-                        f"Active plot points for this location:\n{plot_points_str}\n"
-                        f"Active side quests for this location:\n{side_quests_str}\n"
-                        f"Monsters in this location:\n{monsters_str}\n"
-                        f"Traps in this location:\n{traps_str}\n"
-                        "Monsters should be active threats per engagement rules. ")
-            
-                # Add common instructions
-                dm_note += (
-                    "updateCharacterInfo for player and NPC character changes (inventory, stats, abilities), "
-                    "updateTime for time passage, "
-                    "updatePlot for story progression, discovers, and new information, "
-                    "updatePartyNPCs for party composition changes to the party tracker, "
-                    "levelUp for advancement, "
-                    "establishHub when the party gains ownership or control of a location that could serve as a base of operations (stronghold, tavern, keep, etc.) - example: establishHub('The Silver Swan Inn', {hubType: 'tavern', description: 'Our permanent base of operations', services: ['rest', 'information'], ownership: 'party'}), "
-                    "exitGame for ending sessions, and "
-                    "transitionLocation should always be used when the player expresses a desire to move to a new location, "
-                    "Always roleplay the NPC and NPC party rolls without asking the player. "
-                    "Always ask the player character to roll for skill checks and other actions. "
-                    "Proactively narrate location NPCs, start conversations, and weave plot elements into the adventure. "
-                    "Use party NPCs to narrate if possible instead of always narrating from the DM's perspective, but don't overdo it. "
-                    "Maintain immersive and engaging storytelling similar to an adventure novel while accurately managing game mechanics. "
-                    "Update all relevant information immediately and confirm with the player before major actions. "
-                    "Consider whether the party's action trigger traps in this location. "
-                    "Consider updating the plot elements on every action the player and NPCs take."
-                    f"{module_creation_prompt}")
-            else:
-                dm_note = "Dungeon Master Note: Remember to take actions if necessary such as updating the plot, time, character sheets, and location if changes occur."
-
-            user_input_with_note = f"{dm_note} Player: {user_input_text}"
-            conversation_history.append({"role": "user", "content": user_input_with_note})
-            save_conversation_history(conversation_history)
-
-            retry_count = 0
-            valid_response_received = False 
-            ai_response_content = None
+            # Sanitize location name before using in DM note
+            current_location_name_note = sanitize_text(current_location_name_note)
         
-            while retry_count < 5 and not valid_response_received:
-                # Pass validation retry count for intelligent model escalation
-                ai_response_content = get_ai_response(conversation_history, validation_retry_count=retry_count)
-                validation_result = validate_ai_response(ai_response_content, user_input_text, validation_prompt_text, conversation_history, party_tracker_data)
+            # Get current module, season, and area for enhanced DM note
+            current_module_name = party_tracker_data.get('module', 'Unknown')
+            current_season = world_conditions.get('season', 'Unknown')
+            current_area_name = world_conditions.get('currentArea', 'Unknown')
+        
+            # Format party members and NPCs for DM note
+            party_members_list = party_tracker_data.get('partyMembers', [])
+            party_members_str = ", ".join(party_members_list) if party_members_list else "None"
+        
+            party_npcs_list = party_tracker_data.get('partyNPCs', [])
+            party_npcs_formatted = []
+            for npc in party_npcs_list:
+                party_npcs_formatted.append(f"{npc['name']} ({npc['role']})") 
+            party_npcs_str = ", ".join(party_npcs_formatted) if party_npcs_formatted else "None"
+        
+            # Build DM note - exclude plot/quest info when module creation is active
+            if should_inject_creation_prompt:
+                # Simplified DM note for module creation - no confusing plot/quest info
+                dm_note = (f"Dungeon Master Note: Current date and time: {date_time_str}, {current_season} season. "
+                    f"Current module: {current_module_name}. "
+                    f"Current location: {current_location_name_note} ({current_location_id_note}) in the {current_area_name} area. "
+                    f"Party members: {party_members_str}. "
+                    f"Party NPCs: {party_npcs_str}. "
+                    f"Party stats: {party_stats_str}. "
+                    f"Adjacent locations in this area: {connected_locations_display_str}{connected_areas_display_str}{available_modules_str}.\n")
+            else:
+                # Normal DM note with all plot/quest/monster info
+                dm_note = (f"Dungeon Master Note: Current date and time: {date_time_str}, {current_season} season. "
+                    f"Current module: {current_module_name}. "
+                    f"Current location: {current_location_name_note} ({current_location_id_note}) in the {current_area_name} area. "
+                    f"Party members: {party_members_str}. "
+                    f"Party NPCs: {party_npcs_str}. "
+                    f"Party stats: {party_stats_str}. "
+                    # --- MODIFIED LINE TO INCLUDE CONNECTIVITY ---
+                    f"Adjacent locations in this area: {connected_locations_display_str}{connected_areas_display_str}{available_modules_str}.\n"
+                    # --- END OF MODIFIED LINE ---
+                    f"Active plot points for this location:\n{plot_points_str}\n"
+                    f"Active side quests for this location:\n{side_quests_str}\n"
+                    f"Monsters in this location:\n{monsters_str}\n"
+                    f"Traps in this location:\n{traps_str}\n"
+                    "Monsters should be active threats per engagement rules. ")
+        
+            # Add common instructions
+            dm_note += (
+                "updateCharacterInfo for player and NPC character changes (inventory, stats, abilities), "
+                "updateTime for time passage, "
+                "updatePlot for story progression, discovers, and new information, "
+                "updatePartyNPCs for party composition changes to the party tracker, "
+                "levelUp for advancement, "
+                "establishHub when the party gains ownership or control of a location that could serve as a base of operations (stronghold, tavern, keep, etc.) - example: establishHub('The Silver Swan Inn', {hubType: 'tavern', description: 'Our permanent base of operations', services: ['rest', 'information'], ownership: 'party'}), "
+                "exitGame for ending sessions, and "
+                "transitionLocation should always be used when the player expresses a desire to move to a new location, "
+                "Always roleplay the NPC and NPC party rolls without asking the player. "
+                "Always ask the player character to roll for skill checks and other actions. "
+                "Proactively narrate location NPCs, start conversations, and weave plot elements into the adventure. "
+                "Use party NPCs to narrate if possible instead of always narrating from the DM's perspective, but don't overdo it. "
+                "Maintain immersive and engaging storytelling similar to an adventure novel while accurately managing game mechanics. "
+                "Update all relevant information immediately and confirm with the player before major actions. "
+                "Consider whether the party's action trigger traps in this location. "
+                "Consider updating the plot elements on every action the player and NPCs take."
+                f"{module_creation_prompt}")
+        else:
+            dm_note = "Dungeon Master Note: Remember to take actions if necessary such as updating the plot, time, character sheets, and location if changes occur."
+
+        user_input_with_note = f"{dm_note} Player: {user_input_text}"
+        conversation_history.append({"role": "user", "content": user_input_with_note})
+        save_conversation_history(conversation_history)
+
+        retry_count = 0
+        valid_response_received = False 
+        ai_response_content = None
+    
+        while retry_count < 5 and not valid_response_received:
+            # Pass validation retry count for intelligent model escalation
+            ai_response_content = get_ai_response(conversation_history, validation_retry_count=retry_count)
+            validation_result = validate_ai_response(ai_response_content, user_input_text, validation_prompt_text, conversation_history, party_tracker_data)
+        
+            if validation_result is True:
+                valid_response_received = True
+                debug(f"SUCCESS: Valid response generated on attempt {retry_count + 1}", category="ai_validation")
             
-                if validation_result is True:
-                    valid_response_received = True
-                    debug(f"SUCCESS: Valid response generated on attempt {retry_count + 1}", category="ai_validation")
+                # SIMPLIFIED ARCHITECTURE: process_ai_response now handles ALL complexity internally.
+                # This includes:
+                # - Standard turn processing
+                # - Combat encounters (via needs_post_combat_narration signal)
+                # - Location transitions (with seamless narration generation)
+                # - Level-up sessions (returned as enter_levelup_mode signal)
+                # - All conversation history updates
+                # The main loop is now just a thin orchestration layer.
+                final_result = process_ai_response(ai_response_content, party_tracker_data, location_data, conversation_history)
+
+                # After processing, we only need to check for control flow signals.
+                # Everything else (including history updates) has been handled by process_ai_response.
+                if final_result == "exit":
+                    return
+                elif final_result == "restart":
+                    print("\n[SYSTEM] Restarting game with restored save...\n")
+                    main_game_loop()
+                    return
+                elif isinstance(final_result, dict) and final_result.get("status") == "enter_levelup_mode":
+                    # Enter the level up sub-loop
+                    level_up_session = final_result["session"]
+                    final_narration = ""
+
+                    # Get the first message from the session
+                    dm_response = level_up_session.start()
                 
-                    # SIMPLIFIED ARCHITECTURE: process_ai_response now handles ALL complexity internally.
-                    # This includes:
-                    # - Standard turn processing
-                    # - Combat encounters (via needs_post_combat_narration signal)
-                    # - Location transitions (with seamless narration generation)
-                    # - Level-up sessions (returned as enter_levelup_mode signal)
-                    # - All conversation history updates
-                    # The main loop is now just a thin orchestration layer.
-                    final_result = process_ai_response(ai_response_content, party_tracker_data, location_data, conversation_history)
+                    # Display the first message and add to history
+                    print(colored("Dungeon Master:", "blue"), colored(dm_response, "blue"))
+                    conversation_history.append({"role": "assistant", "content": dm_response})
+                    save_conversation_history(conversation_history)
 
-                    # After processing, we only need to check for control flow signals.
-                    # Everything else (including history updates) has been handled by process_ai_response.
-                    if final_result == "exit":
-                        return
-                    elif final_result == "restart":
-                        print("\n[SYSTEM] Restarting game with restored save...\n")
-                        main_game_loop()
-                        return
-                    elif isinstance(final_result, dict) and final_result.get("status") == "enter_levelup_mode":
-                        # Enter the level up sub-loop
-                        level_up_session = final_result["session"]
-                        final_narration = ""
+                    # Loop until the session is complete
+                    while not level_up_session.is_complete:
+                        # Get player input
+                        player_name_display = f"{SOLID_GREEN}{player_name_actual}{RESET_COLOR}"
+                        level_up_input = input(f"{player_name_display} (Leveling Up): ")
 
-                        # Get the first message from the session
-                        dm_response = level_up_session.start()
+                        if not level_up_input or not level_up_input.strip():
+                            continue
                     
-                        # Display the first message and add to history
-                        print(colored("Dungeon Master:", "blue"), colored(dm_response, "blue"))
-                        conversation_history.append({"role": "assistant", "content": dm_response})
+                        # Handle the input and get the next AI response from the session
+                        dm_response = level_up_session.handle_input(level_up_input)
+
+                        # Check if the response is the final JSON or a conversational step
+                        try:
+                            # It's the final JSON response
+                            parsed_data = json.loads(dm_response)
+                            final_narration = parsed_data.get("narration", "Level up complete!")
+                            print(colored("Dungeon Master:", "blue"), colored(final_narration, "blue"))
+                            # The session is now complete, loop will exit
+                        except (json.JSONDecodeError, TypeError):
+                            # It's a normal conversational response
+                            print(colored("Dungeon Master:", "blue"), colored(dm_response, "blue"))
+
+                    # After the loop, the session is complete.
+                    if level_up_session.success:
+                        debug("SUCCESS: Level up successful. Using final narration for context.", category="level_up")
+                        # Add the final, high-quality narration to the history as the definitive AI response.
+                        # This provides perfect context for the next turn without an extra AI call.
+                        conversation_history.append({"role": "assistant", "content": json.dumps({"narration": final_narration, "actions": []})})
+                        save_conversation_history(conversation_history)
+                    else:
+                        # If the level up failed, inform the player and log it.
+                        print(colored("Dungeon Master:", "red"), colored(level_up_session.summary, "red"))
+                        conversation_history.append({"role": "system", "content": level_up_session.summary})
                         save_conversation_history(conversation_history)
 
-                        # Loop until the session is complete
-                        while not level_up_session.is_complete:
-                            # Get player input
-                            player_name_display = f"{SOLID_GREEN}{player_name_actual}{RESET_COLOR}"
-                            level_up_input = input(f"{player_name_display} (Leveling Up): ")
+                    # Break the outer validation loop and proceed to the next turn.
+                    break 
 
-                            if not level_up_input or not level_up_input.strip():
-                                continue
-                        
-                            # Handle the input and get the next AI response from the session
-                            dm_response = level_up_session.handle_input(level_up_input)
+                # CRITICAL: Reload conversation history from disk.
+                # Since process_ai_response handles all history updates internally (including sub-systems
+                # like combat that may add multiple messages), we must reload to ensure our local
+                # conversation_history variable matches the persisted state.
+                # This is the ONLY place the main loop needs to manage conversation_history.
+                conversation_history = load_json_file(json_file) or []
+                # No need to save here, as process_ai_response already handled all persistence.
 
-                            # Check if the response is the final JSON or a conversational step
-                            try:
-                                # It's the final JSON response
-                                parsed_data = json.loads(dm_response)
-                                final_narration = parsed_data.get("narration", "Level up complete!")
-                                print(colored("Dungeon Master:", "blue"), colored(final_narration, "blue"))
-                                # The session is now complete, loop will exit
-                            except (json.JSONDecodeError, TypeError):
-                                # It's a normal conversational response
-                                print(colored("Dungeon Master:", "blue"), colored(dm_response, "blue"))
+            elif isinstance(validation_result, str):
+                # (The rest of your validation retry logic remains the same)
+                debug(f"VALIDATION: Validation failed. Reason: {validation_result}", category="ai_validation")
+                status_retrying(retry_count + 1, 5)
+                conversation_history.append({"role": "user", "content": f"Error Note: Your previous response failed validation. Reason: {validation_result}. Please adjust your response accordingly."})
+                retry_count += 1
+            else: 
+                warning(f"VALIDATION: Unexpected validation result: {validation_result}. Assuming invalid and retrying.", category="ai_validation")
+                retry_count += 1
+    
+        if not valid_response_received:
+            error("FAILURE: Failed to generate a valid response after 5 attempts. Proceeding with the last generated response.", category="ai_validation")
+            if ai_response_content: 
+                result = process_ai_response(ai_response_content, party_tracker_data, location_data, conversation_history) 
+                if result == "exit": return
+                if result == "restart":
+                    print("\n[SYSTEM] Restarting game with restored save...\n")
+                    main_game_loop()
+                    return
+            else:
+                error("FAILURE: No AI response was generated after retries.", category="ai_validation")
+                conversation_history.append({"role": "assistant", "content": "I seem to be having trouble formulating a response. Could you try rephrasing your action or query?"})
+                save_conversation_history(conversation_history)
+    
+        status_ready()
 
-                        # After the loop, the session is complete.
-                        if level_up_session.success:
-                            debug("SUCCESS: Level up successful. Using final narration for context.", category="level_up")
-                            # Add the final, high-quality narration to the history as the definitive AI response.
-                            # This provides perfect context for the next turn without an extra AI call.
-                            conversation_history.append({"role": "assistant", "content": json.dumps({"narration": final_narration, "actions": []})})
-                            save_conversation_history(conversation_history)
-                        else:
-                            # If the level up failed, inform the player and log it.
-                            print(colored("Dungeon Master:", "red"), colored(level_up_session.summary, "red"))
-                            conversation_history.append({"role": "system", "content": level_up_session.summary})
-                            save_conversation_history(conversation_history)
+        # This block now only runs if a response was NOT held
+        # CRITICAL: Reload party tracker to ensure we have the latest module information after any updates
+        party_tracker_data = load_json_file("party_tracker.json")
+        print(f"DEBUG: [Before update_conversation_history] Reloaded party tracker. Module: {party_tracker_data.get('module', 'Unknown')}")
+    
+        current_area_id = party_tracker_data["worldConditions"]["currentAreaId"] 
+        # Use current module from party tracker for plot data  
+        module_name_updated = party_tracker_data.get("module", "").replace(" ", "_")
+        updated_path_manager = ModulePathManager(module_name_updated)
+        plot_data = load_json_file(updated_path_manager.get_plot_path())
+        module_data = load_json_file(updated_path_manager.get_module_file_path())
+        debug(f"FILE_OP: Updated plot file path: {updated_path_manager.get_plot_path()}", category="module_management")
 
-                        # Break the outer validation loop and proceed to the next turn.
-                        break 
-
-                    # CRITICAL: Reload conversation history from disk.
-                    # Since process_ai_response handles all history updates internally (including sub-systems
-                    # like combat that may add multiple messages), we must reload to ensure our local
-                    # conversation_history variable matches the persisted state.
-                    # This is the ONLY place the main loop needs to manage conversation_history.
-                    conversation_history = load_json_file(json_file) or []
-                    # No need to save here, as process_ai_response already handled all persistence.
-
-                elif isinstance(validation_result, str):
-                    # (The rest of your validation retry logic remains the same)
-                    debug(f"VALIDATION: Validation failed. Reason: {validation_result}", category="ai_validation")
-                    status_retrying(retry_count + 1, 5)
-                    conversation_history.append({"role": "user", "content": f"Error Note: Your previous response failed validation. Reason: {validation_result}. Please adjust your response accordingly."})
-                    retry_count += 1
-                else: 
-                    warning(f"VALIDATION: Unexpected validation result: {validation_result}. Assuming invalid and retrying.", category="ai_validation")
-                    retry_count += 1
-        
-            if not valid_response_received:
-                error("FAILURE: Failed to generate a valid response after 5 attempts. Proceeding with the last generated response.", category="ai_validation")
-                if ai_response_content: 
-                    result = process_ai_response(ai_response_content, party_tracker_data, location_data, conversation_history) 
-                    if result == "exit": return
-                    if result == "restart":
-                        print("\n[SYSTEM] Restarting game with restored save...\n")
-                        main_game_loop()
-                        return
-                else:
-                    error("FAILURE: No AI response was generated after retries.", category="ai_validation")
-                    conversation_history.append({"role": "assistant", "content": "I seem to be having trouble formulating a response. Could you try rephrasing your action or query?"})
-                    save_conversation_history(conversation_history)
-        
-            status_ready()
-
-            # This block now only runs if a response was NOT held
-            # CRITICAL: Reload party tracker to ensure we have the latest module information after any updates
-            party_tracker_data = load_json_file("party_tracker.json")
-            print(f"DEBUG: [Before update_conversation_history] Reloaded party tracker. Module: {party_tracker_data.get('module', 'Unknown')}")
-        
-            current_area_id = party_tracker_data["worldConditions"]["currentAreaId"] 
-            # Use current module from party tracker for plot data  
-            module_name_updated = party_tracker_data.get("module", "").replace(" ", "_")
-            updated_path_manager = ModulePathManager(module_name_updated)
-            plot_data = load_json_file(updated_path_manager.get_plot_path())
-            module_data = load_json_file(updated_path_manager.get_module_file_path())
-            debug(f"FILE_OP: Updated plot file path: {updated_path_manager.get_plot_path()}", category="module_management")
-
-            debug(f"STATE_CHANGE: Before AI response update_conversation_history - history has {len(conversation_history)} messages", category="conversation_management")
-            conversation_history = update_conversation_history(conversation_history, party_tracker_data, plot_data, module_data)
-            debug(f"STATE_CHANGE: After AI response update_conversation_history - history has {len(conversation_history)} messages", category="conversation_management")
-            conversation_history = update_character_data(conversation_history, party_tracker_data)
-            conversation_history = ensure_main_system_prompt(conversation_history, main_system_prompt_text)
-        
-            # Use the new order_conversation_messages function
-            conversation_history = order_conversation_messages(conversation_history, main_system_prompt_text)
-        
-            save_conversation_history(conversation_history)
+        debug(f"STATE_CHANGE: Before AI response update_conversation_history - history has {len(conversation_history)} messages", category="conversation_management")
+        conversation_history = update_conversation_history(conversation_history, party_tracker_data, plot_data, module_data)
+        debug(f"STATE_CHANGE: After AI response update_conversation_history - history has {len(conversation_history)} messages", category="conversation_management")
+        conversation_history = update_character_data(conversation_history, party_tracker_data)
+        conversation_history = ensure_main_system_prompt(conversation_history, main_system_prompt_text)
+    
+        # Use the new order_conversation_messages function
+        conversation_history = order_conversation_messages(conversation_history, main_system_prompt_text)
+    
+        save_conversation_history(conversation_history)
 
 def main():
     """Main entry point with startup wizard integration"""
