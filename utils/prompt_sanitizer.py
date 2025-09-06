@@ -7,6 +7,7 @@ Only used after a failure - no pre-processing.
 from openai import OpenAI
 import config
 import re
+from model_config import DM_MINI_MODEL
 
 def sanitize_prompt(prompt: str) -> str:
     """
@@ -30,7 +31,7 @@ Original prompt: """ + prompt + """
 Return ONLY the sanitized prompt, no explanations."""
 
     response = client.chat.completions.create(
-        model="gpt-4.1-mini-2025-04-14",
+        model=DM_MINI_MODEL,
         messages=[
             {"role": "system", "content": "You are a prompt sanitizer. Return only the cleaned prompt text."},
             {"role": "user", "content": sanitization_request}
