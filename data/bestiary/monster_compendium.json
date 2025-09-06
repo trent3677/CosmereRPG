@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "created": "2025-08-13",
-  "total_monsters": 165,
+  "total_monsters": 166,
   "monsters": {
     "bandit_sentry": {
       "name": "Bandit Sentry",
@@ -1779,7 +1779,22 @@
       ],
       "source_file": "bestiary_updater.py",
       "generated_date": "2025-08-31T23:13:24.790090"
+    },
+    "brine_touched_zombie": {
+      "name": "Brine Touched Zombie",
+      "type": "undead",
+      "description": "Emerging from the shadows of the Cursed Cliffs, the Brine Touched Zombie is a grotesque parody of life, a once-familiar figure now transformed by the ocean's curse. Its skin is slick and glistening, mottled with shades of green and blue, resembling the barnacles and algae that cling to the stone walls of the lighthouse. Hollow eyes, clouded with the murky depths of the sea, glow faintly with a sickly bioluminescence, hinting at the dark magic that binds it to this realm. Jagged teeth, stained with salt and decay, protrude from its lips, while long strands of seaweed hang from its hair like wet rags, trailing behind as it shuffles forward with an unsettling, jerking gait.\n\nThe air around it is heavy with the tang of brine, and the sound of distant waves crashing echoes in the background, mingling with the eerie silence of the cloister. Each movement leaves a slick trail of brackish water, a reminder of its watery grave. As it approaches, the atmosphere grows colder, the flickering shadows cast by the moonlight through shattered stained glass twisting into terrifying shapes, embodying the lost souls trapped within its cursed form. The Brine Touched Zombie is both a harbinger of doom and a testament to the tragic fate that befell those who once walked these halls, now serving the Drowned King as unwilling minions of the deep.",
+      "tags": [
+        "undead",
+        "zombie",
+        "cursed",
+        "ocean",
+        "dark magic",
+        "horror"
+      ],
+      "source_file": "bestiary_updater.py",
+      "generated_date": "2025-09-02T22:08:34.448826"
     }
   },
-  "last_updated": "2025-08-31T23:13:24.797288"
+  "last_updated": "2025-09-02T22:08:34.451842"
 }
