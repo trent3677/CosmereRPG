@@ -92,7 +92,7 @@ class MapLayoutGenerator:
             
             rooms_text = "\\n".join(room_list)
             
-            prompt = f"""You are creating thematic location names for a D&D module called "{module_name}".
+            prompt = f"""You are creating thematic location names for a 5th edition of the world's most popular roleplaying game module called "{module_name}".
 
 AREA CONTEXT:
 - Area Name: {area_name}
@@ -126,7 +126,7 @@ No explanations, just the JSON array of thematic location names."""
             response = client.chat.completions.create(
                 model=DM_MAIN_MODEL,
                 messages=[
-                    {"role": "system", "content": "You are an expert at creating immersive D&D location names that enhance storytelling and world-building."},
+                    {"role": "system", "content": "You are an expert at creating immersive 5th edition of the world's most popular roleplaying game location names that enhance storytelling and world-building."},
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.8
@@ -414,7 +414,7 @@ class AreaGenerator:
                 model=DM_MAIN_MODEL,
                 temperature=0.8,
                 messages=[
-                    {"role": "system", "content": "You are an expert fantasy world builder specializing in creating evocative names and descriptions for D&D 5e areas."},
+                    {"role": "system", "content": "You are an expert fantasy world builder specializing in creating evocative names and descriptions for 5th edition of the world's most popular roleplaying game areas."},
                     {"role": "user", "content": prompt}
                 ],
                 response_format={"type": "json_object"}
@@ -557,7 +557,7 @@ Return ONLY the area description text, no additional formatting or labels."""
                 model=DM_MAIN_MODEL,
                 temperature=0.8,  # Higher temperature for more creative variety
                 messages=[
-                    {"role": "system", "content": "You are an expert fantasy world builder. Create unique, atmospheric descriptions for D&D 5e areas that avoid cliches and generic phrases."},
+                    {"role": "system", "content": "You are an expert fantasy world builder. Create unique, atmospheric descriptions for 5th edition of the world's most popular roleplaying game areas that avoid cliches and generic phrases."},
                     {"role": "user", "content": prompt}
                 ]
             )

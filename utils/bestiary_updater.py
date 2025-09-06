@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Bestiary Updater - Automatically generate monster descriptions from module context
-Uses GPT-4o-mini to create rich D&D 5e style descriptions based on how monsters
+Uses GPT-4o-mini to create rich 5th edition of the world's most popular roleplaying game style descriptions based on how monsters
 appear in actual game modules.
 """
 
@@ -180,12 +180,12 @@ class BestiaryUpdater:
             await asyncio.sleep(self.request_delay - time_since_last)
         
         # Build the prompt
-        system_prompt = """You are a D&D 5th edition monster description expert. Generate rich, atmospheric 
+        system_prompt = """You are a 5th edition of the world's most popular roleplaying game monster description expert. Generate rich, atmospheric 
         descriptions for monsters based on how they appear in game modules. Your descriptions should:
         - Be vivid and detailed, painting a clear picture of the creature
         - Include physical appearance, behavior, and atmospheric elements
         - Be suitable for use in image generation prompts
-        - Maintain consistency with D&D 5e lore while adding creative details
+        - Maintain consistency with 5th edition of the world's most popular roleplaying game lore while adding creative details
         - Be approximately 150-250 words
         
         Return your response as a JSON object with these fields:
@@ -196,7 +196,7 @@ class BestiaryUpdater:
             "tags": ["tag1", "tag2", "tag3"]
         }"""
         
-        user_prompt = f"""Generate a detailed D&D 5e monster description for: {monster_name}
+        user_prompt = f"""Generate a detailed 5th edition of the world's most popular roleplaying game monster description for: {monster_name}
 
 Based on this adventure module context:
 {module_context[:8000]}  

@@ -25,7 +25,7 @@ See LICENSE-APACHE file for full terms.
 # - AI-powered NPC character generation with personality and background
 # - Schema-compliant character data creation and validation
 # - Integration with module path management for file organization
-# - Character stat generation with D&D 5e rule compliance
+# - Character stat generation with 5th edition of the world's most popular roleplaying game rule compliance
 # - NPC profile creation with narrative and mechanical consistency
 # - Batch character creation for module population
 #

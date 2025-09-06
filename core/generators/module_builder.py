@@ -1249,7 +1249,7 @@ def main():
     print("\nDescribe your module concept:")
     concept = input("> ").strip()
     if not concept:
-        concept = "A classic fantasy adventure with dungeons, dragons, and ancient mysteries"
+        concept = "A classic fantasy adventure with dungeons, monsters, and ancient mysteries"
     
     # Configure builder
     config = BuilderConfig(

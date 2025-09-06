@@ -27,7 +27,7 @@ See LICENSE file for full terms.
 # KEY RESPONSIBILITIES:
 # - Interactive AI-driven level-up interview process for players
 # - Automated optimized advancement choices for NPCs
-# - D&D 5e rule compliance validation and verification
+# - 5th edition of the world's most popular roleplaying game rule compliance validation and verification
 # - Isolated subprocess execution for fault tolerance
 # - Character advancement state management without direct I/O
 # - Integration with main game loop through summary reports

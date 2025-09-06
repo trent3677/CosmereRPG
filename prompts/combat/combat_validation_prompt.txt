@@ -63,7 +63,7 @@ UNACCEPTABLE RESPONSES:
 - Attacks targeting already dead creatures as if they were still alive
 - Processing turns out of initiative order based on what you can observe. Don't assume information not present.
 - Failing to immediately update HP and check for deaths after damage
-- Confusing 'status' and 'condition' fields: 'status' is life/death state ('alive', 'dead', 'unconscious'), 'condition' is D&D status effects ('none', 'blinded', 'charmed', etc.)
+- Confusing 'status' and 'condition' fields: 'status' is life/death state ('alive', 'dead', 'unconscious'), 'condition' is 5th edition status effects ('none', 'blinded', 'charmed', etc.)
 - Missing combat_round field in JSON responses
 - Using wrong dice from preroll pools (e.g., using d20 for damage, using damage dice for attacks)
 - Using prerolls for player character actions (players always roll their own dice)

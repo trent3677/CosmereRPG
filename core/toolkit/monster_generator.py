@@ -110,7 +110,7 @@ class MonsterGenerator:
         # Add base prompt (check both 'prompt' and 'base_prompt' keys for compatibility)
         base_prompt = style_data.get("prompt") or style_data.get("base_prompt", "")
         if base_prompt:
-            prompt_parts.append(f"Create an ultra detailed {base_prompt} Dungeons and Dragons monster portrait")
+            prompt_parts.append(f"Create an ultra detailed {base_prompt} 5th edition roleplaying game monster portrait")
         
         # Add monster description
         prompt_parts.append(monster_data["description"])

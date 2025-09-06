@@ -1338,7 +1338,7 @@ def calculate_derived_stats(character_data):
     if 'skills' not in character_data:
         character_data['skills'] = []
     
-    # Set saving throws based on class (this is standard D&D 5e and doesn't change)
+    # Set saving throws based on class (this is standard 5th edition of the world's most popular roleplaying game and doesn't change)
     saving_throws_by_class = {
         'fighter': ["Strength", "Constitution"],
         'wizard': ["Intelligence", "Wisdom"],
@@ -1491,7 +1491,7 @@ def auto_fix_character_data(character_data):
                     elif item.get("armor_category") == "heavy":
                         item["ac_base"] = 16  # Chain mail
     
-    # Fix ability scores that are too low (D&D minimum is usually 8)
+    # Fix ability scores that are too low (5th edition of the world's most popular roleplaying game minimum is usually 8)
     if "abilities" in character_data and isinstance(character_data["abilities"], dict):
         for ability, score in character_data["abilities"].items():
             if isinstance(score, int) and score < 8:
@@ -1698,7 +1698,7 @@ def get_ai_starting_location(module):
             return get_fallback_starting_location()
         
         # Prepare AI prompt
-        prompt = f"""You are a D&D campaign assistant. Analyze this module and determine the best starting location for new players.
+        prompt = f"""You are a 5th edition of the world's most popular roleplaying game campaign assistant. Analyze this module and determine the best starting location for new players.
 
 MODULE DATA:
 {json.dumps(module_data, indent=2)}

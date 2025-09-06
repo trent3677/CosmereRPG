@@ -99,7 +99,7 @@ Example response format:
         response = client.chat.completions.create(
             model=LEVEL_UP_MODEL,
             messages=[
-                {"role": "system", "content": "You are a D&D 5e rules expert. Provide only valid JSON responses."},
+                {"role": "system", "content": "You are a 5th edition of the world's most popular roleplaying game rules expert. Provide only valid JSON responses."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.3  # Low temperature for consistency

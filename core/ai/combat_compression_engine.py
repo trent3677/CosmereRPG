@@ -25,7 +25,7 @@ except:
     def track_response(r): pass  # No-op fallback
 
 # Fully agentic combat compression prompt with self-contained @ROSTER for reversibility
-COMBAT_COMPRESSION_PROMPT = """You are a D&D combat data compressor. Transform a verbose combat block into compact @TAGS for LLM context.
+COMBAT_COMPRESSION_PROMPT = """You are a 5th edition of the world's most popular roleplaying game combat data compressor. Transform a verbose combat block into compact @TAGS for LLM context.
 Do ALL parsing yourself. Do NOT output code fences or commentary—ONLY the tags.
 
 INPUT

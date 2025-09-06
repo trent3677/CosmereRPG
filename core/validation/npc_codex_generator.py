@@ -209,7 +209,7 @@ def extract_npcs_with_ai(module_content, module_name):
         area_content = module_content.get('area_content', 'No area content found')
         character_files = ', '.join(module_content.get('character_files', [])) if module_content.get('character_files') else 'No character files found'
         
-        extraction_prompt = f"""You are analyzing a D&D module called "{module_name}" to extract NPC (Non-Player Character) names for validation purposes.
+        extraction_prompt = f"""You are analyzing a 5th edition of the world's most popular roleplaying game module called "{module_name}" to extract NPC (Non-Player Character) names for validation purposes.
 
 Your task is to identify legitimate NPC names mentioned in the module content. An NPC is a character that players can interact with, talk to, or encounter during gameplay.
 
@@ -256,7 +256,7 @@ Extract all legitimate NPC names now:"""
         response = client.chat.completions.create(
             model=config.DM_MAIN_MODEL,
             messages=[
-                {"role": "system", "content": "You are an expert at analyzing D&D module content and extracting NPC names. You understand the difference between NPCs, locations, and monsters."},
+                {"role": "system", "content": "You are an expert at analyzing 5th edition of the world's most popular roleplaying game module content and extracting NPC names. You understand the difference between NPCs, locations, and monsters."},
                 {"role": "user", "content": extraction_prompt}
             ],
             temperature=0.1  # Low temperature for consistent extraction

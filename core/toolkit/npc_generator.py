@@ -90,7 +90,7 @@ class NPCGenerator:
         
         if not style_data:
             print(f"Warning: Style '{style}' not found. Using a default fantasy art style.")
-            style_data = { "prompt": "digital painting, fantasy character portrait, dungeons and dragons art style" }
+            style_data = { "prompt": "digital painting, fantasy character portrait, 5th edition roleplaying game art style" }
 
         prompt_parts = []
 

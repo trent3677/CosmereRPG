@@ -1460,7 +1460,7 @@ def promote_to_bestiary():
 
         # 2. Use AI to generate a description
         monster_name = monster_id.replace('_', ' ').title()
-        prompt = f"""Generate a compelling Dungeons & Dragons style bestiary description for a monster named "{monster_name}".
+        prompt = f"""Generate a compelling 5th edition of the world's most popular roleplaying game style bestiary description for a monster named "{monster_name}".
         The description should be concise (around 100-150 words) and focus on its appearance, typical behavior, and combat tactics.
         Make it sound like an entry from an official monster manual. Do not include stat blocks."""
         
