@@ -479,7 +479,21 @@ You must validate that each item in the character's inventory has the correct it
 
 #### EXCEPTION RULES - DO NOT RE-CATEGORIZE:
 - If "Short Sword" is already type "weapon", leave it as is
-- If "Shortsword" is already type "weapon", leave it as is
+- If "Shortsword" is already type "weapon", leave it as is  
+- If "Longbow" is already type "weapon", leave it as is
+- If "Long Bow" is already type "weapon", leave it as is
+- If "Crossbow" is already type "weapon", leave it as is
+- If "Light Crossbow" is already type "weapon", leave it as is
+- If "Studded Leather Armor" is already type "armor", leave it as is
+- If "Leather Armor" is already type "armor", leave it as is
+- If "Scale Mail" is already type "armor", leave it as is
+- If "Shield" is already type "armor", leave it as is
+- If "Quiver" is already type "equipment", leave it as is
+- If "Pouch" is already type "equipment" or "miscellaneous", leave it as is
+- If "Explorer's Pack" is already type "equipment", leave it as is
+- If "Torch" is already type "equipment", leave it as is
+- If "Rope" is already type "equipment", leave it as is
+- If "Waterskin" is already type "equipment", leave it as is
 - Items already correctly categorized should not be changed
 
 #### WEAPONS -> "weapon"
