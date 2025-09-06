@@ -1201,6 +1201,21 @@ You must:
 - Ammunition containers without clear count: "empty quiver", "bolt case"
 - Non-standard ammunition: "ballista bolts", "special ammunition"
 
+### AMMUNITION CONTAINER STANDARDIZATION:
+**ALWAYS standardize container names:**
+- "full quiver", "empty quiver", "quiver full of arrows" → "Quiver"
+- "full bolt case", "empty bolt case", "case of bolts" → "Bolt case"
+
+**If container is described as "full" or contains ammo:**
+- Rename to standard name ("Quiver" or "Bolt case")
+- Add appropriate ammunition to ammunition section:
+  - "full quiver" → Add 20 arrows to ammunition
+  - "quiver with 30 arrows" → Add 30 arrows to ammunition
+  - "full bolt case" → Add 20 crossbow bolts to ammunition
+  
+**If container is "empty" or just a container:**
+- Rename to standard name but don't add ammunition
+
 ### CURRENCY TYPES:
 - platinum (pp) = 10 gold
 - gold (gp) = 1 gold
@@ -1222,19 +1237,26 @@ Return a JSON object with ONLY the changes needed:
   },
   "ammunition": [
     {
+      "name": "Arrows",
+      "quantity": 20,     // Added from "full quiver"
+      "description": "Standard arrows for use with a longbow or shortbow"
+    },
+    {
       "name": "Crossbow bolt",
       "quantity": 50,     // New total after consolidation
       "description": "Ammunition for crossbows."
     }
   ],
   "equipment": [
-    {"item_name": "exact name of item to remove", "_remove": true},
-    {"item_name": "another item to remove", "_remove": true}
+    {"item_name": "full quiver", "item_name": "Quiver", "_update": true},  // Rename container
+    {"item_name": "Crossbow bolts x 10", "_remove": true},  // Remove loose ammo from equipment
+    {"item_name": "5 gold pieces", "_remove": true}  // Remove loose coins
   ],
   "consolidations_made": [
     "Consolidated X gold pieces into currency",
     "Emptied bag of Y gold into currency",
     "Total gold increased from A to B",
+    "Renamed 'full quiver' to 'Quiver' and added 20 arrows",
     "Moved 'Crossbow bolts x 10' to ammunition section",
     "Ammunition 'Crossbow bolt' increased from 40 to 50"
   ]
@@ -1304,6 +1326,8 @@ Item #{i+1}:
 Identify loose currency items AND ammunition that should be consolidated. Remember:
 - Consolidate loose coins and emptied bags into currency
 - Move ammunition items (arrows, bolts) to the ammunition section
+- Standardize container names (e.g., "full quiver" → "Quiver")
+- If a container is "full", add ammo and rename container
 - Preserve gems, containers, and valuables
 - Calculate new totals after consolidation
 - Return only the changes needed for both currency and ammunition"""
