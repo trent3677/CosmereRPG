@@ -123,6 +123,9 @@ class AICharacterValidator:
         # CRITICAL: Ensure currency object always has all required fields
         corrected_data = self.ensure_currency_integrity(corrected_data)
         
+        # CRITICAL: Consolidate duplicate ammunition entries (exact matches only)
+        corrected_data = self.consolidate_ammunition(corrected_data)
+        
         # Future: Add other AI validations here
         # - Temporary effects expiration  
         # - Attack bonus calculation
@@ -1435,6 +1438,102 @@ Identify loose currency items AND ammunition that should be consolidated. Rememb
             print(f"DEBUG: [Currency Integrity] Added missing currency fields: {missing_fields}")
             info(f"[Currency Integrity] Added missing currency fields: {missing_fields}", category="character_validation")
             self.corrections_made.append(f"Added missing currency fields: {', '.join(missing_fields)}")
+        
+        return character_data
+    
+    def consolidate_ammunition(self, character_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Consolidate duplicate ammunition entries with exact name matches (case-insensitive).
+        This handles cases like "Arrow" + "arrows" -> single "arrows" entry.
+        
+        IMPORTANT: Only consolidates exact matches (e.g., "arrows" + "Arrows").
+        Does NOT consolidate special ammunition like "ice arrows" or "arrows +1".
+        
+        Args:
+            character_data: Character data to validate
+            
+        Returns:
+            Character data with consolidated ammunition
+        """
+        if 'ammunition' not in character_data or not isinstance(character_data['ammunition'], list):
+            return character_data
+        
+        ammunition_list = character_data['ammunition']
+        if len(ammunition_list) <= 1:
+            return character_data
+        
+        # Group ammunition by normalized name (lowercase, handling singular/plural)
+        consolidated = {}
+        
+        for ammo in ammunition_list:
+            name = ammo.get('name', '').strip()
+            if not name:
+                continue
+            
+            # Normalize the name for comparison
+            normalized_name = name.lower()
+            
+            # Handle singular/plural for exact base words only
+            # "arrow" -> "arrows", "bolt" -> "bolts", "bullet" -> "bullets"
+            singular_to_plural = {
+                'arrow': 'arrows',
+                'bolt': 'bolts', 
+                'crossbow bolt': 'crossbow bolts',
+                'bullet': 'bullets',
+                'sling bullet': 'sling bullets',
+                'dart': 'darts',
+                'needle': 'needles',
+                'blowgun needle': 'blowgun needles'
+            }
+            
+            # Check if this is a singular form that should be pluralized
+            if normalized_name in singular_to_plural:
+                normalized_name = singular_to_plural[normalized_name]
+            
+            # Only consolidate if the name is EXACTLY one of our standard ammunition types
+            # This prevents consolidation of "ice arrows", "flaming arrows", etc.
+            standard_ammo_types = [
+                'arrows', 'bolts', 'crossbow bolts', 'bullets', 
+                'sling bullets', 'darts', 'needles', 'blowgun needles'
+            ]
+            
+            if normalized_name not in standard_ammo_types:
+                # Special ammunition - don't consolidate, keep as-is
+                # Use the original name as the key to preserve it
+                consolidated[name] = ammo
+                continue
+            
+            # For standard ammunition, consolidate by normalized name
+            if normalized_name in consolidated:
+                # Add quantities together
+                consolidated[normalized_name]['quantity'] = (
+                    consolidated[normalized_name].get('quantity', 0) + 
+                    ammo.get('quantity', 0)
+                )
+            else:
+                # First occurrence - use the plural form as standard
+                standardized_ammo = {
+                    'name': normalized_name.title() if normalized_name != 'crossbow bolts' else 'Crossbow Bolts',
+                    'quantity': ammo.get('quantity', 0),
+                    'description': ammo.get('description', f"Standard {normalized_name}.")
+                }
+                consolidated[normalized_name] = standardized_ammo
+        
+        # Check if consolidation happened
+        if len(consolidated) < len(ammunition_list):
+            # Build list of what was consolidated
+            original_entries = [f"{a.get('name')} ({a.get('quantity', 0)})" for a in ammunition_list]
+            new_entries = [f"{a.get('name')} ({a.get('quantity', 0)})" for a in consolidated.values()]
+            
+            print(f"DEBUG: [Ammunition Consolidation] Consolidated {len(ammunition_list)} entries to {len(consolidated)}")
+            print(f"DEBUG:   Original: {', '.join(original_entries)}")
+            print(f"DEBUG:   Consolidated: {', '.join(new_entries)}")
+            
+            info(f"[Ammunition Consolidation] Consolidated duplicate ammunition entries", category="character_validation")
+            self.corrections_made.append(f"Consolidated ammunition: {', '.join(original_entries)} -> {', '.join(new_entries)}")
+            
+            # Update the character data with consolidated ammunition
+            character_data['ammunition'] = list(consolidated.values())
         
         return character_data
 
