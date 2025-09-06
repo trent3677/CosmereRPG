@@ -335,21 +335,21 @@ class ParallelConversationCompressor:
                             if len(parts) == 2:
                                 module_name = parts[0].replace('_', ' ')
                                 chronicle_num = parts[1]
-                                header = f"=== CAMPAIGN CONTEXT (COMPRESSED) ===\n\n--- {module_name} (Chronicle {chronicle_num}) ---"
+                                header = f"=== CAMPAIGN HISTORY: {module_name} (Chronicle {chronicle_num}) ===\n\n[These events have already occurred and form the party's backstory.]"
                             else:
-                                header = "=== CAMPAIGN CONTEXT (COMPRESSED) ==="
+                                header = "=== CAMPAIGN HISTORY ===\n\n[These events have already occurred and form the party's backstory.]"
                         else:
                             # For location summaries, extract location info from the narrative start
                             # Look for pattern like "The Black Lantern Hearth (AD01):" at the beginning
                             location_match = re.match(r'^(.*?\([A-Z]+\d+\)):', narrative)
                             if location_match:
                                 location_info = location_match.group(1)
-                                header = f"=== LOCATION SUMMARY (COMPRESSED) ===\n\n{location_info}:"
+                                header = f"=== LOCATION CHRONICLE: {location_info} ===\n\n[IMPORTANT: This is the canonical record of actual events that occurred at this location. Reference these as historical fact when narrating.]"
                                 # Remove the location info from compressed text if it's duplicated
                                 if compressed_text.startswith(location_info):
                                     compressed_text = compressed_text[len(location_info):].lstrip(':').strip()
                             else:
-                                header = "=== LOCATION SUMMARY (COMPRESSED) ==="
+                                header = "=== LOCATION CHRONICLE ===\n\n[IMPORTANT: This is the canonical record of actual events. Reference these as historical fact when narrating.]"
                         
                         compressed_replacement = f"{header}\n\n{compressed_text}"
                         modified_content = modified_content.replace(full_match, compressed_replacement)
