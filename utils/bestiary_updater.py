@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Bestiary Updater - Automatically generate monster descriptions from module context
-Uses GPT-4o-mini to create rich 5th edition of the world's most popular roleplaying game style descriptions based on how monsters
+Uses configured AI model to create rich 5th edition of the world's most popular roleplaying game style descriptions based on how monsters
 appear in actual game modules.
 """
 
@@ -24,6 +24,7 @@ except ImportError:
 from utils.file_operations import safe_read_json, safe_write_json
 from utils.encoding_utils import safe_json_load, safe_json_dump, sanitize_text
 from utils.enhanced_logger import debug, info, warning, error, set_script_name
+from model_config import DM_MINI_MODEL
 
 # Import API key
 try:
@@ -47,7 +48,7 @@ class BestiaryUpdater:
             self.client = None
             error("OpenAI client not available - check API key and library installation")
         
-        # Rate limiting settings (GPT-4o-mini has higher limits but we'll be conservative)
+        # Rate limiting settings (being conservative)
         self.requests_per_minute = 30
         self.request_delay = 60.0 / self.requests_per_minute  # ~2 seconds between requests
         self.last_request_time = 0
@@ -160,7 +161,7 @@ class BestiaryUpdater:
     
     async def generate_monster_description(self, monster_name: str, module_context: str) -> Optional[Dict]:
         """
-        Generate a monster description using GPT-4o-mini
+        Generate a monster description using configured AI model
         
         Args:
             monster_name: The name of the monster to generate
@@ -211,7 +212,7 @@ image-generation-ready description that would fit this adventure."""
                 info(f"Generating description for: {monster_name} (attempt {attempt + 1}/{max_retries})")
                 
                 response = self.client.chat.completions.create(
-                    model="gpt-4o-mini",
+                    model=DM_MINI_MODEL,
                     messages=[
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_prompt}

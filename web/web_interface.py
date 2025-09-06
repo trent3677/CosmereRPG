@@ -78,6 +78,7 @@ import main as dm_main
 import utils.reset_campaign as reset_campaign
 from core.managers.status_manager import set_status_callback, set_compression_callback
 from utils.enhanced_logger import debug, info, warning, error, set_script_name
+from model_config import DM_MINI_MODEL
 
 # Import toolkit components for API support
 try:
@@ -1468,7 +1469,7 @@ def promote_to_bestiary():
         client = OpenAI(api_key=OPENAI_API_KEY)
         
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model=DM_MINI_MODEL,
             messages=[
                 {"role": "system", "content": "You are a creative writer for a fantasy role-playing game, specializing in monster lore."},
                 {"role": "user", "content": prompt}
@@ -2823,7 +2824,7 @@ Example Output Format:
                 try:
                     # Call OpenAI API with the new system message and prompt
                     response = client.chat.completions.create(
-                        model="gpt-4o-mini",
+                        model=DM_MINI_MODEL,
                         messages=[
                             {"role": "system", "content": "You are an expert AI prompt engineer specializing in fantasy character art. Your task is to write image generation prompts, not narrative descriptions. The prompts you write will be used to create digital paintings."},
                             {"role": "user", "content": prompt}

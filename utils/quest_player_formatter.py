@@ -14,6 +14,7 @@ import os
 from datetime import datetime
 from openai import OpenAI
 from config import OPENAI_API_KEY
+from model_config import DM_MINI_MODEL
 from utils.module_path_manager import ModulePathManager
 from utils.file_operations import safe_read_json, safe_write_json
 from utils.enhanced_logger import debug, info, warning, error, set_script_name
@@ -25,8 +26,7 @@ set_script_name("quest_player_formatter")
 # Initialize OpenAI client
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-# Constants
-MODEL = "gpt-4o-mini"
+# Constants - model is imported from model_config
 TEMPERATURE = 0.3
 MAX_RETRIES = 3
 
@@ -81,7 +81,7 @@ def format_quest_batch(quests_to_format):
         debug(f"AI_REQUEST: Sending {len(quest_input)} quests for reformatting", category="quest_formatting")
         
         response = client.chat.completions.create(
-            model=MODEL,
+            model=DM_MINI_MODEL,
             temperature=TEMPERATURE,
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
