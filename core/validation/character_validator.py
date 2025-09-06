@@ -477,6 +477,11 @@ You must validate that each item in the character's inventory has the correct it
 
 ### DETAILED CATEGORIZATION RULES:
 
+#### EXCEPTION RULES - DO NOT RE-CATEGORIZE:
+- If "Short Sword" is already type "weapon", leave it as is
+- If "Shortsword" is already type "weapon", leave it as is
+- Items already correctly categorized should not be changed
+
 #### WEAPONS -> "weapon"
 - All swords, axes, maces, hammers, daggers
 - All bows, crossbows, slings

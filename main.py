@@ -786,15 +786,114 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
     # Create module data context for location/NPC validation
     module_data_context = create_module_validation_context(party_tracker_data, path_manager)
     
+    # Extract character names from updateCharacterInfo actions and load their inventories
+    character_inventory_context = ""
+    try:
+        # Parse the primary response to find updateCharacterInfo actions
+        response_data = json.loads(primary_response)
+        if "actions" in response_data:
+            characters_to_load = set()
+            for action in response_data["actions"]:
+                if action.get("action") == "updateCharacterInfo":
+                    char_name = action.get("parameters", {}).get("characterName", "")
+                    if char_name:
+                        characters_to_load.add(char_name)
+            
+            # Load character sheets for identified characters
+            if characters_to_load:
+                character_inventory_context = "\n\nCHARACTER INVENTORY DATA FOR VALIDATION:\n"
+                for char_name in characters_to_load:
+                    # Try to load from characters directory
+                    # Note: get_character_path already adds .json extension
+                    char_file_name = char_name.lower().replace(" ", "_")
+                    char_path = path_manager.get_character_path(char_file_name)
+                    
+                    if os.path.exists(char_path):
+                        try:
+                            with open(char_path, 'r', encoding='utf-8') as f:
+                                char_data = json.load(f)
+                            
+                            # Extract relevant inventory data
+                            ammunition = char_data.get("ammunition", [])
+                            currency = char_data.get("currency", {})
+                            equipment = char_data.get("equipment", [])
+                            
+                            character_inventory_context += f"\n{char_name}:\n"
+                            character_inventory_context += f"  Currency: {currency.get('gold', 0)} gold, {currency.get('silver', 0)} silver, {currency.get('copper', 0)} copper\n"
+                            
+                            # Add ammunition
+                            if ammunition:
+                                character_inventory_context += "  Ammunition:\n"
+                                for ammo in ammunition:
+                                    character_inventory_context += f"    - {ammo.get('name', 'Unknown')}: {ammo.get('quantity', 0)}\n"
+                            else:
+                                character_inventory_context += "  Ammunition: None\n"
+                            
+                            # Add equipment and items (especially consumables like potions)
+                            consumables = []
+                            weapons = []
+                            armor = []
+                            other_equipment = []
+                            
+                            for item in equipment:
+                                item_name = item.get("item_name", "Unknown")
+                                item_type = item.get("item_type", "")
+                                quantity = item.get("quantity", 1)
+                                
+                                if item_type == "consumable" or item.get("consumable", False):
+                                    consumables.append(f"{item_name} (x{quantity})")
+                                elif item_type == "weapon":
+                                    weapons.append(item_name)
+                                elif item_type == "armor":
+                                    armor.append(item_name)
+                                else:
+                                    other_equipment.append(item_name)
+                            
+                            if consumables:
+                                character_inventory_context += "  Consumables:\n"
+                                for item in consumables:
+                                    character_inventory_context += f"    - {item}\n"
+                            
+                            if weapons:
+                                character_inventory_context += "  Weapons:\n"
+                                for item in weapons:
+                                    character_inventory_context += f"    - {item}\n"
+                            
+                            if armor:
+                                character_inventory_context += "  Armor:\n"
+                                for item in armor:
+                                    character_inventory_context += f"    - {item}\n"
+                            
+                            if other_equipment:
+                                character_inventory_context += "  Other Equipment:\n"
+                                for item in other_equipment:
+                                    character_inventory_context += f"    - {item}\n"
+                        except Exception as e:
+                            debug(f"VALIDATION: Could not load character data for {char_name}: {e}", category="ai_validation")
+                    else:
+                        debug(f"VALIDATION: Character file not found: {char_path}", category="ai_validation")
+                
+                if character_inventory_context != "\n\nCHARACTER INVENTORY DATA FOR VALIDATION:\n":
+                    debug(f"VALIDATION: Loaded inventory data for: {', '.join(characters_to_load)}", category="ai_validation")
+    except json.JSONDecodeError:
+        # Response might not be valid JSON, skip inventory loading
+        pass
+    except Exception as e:
+        debug(f"VALIDATION: Error extracting character names: {e}", category="ai_validation")
+    
     validation_conversation = [
         {"role": "system", "content": validation_prompt_text},
         {"role": "system", "content": location_details},
         {"role": "system", "content": user_input_context},
         {"role": "system", "content": module_data_context},
+        {"role": "system", "content": character_inventory_context} if character_inventory_context else None,
         last_two_messages[0],
         last_two_messages[1],
         {"role": "assistant", "content": primary_response}
     ]
+    
+    # Filter out None entries
+    validation_conversation = [msg for msg in validation_conversation if msg is not None]
     
     # DEBUG: Log what validation AI sees for createNewModule actions
     if '"action": "createNewModule"' in primary_response:
