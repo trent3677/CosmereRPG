@@ -721,6 +721,42 @@ def process_action(action, party_tracker_data, location_data, conversation_histo
         )
         
         if not is_valid:
+            # Check if this is a cross-module transition attempt
+            from core.managers.campaign_manager import CampaignManager
+            campaign_manager = CampaignManager()
+            
+            # Determine which module owns the target location
+            target_module = campaign_manager.get_module_from_location(new_location_name_or_id)
+            current_module = party_tracker_data.get("module", "")
+            
+            if target_module and target_module != current_module:
+                # This is a cross-module transition attempt!
+                print(f"INFO: Cross-module transition detected: {current_module} -> {target_module}")
+                
+                # Get target location details for better error message
+                target_location_name = "Unknown"
+                if location_graph.nodes.get(new_location_name_or_id):
+                    target_location_name = location_graph.nodes[new_location_name_or_id].get('location_name', 'Unknown')
+                
+                # Create helpful error message that guides the AI
+                error_msg = (
+                    f"Module Transition Required: The location '{new_location_name_or_id}' ({target_location_name}) "
+                    f"is in the '{target_module}' module, but you are currently in the '{current_module}' module. "
+                    f"If the player intends to travel to a different module (e.g., 'take me back to my keep', "
+                    f"'let's return to {target_module}'), use the updatePartyTracker action with module parameter. "
+                    f"If the player wants to stay in the current module (e.g., 'let's go to the inn'), "
+                    f"use the appropriate location in the current module instead. "
+                    f"For module travel, use: updatePartyTracker with module='{target_module}'"
+                )
+                
+                print(f"ERROR: {error_msg}")
+                return create_return(
+                    status="error",
+                    needs_update=False,
+                    response_data={"error_message": error_msg}
+                )
+            
+            # Original error for non-module path issues
             print(f"ERROR: {error_message}")
             return create_return(
                 status="error", 

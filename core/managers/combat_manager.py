@@ -2174,9 +2174,9 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
                messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
                
                # Export compressed conversation for review
-               with open("combat_messages_to_api.json", "w", encoding="utf-8") as f:
+               with open("debug/api_captures/combat_messages_to_api.json", "w", encoding="utf-8") as f:
                    json.dump(messages_to_send, f, indent=2, ensure_ascii=False)
-               print(f"DEBUG: [COMBAT] Exported compressed messages to combat_messages_to_api.json")
+               print(f"DEBUG: [COMBAT] Exported compressed messages to debug/api_captures/combat_messages_to_api.json")
                
                response = client.chat.completions.create(
                    model=GPT5_MINI_MODEL,
@@ -2191,9 +2191,9 @@ def run_combat_simulation(encounter_id, party_tracker_data, location_info):
                messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
                
                # Export compressed conversation for review
-               with open("combat_messages_to_api.json", "w", encoding="utf-8") as f:
+               with open("debug/api_captures/combat_messages_to_api.json", "w", encoding="utf-8") as f:
                    json.dump(messages_to_send, f, indent=2, ensure_ascii=False)
-               print(f"DEBUG: [COMBAT] Exported compressed messages to combat_messages_to_api.json")
+               print(f"DEBUG: [COMBAT] Exported compressed messages to debug/api_captures/combat_messages_to_api.json")
                
                response = client.chat.completions.create(
                    model=COMBAT_MAIN_MODEL,
@@ -2274,9 +2274,9 @@ Player: {initial_prompt_text}"""
                messages_to_send = combat_message_compressor.process_combat_conversation(conversation_history)
                
                # Export compressed conversation for review
-               with open("combat_messages_to_api.json", "w", encoding="utf-8") as f:
+               with open("debug/api_captures/combat_messages_to_api.json", "w", encoding="utf-8") as f:
                    json.dump(messages_to_send, f, indent=2, ensure_ascii=False)
-               print(f"DEBUG: [COMBAT] Exported compressed messages to combat_messages_to_api.json")
+               print(f"DEBUG: [COMBAT] Exported compressed messages to debug/api_captures/combat_messages_to_api.json")
                
                response = client.chat.completions.create(
                    model=COMBAT_MAIN_MODEL, 

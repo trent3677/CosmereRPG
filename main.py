@@ -812,7 +812,7 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
             # Use the ParallelConversationCompressor to compress validation messages
             # This will automatically detect and compress location summaries, module contexts, etc.
             # The cache will prevent double-compression of already compressed content
-            from conversation_compressor_parallel import ParallelConversationCompressor
+            from utils.compression.conversation_compressor_parallel import ParallelConversationCompressor
             from pathlib import Path
             
             # Save validation conversation to temp file
@@ -837,9 +837,9 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
         validation_messages_to_send = validation_conversation
     
     # Export validation messages for debugging
-    with open("main_validation_messages_to_api.json", "w", encoding="utf-8") as f:
+    with open("debug/api_captures/main_validation_messages_to_api.json", "w", encoding="utf-8") as f:
         json.dump(validation_messages_to_send, f, indent=2, ensure_ascii=False)
-    print(f"DEBUG: [MAIN VALIDATION] Exported validation messages to main_validation_messages_to_api.json")
+    print(f"DEBUG: [MAIN VALIDATION] Exported validation messages to debug/api_captures/main_validation_messages_to_api.json")
     
     max_validation_retries = 3
     for attempt in range(max_validation_retries):
@@ -873,7 +873,7 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
                     "reason": reason
                 }
 
-                with open("prompt_validation.json", "a", encoding="utf-8") as log_file:
+                with open("debug/logs/prompt_validation.json", "a", encoding="utf-8") as log_file:
                     json.dump(log_entry, log_file)
                     log_file.write("\n")  # Add a newline for better readability
 
@@ -1789,7 +1789,7 @@ def get_ai_response(conversation_history, validation_retry_count=0):
         from model_config import COMPRESSION_ENABLED
         if COMPRESSION_ENABLED:
             # Use our parallel compressor with caching
-            from conversation_compressor_parallel import ParallelConversationCompressor
+            from utils.compression.conversation_compressor_parallel import ParallelConversationCompressor
             import json
             from pathlib import Path
             

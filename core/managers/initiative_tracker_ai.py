@@ -161,9 +161,9 @@ def generate_live_initiative_tracker(encounter_data, conversation_history, curre
         ]
         
         # Export initiative tracker messages for debugging (same pattern as combat/validation)
-        with open("initiative_messages_to_api.json", "w", encoding="utf-8") as f:
+        with open("debug/api_captures/initiative_messages_to_api.json", "w", encoding="utf-8") as f:
             json.dump(api_messages, f, indent=2, ensure_ascii=False)
-        print(f"DEBUG: [INITIATIVE] Exported messages to initiative_messages_to_api.json")
+        print(f"DEBUG: [INITIATIVE] Exported messages to debug/api_captures/initiative_messages_to_api.json")
         
         # Query AI model
         client = OpenAI(api_key=OPENAI_API_KEY)
@@ -179,7 +179,7 @@ def generate_live_initiative_tracker(encounter_data, conversation_history, curre
         # Append the assistant's response to the debug file
         try:
             # Read the existing debug file
-            with open("initiative_messages_to_api.json", "r", encoding="utf-8") as f:
+            with open("debug/api_captures/initiative_messages_to_api.json", "r", encoding="utf-8") as f:
                 debug_data = json.load(f)
             
             # Add the assistant's response
@@ -189,9 +189,9 @@ def generate_live_initiative_tracker(encounter_data, conversation_history, curre
             })
             
             # Write back the complete conversation including response
-            with open("initiative_messages_to_api.json", "w", encoding="utf-8") as f:
+            with open("debug/api_captures/initiative_messages_to_api.json", "w", encoding="utf-8") as f:
                 json.dump(debug_data, f, indent=2, ensure_ascii=False)
-            print(f"DEBUG: [INITIATIVE] Added assistant response to initiative_messages_to_api.json")
+            print(f"DEBUG: [INITIATIVE] Added assistant response to debug/api_captures/initiative_messages_to_api.json")
             
         except Exception as e:
             logger.error(f"Failed to append initiative response: {e}")

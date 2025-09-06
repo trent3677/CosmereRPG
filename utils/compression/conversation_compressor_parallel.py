@@ -17,8 +17,8 @@ from datetime import datetime
 
 # Import compression functions
 sys.path.append('/mnt/c/dungeon_master_v1')
-from ai_narrative_compressor_agentic import compress_with_ai
-from location_compressor import compress_location
+from utils.compression.ai_narrative_compressor_agentic import compress_with_ai
+from utils.compression.location_compressor import compress_location
 from model_config import COMPRESSION_MAX_WORKERS
 
 class ParallelConversationCompressor:
@@ -31,6 +31,7 @@ class ParallelConversationCompressor:
         self.progress_lock = threading.Lock()  # Thread safety for progress tracking
         self.completed_count = 0
         self.total_sections = 0
+        self.cache_hits = []  # Track cache hits for batch reporting
         
     def load_cache(self) -> Dict[str, Any]:
         """Load existing cache from file"""
@@ -82,7 +83,7 @@ class ParallelConversationCompressor:
         # Check cache first (thread-safe)
         with self.cache_lock:
             if cache_key in self.cache:
-                print(f"  [{idx:3d}] [CACHE HIT] {section_id}")
+                self.cache_hits.append(section_id)
                 # Update progress for cached item
                 self._update_progress(from_cache=True)
                 return (idx, section_id, full_match, self.cache[cache_key], True)  # Added from_cache flag
@@ -279,6 +280,7 @@ class ParallelConversationCompressor:
         
         # Step 3: Process sections in parallel
         results = {}
+        self.cache_hits = []  # Reset cache hits tracking
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             # Submit all tasks
             future_to_item = {executor.submit(self.compress_section, item): item for item in work_items}
@@ -288,6 +290,10 @@ class ParallelConversationCompressor:
                 result = future.result()
                 idx, section_id, full_match, compressed_data, from_cache = result
                 results[idx] = (section_id, full_match, compressed_data)
+        
+        # Report cache hits in a compact format
+        if self.cache_hits:
+            print(f"  [CACHE HITS] {len(self.cache_hits)} sections from cache: {', '.join(self.cache_hits[:5])}{' ...' if len(self.cache_hits) > 5 else ''}")
         
         # Save cache after all processing
         self.save_cache()

@@ -15,7 +15,15 @@ You are the Dungeon Master for the world's most popular roleplaying game, 5th Ed
   exitGame: end session with brief farewell; no further actions after.
   createNewModule: only AFTER in-world hooks and player interest.
   updateEncounter: modify an existing encounter.
-  updatePartyTracker: update module/area/location fields in party tracker.
+  updatePartyTracker: update module/area/location fields; use for module changes.
+  transitionLocation: move to location; only works WITHIN current module.
+}
+
+@MODULE_BOUNDARIES={
+  rule: transitionLocation fails if target in different module.
+  fix: use updatePartyTracker with module param for cross-module travel.
+  error: "Module Transition Required" means target is in different module.
+  check: verify which module location belongs to before choosing action.
 }
 
 @COMBAT={
