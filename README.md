@@ -194,11 +194,12 @@ Traditional AI systems have limited memory - typically 100-200k tokens. In a tex
 
 NeverEndingQuest implements a sophisticated compression pipeline that maintains full contextual understanding:
 
-#### 1. **Living Summary Generation**
+#### 1. **Living Summary Generation & Chronicle System**
 - Each module generates a comprehensive living summary upon exit that captures the complete adventure
 - AI analyzes the entire module conversation and creates beautifully written fantasy prose summaries
 - Living summaries are completely regenerated (not appended) on each visit to incorporate new experiences
 - Original events preserved in elevated narrative form while reducing tokens by 85-90%
+- **Chronicle Format**: Compressed histories are clearly labeled as "CHRONICLE" - these are historical records of actual gameplay, not metadata
 - **Visit Evolution**: Summaries become richer and more detailed with each return visit
 - **Single File System**: Always `[Module_Name]_summary_001.json` - never increments, always regenerates
 
@@ -736,8 +737,12 @@ AI: "The explosion engulfs three goblins..."
 │   ├── validation/         # Data validation systems
 │   └── toolkit/           # Module toolkit components
 ├── utils/                  # Utility functions and helpers
+│   └── compression/        # Token compression scripts
 ├── updates/               # State update modules
 ├── web/                   # Web interface
+├── debug/                 # Debugging and development tools
+│   ├── api_captures/      # API request/response captures
+│   └── logs/              # Debug and error logs
 ├── modules/               # Adventure modules and game data
 │   ├── conversation_history/  # All conversation files
 │   ├── campaign_archives/     # Archived module conversations
@@ -867,6 +872,23 @@ New module detected → Security scan → Content safety check → Schema valida
 - **macOS permissions**: Check file access
 - **Linux paths**: Use absolute paths
 
+### Developer Debugging
+
+#### Debug Logging
+- **API Captures**: Check `debug/api_captures/` for request/response logs
+- **Error Logs**: Review `debug/logs/` for detailed error traces
+- **Telemetry**: Analyze `telemetry_log.jsonl` for usage patterns
+
+#### Combat Debugging
+- **Ammunition Tracking**: Enable `AMMO_DEBUG` in `combat_manager.py`
+- **Combat Flow**: Monitor turn-by-turn combat logs in debug output
+- **Validation Errors**: Check AI response validation in console
+
+#### Module Transitions
+- **Cross-Module Travel**: Look for "different module" error messages
+- **Chronicle Generation**: Check `campaign_summaries/` for AI summaries
+- **Conversation Archives**: Review `campaign_archives/` for saved histories
+
 ### Getting Help
 - Check the [GitHub Issues](https://github.com/MoonlightByte/NeverEndingQuest/issues) for known problems
 - Create a new issue with your error message and system information
@@ -957,6 +979,14 @@ The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 Internation
 This is unofficial Fan Content and is not affiliated with, endorsed, sponsored, or approved by Wizards of the Coast LLC. NeverEndingQuest is an independent implementation compatible with 5th edition rules.
 
 ## Recent Updates
+
+### Version 0.2.6 - Chronicle System & Enhanced Debugging
+- **Chronicle Format** - Conversation history now shows "CHRONICLE" labels for historical adventure records
+- **Cross-Module Transitions** - Improved error messages guide AI when moving between modules
+- **File Organization** - Better project structure with dedicated debug/ and utils/compression/ directories
+- **Ammunition Tracking** - Enhanced debugging for combat ammunition management
+- **Container Reconciliation** - Automatic standardization of container names and ammunition
+- **MCP Integration** - Support for Playwright browser automation and Context7 documentation access
 
 ### Version 0.2.5 - Advanced Token Compression System
 - **Token Compression Pipeline** - 76-82% reduction per message with parallel processing
