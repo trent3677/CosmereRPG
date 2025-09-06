@@ -94,7 +94,39 @@ set_script_name("web_interface")
 
 # Set up Flask with correct template and static paths
 # Templates are in both web/templates (for game) and root templates (for toolkit)
-app = Flask(__name__)
+# Get the directory where this file is located
+current_dir = os.path.dirname(os.path.abspath(__file__))
+template_dir = os.path.join(current_dir, 'templates')
+static_dir = os.path.join(current_dir, 'static')
+
+# Debug: Print paths for troubleshooting
+print(f"Web Interface starting from: {current_dir}")
+print(f"Looking for templates in: {template_dir}")
+print(f"Looking for static files in: {static_dir}")
+
+# Ensure template directory exists
+if not os.path.exists(template_dir):
+    print(f"WARNING: Template directory not found at {template_dir}")
+    # Try alternate location
+    alt_template_dir = os.path.join(os.path.dirname(current_dir), 'templates')
+    if os.path.exists(alt_template_dir):
+        template_dir = alt_template_dir
+        print(f"Using alternate template directory: {template_dir}")
+    else:
+        print(f"ERROR: No template directory found! Checked:")
+        print(f"  - {template_dir}")
+        print(f"  - {alt_template_dir}")
+
+# Check if game_interface.html exists
+game_interface_path = os.path.join(template_dir, 'game_interface.html')
+if os.path.exists(game_interface_path):
+    print(f"Found game_interface.html at: {game_interface_path}")
+else:
+    print(f"WARNING: game_interface.html not found at: {game_interface_path}")
+
+app = Flask(__name__, 
+            template_folder=template_dir,
+            static_folder=static_dir)
 app.config['SECRET_KEY'] = 'dungeon-master-secret-key'
 socketio = SocketIO(app, cors_allowed_origins="*")
 
