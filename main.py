@@ -2970,7 +2970,11 @@ def main_game_loop():
                 # (The rest of your validation retry logic remains the same)
                 debug(f"VALIDATION: Validation failed. Reason: {validation_result}", category="ai_validation")
                 status_retrying(retry_count + 1, 5)
+                # CRITICAL: Save the failed assistant response so the AI can see what it did wrong
+                if ai_response_content:
+                    conversation_history.append({"role": "assistant", "content": ai_response_content})
                 conversation_history.append({"role": "user", "content": f"Error Note: Your previous response failed validation. Reason: {validation_result}. Please adjust your response accordingly."})
+                save_conversation_history(conversation_history)
                 retry_count += 1
             else: 
                 warning(f"VALIDATION: Unexpected validation result: {validation_result}. Assuming invalid and retrying.", category="ai_validation")
