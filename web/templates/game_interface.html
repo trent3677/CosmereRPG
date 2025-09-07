@@ -5698,15 +5698,6 @@
                             };
                         };
                     });
-                    
-                    // Silently validate the thumbnail exists
-                    const thumbImg = new Image();
-                    thumbImg.onerror = () => {
-                        // Remove background if thumbnail doesn't exist
-                        item.style.backgroundImage = '';
-                        item.style.cursor = 'default';
-                    };
-                    thumbImg.src = monsterThumbUrl;
                 }
                 
                 // Add special handling for player characters - set portrait image directly
