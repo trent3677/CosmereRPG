@@ -5623,9 +5623,46 @@
                     const monsterThumbUrl = `/static/media/monsters/${monsterType}_thumb.jpg`;
                     const monsterVideoUrl = `/static/media/monsters/${monsterType}_video.mp4`;
                     
-                    // Set thumbnail immediately (no async checking to prevent flicker)
-                    item.style.backgroundImage = `url('${monsterThumbUrl}')`;
+                    // Set thumbnail - try JPG first, then PNG
                     item.style.backgroundSize = 'cover';
+                    const thumbImg = new Image();
+                    thumbImg.onload = () => {
+                        item.style.backgroundImage = `url('${monsterThumbUrl}')`;
+                    };
+                    thumbImg.onerror = () => {
+                        // Try PNG instead
+                        const pngUrl = `/static/media/monsters/${monsterType}_thumb.png`;
+                        const pngImg = new Image();
+                        pngImg.onload = () => {
+                            item.style.backgroundImage = `url('${pngUrl}')`;
+                        };
+                        pngImg.onerror = () => {
+                            // Try with/without 's' at the end
+                            const altName = monsterType.endsWith('s') ? 
+                                monsterType.slice(0, -1) : monsterType + 's';
+                            const altUrl = `/static/media/monsters/${altName}_thumb.jpg`;
+                            const altImg = new Image();
+                            altImg.onload = () => {
+                                item.style.backgroundImage = `url('${altUrl}')`;
+                            };
+                            altImg.onerror = () => {
+                                // Try alt name with PNG
+                                const altPngUrl = `/static/media/monsters/${altName}_thumb.png`;
+                                const altPngImg = new Image();
+                                altPngImg.onload = () => {
+                                    item.style.backgroundImage = `url('${altPngUrl}')`;
+                                };
+                                altPngImg.onerror = () => {
+                                    // No thumbnail available
+                                    item.style.cursor = 'default';
+                                };
+                                altPngImg.src = altPngUrl;
+                            };
+                            altImg.src = altUrl;
+                        };
+                        pngImg.src = pngUrl;
+                    };
+                    thumbImg.src = monsterThumbUrl;
                     item.style.backgroundPosition = 'center';
                     item.style.color = 'white';
                     item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
