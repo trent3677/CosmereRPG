@@ -165,8 +165,10 @@ class AtomicFileWriter:
         try:
             # Acquire lock if requested
             if acquire_lock:
+                print(f"DEBUG: [FILE_OPS] Attempting to acquire lock for {filepath}")
                 self.acquire_lock(filepath)
                 lock_acquired = True
+                print(f"DEBUG: [FILE_OPS] Lock acquired successfully")
             
             # Create backup if requested and file exists
             if create_backup and os.path.exists(filepath):

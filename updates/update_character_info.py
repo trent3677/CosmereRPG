@@ -1501,9 +1501,19 @@ Character Role: {character_role}
             # Load existing debug log or create new one
             if os.path.exists(debug_log_file):
                 try:
-                    with open(debug_log_file, 'r') as f:
-                        debug_log = json.load(f)
-                except:
+                    # Check file size first - if it's over 10MB, just start fresh
+                    file_size = os.path.getsize(debug_log_file)
+                    if file_size > 10 * 1024 * 1024:  # 10MB limit
+                        print(f"DEBUG: Character updates log too large ({file_size} bytes), starting fresh")
+                        debug_log = {"updates": []}
+                    else:
+                        with open(debug_log_file, 'r') as f:
+                            debug_log = json.load(f)
+                            # Immediately trim to last 20 entries when loading
+                            if len(debug_log.get("updates", [])) > 20:
+                                debug_log["updates"] = debug_log["updates"][-20:]
+                except Exception as e:
+                    print(f"DEBUG: Error loading debug log: {e}")
                     debug_log = {"updates": []}
             else:
                 debug_log = {"updates": []}
@@ -1727,7 +1737,27 @@ Please provide the CORRECT currency values:
             if 'experience_points' in updated_data:
                 print(f"DEBUG: [XP Save] About to save {character_name} with XP: {updated_data.get('experience_points')}")
             
-            if safe_write_json(character_path, updated_data):
+            # Enhanced debugging for save failures
+            print(f"DEBUG: [SAVE] Attempting to save {character_name} to {character_path}")
+            print(f"DEBUG: [SAVE] File exists: {os.path.exists(character_path)}")
+            
+            # Check for lock files that might block the save
+            lock_file = f"{character_path}.lock"
+            if os.path.exists(lock_file):
+                print(f"DEBUG: [SAVE] WARNING - Lock file exists: {lock_file}")
+                try:
+                    lock_age = time.time() - os.path.getmtime(lock_file)
+                    print(f"DEBUG: [SAVE] Lock file age: {lock_age:.2f} seconds")
+                    with open(lock_file, 'r') as f:
+                        lock_pid = f.read().strip()
+                        print(f"DEBUG: [SAVE] Lock held by PID: {lock_pid}")
+                except Exception as e:
+                    print(f"DEBUG: [SAVE] Could not read lock file: {e}")
+            
+            save_result = safe_write_json(character_path, updated_data)
+            print(f"DEBUG: [SAVE] safe_write_json returned: {save_result}")
+            
+            if save_result:
                 # print(f"[DEBUG] Character data saved successfully!")
                 info(f"SUCCESS: Successfully updated {character_name} ({character_role})!", category="character_updates")
                 
@@ -1742,9 +1772,9 @@ Please provide the CORRECT currency values:
                 
                 # Add to consolidated debug log
                 debug_log["updates"].append(debug_data)
-                # Keep only last 100 entries to prevent file from growing too large
-                if len(debug_log["updates"]) > 100:
-                    debug_log["updates"] = debug_log["updates"][-100:]
+                # Keep only last 20 entries to prevent file from growing too large
+                if len(debug_log["updates"]) > 20:
+                    debug_log["updates"] = debug_log["updates"][-20:]
                 safe_write_json(debug_log_file, debug_log)
                 debug(f"Debug log updated: {debug_log_file}", category="character_updates")
                 
