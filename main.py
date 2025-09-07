@@ -582,9 +582,8 @@ def create_module_validation_context(party_tracker_data, path_manager):
             if all_accessible_locations:
                 # Sort by area for clarity
                 all_accessible_locations.sort()
-                validation_context += "\n".join([f"- {loc}" for loc in all_accessible_locations[:50]])  # Limit to first 50 to avoid huge context
-                if len(all_accessible_locations) > 50:
-                    validation_context += f"\n... and {len(all_accessible_locations) - 50} more locations"
+                # Include all locations since we only have ~78 total which is manageable
+                validation_context += "\n".join([f"- {loc}" for loc in all_accessible_locations])
             else:
                 validation_context += "- No locations found in location graph"
             validation_context += "\n\n"
@@ -766,9 +765,9 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
                     success, path, message = location_graph.find_path(current_origin, destination)
                     
                     if success:
-                        path_info = f"The party is currently at {current_origin} and desires to travel to {destination}. The path of travel is: {' -> '.join(path)}."
+                        path_info = f"The party is currently at {current_origin} and desires to travel to {destination}. VALID PATH FOUND. The path of travel is: {' -> '.join(path)}."
                     else:
-                        path_info = f"The party is currently at {current_origin} and desires to travel to {destination}. WARNING: {message}"
+                        path_info = f"The party is currently at {current_origin} and desires to travel to {destination}. INVALID PATH: {message}"
                 
                 # Add path validation to location details
                 location_details += f"\n\nPath Validation: {path_info}"
