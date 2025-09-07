@@ -2627,7 +2627,7 @@ Player: {initial_prompt_text}"""
        else:
            # Tracker is required for proper combat flow
            error("AI_TRACKER: Failed to generate initiative tracker - combat cannot proceed properly", category="combat_events")
-           return None  # Exit early if tracker fails
+           return None, None  # Exit early if tracker fails
        
        # Get the player's name from encounter data or turn_window JSON
        player_character_name = None
