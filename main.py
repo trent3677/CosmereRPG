@@ -532,12 +532,12 @@ def create_module_validation_context(party_tracker_data, path_manager):
             with open(area_file, "r", encoding="utf-8") as file:
                 area_data = json.load(file)
             
-            valid_locations = []
+            valid_location_ids = []
             for location in area_data.get("locations", []):
                 loc_id = location.get("locationId", "")
                 loc_name = location.get("name", "")
-                if loc_id and loc_name:
-                    valid_locations.append(f"{loc_id} ({loc_name})")
+                if loc_id:
+                    valid_location_ids.append(loc_id)
                     
                     # Track NPCs by location
                     location_npcs = [npc.get("name") for npc in location.get("npcs", []) if npc.get("name")]
@@ -555,11 +555,12 @@ def create_module_validation_context(party_tracker_data, path_manager):
                 if npc_name and npc_name not in current_location_npcs:
                     current_location_npcs.append(npc_name)
             
-            validation_context += f"VALID LOCATIONS in current area ({current_area_id}):\n"
-            if valid_locations:
-                validation_context += "\n".join([f"- {loc}" for loc in valid_locations])
+            # Just list the location IDs for current area since full details are below
+            validation_context += f"Current area ({current_area_id}) location IDs: "
+            if valid_location_ids:
+                validation_context += ", ".join(valid_location_ids)
             else:
-                validation_context += "- No locations found"
+                validation_context += "None found"
             validation_context += "\n\n"
                 
         except (FileNotFoundError, json.JSONDecodeError):
