@@ -493,35 +493,25 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
     current_location_id = party_tracker_data["worldConditions"]["currentLocationId"] if party_tracker_data else None
 
     # Insert atlas data BEFORE map data for navigation context
-    # First, check if atlas exists in either new_history or original conversation_history
+    # Always rebuild atlas fresh to ensure it reflects current area data
     atlas_exists = False
     
-    # Check new_history for atlas
+    # Check new_history for atlas and remove any existing ones
     atlas_indices_new = []
     for i, msg in enumerate(new_history):
         if msg.get("role") == "system" and "COMPLETE MODULE WORLD ATLAS" in msg.get("content", ""):
             atlas_indices_new.append(i)
     
-    # Check original conversation_history for atlas (to avoid re-adding)
-    for msg in conversation_history:
-        if msg.get("role") == "system" and "COMPLETE MODULE WORLD ATLAS" in msg.get("content", ""):
-            atlas_exists = True
-            debug(f"Atlas already exists in original conversation history, skipping")
-            break
-    
-    # If we have duplicates in new_history, remove all but the first
-    if len(atlas_indices_new) > 1:
-        debug(f"Found {len(atlas_indices_new)} atlas copies in new_history, removing {len(atlas_indices_new) - 1} duplicates")
+    # Remove ALL existing atlas entries from new_history (we'll add a fresh one)
+    if atlas_indices_new:
+        debug(f"Found {len(atlas_indices_new)} existing atlas entries in new_history, removing all to rebuild fresh")
         # Remove from back to front to preserve indices
-        for idx in reversed(atlas_indices_new[1:]):
+        for idx in reversed(atlas_indices_new):
             del new_history[idx]
-        atlas_exists = True
-    elif len(atlas_indices_new) == 1:
-        atlas_exists = True
-        debug(f"Atlas already exists in new_history, skipping duplicate")
     
+    # Always rebuild the atlas with current data
     current_module_name = party_tracker_data.get("module", "").replace(" ", "_") if party_tracker_data else None
-    if current_module_name and not atlas_exists:
+    if current_module_name:
         try:
             atlas = build_atlas_for_module(current_module_name)
             if atlas and atlas.get("areas"):
