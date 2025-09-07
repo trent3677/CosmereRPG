@@ -2704,6 +2704,44 @@ turn_window: {json.dumps(turn_window_json.get('turn_window', []))}
                    ac_block += f"{name}: {ac_values[name]}\n"
            ac_block += "\n"
        
+       # Check if all monsters are defeated
+       def check_all_monsters_defeated(encounter):
+           """Check if all monsters/enemies have 0 or negative HP"""
+           if not encounter or 'combatants' not in encounter:
+               return False
+           
+           has_monsters = False
+           all_defeated = True
+           
+           for combatant in encounter['combatants']:
+               # Check if this is a monster/enemy (not player or allied NPC)
+               if combatant.get('type') == 'enemy':
+                   has_monsters = True
+                   current_hp = combatant.get('hitPoints', 0)
+                   if current_hp > 0:
+                       all_defeated = False
+                       break
+           
+           # Only return True if there were monsters and all are defeated
+           return has_monsters and all_defeated
+       
+       # Determine the required response based on combat state
+       all_monsters_defeated = check_all_monsters_defeated(encounter_data)
+       if all_monsters_defeated:
+           debug("COMBAT_AUTO_EXIT: All monsters defeated, modifying required response", category="combat_events")
+           print("[COMBAT_MANAGER] Auto-detecting combat end: All enemies defeated")
+           required_response = """--- REQUIRED RESPONSE ---
+All monsters have been defeated. Pass the exit action to end combat:
+1. Return structured JSON with plan, narration, combat_round, and actions
+2. Include exit action with encounterId and reason: 'All enemies defeated'"""
+       else:
+           required_response = """--- REQUIRED RESPONSE ---
+1. Narrate and resolve actions for all NPCs/monsters in initiative order until:
+   - The LAST creature in this round has acted, OR
+   - Initiative returns to the player
+2. Stop narration at that point
+3. Return structured JSON with plan, narration, combat_round, and actions"""
+       
        # The tracker now always provides properly formatted output with ROUND INFO
        # Don't duplicate sections - use the tracker output as-is
        user_input_with_note = f"""{marked_initiative_display}
@@ -2730,12 +2768,7 @@ Rules:
 --- PLAYER ACTION ---
 {user_input_text}
 
---- REQUIRED RESPONSE ---
-1. Narrate and resolve actions for all NPCs/monsters in initiative order until:
-   - The LAST creature in this round has acted, OR
-   - Initiative returns to the player
-2. Stop narration at that point
-3. Return structured JSON with plan, narration, combat_round, and actions"""
+{required_response}"""
        
        # Clean old DM notes and combat state blocks before adding new user input
        conversation_history = clean_old_dm_notes(conversation_history)
