@@ -1301,14 +1301,17 @@ def format_character_for_combat(char_data, char_type="player", role=None):
     Returns:
         Formatted string matching conversation_utils format
     """
-    # Get equipment string
+    # Get equipment string - include ALL items with quantities (not just equipped)
     equipment_str = "None"
     if char_data.get('equipment'):
-        equipped_items = [f"{item['item_name']} ({item['item_type']})" 
-                         for item in char_data['equipment'] 
-                         if item.get('equipped', False)]
-        if equipped_items:
-            equipment_str = ", ".join(equipped_items)
+        equipment_list = []
+        for item in char_data['equipment']:
+            item_description = f"{item['item_name']} ({item['item_type']})"
+            if item.get('quantity', 1) > 1:
+                item_description = f"{item_description} x{item['quantity']}"
+            equipment_list.append(item_description)
+        if equipment_list:
+            equipment_str = ", ".join(equipment_list)
     
     # Get background feature name
     bg_feature_name = "None"
@@ -1379,7 +1382,6 @@ VULN: {', '.join(char_data.get('damageVulnerabilities', []))}
 RES: {', '.join(char_data.get('damageResistances', []))}
 IMM: {', '.join(char_data.get('damageImmunities', []))}
 COND IMM: {', '.join(char_data.get('conditionImmunities', []))}
-CLASS FEAT: {', '.join([f['name'] for f in char_data.get('classFeatures', [])])}
 RACIAL: {', '.join([t['name'] for t in char_data.get('racialTraits', [])])}
 BG FEAT: {bg_feature_name}
 FEATS: {', '.join([f['name'] for f in char_data.get('feats', [])])}
@@ -1437,14 +1439,17 @@ def format_npc_for_combat(npc_data, npc_role=None):
     Returns:
         Formatted string matching conversation_utils format
     """
-    # Get equipment string
+    # Get equipment string - include ALL items with quantities (not just equipped)
     equipment_str = "None"
     if npc_data.get('equipment'):
-        equipped_items = [f"{item['item_name']} ({item['item_type']})" 
-                         for item in npc_data['equipment'] 
-                         if item.get('equipped', False)]
-        if equipped_items:
-            equipment_str = ", ".join(equipped_items)
+        equipment_list = []
+        for item in npc_data['equipment']:
+            item_description = f"{item['item_name']} ({item['item_type']})"
+            if item.get('quantity', 1) > 1:
+                item_description = f"{item_description} x{item['quantity']}"
+            equipment_list.append(item_description)
+        if equipment_list:
+            equipment_str = ", ".join(equipment_list)
     
     # Get background feature name
     bg_feature_name = "None"
@@ -1507,7 +1512,6 @@ VULN: {', '.join(npc_data.get('damageVulnerabilities', []))}
 RES: {', '.join(npc_data.get('damageResistances', []))}
 IMM: {', '.join(npc_data.get('damageImmunities', []))}
 COND IMM: {', '.join(npc_data.get('conditionImmunities', []))}
-CLASS FEAT: {', '.join([f['name'] for f in npc_data.get('classFeatures', [])])}
 RACIAL: {', '.join([t['name'] for t in npc_data.get('racialTraits', [])])}
 BG FEAT: {bg_feature_name}
 FEATS: {', '.join([f['name'] for f in npc_data.get('feats', [])])}
@@ -2464,8 +2468,16 @@ Player: {initial_prompt_text}"""
            player_condition = player_info.get("condition", "none")
            player_conditions = player_info.get("condition_affected", [])
        
+       # Extract class features from player
+       class_features_names = []
+       if fresh_player_data:
+           class_features = fresh_player_data.get("classFeatures", [])
+           class_features_names = [f.get("name", "") for f in class_features if f.get("name")]
+       
        # Build compact state line
        state_line = f"{player_name_display}: HP {current_hp}/{max_hp}, {player_status}"
+       if class_features_names:
+           state_line += f", Class Features: {', '.join(class_features_names)}"
        if player_condition != "none":
            state_line += f", {player_condition}"
        if player_conditions:
@@ -2513,6 +2525,15 @@ Player: {initial_prompt_text}"""
                
                # Build compact creature state line
                creature_line = f"{creature_name}: HP {creature_hp}/{creature_max_hp}, {creature_status}"
+               
+               # Add class features for NPCs (party members might have important abilities)
+               if creature["type"] == "npc" and npc_data:
+                   npc_class_features = npc_data.get("classFeatures", [])
+                   if npc_class_features:
+                       npc_features_names = [f.get("name", "") for f in npc_class_features if f.get("name")]
+                       if npc_features_names:
+                           creature_line += f", Class Features: {', '.join(npc_features_names)}"
+               
                if creature_condition != "none":
                    creature_line += f", {creature_condition}"
                
