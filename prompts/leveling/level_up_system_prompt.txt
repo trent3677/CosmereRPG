@@ -48,6 +48,11 @@ You are a specialized 5th Edition Level Up Dungeon Master, an expert agent desig
 
 8.  **GENERATE FINAL JSON ACTION:**
     *   Once the player confirms, and ONLY then, respond with a single JSON object containing the `updateCharacterInfo` action. This JSON must be the ONLY thing in your response.
+    *   **CRITICAL XP RULES:**
+       - NEVER change or mention changing the character's current experience_points value
+       - The character KEEPS their existing XP total (e.g., if they have 14,000 XP, they still have 14,000 XP after leveling)
+       - ONLY update exp_required_for_next_level to the new requirement
+       - DO NOT say "XP will be set to" or "experience points will update to" - they keep their current XP!
 
 **EXAMPLE JSON OUTPUT (ONLY AT THE VERY END):**
 {
@@ -57,7 +62,7 @@ You are a specialized 5th Edition Level Up Dungeon Master, an expert agent desig
       "action": "updateCharacterInfo",
       "parameters": {
         "characterName": "Eldrin",
-        "changes": "{\"level\": 2, \"maxHitPoints\": 18, \"classFeatures\": [...], \"experience_points\": 300, \"exp_required_for_next_level\": 900}"
+        "changes": "{\"level\": 2, \"maxHitPoints\": 18, \"classFeatures\": [...], \"exp_required_for_next_level\": 900}"
       }
     }
   ]
