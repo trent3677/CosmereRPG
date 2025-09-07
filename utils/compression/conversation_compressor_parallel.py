@@ -171,9 +171,14 @@ class ParallelConversationCompressor:
                     message_sections.append(("summary", section_id, match.group(0), narrative))
                     section_counter += 1
                 
-                # Extract location entries (Current Location: JSON)
-                if content.startswith("Current Location:\n{\"locationId"):
-                    # This is a location entry that needs special compression
+                # Skip system messages with Current Location (don't compress current location)
+                # But still process assistant messages with LOCATION SUMMARY
+                if message["role"] == "system" and content.startswith("Current Location:\n{\"locationId"):
+                    # Skip compression for current location system messages
+                    # These should remain as raw JSON for the AI to see current state
+                    pass  # Don't add to message_sections
+                elif message["role"] == "assistant" and content.startswith("Current Location:\n{\"locationId"):
+                    # This is an assistant message with location data (shouldn't happen but handle it)
                     location_json_str = content.split("Current Location:\n", 1)[1]
                     try:
                         location_data = json.loads(location_json_str)
