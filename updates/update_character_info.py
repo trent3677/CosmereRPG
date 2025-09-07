@@ -1214,6 +1214,14 @@ Your primary goal is to generate the smallest possible valid JSON object that re
 
 **CRITICAL: The examples above are for learning purposes only. Do NOT include example JSON in your response. Only return the specific updates needed for the requested changes.**
 
+**HEALING AND DAMAGE CALCULATIONS:**
+- When a character "regains X hit points" or "is healed for X hit points": ADD X to their current hitPoints value (capped at maxHitPoints)
+- When a character "takes X damage" or "loses X hit points": SUBTRACT X from their current hitPoints value (minimum 0)
+- NEVER return the current HP value when healing is mentioned - always calculate the new value
+- Example: If character has 22 HP and "regains 13 hit points", return {{"hitPoints": 35}} NOT {{"hitPoints": 22}}
+- Example: If character has 31 HP out of 40 max and "regains 13 hit points", return {{"hitPoints": 40}} (capped at max)
+- Always respect maxHitPoints as the upper limit for healing
+
 {schema_info}
 
 MAGICAL ITEM RECOGNITION - AUTOMATIC EFFECTS:
@@ -1613,7 +1621,15 @@ Please provide the CORRECT currency values:
                     # The improved prompting should prevent calculation errors
                     # We allow the transaction to proceed per the agentic approach
             
+            # Debug HP changes BEFORE merge
+            if 'hitPoints' in updates:
+                debug(f"HP_DEBUG: {character_name} - Before merge HP: {character_data.get('hitPoints')}/{character_data.get('maxHitPoints')}, Update wants HP: {updates.get('hitPoints')}", category="character_updates")
+            
             updated_data = deep_merge_dict(character_data, updates)
+            
+            # Debug HP changes AFTER merge
+            if 'hitPoints' in updates:
+                debug(f"HP_DEBUG: {character_name} - After merge HP: {updated_data.get('hitPoints')}/{updated_data.get('maxHitPoints')}", category="character_updates")
             
             # print(f"[DEBUG] deep_merge_dict completed successfully")
             
@@ -1714,6 +1730,11 @@ Please provide the CORRECT currency values:
             if safe_write_json(character_path, updated_data):
                 # print(f"[DEBUG] Character data saved successfully!")
                 info(f"SUCCESS: Successfully updated {character_name} ({character_role})!", category="character_updates")
+                
+                # Debug HP after save
+                if 'hitPoints' in updates:
+                    saved_data = safe_read_json(character_path)
+                    debug(f"HP_DEBUG: {character_name} - After save HP: {saved_data.get('hitPoints')}/{saved_data.get('maxHitPoints')}", category="character_updates")
                 
                 # Update debug data with success
                 debug_data["final_outcome"] = "success"
