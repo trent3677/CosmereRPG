@@ -1302,11 +1302,12 @@ def format_character_for_combat(char_data, char_type="player", role=None):
         Formatted string matching conversation_utils format
     """
     # Get equipment string - include ALL items with quantities (not just equipped)
+    # Don't include item type in parentheses for combat - wastes tokens
     equipment_str = "None"
     if char_data.get('equipment'):
         equipment_list = []
         for item in char_data['equipment']:
-            item_description = f"{item['item_name']} ({item['item_type']})"
+            item_description = item['item_name']
             if item.get('quantity', 1) > 1:
                 item_description = f"{item_description} x{item['quantity']}"
             equipment_list.append(item_description)
@@ -1440,11 +1441,12 @@ def format_npc_for_combat(npc_data, npc_role=None):
         Formatted string matching conversation_utils format
     """
     # Get equipment string - include ALL items with quantities (not just equipped)
+    # Don't include item type in parentheses for combat - wastes tokens
     equipment_str = "None"
     if npc_data.get('equipment'):
         equipment_list = []
         for item in npc_data['equipment']:
-            item_description = f"{item['item_name']} ({item['item_type']})"
+            item_description = item['item_name']
             if item.get('quantity', 1) > 1:
                 item_description = f"{item_description} x{item['quantity']}"
             equipment_list.append(item_description)
