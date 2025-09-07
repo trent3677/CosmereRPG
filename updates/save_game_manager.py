@@ -193,6 +193,11 @@ class SaveGameManager:
             "*_backup_*",
             "modules/backups/",
             
+            # CRITICAL: Exclude save directories to prevent recursive nesting
+            "saved_games/",
+            "*/saved_games/*",
+            "save_20*",  # Exclude any save folders
+            
             # Temporary files
             "*.tmp",
             "*.bak",
@@ -376,9 +381,15 @@ class SaveGameManager:
                 if save_path in root:
                     continue
                 
+                # Skip any saved_games directories to prevent recursive nesting
+                if "saved_games" in root or "save_20" in root:
+                    continue
+                
                 # Skip directories that should be excluded
                 dirs[:] = [d for d in dirs if not any(
-                    d.startswith(pattern[:-1]) if pattern.endswith("*") else d == pattern 
+                    d == "saved_games" or 
+                    d.startswith("save_20") or
+                    (d.startswith(pattern[:-1]) if pattern.endswith("*") else d == pattern)
                     for pattern in self.get_excluded_patterns() 
                     if "/" not in pattern
                 )]
