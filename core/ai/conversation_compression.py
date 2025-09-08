@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2024 MoonlightByte
+# SPDX-License-Identifier: Fair-Source-1.0
+# License: See LICENSE file in the repository root
 """
 Real-time conversation compression before API calls.
 Compresses specific elements in the conversation history to reduce token usage.

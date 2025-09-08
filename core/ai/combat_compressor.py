@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2024 MoonlightByte
+# SPDX-License-Identifier: Fair-Source-1.0
+# License: See LICENSE file in the repository root
 """
 Combat user message compressor with parallel processing and caching.
 Compresses combat messages in conversation history for AI consumption only.

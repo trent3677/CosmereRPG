@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: 2024 MoonlightByte
+# SPDX-License-Identifier: Fair-Source-1.0
+# License: See LICENSE file in the repository root
 """
 AI-powered narrative compressor using GPT-4.1-mini (Agentic approach)
 Converts fantasy narrative to ultra-compact EVT notation format
