@@ -34,12 +34,7 @@ import time
 def create_default_party_tracker():
     """Create a default party_tracker.json if it doesn't exist"""
     if not os.path.exists('party_tracker.json'):
-        default_tracker = {
-            "module": "",
-            "partyMembers": [],
-            "partyNPCs": [],
-            "worldConditions": {}
-        }
+        default_tracker = {}
         
         try:
             import json
