@@ -484,6 +484,46 @@ def serve_portrait(filename):
         return send_file(portrait_path, mimetype='image/png')
     return "Not found", 404
 
+@app.route('/media/<media_type>/<path:filename>')
+def serve_module_media(media_type, filename):
+    """
+    Smart media endpoint that checks module-specific media first, then falls back to static.
+    Priority order:
+    1. modules/[current_module]/media/[type]/[filename]
+    2. web/static/media/[type]/[filename]
+    
+    media_type: 'monsters', 'npcs', or 'environment'
+    filename: the requested file (e.g., 'goblin_thumb.jpg', 'grimjaw_video.mp4')
+    """
+    import mimetypes
+    from flask import send_file
+    from utils.file_operations import safe_read_json
+    
+    # Validate media type
+    if media_type not in ['monsters', 'npcs', 'environment']:
+        return "Invalid media type", 404
+    
+    # Determine current module from party tracker
+    current_module = None
+    party_data = safe_read_json('party_tracker.json')
+    if party_data and 'module_name' in party_data:
+        current_module = party_data['module_name']
+    
+    # Priority 1: Check module-specific media folder if we have a current module
+    if current_module:
+        module_media_path = os.path.join('modules', current_module, 'media', media_type, filename)
+        if os.path.exists(module_media_path):
+            mimetype, _ = mimetypes.guess_type(module_media_path)
+            return send_file(os.path.abspath(module_media_path), mimetype=mimetype)
+    
+    # Priority 2: Fall back to static media folder
+    static_media_path = os.path.join(os.path.dirname(__file__), 'static', 'media', media_type, filename)
+    if os.path.exists(static_media_path):
+        mimetype, _ = mimetypes.guess_type(static_media_path)
+        return send_file(static_media_path, mimetype=mimetype)
+    
+    return "Media not found", 404
+
 @app.route('/get_character_data')
 def get_character_data():
     """Get character data including class for NPC portraits."""

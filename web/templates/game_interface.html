@@ -5620,8 +5620,9 @@
                 if (combatant.type === 'enemy' && combatant.monsterType) {
                     // Use the monsterType field for lookup
                     const monsterType = combatant.monsterType.toLowerCase();
-                    const monsterThumbUrl = `/static/media/monsters/${monsterType}_thumb.jpg`;
-                    const monsterVideoUrl = `/static/media/monsters/${monsterType}_video.mp4`;
+                    // Use new smart media endpoint that checks module folder first
+                    const monsterThumbUrl = `/media/monsters/${monsterType}_thumb.jpg`;
+                    const monsterVideoUrl = `/media/monsters/${monsterType}_video.mp4`;
                     
                     // Set thumbnail - try JPG first, then PNG
                     item.style.backgroundSize = 'cover';
@@ -5631,7 +5632,7 @@
                     };
                     thumbImg.onerror = () => {
                         // Try PNG instead
-                        const pngUrl = `/static/media/monsters/${monsterType}_thumb.png`;
+                        const pngUrl = `/media/monsters/${monsterType}_thumb.png`;
                         const pngImg = new Image();
                         pngImg.onload = () => {
                             item.style.backgroundImage = `url('${pngUrl}')`;
@@ -5640,14 +5641,14 @@
                             // Try with/without 's' at the end
                             const altName = monsterType.endsWith('s') ? 
                                 monsterType.slice(0, -1) : monsterType + 's';
-                            const altUrl = `/static/media/monsters/${altName}_thumb.jpg`;
+                            const altUrl = `/media/monsters/${altName}_thumb.jpg`;
                             const altImg = new Image();
                             altImg.onload = () => {
                                 item.style.backgroundImage = `url('${altUrl}')`;
                             };
                             altImg.onerror = () => {
                                 // Try alt name with PNG
-                                const altPngUrl = `/static/media/monsters/${altName}_thumb.png`;
+                                const altPngUrl = `/media/monsters/${altName}_thumb.png`;
                                 const altPngImg = new Image();
                                 altPngImg.onload = () => {
                                     item.style.backgroundImage = `url('${altPngUrl}')`;
@@ -5680,12 +5681,12 @@
                         video.onerror = () => {
                             // Video failed, try full-size JPG image
                             const imgJpg = new Image();
-                            imgJpg.src = `/static/media/monsters/${monsterType}.jpg`;
+                            imgJpg.src = `/media/monsters/${monsterType}.jpg`;
                             imgJpg.onload = () => showImagePopup(item, imgJpg.src);
                             imgJpg.onerror = () => {
                                 // JPG failed, try PNG image
                                 const imgPng = new Image();
-                                imgPng.src = `/static/media/monsters/${monsterType}.png`;
+                                imgPng.src = `/media/monsters/${monsterType}.png`;
                                 imgPng.onload = () => showImagePopup(item, imgPng.src);
                                 imgPng.onerror = () => {
                                     // No media available, show the thumbnail if it exists
@@ -5730,7 +5731,8 @@
                     
                     // First try NPC-specific thumbnail (static approach to avoid flicker)
                     // Assume if there's a thumbnail, there might be a video
-                    let portraitUrl = `/static/media/npcs/${npcFilename}_thumb.jpg`;
+                    // Use new smart media endpoint that checks module folder first
+                    let portraitUrl = `/media/npcs/${npcFilename}_thumb.jpg`;
                     let fallbackPortrait = '/static/media/class_portraits/default_npc.png';
                     
                     // Determine class-based fallback portrait
@@ -5768,7 +5770,7 @@
                     
                     // Always try to add video hover for NPCs (will silently fail if no video)
                     item.style.cursor = 'pointer';
-                    const npcVideoUrl = `/static/media/npcs/${npcFilename}_video.mp4`;
+                    const npcVideoUrl = `/media/npcs/${npcFilename}_video.mp4`;
                     
                     // NEW: Always add stats tooltip on hover
                     item.addEventListener('mouseenter', showStatsTooltip);
@@ -5852,7 +5854,7 @@
                     item.classList.add(isLocationNpc ? 'location-npc-item' : 'party-member-item', member.type);
                     
                     const cleanName = member.name.toLowerCase().replace(/\s+/g, '_').replace(/'/g, "");
-                    const basePath = member.type === 'player' ? `/static/portraits/${cleanName}` : `/static/media/npcs/${cleanName}`;
+                    const basePath = member.type === 'player' ? `/static/portraits/${cleanName}` : `/media/npcs/${cleanName}`;
                     const thumbUrl = member.type === 'player' ? `${basePath}.png` : `${basePath}_thumb.jpg`;
                     const videoUrl = `${basePath}_video.mp4`;
 

@@ -403,13 +403,18 @@ MODULE INDEPENDENCE RULES:
         """Create all required module directories"""
         required_dirs = ["characters", "monsters", "encounters", "areas"]
         
-        for dir_name in required_dirs:
+        # Add media directories for module-specific assets
+        media_dirs = ["media", "media/monsters", "media/npcs", "media/environment"]
+        
+        all_dirs = required_dirs + media_dirs
+        
+        for dir_name in all_dirs:
             dir_path = os.path.join(self.config.output_directory, dir_name)
             os.makedirs(dir_path, exist_ok=True)
             self.log(f"Created directory: {dir_name}/")
         
         # Create empty .gitkeep files to preserve directory structure
-        for dir_name in required_dirs:
+        for dir_name in all_dirs:
             gitkeep_path = os.path.join(self.config.output_directory, dir_name, ".gitkeep")
             if not os.path.exists(gitkeep_path):
                 with open(gitkeep_path, 'w') as f:
