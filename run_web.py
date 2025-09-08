@@ -35,21 +35,10 @@ def create_default_party_tracker():
     """Create a default party_tracker.json if it doesn't exist"""
     if not os.path.exists('party_tracker.json'):
         default_tracker = {
-            "module": "Keep_of_Doom",
+            "module": "",
             "partyMembers": [],
             "partyNPCs": [],
-            "worldConditions": {
-                "currentLocationId": "B01",
-                "currentAreaId": "AR001",
-                "currentArea": "Keep Gates",
-                "currentLocation": "Main Gate",
-                "weather": "clear",
-                "dayNight": "day",
-                "year": 1,
-                "day": 1,
-                "timeOfDay": "morning",
-                "activeCombatEncounter": None
-            }
+            "worldConditions": {}
         }
         
         try:
