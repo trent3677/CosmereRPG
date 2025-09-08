@@ -936,6 +936,7 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
         validation_messages_to_send = validation_conversation
     
     # Export validation messages for debugging
+    os.makedirs("debug/api_captures", exist_ok=True)
     with open("debug/api_captures/main_validation_messages_to_api.json", "w", encoding="utf-8") as f:
         json.dump(validation_messages_to_send, f, indent=2, ensure_ascii=False)
     print(f"DEBUG: [MAIN VALIDATION] Exported validation messages to debug/api_captures/main_validation_messages_to_api.json")
