@@ -31,6 +31,38 @@ import sys
 import os
 import time
 
+def create_default_party_tracker():
+    """Create a default party_tracker.json if it doesn't exist"""
+    if not os.path.exists('party_tracker.json'):
+        default_tracker = {
+            "module": "Keep_of_Doom",
+            "partyMembers": [],
+            "partyNPCs": [],
+            "worldConditions": {
+                "currentLocationId": "B01",
+                "currentAreaId": "AR001",
+                "currentArea": "Keep Gates",
+                "currentLocation": "Main Gate",
+                "weather": "clear",
+                "dayNight": "day",
+                "year": 1,
+                "day": 1,
+                "timeOfDay": "morning",
+                "activeCombatEncounter": None
+            }
+        }
+        
+        try:
+            import json
+            with open('party_tracker.json', 'w', encoding='utf-8') as f:
+                json.dump(default_tracker, f, indent=2, ensure_ascii=False)
+            print("[INFO] Created default party_tracker.json for first-time setup")
+            return True
+        except Exception as e:
+            print(f"[ERROR] Could not create party_tracker.json: {e}")
+            return False
+    return True
+
 def main():
     import shutil
     
@@ -59,6 +91,10 @@ def main():
             print("Please manually copy config_template.py to config.py")
             input("\nPress Enter to exit...")
             return
+    
+    # Create default party_tracker.json if it doesn't exist
+    if not create_default_party_tracker():
+        print("[WARNING] Could not create party_tracker.json - some features may not work")
     
     # Initialize all required directories
     required_dirs = [
