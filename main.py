@@ -3068,38 +3068,38 @@ def main():
         if not os.path.exists(dir_path):
             os.makedirs(dir_path, exist_ok=True)
     
-    # Create empty party tracker if it doesn't exist (in root directory)
-    party_tracker_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'party_tracker.json')
-    if not os.path.exists(party_tracker_path):
-        empty_party_tracker = {
-            "module": "",
-            "partyMembers": [],
-            "partyNPCs": [],
-            "worldConditions": {
-                "year": 1492,
-                "month": "Springmonth",
-                "day": 1,
-                "time": "08:00:00",
-                "weather": "",
-                "season": "Spring",
-                "dayNightCycle": "Day",
-                "moonPhase": "New Moon",
-                "currentLocation": "",
-                "currentLocationId": "",
-                "currentArea": "",
-                "currentAreaId": "",
-                "majorEventsUnderway": [],
-                "politicalClimate": "",
-                "activeEncounter": "",
-                "activeCombatEncounter": ""
-            }
-        }
-        try:
-            with open(party_tracker_path, 'w', encoding='utf-8') as f:
-                json.dump(empty_party_tracker, f, indent=2)
-            print(f"[INFO] Created empty party_tracker.json in root directory for first-time setup")
-        except Exception as e:
-            print(f"[WARNING] Could not create party_tracker.json in root: {e}")
+    # DISABLED FOR DEBUGGING - Create empty party tracker if it doesn't exist (in root directory)
+    # party_tracker_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'party_tracker.json')
+    # if not os.path.exists(party_tracker_path):
+    #     empty_party_tracker = {
+    #         "module": "",
+    #         "partyMembers": [],
+    #         "partyNPCs": [],
+    #         "worldConditions": {
+    #             "year": 1492,
+    #             "month": "Springmonth",
+    #             "day": 1,
+    #             "time": "08:00:00",
+    #             "weather": "",
+    #             "season": "Spring",
+    #             "dayNightCycle": "Day",
+    #             "moonPhase": "New Moon",
+    #             "currentLocation": "",
+    #             "currentLocationId": "",
+    #             "currentArea": "",
+    #             "currentAreaId": "",
+    #             "majorEventsUnderway": [],
+    #             "politicalClimate": "",
+    #             "activeEncounter": "",
+    #             "activeCombatEncounter": ""
+    #         }
+    #     }
+    #     try:
+    #         with open(party_tracker_path, 'w', encoding='utf-8') as f:
+    #             json.dump(empty_party_tracker, f, indent=2)
+    #         print(f"[INFO] Created empty party_tracker.json in root directory for first-time setup")
+    #     except Exception as e:
+    #         print(f"[WARNING] Could not create party_tracker.json in root: {e}")
     
     # Always initialize game files from BU templates if needed
     from utils.startup_wizard import initialize_game_files_from_bu

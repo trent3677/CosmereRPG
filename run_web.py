@@ -76,9 +76,9 @@ def main():
             input("\nPress Enter to exit...")
             return
     
-    # Create default party_tracker.json if it doesn't exist
-    if not create_default_party_tracker():
-        print("[WARNING] Could not create party_tracker.json - some features may not work")
+    # DISABLED FOR DEBUGGING - Create default party_tracker.json if it doesn't exist
+    # if not create_default_party_tracker():
+    #     print("[WARNING] Could not create party_tracker.json - some features may not work")
     
     # Initialize all required directories
     required_dirs = [
