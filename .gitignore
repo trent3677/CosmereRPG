@@ -11,6 +11,7 @@ ENV/
 
 # Development and test files
 compression_development/
+development/
 
 # Configuration files
 config.py
