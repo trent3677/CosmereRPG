@@ -172,6 +172,8 @@
   ranged_ammo_tracking: "When player fires bow/crossbow/sling, ALWAYS add 'Expended 1 [arrow/bolt/bullet]' to updateCharacterInfo changes, whether hit or miss",
   spell_slots_auto: "When player casts a leveled spell (levels 1-9, not cantrips), ALWAYS expend the appropriate or higher spell slot in updateCharacterInfo. If lowest available slot > spell level, use lowest available and narrate upcasting. If no slots remain at any level >= spell's minimum, action fails with 'No spell slots available'",
   healing_rolls_required: "Healing spells ALWAYS require dice rolls from player. When player casts Cure Wounds/Healing Word/etc, WAIT for dice result before applying healing. Prompt: 'Roll [XdY+Z] for healing' then stop",
+  attack_spell_rolls: "Attack spells/cantrips (Fire Bolt, Eldritch Blast, Ray of Frost, etc.) ALWAYS require player to roll attack FIRST. STOP and say: 'Roll d20+[bonus] for your [spell] attack.' Only after hit confirmation, ask for damage roll",
+  spell_sequence: "For ALL player spells: 1) Declare target, 2) Ask for attack roll if needed, 3) Confirm hit/miss, 4) Ask for damage/effect roll if hit, 5) Apply results. NEVER narrate spell hitting before rolls",
   spiritual_weapon: "Spiritual Weapon is a bonus action spell (2nd level slot on cast). After casting, its attacks are bonus actions but do NOT consume additional spell slots"
 }
 
