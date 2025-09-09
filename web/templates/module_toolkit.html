@@ -2792,7 +2792,12 @@
             } else if (tab === 'npcs') {
                 // Load NPC modules and packs when switching to NPC tab
                 loadNpcModules();
-                loadNpcPacks();
+                // Ensure packs are loaded before trying to populate NPC packs
+                if (availablePacks.length === 0) {
+                    loadPacks().then(() => loadNpcPacks());
+                } else {
+                    loadNpcPacks();
+                }
             } else if (tab === 'builder') {
                 // Request module list when switching to builder tab
                 console.log('Switching to builder tab, requesting module list...');
@@ -4967,6 +4972,13 @@
         function loadNpcPacks() {
             const select = document.getElementById('npcPackSelect');
             if (!select) return;
+            
+            // If no packs available, show a message
+            if (!availablePacks || availablePacks.length === 0) {
+                select.innerHTML = '<option value="">-- No packs available --</option>';
+                return;
+            }
+            
             const activePackName = availablePacks.find(p => p.is_active)?.name;
             select.innerHTML = '';
             availablePacks.forEach(pack => {
