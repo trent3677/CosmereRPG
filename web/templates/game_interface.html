@@ -380,7 +380,11 @@
             box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
         }
         
-        .party-member-item:hover {
+        .party-member-item {
+            transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out, border-color 0.15s ease-in-out;
+        }
+        
+        .party-member-item:hover, .party-member-item.preserve-hover {
             transform: scale(1.05);
             box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
         }
@@ -407,7 +411,11 @@
             opacity: 0.8; /* Slightly faded to show they aren't party members */
         }
 
-        .location-npc-item:hover {
+        .location-npc-item {
+            transition: transform 0.15s ease-in-out, opacity 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        
+        .location-npc-item:hover, .location-npc-item.preserve-hover {
             transform: scale(1.05);
             opacity: 1;
             box-shadow: 0 0 10px rgba(156, 39, 176, 0.5);
@@ -3673,13 +3681,15 @@
             font-family: 'Crimson Text', Georgia, serif;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.15s ease-in-out;
+            transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
+            transform: translateY(2px);
             visibility: hidden;
         }
 
         .stats-tooltip.visible {
             opacity: 1;
             visibility: visible;
+            transform: translateY(0);
         }
 
         .stats-tooltip-header {
@@ -4435,6 +4445,10 @@
         // --- START: Stats Tooltip Functions ---
         let currentStatsTooltip = null;
         let tooltipHideTimer = null; // Timer to manage tooltip hide delay
+        let tooltipShowTimer = null; // Timer for debouncing tooltip show
+        let lastHoveredElement = null; // Track last hovered element to avoid recalculation
+        const elementListenerMap = new WeakMap(); // Track which elements have listeners
+        let currentlyHoveredName = null; // Track the name of currently hovered character to preserve hover state
 
         function createStatsTooltip(stats) {
             const tooltip = document.createElement('div');
@@ -4462,42 +4476,107 @@
             return tooltip;
         }
 
-        function showStatsTooltip(event) {
-            clearTimeout(tooltipHideTimer); // Cancel any pending hide action
-            hideStatsTooltip(true); // Immediately remove any old tooltip to prevent overlap
+        function updateStatsTooltipContent(tooltip, stats) {
+            let html = `<div class="stats-tooltip-header">${stats.name.replace(/_/g, ' ')}</div>`;
+            
+            // Display HP if available
+            if (stats.currentHp !== undefined && stats.maxHp !== undefined) {
+                html += `<div class="stats-tooltip-row">
+                            <span class="stats-tooltip-label">HP:</span>
+                            <span class="stats-tooltip-value">${stats.currentHp} / ${stats.maxHp}</span>
+                         </div>`;
+            }
 
-            const target = event.currentTarget;
-            const stats = JSON.parse(target.dataset.stats || '{}');
+            // Display Initiative only if it's a combatant
+            if (stats.initiative !== undefined) {
+                html += `<div class="stats-tooltip-row">
+                            <span class="stats-tooltip-label">Initiative:</span>
+                            <span class="stats-tooltip-value">${stats.initiative}</span>
+                         </div>`;
+            }
 
-            if (!stats.name) return;
-
-            currentStatsTooltip = createStatsTooltip(stats);
-            document.body.appendChild(currentStatsTooltip);
-            positionTooltip(target, currentStatsTooltip); // This function already handles the fade-in
+            tooltip.innerHTML = html;
         }
 
-        function hideStatsTooltip(immediate = false) {
+        function showStatsTooltip(event) {
+            clearTimeout(tooltipShowTimer);
+            clearTimeout(tooltipHideTimer);
+            
+            const target = event.currentTarget;
+            const stats = JSON.parse(target.dataset.stats || '{}');
+            
+            // Store the currently hovered character name
+            currentlyHoveredName = stats.name || null;
+            
+            // Debounce - wait 50ms before showing to prevent flicker
+            tooltipShowTimer = setTimeout(() => {
+                if (!stats.name) return;
+                
+                // Reuse existing tooltip or create new one
+                if (!currentStatsTooltip) {
+                    currentStatsTooltip = createStatsTooltip(stats);
+                    document.body.appendChild(currentStatsTooltip);
+                    positionTooltip(target, currentStatsTooltip);
+                } else {
+                    // Just update content if hovering over different element
+                    if (lastHoveredElement !== target) {
+                        updateStatsTooltipContent(currentStatsTooltip, stats);
+                        positionTooltip(target, currentStatsTooltip);
+                    }
+                }
+                
+                lastHoveredElement = target;
+                currentStatsTooltip.classList.add('visible');
+            }, 50);
+        }
+
+        function hideStatsTooltip(event) {
+            const immediate = typeof event === 'boolean' ? event : false;
+            
+            clearTimeout(tooltipShowTimer); // Cancel any pending show action
             clearTimeout(tooltipHideTimer); // Always clear any previous timer
+            
+            // Remove preserve-hover from all elements when hiding tooltip
+            document.querySelectorAll('.preserve-hover').forEach(el => {
+                el.classList.remove('preserve-hover');
+            });
+            
+            // Reset the last hovered element and name when hiding
+            lastHoveredElement = null;
+            currentlyHoveredName = null;
 
             if (immediate) {
                 if (currentStatsTooltip) {
-                    currentStatsTooltip.remove();
-                    currentStatsTooltip = null;
+                    currentStatsTooltip.classList.remove('visible');
+                    // Keep the tooltip element but hide it instead of removing
+                    // This allows for reuse and prevents recreation
                 }
             } else {
-                // Set a timer to hide the tooltip after a short delay (e.g., 100ms)
+                // Set a timer to hide the tooltip after a short delay
                 tooltipHideTimer = setTimeout(() => {
                     if (currentStatsTooltip) {
                         currentStatsTooltip.classList.remove('visible');
-                        // Remove from DOM after the fade-out animation completes
-                        setTimeout(() => {
-                            if (currentStatsTooltip) {
-                                currentStatsTooltip.remove();
-                                currentStatsTooltip = null;
-                            }
-                        }, 150); // This should match your CSS transition duration
+                        // Don't remove the element, just hide it for reuse
                     }
+                    currentlyHoveredName = null;
                 }, 100);
+            }
+        }
+        
+        // Smart event listener attachment to prevent duplicates
+        function attachTooltipListeners(element) {
+            if (!elementListenerMap.has(element)) {
+                element.addEventListener('mouseenter', (e) => {
+                    // Remove preserve-hover class when actually hovering
+                    e.currentTarget.classList.remove('preserve-hover');
+                    showStatsTooltip(e);
+                });
+                element.addEventListener('mouseleave', (e) => {
+                    // Ensure preserve-hover is removed on mouse leave
+                    e.currentTarget.classList.remove('preserve-hover');
+                    hideStatsTooltip(e);
+                });
+                elementListenerMap.set(element, true);
             }
         }
         // --- END: Stats Tooltip Functions ---
@@ -5615,6 +5694,20 @@
                 item.classList.add('initiative-item', combatant.type);
                 item.dataset.name = combatant.name; // Use a data attribute for easy selection
                 
+                // Preserve hover state if this was the previously hovered item
+                if (currentlyHoveredName === combatant.name) {
+                    item.classList.add('preserve-hover');
+                    // Simulate mouse enter to maintain tooltip
+                    setTimeout(() => {
+                        const event = new MouseEvent('mouseenter', {
+                            view: window,
+                            bubbles: true,
+                            cancelable: true
+                        });
+                        item.dispatchEvent(event);
+                    }, 10);
+                }
+                
                 // Extract monster type from name (e.g., "Skeleton_1" -> "Skeleton")
                 let displayName = combatant.name.replace(/_/g, ' ');
                 
@@ -5686,9 +5779,8 @@
                     item.style.textShadow = '1px 1px 2px black, -1px -1px 2px black';
                     item.style.cursor = 'pointer';
                     
-                    // NEW: Show stats on hover, media on click
-                    item.addEventListener('mouseenter', showStatsTooltip);
-                    item.addEventListener('mouseleave', hideStatsTooltip);
+                    // NEW: Show stats on hover, media on click (using smart attachment)
+                    attachTooltipListeners(item);
                     item.addEventListener('click', function() {
                         // On click, check for video first. If it exists, show it.
                         // If not, fall back to showing the full-size image.
@@ -5789,9 +5881,8 @@
                     item.style.cursor = 'pointer';
                     const npcVideoUrl = `/media/npcs/${npcFilename}_video.mp4`;
                     
-                    // NEW: Always add stats tooltip on hover
-                    item.addEventListener('mouseenter', showStatsTooltip);
-                    item.addEventListener('mouseleave', hideStatsTooltip);
+                    // NEW: Always add stats tooltip on hover (using smart attachment)
+                    attachTooltipListeners(item);
                     
                     // Check if video exists by trying to load it
                     const videoTest = document.createElement('video');
@@ -5870,6 +5961,20 @@
                     const item = document.createElement('div');
                     item.classList.add(isLocationNpc ? 'location-npc-item' : 'party-member-item', member.type);
                     
+                    // Preserve hover state if this was the previously hovered item
+                    if (currentlyHoveredName === member.name) {
+                        item.classList.add('preserve-hover');
+                        // Simulate mouse enter to maintain tooltip
+                        setTimeout(() => {
+                            const event = new MouseEvent('mouseenter', {
+                                view: window,
+                                bubbles: true,
+                                cancelable: true
+                            });
+                            item.dispatchEvent(event);
+                        }, 10);
+                    }
+                    
                     const cleanName = member.name.toLowerCase().replace(/\s+/g, '_').replace(/'/g, "");
                     const basePath = member.type === 'player' ? `/static/portraits/${cleanName}` : `/media/npcs/${cleanName}`;
                     const thumbUrl = member.type === 'player' ? `${basePath}.png` : `${basePath}_thumb.jpg`;
@@ -5900,9 +6005,8 @@
                     // Store stats data for tooltip
                     item.dataset.stats = JSON.stringify(member);
 
-                    // NEW: Show stats on hover, media on click
-                    item.addEventListener('mouseenter', showStatsTooltip);
-                    item.addEventListener('mouseleave', hideStatsTooltip);
+                    // NEW: Show stats on hover, media on click (using smart attachment)
+                    attachTooltipListeners(item);
 
                     item.addEventListener('click', function() {
                         // On click, check for video first. If it exists, show it.
