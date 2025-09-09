@@ -4297,15 +4297,29 @@ def handle_generate_unified_assets(data):
                                         response = requests.get(result['image_url'])
                                         img = Image.open(BytesIO(response.content))
                                         
+                                        # Save original uncompressed PNG to raw_images folder
+                                        raw_dir = Path('raw_images') / 'npcs' / module_name
+                                        raw_dir.mkdir(parents=True, exist_ok=True)
+                                        raw_path = raw_dir / f"{asset['id']}.png"
+                                        img.save(raw_path, 'PNG')
+                                        
                                         # Save to module media folder
                                         media_dir = Path(f"modules/{module_name}/media/npcs")
                                         media_dir.mkdir(parents=True, exist_ok=True)
                                         
-                                        # Save full image
-                                        img.save(media_dir / f"{asset['id']}.png", 'PNG')
+                                        # Convert to RGB if needed (JPEG doesn't support transparency)
+                                        if img.mode == 'RGBA':
+                                            rgb_img = Image.new('RGB', img.size, (255, 255, 255))
+                                            rgb_img.paste(img, mask=img.split()[3] if len(img.split()) > 3 else None)
+                                            img_to_save = rgb_img
+                                        else:
+                                            img_to_save = img
                                         
-                                        # Create and save thumbnail
-                                        thumb = img.copy()
+                                        # Save compressed JPEG (matching monster generator quality)
+                                        img_to_save.save(media_dir / f"{asset['id']}.jpg", 'JPEG', quality=95)
+                                        
+                                        # Create and save thumbnail as JPEG
+                                        thumb = img_to_save.copy()
                                         thumb.thumbnail((128, 128), Image.Resampling.LANCZOS)
                                         thumb.save(media_dir / f"{asset['id']}_thumb.jpg", 'JPEG', quality=85)
                         

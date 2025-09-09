@@ -224,15 +224,30 @@ class NPCGenerator:
                 pack_dir = Path('graphic_packs') / pack_name / 'npcs'
                 pack_dir.mkdir(parents=True, exist_ok=True)
                 
-                # Save full size portrait
-                portrait_path = pack_dir / f'{npc_id}.png'
-                img.save(portrait_path, 'PNG')
+                # Save original uncompressed PNG to raw_images folder
+                raw_dir = Path('raw_images') / 'npcs' / pack_name
+                raw_dir.mkdir(parents=True, exist_ok=True)
+                raw_path = raw_dir / f'{npc_id}.png'
+                img.save(raw_path, 'PNG')
+                print(f"  Original saved to: {raw_path}")
                 
-                # Create and save thumbnail
-                thumb = img.copy()
+                # Convert to RGB if needed (JPEG doesn't support transparency)
+                if img.mode == 'RGBA':
+                    rgb_img = Image.new('RGB', img.size, (255, 255, 255))
+                    rgb_img.paste(img, mask=img.split()[3] if len(img.split()) > 3 else None)
+                    img_to_save = rgb_img
+                else:
+                    img_to_save = img
+                
+                # Save compressed JPEG to pack (matching monster generator)
+                portrait_path = pack_dir / f'{npc_id}.jpg'
+                img_to_save.save(portrait_path, 'JPEG', quality=95)
+                
+                # Create and save thumbnail as JPEG
+                thumb = img_to_save.copy()
                 thumb.thumbnail((128, 128), Image.Resampling.LANCZOS)
-                thumb_path = pack_dir / f'{npc_id}_thumb.png'
-                thumb.save(thumb_path, 'PNG')
+                thumb_path = pack_dir / f'{npc_id}_thumb.jpg'
+                thumb.save(thumb_path, 'JPEG', quality=85)
                 
                 # Also save to game's NPC media folder for live use
                 game_npcs_dir = Path('web/static/media/npcs')
@@ -249,7 +264,7 @@ class NPCGenerator:
                 game_thumb_path = game_npcs_dir / f'{npc_id}_thumb.jpg'
                 thumb_jpg.save(game_thumb_path, 'JPEG', quality=85)
                 
-                print(f"✓ Generated portrait for {npc_name} in {elapsed:.2f}s")
+                print(f"[OK] Generated portrait for {npc_name} in {elapsed:.2f}s")
                 print(f"  Saved to: {portrait_path}")
             
             return {
@@ -265,7 +280,7 @@ class NPCGenerator:
             
         except Exception as e:
             error_msg = str(e)
-            print(f"✗ Failed to generate {npc_name}: {error_msg}")
+            print(f"[FAIL] Failed to generate {npc_name}: {error_msg}")
             
             # Check for content policy violation
             if "content_policy_violation" in error_msg.lower():

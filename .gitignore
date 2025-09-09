@@ -13,6 +13,10 @@ ENV/
 compression_development/
 development/
 
+# Original/uncompressed images
+raw_images/
+original_images/
+
 # Configuration files
 config.py
 
