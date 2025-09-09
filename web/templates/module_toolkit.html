@@ -5795,6 +5795,11 @@
             }
         }
 
+
+        // === Module Media Generator Functions ===
+        let moduleAssets = [];
+        let selectedAssets = new Set();
+
         // === Notification Helper Function ===
         function showNotification(message, type = 'info') {
             // Create notification element
@@ -5843,10 +5848,6 @@
             }, 5000);
         }
 
-        // === Module Media Generator Functions ===
-        let moduleAssets = [];
-        let selectedAssets = new Set();
-
         // Load modules when tab is opened
         function loadModulesForMediaGen() {
             const select = document.getElementById('media-gen-module-select');
@@ -5861,8 +5862,10 @@
                     select.innerHTML = '<option value="">-- Select a Module --</option>';
                     modules.forEach(module => {
                         const option = document.createElement('option');
-                        option.value = module.name;
-                        option.textContent = `${module.name} (Level ${module.level_range.min}-${module.level_range.max})`;
+                        option.value = module.moduleName || module.name;
+                        const name = module.moduleName || module.name;
+                        const levelRange = module.levelRange || module.level_range;
+                        option.textContent = `${name} (Level ${levelRange.min}-${levelRange.max})`;
                         select.appendChild(option);
                     });
                 })

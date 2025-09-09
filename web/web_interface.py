@@ -506,22 +506,39 @@ def serve_module_media(media_type, filename):
     # Determine current module from party tracker
     current_module = None
     party_data = safe_read_json('party_tracker.json')
-    if party_data and 'module_name' in party_data:
-        current_module = party_data['module_name']
+    if party_data:
+        # Check both 'module' and 'module_name' fields for compatibility
+        current_module = party_data.get('module') or party_data.get('module_name')
     
-    # Priority 1: Check module-specific media folder if we have a current module
+    # Priority 1: Check current module's media folder first
     if current_module:
         module_media_path = os.path.join('modules', current_module, 'media', media_type, filename)
         if os.path.exists(module_media_path):
             mimetype, _ = mimetypes.guess_type(module_media_path)
+            info(f"Serving {media_type}/{filename} from current module: {current_module}")
             return send_file(os.path.abspath(module_media_path), mimetype=mimetype)
     
-    # Priority 2: Fall back to static media folder
+    # Priority 2: Check ALL other modules for the media file
+    modules_dir = 'modules'
+    if os.path.exists(modules_dir):
+        for module_name in os.listdir(modules_dir):
+            # Skip non-directories and the current module
+            module_path = os.path.join(modules_dir, module_name)
+            if os.path.isdir(module_path) and module_name != current_module:
+                module_media_path = os.path.join(module_path, 'media', media_type, filename)
+                if os.path.exists(module_media_path):
+                    mimetype, _ = mimetypes.guess_type(module_media_path)
+                    info(f"Serving {media_type}/{filename} from module: {module_name}")
+                    return send_file(os.path.abspath(module_media_path), mimetype=mimetype)
+    
+    # Priority 3: Fall back to static media folder
     static_media_path = os.path.join(os.path.dirname(__file__), 'static', 'media', media_type, filename)
     if os.path.exists(static_media_path):
         mimetype, _ = mimetypes.guess_type(static_media_path)
+        info(f"Serving {media_type}/{filename} from static folder")
         return send_file(static_media_path, mimetype=mimetype)
     
+    warning(f"Media file not found in any location: {media_type}/{filename}")
     return "Media not found", 404
 
 @app.route('/get_character_data')
@@ -1738,19 +1755,41 @@ def get_module_unified_assets(module_name):
             
             # Check for description
             if asset_type == 'monster':
-                # Check bestiary
+                # Check bestiary first
                 bestiary_path = 'data/bestiary/monster_compendium.json'
                 if os.path.exists(bestiary_path):
                     bestiary_data = safe_read_json(bestiary_path) or {}
-                    if asset_id in bestiary_data:
-                        status['has_description'] = True
+                    monsters_dict = bestiary_data.get('monsters', {})
+                    if asset_id in monsters_dict:
+                        monster_entry = monsters_dict[asset_id]
+                        if monster_entry.get('description'):
+                            status['has_description'] = True
+                
+                # If not in bestiary, check module's monster file
+                if not status['has_description']:
+                    monster_file_path = os.path.join('modules', module_name, 'monsters', f'{asset_id}.json')
+                    if os.path.exists(monster_file_path):
+                        monster_data = safe_read_json(monster_file_path) or {}
+                        if monster_data.get('description'):
+                            status['has_description'] = True
             else:  # NPC
-                # Check temp descriptions file
-                desc_file = f'temp/npc_descriptions_{module_name}.json'
-                if os.path.exists(desc_file):
-                    descriptions = safe_read_json(desc_file) or {}
-                    if asset_id in descriptions:
-                        status['has_description'] = True
+                # Check NPC compendium first
+                npc_compendium_path = 'data/bestiary/npc_compendium.json'
+                if os.path.exists(npc_compendium_path):
+                    npc_compendium = safe_read_json(npc_compendium_path) or {}
+                    npcs_dict = npc_compendium.get('npcs', {})
+                    if asset_id in npcs_dict:
+                        npc_entry = npcs_dict[asset_id]
+                        if npc_entry.get('description'):
+                            status['has_description'] = True
+                
+                # Fall back to temp descriptions file for backward compatibility
+                if not status['has_description']:
+                    desc_file = f'temp/npc_descriptions_{module_name}.json'
+                    if os.path.exists(desc_file):
+                        descriptions = safe_read_json(desc_file) or {}
+                        if asset_id in descriptions:
+                            status['has_description'] = True
             
             # Check for media files
             media_type_folder = 'monsters' if asset_type == 'monster' else 'npcs'
@@ -2720,10 +2759,16 @@ def handle_generate_unified_assets(data):
                                 context = extract_module_context_for_monsters(module_name)
                                 description = bestiary.generate_monster_description(asset['name'], context)
                                 
-                                # Save to bestiary
+                                # Save to bestiary in the correct structure
                                 bestiary_path = 'data/bestiary/monster_compendium.json'
                                 bestiary_data = safe_read_json(bestiary_path) or {}
-                                bestiary_data[asset['id']] = {
+                                
+                                # Ensure 'monsters' key exists (consistent with existing bestiary structure)
+                                if 'monsters' not in bestiary_data:
+                                    bestiary_data['monsters'] = {}
+                                
+                                # Save under the 'monsters' key to match how we read it
+                                bestiary_data['monsters'][asset['id']] = {
                                     'name': asset['name'],
                                     'description': description
                                 }
@@ -2746,8 +2791,14 @@ def handle_generate_unified_assets(data):
                     # Generate NPC descriptions
                     if npcs_needing_descriptions:
                         context = extract_module_context_for_npcs(module_name)
-                        desc_file = f'temp/npc_descriptions_{module_name}.json'
-                        descriptions = safe_read_json(desc_file) or {}
+                        
+                        # Load NPC compendium
+                        npc_compendium_path = 'data/bestiary/npc_compendium.json'
+                        npc_compendium = safe_read_json(npc_compendium_path) or {}
+                        
+                        # Ensure proper structure
+                        if 'npcs' not in npc_compendium:
+                            npc_compendium['npcs'] = {}
                         
                         for i, asset in enumerate(npcs_needing_descriptions):
                             try:
@@ -2757,7 +2808,13 @@ def handle_generate_unified_assets(data):
                                 # This would call the actual AI API
                                 description = "Generated description placeholder"  # Replace with actual API call
                                 
-                                descriptions[asset['id']] = description
+                                # Save to NPC compendium
+                                npc_compendium['npcs'][asset['id']] = {
+                                    'name': asset['name'],
+                                    'description': description,
+                                    'module': module_name,
+                                    'generated_at': datetime.now().isoformat()
+                                }
                                 
                                 completed += 1
                                 percent = int((completed / total_assets) * 30)
@@ -2772,8 +2829,10 @@ def handle_generate_unified_assets(data):
                             except Exception as e:
                                 error(f"TOOLKIT: Failed to generate NPC description for {asset['name']}: {e}")
                         
-                        # Save NPC descriptions
-                        safe_write_json(desc_file, descriptions)
+                        # Update metadata and save compendium
+                        npc_compendium['total_npcs'] = len(npc_compendium.get('npcs', {}))
+                        npc_compendium['last_updated'] = datetime.now().isoformat()
+                        safe_write_json(npc_compendium_path, npc_compendium)
                 
                 # Phase 2: Generate images
                 if generate_images:
@@ -2831,10 +2890,24 @@ def handle_generate_unified_assets(data):
                                 info(f"TOOLKIT: Generating portrait for NPC: {asset['name']}")
                                 generator = NPCImageGenerator(style)
                                 
-                                # Get description
-                                desc_file = f'temp/npc_descriptions_{module_name}.json'
-                                descriptions = safe_read_json(desc_file) or {}
-                                description = descriptions.get(asset['id'], '')
+                                # Get description from NPC compendium first
+                                description = ''
+                                npc_compendium_path = 'data/bestiary/npc_compendium.json'
+                                if os.path.exists(npc_compendium_path):
+                                    npc_compendium = safe_read_json(npc_compendium_path) or {}
+                                    npcs_dict = npc_compendium.get('npcs', {})
+                                    if asset['id'] in npcs_dict:
+                                        description = npcs_dict[asset['id']].get('description', '')
+                                
+                                # Fall back to temp file if not in compendium
+                                if not description:
+                                    desc_file = f'temp/npc_descriptions_{module_name}.json'
+                                    descriptions = safe_read_json(desc_file) or {}
+                                    desc_data = descriptions.get(asset['id'], {})
+                                    if isinstance(desc_data, dict):
+                                        description = desc_data.get('description', '')
+                                    else:
+                                        description = desc_data
                                 
                                 if description:
                                     # Generate portrait
@@ -3226,10 +3299,17 @@ def fetch_npc_descriptions():
                 
             client = OpenAI(api_key=OPENAI_API_KEY)
             
-            # Load or create descriptions file
+            # Load NPC compendium
+            npc_compendium_path = 'data/bestiary/npc_compendium.json'
+            npc_compendium = safe_read_json(npc_compendium_path) or {}
+            
+            # Ensure proper structure
+            if 'npcs' not in npc_compendium:
+                npc_compendium['npcs'] = {}
+            
+            # Also maintain temp file for backward compatibility
             descriptions_file = f'temp/npc_descriptions_{module_name}.json'
             os.makedirs('temp', exist_ok=True)
-            
             existing_descriptions = safe_read_json(descriptions_file) or {}
             
             # Extract module context
@@ -3285,14 +3365,25 @@ Example Output Format:
                     description = response.choices[0].message.content
                     description = sanitize_text(description)
                     
-                    # Save description
+                    # Save to NPC compendium
+                    npc_compendium['npcs'][npc_id] = {
+                        'name': npc_name,
+                        'description': description,
+                        'module': module_name,
+                        'generated_at': datetime.now().isoformat()
+                    }
+                    
+                    # Also save to temp file for backward compatibility
                     existing_descriptions[npc_id] = {
                         'name': npc_name,
                         'description': description,
                         'generated_at': datetime.now().isoformat()
                     }
                     
-                    # Write back to file
+                    # Write both files
+                    npc_compendium['total_npcs'] = len(npc_compendium.get('npcs', {}))
+                    npc_compendium['last_updated'] = datetime.now().isoformat()
+                    safe_write_json(npc_compendium_path, npc_compendium)
                     safe_write_json(descriptions_file, existing_descriptions)
                     
                     info(f"TOOLKIT: Generated description for {npc_name} ({i+1}/{len(npcs)})")
@@ -3394,13 +3485,26 @@ def handle_npc_description():
         try:
             from utils.file_operations import safe_read_json
             
+            # Check NPC compendium first
+            npc_compendium_path = 'data/bestiary/npc_compendium.json'
+            if os.path.exists(npc_compendium_path):
+                npc_compendium = safe_read_json(npc_compendium_path) or {}
+                npcs_dict = npc_compendium.get('npcs', {})
+                if npc_id in npcs_dict:
+                    return jsonify({'description': npcs_dict[npc_id].get('description', '')})
+            
+            # Fall back to temp file
             descriptions_file = f'temp/npc_descriptions_{module_name}.json'
             descriptions = safe_read_json(descriptions_file) or {}
             
             if npc_id in descriptions:
-                return jsonify({'description': descriptions[npc_id].get('description', '')})
-            else:
-                return jsonify({'description': ''})
+                desc_data = descriptions[npc_id]
+                if isinstance(desc_data, dict):
+                    return jsonify({'description': desc_data.get('description', '')})
+                else:
+                    return jsonify({'description': desc_data})
+            
+            return jsonify({'description': ''})
                 
         except Exception as e:
             error(f"TOOLKIT: Failed to load NPC description: {e}")
@@ -3420,13 +3524,34 @@ def handle_npc_description():
             from utils.file_operations import safe_read_json, safe_write_json
             from utils.encoding_utils import sanitize_text
             
+            sanitized_description = sanitize_text(description)
+            
+            # Save to NPC compendium
+            npc_compendium_path = 'data/bestiary/npc_compendium.json'
+            npc_compendium = safe_read_json(npc_compendium_path) or {}
+            
+            if 'npcs' not in npc_compendium:
+                npc_compendium['npcs'] = {}
+            
+            npc_compendium['npcs'][npc_id] = {
+                'name': npc_name,
+                'description': sanitized_description,
+                'module': module_name,
+                'updated_at': datetime.now().isoformat()
+            }
+            
+            npc_compendium['total_npcs'] = len(npc_compendium.get('npcs', {}))
+            npc_compendium['last_updated'] = datetime.now().isoformat()
+            safe_write_json(npc_compendium_path, npc_compendium)
+            
+            # Also save to temp file for backward compatibility
             descriptions_file = f'temp/npc_descriptions_{module_name}.json'
             os.makedirs('temp', exist_ok=True)
             
             descriptions = safe_read_json(descriptions_file) or {}
             descriptions[npc_id] = {
                 'name': npc_name,
-                'description': sanitize_text(description),
+                'description': sanitized_description,
                 'updated_at': datetime.now().isoformat()
             }
             
@@ -3478,9 +3603,14 @@ def generate_npc_portraits():
             # Initialize NPC generator
             generator = NPCGenerator(api_key=OPENAI_API_KEY)
             
-            # Load descriptions
+            # Load descriptions from NPC compendium first
+            npc_compendium_path = 'data/bestiary/npc_compendium.json'
+            npc_compendium = safe_read_json(npc_compendium_path) or {}
+            npcs_dict = npc_compendium.get('npcs', {})
+            
+            # Also load temp file for backward compatibility
             descriptions_file = f'temp/npc_descriptions_{module_name}.json'
-            descriptions = safe_read_json(descriptions_file) or {}
+            temp_descriptions = safe_read_json(descriptions_file) or {}
             
             # Prepare NPC data with descriptions
             npcs_with_descriptions = []
@@ -3488,9 +3618,20 @@ def generate_npc_portraits():
                 npc_id = npc_data['id']
                 npc_name = npc_data['name']
                 
-                # Get description
-                npc_desc_data = descriptions.get(npc_id, {})
-                description = npc_desc_data.get('description', f'A fantasy NPC named {npc_name}')
+                # Get description from compendium first, then temp file
+                description = ''
+                if npc_id in npcs_dict:
+                    description = npcs_dict[npc_id].get('description', '')
+                
+                if not description and npc_id in temp_descriptions:
+                    npc_desc_data = temp_descriptions[npc_id]
+                    if isinstance(npc_desc_data, dict):
+                        description = npc_desc_data.get('description', '')
+                    else:
+                        description = npc_desc_data
+                
+                if not description:
+                    description = f'A fantasy NPC named {npc_name}'
                 
                 npcs_with_descriptions.append({
                     'id': npc_id,
@@ -4050,19 +4191,38 @@ def handle_generate_unified_assets(data):
                         nonlocal completed
                         for asset in monsters_to_describe:
                             try:
-                                # Generate description using bestiary updater
-                                monster_data = await bestiary_updater.generate_monster_description(
-                                    asset['name'], 
-                                    module_context
-                                )
+                                description_found = False
+                                description_text = ""
                                 
-                                if monster_data:
-                                    # Save to module's monster file
+                                # First check if description exists in bestiary
+                                bestiary_path = 'data/bestiary/monster_compendium.json'
+                                if os.path.exists(bestiary_path):
+                                    bestiary_data = safe_read_json(bestiary_path) or {}
+                                    monsters_dict = bestiary_data.get('monsters', {})
+                                    if asset['id'] in monsters_dict:
+                                        monster_entry = monsters_dict[asset['id']]
+                                        if monster_entry.get('description'):
+                                            description_found = True
+                                            description_text = monster_entry['description']
+                                            info(f"Using existing description from bestiary for {asset['name']}")
+                                
+                                # If not in bestiary, generate new description
+                                if not description_found:
+                                    monster_data = await bestiary_updater.generate_monster_description(
+                                        asset['name'], 
+                                        module_context
+                                    )
+                                    if monster_data:
+                                        description_text = monster_data.get('description', '')
+                                        info(f"Generated new description for {asset['name']}")
+                                
+                                # Save to module's monster file
+                                if description_text:
                                     monster_file = Path(f"modules/{module_name}/monsters/{asset['id']}.json")
                                     if monster_file.exists():
                                         existing_data = safe_read_json(str(monster_file))
                                         if existing_data:
-                                            existing_data['description'] = monster_data.get('description', '')
+                                            existing_data['description'] = description_text
                                             safe_write_json(str(monster_file), existing_data)
                                     
                                     completed += 1
