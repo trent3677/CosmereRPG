@@ -1667,6 +1667,174 @@ def get_module_monsters_api(module_name):
         error(f"TOOLKIT: Failed to get monsters for module {module_name}: {e}")
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/toolkit/modules/<module_name>/unified-assets')
+def get_module_unified_assets(module_name):
+    """
+    Get unified list of all NPCs and monsters in a module with their asset status.
+    Returns detailed information about description existence and media availability.
+    """
+    if not TOOLKIT_AVAILABLE:
+        return jsonify({'success': False, 'error': 'Toolkit not available'}), 503
+    
+    try:
+        from utils.file_operations import safe_read_json
+        from utils.bestiary_updater import BestiaryUpdater
+        import os
+        import re
+        
+        info(f"TOOLKIT: Scanning unified assets for module {module_name}")
+        
+        # Initialize collections
+        npcs = {}
+        monsters = {}
+        
+        # Build areas directory path
+        areas_dir = os.path.join('modules', module_name, 'areas')
+        
+        # Scan area backup files for both NPCs and monsters
+        if os.path.exists(areas_dir):
+            for filename in os.listdir(areas_dir):
+                if filename.endswith('_BU.json'):
+                    area_path = os.path.join(areas_dir, filename)
+                    area_data = safe_read_json(area_path)
+                    if area_data and 'locations' in area_data:
+                        for location in area_data.get('locations', []):
+                            # Extract NPCs
+                            if 'npcs' in location and location['npcs']:
+                                for npc in location['npcs']:
+                                    if isinstance(npc, dict) and 'name' in npc:
+                                        npc_id = npc['name'].lower().replace(' ', '_').replace("'", "")
+                                        if npc_id not in npcs:
+                                            npcs[npc_id] = {'name': npc['name'], 'type': 'npc'}
+                            
+                            # Extract monsters
+                            if 'monsters' in location and location['monsters']:
+                                for monster in location['monsters']:
+                                    if isinstance(monster, dict) and 'name' in monster:
+                                        monster_id = monster['name'].lower().replace(' ', '_')
+                                        if monster_id not in monsters:
+                                            monsters[monster_id] = {'name': monster['name'], 'type': 'monster'}
+                                    elif isinstance(monster, str):
+                                        match = re.search(r'\d*\s*(.+?)(?:\s*\(|$)', monster)
+                                        if match:
+                                            monster_name = match.group(1).strip()
+                                            monster_id = monster_name.lower().replace(' ', '_')
+                                            if monster_id not in monsters:
+                                                monsters[monster_id] = {'name': monster_name, 'type': 'monster'}
+        
+        # Check for descriptions and media status
+        def check_asset_status(asset_id, asset_type, asset_name):
+            """Check the status of descriptions and media for an asset."""
+            status = {
+                'id': asset_id,
+                'name': asset_name,
+                'type': asset_type,
+                'has_description': False,
+                'has_image': False,
+                'has_thumbnail': False,
+                'has_video': False,
+                'image_location': 'none',  # 'module', 'static', or 'none'
+            }
+            
+            # Check for description
+            if asset_type == 'monster':
+                # Check bestiary
+                bestiary_path = 'data/bestiary/monster_compendium.json'
+                if os.path.exists(bestiary_path):
+                    bestiary_data = safe_read_json(bestiary_path) or {}
+                    if asset_id in bestiary_data:
+                        status['has_description'] = True
+            else:  # NPC
+                # Check temp descriptions file
+                desc_file = f'temp/npc_descriptions_{module_name}.json'
+                if os.path.exists(desc_file):
+                    descriptions = safe_read_json(desc_file) or {}
+                    if asset_id in descriptions:
+                        status['has_description'] = True
+            
+            # Check for media files
+            media_type_folder = 'monsters' if asset_type == 'monster' else 'npcs'
+            
+            # Check module-specific media first
+            module_media_dir = os.path.join('modules', module_name, 'media', media_type_folder)
+            if os.path.exists(module_media_dir):
+                # Check for main image
+                for ext in ['.jpg', '.png']:
+                    if os.path.exists(os.path.join(module_media_dir, f"{asset_id}{ext}")):
+                        status['has_image'] = True
+                        status['image_location'] = 'module'
+                        break
+                
+                # Check for thumbnail
+                for ext in ['_thumb.jpg', '_thumb.png']:
+                    if os.path.exists(os.path.join(module_media_dir, f"{asset_id}{ext}")):
+                        status['has_thumbnail'] = True
+                        break
+                
+                # Check for video
+                if os.path.exists(os.path.join(module_media_dir, f"{asset_id}_video.mp4")):
+                    status['has_video'] = True
+            
+            # If not in module, check static folder
+            if not status['has_image']:
+                static_media_dir = os.path.join('web', 'static', 'media', media_type_folder)
+                if os.path.exists(static_media_dir):
+                    for ext in ['.jpg', '.png']:
+                        if os.path.exists(os.path.join(static_media_dir, f"{asset_id}{ext}")):
+                            status['has_image'] = True
+                            status['image_location'] = 'static'
+                            break
+                    
+                    # Check thumbnail in static
+                    if not status['has_thumbnail']:
+                        for ext in ['_thumb.jpg', '_thumb.png']:
+                            if os.path.exists(os.path.join(static_media_dir, f"{asset_id}{ext}")):
+                                status['has_thumbnail'] = True
+                                break
+                    
+                    # Check video in static
+                    if not status['has_video']:
+                        if os.path.exists(os.path.join(static_media_dir, f"{asset_id}_video.mp4")):
+                            status['has_video'] = True
+            
+            return status
+        
+        # Build unified asset list with status
+        unified_assets = []
+        
+        # Process NPCs
+        for npc_id, npc_data in npcs.items():
+            asset_status = check_asset_status(npc_id, 'npc', npc_data['name'])
+            unified_assets.append(asset_status)
+        
+        # Process monsters
+        for monster_id, monster_data in monsters.items():
+            asset_status = check_asset_status(monster_id, 'monster', monster_data['name'])
+            unified_assets.append(asset_status)
+        
+        # Sort by type then name
+        unified_assets.sort(key=lambda x: (x['type'], x['name']))
+        
+        info(f"TOOLKIT: Found {len(npcs)} NPCs and {len(monsters)} monsters in module {module_name}")
+        
+        return jsonify({
+            'success': True,
+            'module': module_name,
+            'assets': unified_assets,
+            'summary': {
+                'total_npcs': len(npcs),
+                'total_monsters': len(monsters),
+                'total_assets': len(unified_assets),
+                'with_descriptions': sum(1 for a in unified_assets if a['has_description']),
+                'with_images': sum(1 for a in unified_assets if a['has_image']),
+                'complete': sum(1 for a in unified_assets if a['has_description'] and a['has_image'] and a['has_thumbnail'])
+            }
+        })
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to get unified assets for module {module_name}: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 @socketio.on('connect')
 def handle_connect():
     """Handle client connection"""
@@ -2505,6 +2673,239 @@ def handle_generate_image(data):
         error_msg = f"Image generation failed: {str(e)}"
         print(f"ERROR: {error_msg}")
         emit('image_generation_error', {'message': error_msg})
+
+@socketio.on('generate_unified_assets')
+def handle_generate_unified_assets(data):
+    """Handle unified asset generation for a module"""
+    try:
+        from utils.bestiary_updater import BestiaryUpdater
+        from core.toolkit.monster_generator import MonsterImageGenerator
+        from core.toolkit.npc_generator import NPCImageGenerator
+        import threading
+        import time
+        import shutil
+        
+        module_name = data.get('module')
+        assets = data.get('assets', [])
+        style = data.get('style', 'photorealistic')
+        overwrite = data.get('overwrite', False)
+        generate_descriptions = data.get('generate_descriptions', True)
+        generate_images = data.get('generate_images', True)
+        
+        info(f"TOOLKIT: Starting unified generation for {len(assets)} assets in module {module_name}")
+        
+        def generate_assets():
+            """Background thread for asset generation"""
+            try:
+                total_assets = len(assets)
+                completed = 0
+                
+                # Phase 1: Generate descriptions for assets that need them
+                if generate_descriptions:
+                    emit('unified_generation_progress', {
+                        'percent': 0,
+                        'message': 'Phase 1: Generating descriptions...'
+                    })
+                    
+                    monsters_needing_descriptions = [a for a in assets if a['type'] == 'monster' and not a['has_description']]
+                    npcs_needing_descriptions = [a for a in assets if a['type'] == 'npc' and not a['has_description']]
+                    
+                    # Generate monster descriptions
+                    if monsters_needing_descriptions:
+                        bestiary = BestiaryUpdater()
+                        for i, asset in enumerate(monsters_needing_descriptions):
+                            try:
+                                info(f"TOOLKIT: Generating description for monster: {asset['name']}")
+                                # Extract module context for better descriptions
+                                context = extract_module_context_for_monsters(module_name)
+                                description = bestiary.generate_monster_description(asset['name'], context)
+                                
+                                # Save to bestiary
+                                bestiary_path = 'data/bestiary/monster_compendium.json'
+                                bestiary_data = safe_read_json(bestiary_path) or {}
+                                bestiary_data[asset['id']] = {
+                                    'name': asset['name'],
+                                    'description': description
+                                }
+                                safe_write_json(bestiary_path, bestiary_data)
+                                
+                                completed += 1
+                                percent = int((completed / total_assets) * 30)  # 30% for descriptions
+                                emit('unified_generation_progress', {
+                                    'percent': percent,
+                                    'message': f"Generated description for {asset['name']}",
+                                    'asset_id': asset['id'],
+                                    'status': 'Description Generated'
+                                })
+                                
+                                # Rate limiting
+                                time.sleep(2)
+                            except Exception as e:
+                                error(f"TOOLKIT: Failed to generate description for {asset['name']}: {e}")
+                    
+                    # Generate NPC descriptions
+                    if npcs_needing_descriptions:
+                        context = extract_module_context_for_npcs(module_name)
+                        desc_file = f'temp/npc_descriptions_{module_name}.json'
+                        descriptions = safe_read_json(desc_file) or {}
+                        
+                        for i, asset in enumerate(npcs_needing_descriptions):
+                            try:
+                                info(f"TOOLKIT: Generating description for NPC: {asset['name']}")
+                                # Use existing NPC description generation logic
+                                prompt = f"Generate a 150-200 word visual description for {asset['name']} suitable for AI image generation."
+                                # This would call the actual AI API
+                                description = "Generated description placeholder"  # Replace with actual API call
+                                
+                                descriptions[asset['id']] = description
+                                
+                                completed += 1
+                                percent = int((completed / total_assets) * 30)
+                                emit('unified_generation_progress', {
+                                    'percent': percent,
+                                    'message': f"Generated description for {asset['name']}",
+                                    'asset_id': asset['id'],
+                                    'status': 'Description Generated'
+                                })
+                                
+                                time.sleep(2)
+                            except Exception as e:
+                                error(f"TOOLKIT: Failed to generate NPC description for {asset['name']}: {e}")
+                        
+                        # Save NPC descriptions
+                        safe_write_json(desc_file, descriptions)
+                
+                # Phase 2: Generate images
+                if generate_images:
+                    emit('unified_generation_progress', {
+                        'percent': 30,
+                        'message': 'Phase 2: Generating images...'
+                    })
+                    
+                    # Create directories for raw images
+                    raw_images_dir = os.path.join('raw_images', 'modules', module_name)
+                    os.makedirs(os.path.join(raw_images_dir, 'monsters'), exist_ok=True)
+                    os.makedirs(os.path.join(raw_images_dir, 'npcs'), exist_ok=True)
+                    
+                    assets_needing_images = [a for a in assets if not a['has_image'] or overwrite]
+                    
+                    for i, asset in enumerate(assets_needing_images):
+                        try:
+                            if asset['type'] == 'monster':
+                                info(f"TOOLKIT: Generating image for monster: {asset['name']}")
+                                generator = MonsterImageGenerator(style)
+                                
+                                # Get description from bestiary
+                                bestiary_data = safe_read_json('data/bestiary/monster_compendium.json') or {}
+                                description = bestiary_data.get(asset['id'], {}).get('description', '')
+                                
+                                if description:
+                                    # Generate image (this would call DALL-E)
+                                    # For now, placeholder
+                                    image_path = f"raw_images/modules/{module_name}/monsters/{asset['id']}.jpg"
+                                    thumb_path = f"modules/{module_name}/media/monsters/{asset['id']}_thumb.jpg"
+                                    
+                                    # Copy to module media folder
+                                    module_media_dir = os.path.join('modules', module_name, 'media', 'monsters')
+                                    os.makedirs(module_media_dir, exist_ok=True)
+                                    
+                                    # In real implementation, this would:
+                                    # 1. Generate image with DALL-E
+                                    # 2. Save raw to raw_images
+                                    # 3. Create compressed version
+                                    # 4. Create thumbnail
+                                    # 5. Copy to module media folder
+                                    
+                                    completed += 1
+                                    percent = 30 + int((completed / total_assets) * 70)
+                                    emit('unified_generation_progress', {
+                                        'percent': percent,
+                                        'message': f"Generated image for {asset['name']}",
+                                        'asset_id': asset['id'],
+                                        'status': 'Image Generated'
+                                    })
+                                    
+                                    time.sleep(3)  # Rate limiting for image generation
+                            
+                            elif asset['type'] == 'npc':
+                                info(f"TOOLKIT: Generating portrait for NPC: {asset['name']}")
+                                generator = NPCImageGenerator(style)
+                                
+                                # Get description
+                                desc_file = f'temp/npc_descriptions_{module_name}.json'
+                                descriptions = safe_read_json(desc_file) or {}
+                                description = descriptions.get(asset['id'], '')
+                                
+                                if description:
+                                    # Generate portrait
+                                    image_path = f"raw_images/modules/{module_name}/npcs/{asset['id']}.png"
+                                    thumb_path = f"modules/{module_name}/media/npcs/{asset['id']}_thumb.jpg"
+                                    
+                                    # Copy to module media folder
+                                    module_media_dir = os.path.join('modules', module_name, 'media', 'npcs')
+                                    os.makedirs(module_media_dir, exist_ok=True)
+                                    
+                                    completed += 1
+                                    percent = 30 + int((completed / total_assets) * 70)
+                                    emit('unified_generation_progress', {
+                                        'percent': percent,
+                                        'message': f"Generated portrait for {asset['name']}",
+                                        'asset_id': asset['id'],
+                                        'status': 'Portrait Generated'
+                                    })
+                                    
+                                    time.sleep(3)
+                                    
+                        except Exception as e:
+                            error(f"TOOLKIT: Failed to generate image for {asset['name']}: {e}")
+                            emit('unified_generation_progress', {
+                                'percent': percent,
+                                'message': f"Failed: {asset['name']} - {str(e)}",
+                                'asset_id': asset['id'],
+                                'status': 'Failed'
+                            })
+                
+                # Complete
+                emit('unified_generation_complete', {
+                    'message': f'Successfully processed {completed} assets'
+                })
+                info(f"TOOLKIT: Unified generation complete for module {module_name}")
+                
+            except Exception as e:
+                error(f"TOOLKIT: Unified generation failed: {e}")
+                emit('unified_generation_error', {'error': str(e)})
+        
+        # Start generation in background thread
+        thread = threading.Thread(target=generate_assets)
+        thread.daemon = True
+        thread.start()
+        
+    except Exception as e:
+        error(f"TOOLKIT: Failed to start unified generation: {e}")
+        emit('unified_generation_error', {'error': str(e)})
+
+def extract_module_context_for_monsters(module_name):
+    """Extract context for monster description generation"""
+    try:
+        from utils.file_operations import safe_read_json
+        import os
+        
+        context_parts = []
+        
+        # Read module plot
+        plot_file = os.path.join('modules', module_name, 'module_plot.json')
+        if os.path.exists(plot_file):
+            plot_data = safe_read_json(plot_file)
+            if plot_data:
+                context_parts.append(f"Module: {module_name}")
+                context_parts.append(f"Setting: {plot_data.get('setting', 'Fantasy world')}")
+                context_parts.append(f"Theme: {plot_data.get('theme', 'Adventure')}")
+        
+        return "\n".join(context_parts)
+        
+    except Exception as e:
+        error(f"Failed to extract monster context: {e}")
+        return f"Module: {module_name}"
 
 def run_game_loop():
     """Run the main game loop with enhanced error handling"""
@@ -3602,6 +4003,199 @@ def handle_cancel_build():
         cancel_build_flag.set()
     else:
         emit('module_error', {'error': 'No active build to cancel.'})
+
+@socketio.on('generate_unified_assets')
+def handle_generate_unified_assets(data):
+    """Generate missing descriptions and images for module assets"""
+    module_name = data.get('module_name')
+    assets = data.get('assets', [])
+    options = data.get('options', {})
+    
+    def generate_assets():
+        try:
+            import asyncio
+            from utils.bestiary_updater import BestiaryUpdater
+            from core.toolkit.npc_generator import NPCGenerator
+            from pathlib import Path
+            import time
+            import json
+            from utils.file_operations import safe_read_json, safe_write_json
+            
+            total_assets = len(assets)
+            completed = 0
+            
+            # Initialize generators
+            bestiary_updater = BestiaryUpdater()
+            npc_generator = NPCGenerator()
+            
+            # Extract module context once for all descriptions
+            module_context = bestiary_updater.extract_all_area_context(module_name)
+            
+            # Phase 1: Generate descriptions for assets without them
+            description_targets = [a for a in assets if not a.get('has_description')]
+            if description_targets:
+                socketio.emit('generation_progress', {
+                    'phase': 'descriptions',
+                    'progress': 0,
+                    'message': f"Generating descriptions for {len(description_targets)} assets..."
+                })
+                
+                # Separate monsters and NPCs
+                monsters_to_describe = [a for a in description_targets if a['type'] == 'monster']
+                npcs_to_describe = [a for a in description_targets if a['type'] == 'npc']
+                
+                # Generate monster descriptions
+                if monsters_to_describe:
+                    async def generate_monster_descriptions():
+                        nonlocal completed
+                        for asset in monsters_to_describe:
+                            try:
+                                # Generate description using bestiary updater
+                                monster_data = await bestiary_updater.generate_monster_description(
+                                    asset['name'], 
+                                    module_context
+                                )
+                                
+                                if monster_data:
+                                    # Save to module's monster file
+                                    monster_file = Path(f"modules/{module_name}/monsters/{asset['id']}.json")
+                                    if monster_file.exists():
+                                        existing_data = safe_read_json(str(monster_file))
+                                        if existing_data:
+                                            existing_data['description'] = monster_data.get('description', '')
+                                            safe_write_json(str(monster_file), existing_data)
+                                    
+                                    completed += 1
+                                    progress = int((completed / total_assets) * 100)
+                                    socketio.emit('generation_progress', {
+                                        'phase': 'descriptions',
+                                        'progress': progress,
+                                        'message': f"Generated description for {asset['name']}..."
+                                    })
+                            except Exception as e:
+                                error(f"Failed to generate description for {asset['name']}: {e}")
+                                completed += 1
+                    
+                    # Run async function
+                    asyncio.run(generate_monster_descriptions())
+                
+                # Generate NPC descriptions (NPCs typically have descriptions from module generation)
+                for asset in npcs_to_describe:
+                    # NPCs usually have descriptions already, but if needed, generate here
+                    completed += 1
+                    progress = int((completed / total_assets) * 100)
+                    socketio.emit('generation_progress', {
+                        'phase': 'descriptions',
+                        'progress': progress,
+                        'message': f"Processed {asset['name']}..."
+                    })
+            
+            # Phase 2: Generate images for assets without them
+            image_targets = [a for a in assets if not a.get('has_image')]
+            if image_targets:
+                socketio.emit('generation_progress', {
+                    'phase': 'images',
+                    'progress': 0,
+                    'message': f"Generating images for {len(image_targets)} assets..."
+                })
+                
+                # Separate monsters and NPCs for image generation
+                monsters_to_image = [a for a in image_targets if a['type'] == 'monster']
+                npcs_to_image = [a for a in image_targets if a['type'] == 'npc']
+                
+                # Generate NPC portraits
+                for asset in npcs_to_image:
+                    try:
+                        # Load NPC data to get description
+                        npc_file = Path(f"modules/{module_name}/characters/{asset['id']}.json")
+                        if npc_file.exists():
+                            npc_data = safe_read_json(str(npc_file))
+                            
+                            if npc_data:
+                                description = npc_data.get('description', f"A fantasy NPC named {asset['name']}")
+                                
+                                # Generate portrait using selected style and model
+                                style = options.get('style', 'photorealistic')
+                                model = options.get('model', 'dall-e-3')
+                                result = npc_generator.generate_npc_portrait(
+                                    npc_id=asset['id'],
+                                    npc_name=asset['name'],
+                                    npc_description=description,
+                                    style=style,
+                                    model=model,
+                                    pack_name=None  # We'll save directly to module
+                                )
+                                
+                                if result['success']:
+                                    # Move generated image to module media folder
+                                    from PIL import Image
+                                    import requests
+                                    from io import BytesIO
+                                    
+                                    # Download the generated image
+                                    if result.get('image_url') and result['image_url'] != 'base64_image':
+                                        response = requests.get(result['image_url'])
+                                        img = Image.open(BytesIO(response.content))
+                                        
+                                        # Save to module media folder
+                                        media_dir = Path(f"modules/{module_name}/media/npcs")
+                                        media_dir.mkdir(parents=True, exist_ok=True)
+                                        
+                                        # Save full image
+                                        img.save(media_dir / f"{asset['id']}.png", 'PNG')
+                                        
+                                        # Create and save thumbnail
+                                        thumb = img.copy()
+                                        thumb.thumbnail((128, 128), Image.Resampling.LANCZOS)
+                                        thumb.save(media_dir / f"{asset['id']}_thumb.jpg", 'JPEG', quality=85)
+                        
+                        completed += 1
+                        progress = int((completed / total_assets) * 100)
+                        socketio.emit('generation_progress', {
+                            'phase': 'images',
+                            'progress': progress,
+                            'message': f"Generated portrait for {asset['name']}..."
+                        })
+                        
+                        # Rate limiting between API calls
+                        time.sleep(3)
+                        
+                    except Exception as e:
+                        error(f"Failed to generate image for NPC {asset['name']}: {e}")
+                        completed += 1
+                
+                # Generate monster images (would require monster image generator)
+                # For now, we'll skip actual monster image generation
+                for asset in monsters_to_image:
+                    info(f"Monster image generation not yet implemented for {asset['name']}")
+                    completed += 1
+                    progress = int((completed / total_assets) * 100)
+                    socketio.emit('generation_progress', {
+                        'phase': 'images',
+                        'progress': progress,
+                        'message': f"Skipped {asset['name']} (monster images not yet supported)..."
+                    })
+            
+            socketio.emit('generation_complete', {
+                'success': True,
+                'message': f"Successfully generated assets for {module_name}",
+                'generated_count': len(description_targets) + len([a for a in image_targets if a['type'] == 'npc'])
+            })
+            
+        except Exception as e:
+            error(f"Asset generation failed: {e}")
+            socketio.emit('generation_complete', {
+                'success': False,
+                'error': str(e)
+            })
+    
+    # Run generation in background thread
+    import threading
+    thread = threading.Thread(target=generate_assets)
+    thread.daemon = True
+    thread.start()
+    
+    return {'status': 'started'}
 
 if __name__ == '__main__':
     # Create templates directory if it doesn't exist

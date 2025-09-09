@@ -122,6 +122,15 @@ web/static/media/videos/skeleton.mp4
 !web/static/media/npcs/*.jpg
 !web/static/media/npcs/*.png
 !web/static/media/npcs/*.mp4
+# Allow module-specific media assets
+!modules/*/media/monsters/*.jpg
+!modules/*/media/monsters/*.png
+!modules/*/media/monsters/*.mp4
+!modules/*/media/npcs/*.jpg
+!modules/*/media/npcs/*.png
+!modules/*/media/npcs/*.mp4
+!modules/*/media/environment/*.jpg
+!modules/*/media/environment/*.png
 
 # Original uncompressed animation files (keep local only)
 *_animation.mp4
