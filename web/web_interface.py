@@ -131,6 +131,15 @@ app = Flask(__name__,
 app.config['SECRET_KEY'] = 'dungeon-master-secret-key'
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+# Add static route for graphic_packs to improve thumbnail loading performance
+@app.route('/graphic_packs/<path:filename>')
+def serve_graphic_packs(filename):
+    """Serve files from graphic_packs directory as static files for better performance"""
+    from flask import send_from_directory
+    import os
+    graphic_packs_dir = os.path.abspath('graphic_packs')
+    return send_from_directory(graphic_packs_dir, filename)
+
 # Suppress werkzeug HTTP request logs (they clutter the console)
 import logging
 log = logging.getLogger('werkzeug')

@@ -3557,9 +3557,10 @@
 
             // Only use cache busting when explicitly refreshing
             const cacheBuster = forceRefresh ? `?t=${new Date().getTime()}` : '';
-            const thumbUrl = `/toolkit/pack_image/${packName}/${monsterId}_thumb.jpg${cacheBuster}`;
-            const fullImageUrl = `/toolkit/pack_image/${packName}/${monsterId}.jpg${cacheBuster}`;
-            const videoUrl = `/toolkit/pack_video/${packName}/${monsterId}_video.mp4${cacheBuster}`;
+            // Use direct static routes for better performance
+            const thumbUrl = `/graphic_packs/${packName}/monsters/${monsterId}_thumb.jpg${cacheBuster}`;
+            const fullImageUrl = `/graphic_packs/${packName}/monsters/${monsterId}.jpg${cacheBuster}`;
+            const videoUrl = `/graphic_packs/${packName}/monsters/${monsterId}_video.mp4${cacheBuster}`;
             
             console.log(`Thumbnail URL: ${thumbUrl}`);
             
@@ -5078,14 +5079,17 @@
         }
 
         // Loads a single NPC thumbnail with click handling for full preview
-        function loadNpcThumbnail(npcId, packName, isLocal = false) {
+        function loadNpcThumbnail(npcId, packName, isLocal = false, forceRefresh = false) {
             const thumbContainer = document.getElementById(`thumb-npc-${npcId}`);
             if (!thumbContainer) return;
             
-            // Try pack first, then fall back to local game files if isLocal is true
-            const portraitUrl = `/api/toolkit/packs/${packName}/npcs/${npcId}/thumbnail?v=${new Date().getTime()}`; // Cache bust
-            const fullImageUrl = `/api/toolkit/packs/${packName}/npcs/${npcId}/image`;
-            const videoUrl = `/api/toolkit/packs/${packName}/npcs/${npcId}/video`;
+            // Only use cache busting when explicitly refreshing
+            const cacheBuster = forceRefresh ? `?v=${new Date().getTime()}` : '';
+            
+            // Use direct static routes for better performance
+            const portraitUrl = `/graphic_packs/${packName}/npcs/${npcId}_thumb.jpg${cacheBuster}`;
+            const fullImageUrl = `/graphic_packs/${packName}/npcs/${npcId}.jpg${cacheBuster}`;
+            const videoUrl = `/graphic_packs/${packName}/npcs/${npcId}_video.mp4${cacheBuster}`;
 
             const img = new Image();
             img.onload = () => {
@@ -5093,7 +5097,7 @@
                 thumbContainer.appendChild(img);
                 
                 // Store URLs for popup use
-                thumbContainer.dataset.thumbSrc = `/api/toolkit/packs/${packName}/npcs/${npcId}/thumbnail`;
+                thumbContainer.dataset.thumbSrc = portraitUrl;
                 thumbContainer.dataset.imageSrc = fullImageUrl;
                 thumbContainer.dataset.npcId = npcId;
                 thumbContainer.dataset.packName = packName;
