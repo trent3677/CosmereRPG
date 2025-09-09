@@ -2172,6 +2172,10 @@
                                 <label for="new-pack-author">Author</label>
                                 <input type="text" id="new-pack-author" placeholder="Your name or alias">
                             </div>
+                            <div class="form-group">
+                                <label for="new-pack-description">Description (Optional)</label>
+                                <input type="text" id="new-pack-description" placeholder="Brief description of the pack">
+                            </div>
                             <button class="btn btn-primary" onclick="createNewPack()" style="width: 100%;">Create Pack</button>
                         </div>
                     </div>
@@ -2647,10 +2651,7 @@
                             <div class="config-item">
                                 <label for="media-gen-style-select">Art Style:</label>
                                 <select id="media-gen-style-select" class="game-input">
-                                    <option value="photorealistic">Photorealistic</option>
-                                    <option value="comic">Comic Book</option>
-                                    <option value="pixel">Pixel Art</option>
-                                    <option value="anime">Anime</option>
+                                    <!-- Dynamically populated -->
                                 </select>
                             </div>
                             
@@ -2805,6 +2806,8 @@
             } else if (tab === 'media-gen') {
                 // Load modules when switching to media generator tab
                 loadModulesForMediaGen();
+                // Also load available styles
+                loadMediaGenStyles();
             }
         }
         
@@ -5921,6 +5924,46 @@
         }
 
         // Load modules when tab is opened
+        function loadMediaGenStyles() {
+            fetch('/toolkit/get_styles')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Loading styles for media generator:', data);
+                const mediaGenStyleSelect = document.getElementById('media-gen-style-select');
+                
+                // Clear current options
+                mediaGenStyleSelect.innerHTML = '';
+                
+                // Add builtin styles
+                if (data.builtin) {
+                    Object.entries(data.builtin).forEach(([id, style]) => {
+                        const option = new Option(style.name, id);
+                        mediaGenStyleSelect.appendChild(option);
+                    });
+                }
+                
+                // Add custom styles if any
+                if (data.custom && Object.keys(data.custom).length > 0) {
+                    const separator = new Option('--- Custom Styles ---', '', true, false);
+                    separator.disabled = true;
+                    mediaGenStyleSelect.appendChild(separator);
+                    
+                    Object.entries(data.custom).forEach(([id, style]) => {
+                        const option = new Option(style.name + ' (Custom)', id);
+                        mediaGenStyleSelect.appendChild(option);
+                    });
+                }
+                
+                // Set default to photorealistic if available
+                if (data.builtin && data.builtin.photorealistic) {
+                    mediaGenStyleSelect.value = 'photorealistic';
+                }
+            })
+            .catch(error => {
+                console.error('Failed to load styles for media generator:', error);
+            });
+        }
+        
         function loadModulesForMediaGen() {
             const select = document.getElementById('media-gen-module-select');
             select.innerHTML = '<option value="">Loading modules...</option>';
