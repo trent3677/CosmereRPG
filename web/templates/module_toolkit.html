@@ -2678,6 +2678,13 @@
                                     <span>Generate Images<span class="tooltip-trigger" data-tooltip="Creates portrait images based on the descriptions. Uncheck to only generate text descriptions.">?</span></span>
                                 </label>
                             </div>
+                            
+                            <div class="config-item">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="media-gen-overwrite">
+                                    <span>Overwrite Existing<span class="tooltip-trigger" data-tooltip="Replace existing images and descriptions. Uncheck to skip assets that already have content.">?</span></span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                     
@@ -2729,6 +2736,14 @@
                                     <span class="progress-text" id="media-gen-progress-text">0%</span>
                                 </div>
                                 <p id="media-gen-status-message">Initializing...</p>
+                                
+                                <!-- Generation Log -->
+                                <div class="section" style="margin-top: 20px;">
+                                    <h3>Generation Progress Log</h3>
+                                    <div class="log-container" id="mediaGenLog">
+                                        <!-- Log entries will appear here -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -6147,7 +6162,9 @@
             }
 
             const moduleName = document.getElementById('media-gen-module-select').value;
-            const style = document.getElementById('media-gen-style-select').value;
+            const styleSelect = document.getElementById('media-gen-style-select');
+            const style = styleSelect.value;
+            const styleName = styleSelect.options[styleSelect.selectedIndex]?.text || style;
             const model = document.getElementById('media-gen-model-select').value;
             const overwrite = document.getElementById('media-gen-overwrite').checked;
             const generateDescriptions = document.getElementById('media-gen-descriptions').checked;
@@ -6155,6 +6172,116 @@
 
             // Prepare selected assets data
             const assetsToGenerate = moduleAssets.filter(a => selectedAssets.has(a.id));
+            
+            // Count asset types
+            const npcCount = assetsToGenerate.filter(a => a.type === 'npc').length;
+            const monsterCount = assetsToGenerate.filter(a => a.type === 'monster').length;
+
+            // Show styled confirmation popup
+            const confirmationDiv = document.createElement('div');
+            confirmationDiv.id = 'media-gen-confirmation-popup';
+            confirmationDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #2a2a2a;
+                border: 2px solid #ff9800;
+                border-radius: 8px;
+                padding: 20px;
+                z-index: 10000;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+                min-width: 450px;
+                color: white;
+                font-family: 'Crimson Text', Georgia, serif;
+            `;
+            
+            confirmationDiv.innerHTML = `
+                <h3 style="margin: 0 0 20px 0; color: #ff9800; font-family: 'Cinzel', serif;">Module Media Generation Plan</h3>
+                
+                <div style="margin-bottom: 15px;">
+                    <strong>Module:</strong> <span style="color: #4CAF50;">${moduleName}</span>
+                </div>
+                
+                <div style="margin-bottom: 15px; padding: 10px; background: #1a1a1a; border-radius: 4px;">
+                    <div style="margin-bottom: 8px;">
+                        <strong>Assets to Generate:</strong>
+                    </div>
+                    <div style="margin-left: 20px;">
+                        <div>• NPCs: <span style="color: #4CAF50;">${npcCount}</span></div>
+                        <div>• Monsters: <span style="color: #4CAF50;">${monsterCount}</span></div>
+                        <div>• Total: <span style="color: #ff9800;">${assetsToGenerate.length}</span></div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <strong>Art Style:</strong> <span style="color: #4CAF50;">${styleName}</span>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <strong>AI Model:</strong> <span style="color: #4CAF50;">${model}</span>
+                </div>
+                
+                <div style="margin-bottom: 20px; padding: 10px; background: #1a1a1a; border-radius: 4px;">
+                    <div style="margin-bottom: 8px;">
+                        <strong>Generation Options:</strong>
+                    </div>
+                    <div style="margin-left: 20px;">
+                        <div>• Generate Descriptions: <span style="color: ${generateDescriptions ? '#4CAF50' : '#ff5252'}">${generateDescriptions ? 'Yes' : 'No'}</span></div>
+                        <div>• Generate Images: <span style="color: ${generateImages ? '#4CAF50' : '#ff5252'}">${generateImages ? 'Yes' : 'No'}</span></div>
+                        <div>• Overwrite Existing: <span style="color: ${overwrite ? '#ff9800' : '#4CAF50'}">${overwrite ? 'Yes (⚠️ Will Replace)' : 'No (Skip Existing)'}</span></div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button id="media-gen-proceed-btn" style="padding: 10px 30px; margin-right: 10px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+                        Proceed with Generation
+                    </button>
+                    <button id="media-gen-cancel-btn" style="padding: 10px 30px; background: #666; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+                        Cancel
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(confirmationDiv);
+            
+            // Store generation data for proceed function
+            window.pendingMediaGeneration = {
+                moduleName,
+                assetsToGenerate,
+                style,
+                model,
+                overwrite,
+                generateDescriptions,
+                generateImages,
+                styleName
+            };
+            
+            // Add button handlers
+            document.getElementById('media-gen-proceed-btn').onclick = proceedWithMediaGeneration;
+            document.getElementById('media-gen-cancel-btn').onclick = cancelMediaGeneration;
+            
+            return; // Exit here, actual generation happens in proceedWithMediaGeneration
+        }
+        
+        function proceedWithMediaGeneration() {
+            // Remove confirmation popup
+            const popup = document.getElementById('media-gen-confirmation-popup');
+            if (popup) popup.remove();
+            
+            // Get stored generation data
+            const data = window.pendingMediaGeneration;
+            if (!data) return;
+            
+            // Clear previous log
+            const logContainer = document.getElementById('mediaGenLog');
+            if (logContainer) {
+                logContainer.innerHTML = '';
+            }
+
+            // Add initial log entry
+            addLog('mediaGenLog', `Starting generation for ${data.assetsToGenerate.length} asset(s)...`, 'info');
+            addLog('mediaGenLog', `Style: ${data.styleName}, Model: ${data.model}`, 'info');
 
             // Show progress
             document.getElementById('generate-assets-btn').style.display = 'none';
@@ -6162,16 +6289,28 @@
 
             // Send generation request
             socket.emit('generate_unified_assets', {
-                module_name: moduleName,
-                assets: assetsToGenerate,
+                module_name: data.moduleName,
+                assets: data.assetsToGenerate,
                 options: {
-                    style: style,
-                    model: model,
-                    overwrite: overwrite,
-                    generate_descriptions: generateDescriptions,
-                    generate_images: generateImages
+                    style: data.style,
+                    model: data.model,
+                    overwrite: data.overwrite,
+                    generate_descriptions: data.generateDescriptions,
+                    generate_images: data.generateImages
                 }
             });
+            
+            // Clear stored data
+            window.pendingMediaGeneration = null;
+        }
+        
+        function cancelMediaGeneration() {
+            // Remove confirmation popup
+            const popup = document.getElementById('media-gen-confirmation-popup');
+            if (popup) popup.remove();
+            
+            // Clear stored data
+            window.pendingMediaGeneration = null;
         }
 
         // Socket event handlers for progress
@@ -6184,6 +6323,11 @@
             if (progressText) progressText.textContent = data.percent + '%';
             if (statusMessage) statusMessage.textContent = data.message || 'Processing...';
             
+            // Add log entry for progress
+            if (data.message) {
+                addLog('mediaGenLog', data.message, 'info');
+            }
+            
             // Update asset status in table if provided
             if (data.asset_id && data.status) {
                 const row = document.querySelector(`tr[data-asset-id="${data.asset_id}"]`);
@@ -6193,11 +6337,18 @@
                         statusCell.innerHTML = `<span style="color: #4CAF50;">${data.status}</span>`;
                     }
                 }
+                
+                // Also log individual asset progress
+                if (data.asset_name) {
+                    addLog('mediaGenLog', `${data.asset_name}: ${data.status}`, 'success');
+                }
             }
         });
 
         socket.on('unified_generation_complete', (data) => {
             showNotification('Asset generation complete!', 'success');
+            addLog('mediaGenLog', 'Generation completed successfully!', 'success');
+            
             document.getElementById('generate-assets-btn').style.display = 'block';
             document.getElementById('generation-progress-container').style.display = 'none';
             
@@ -6207,6 +6358,8 @@
 
         socket.on('unified_generation_error', (data) => {
             showNotification('Generation error: ' + data.error, 'error');
+            addLog('mediaGenLog', `Error: ${data.error}`, 'error');
+            
             document.getElementById('generate-assets-btn').style.display = 'block';
             document.getElementById('generation-progress-container').style.display = 'none';
         });
