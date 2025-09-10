@@ -4161,16 +4161,32 @@ def handle_generate_unified_assets(data):
     assets = data.get('assets', [])
     options = data.get('options', {})
     
+    # Debug logging
+    info(f"TOOLKIT: Received generation request for module: {module_name}")
+    info(f"TOOLKIT: Assets count: {len(assets)}")
+    info(f"TOOLKIT: Options received: {options}")
+    info(f"TOOLKIT: Overwrite setting: {options.get('overwrite', False)}")
+    info(f"TOOLKIT: Generate images: {options.get('generate_images', True)}")
+    info(f"TOOLKIT: Generate descriptions: {options.get('generate_descriptions', True)}")
+    
     def generate_assets():
         try:
+            info(f"TOOLKIT: generate_assets() thread started")
+            socketio.emit('unified_generation_progress', {
+                'percent': 0,
+                'message': 'Thread started, initializing generators...'
+            })
+            
             import asyncio
             from utils.bestiary_updater import BestiaryUpdater
             from core.toolkit.npc_generator import NPCGenerator
-            from core.toolkit.monster_generator import MonsterImageGenerator
+            from core.toolkit.monster_generator import MonsterGenerator
             from pathlib import Path
             import time
             import json
             from utils.file_operations import safe_read_json, safe_write_json
+            
+            info(f"TOOLKIT: Imports completed, processing {len(assets)} assets")
             
             total_assets = len(assets)
             completed = 0
@@ -4270,12 +4286,18 @@ def handle_generate_unified_assets(data):
             
             # Phase 2: Generate images for assets without them (or all if overwrite)
             overwrite = options.get('overwrite', False)
+            info(f"TOOLKIT: Phase 2 - Image generation. Overwrite: {overwrite}")
+            info(f"TOOLKIT: Assets with images: {[a['name'] for a in assets if a.get('has_image')]}")
+            info(f"TOOLKIT: Assets without images: {[a['name'] for a in assets if not a.get('has_image')]}")
+            
             if overwrite:
                 # If overwrite is enabled, generate for all assets that were selected
                 image_targets = [a for a in assets if options.get('generate_images', True)]
+                info(f"TOOLKIT: Overwrite enabled - will generate for all {len(image_targets)} assets")
             else:
                 # Otherwise only generate for assets without images
                 image_targets = [a for a in assets if not a.get('has_image')]
+                info(f"TOOLKIT: Overwrite disabled - will generate only for {len(image_targets)} assets without images")
             
             if image_targets:
                 socketio.emit('unified_generation_progress', {
@@ -4369,7 +4391,7 @@ def handle_generate_unified_assets(data):
                     model = options.get('model', 'dall-e-3')
                     
                     # Initialize monster generator with style
-                    monster_generator = MonsterImageGenerator(style)
+                    monster_generator = MonsterGenerator(style)
                     
                     for asset in monsters_to_image:
                         try:
@@ -4442,10 +4464,11 @@ def handle_generate_unified_assets(data):
                                 'status': 'Error'
                             })
             
+            info(f"TOOLKIT: Generation completed. Description targets: {len(description_targets) if 'description_targets' in locals() else 0}, Image targets: {len(image_targets) if 'image_targets' in locals() else 0}")
             socketio.emit('unified_generation_complete', {
                 'success': True,
                 'message': f"Successfully generated assets for {module_name}",
-                'generated_count': len(description_targets) + len([a for a in image_targets if a['type'] == 'npc'])
+                'generated_count': len(description_targets) if 'description_targets' in locals() else 0 + len(image_targets) if 'image_targets' in locals() else 0
             })
             
         except Exception as e:
@@ -4456,10 +4479,12 @@ def handle_generate_unified_assets(data):
             })
     
     # Run generation in background thread
+    info(f"TOOLKIT: About to start background thread for generation")
     import threading
     thread = threading.Thread(target=generate_assets)
     thread.daemon = True
     thread.start()
+    info(f"TOOLKIT: Background thread started")
     
     return {'status': 'started'}
 
