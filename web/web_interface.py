@@ -4184,9 +4184,8 @@ def handle_generate_unified_assets(data):
             # Phase 1: Generate descriptions for assets without them
             description_targets = [a for a in assets if not a.get('has_description')]
             if description_targets:
-                socketio.emit('generation_progress', {
-                    'phase': 'descriptions',
-                    'progress': 0,
+                socketio.emit('unified_generation_progress', {
+                    'percent': 0,
                     'message': f"Generating descriptions for {len(description_targets)} assets..."
                 })
                 
@@ -4236,10 +4235,12 @@ def handle_generate_unified_assets(data):
                                     
                                     completed += 1
                                     progress = int((completed / total_assets) * 100)
-                                    socketio.emit('generation_progress', {
-                                        'phase': 'descriptions',
-                                        'progress': progress,
-                                        'message': f"Generated description for {asset['name']}..."
+                                    socketio.emit('unified_generation_progress', {
+                                        'percent': progress,
+                                        'message': f"Generated description for {asset['name']}...",
+                                        'asset_id': asset.get('id'),
+                                        'asset_name': asset.get('name'),
+                                        'status': 'Description Generated'
                                     })
                             except Exception as e:
                                 error(f"Failed to generate description for {asset['name']}: {e}")
@@ -4253,18 +4254,18 @@ def handle_generate_unified_assets(data):
                     # NPCs usually have descriptions already, but if needed, generate here
                     completed += 1
                     progress = int((completed / total_assets) * 100)
-                    socketio.emit('generation_progress', {
+                    socketio.emit('unified_generation_progress', {
                         'phase': 'descriptions',
-                        'progress': progress,
+                        'percent': progress,
                         'message': f"Processed {asset['name']}..."
                     })
             
             # Phase 2: Generate images for assets without them
             image_targets = [a for a in assets if not a.get('has_image')]
             if image_targets:
-                socketio.emit('generation_progress', {
+                socketio.emit('unified_generation_progress', {
                     'phase': 'images',
-                    'progress': 0,
+                    'percent': 0,
                     'message': f"Generating images for {len(image_targets)} assets..."
                 })
                 
@@ -4334,9 +4335,9 @@ def handle_generate_unified_assets(data):
                         
                         completed += 1
                         progress = int((completed / total_assets) * 100)
-                        socketio.emit('generation_progress', {
+                        socketio.emit('unified_generation_progress', {
                             'phase': 'images',
-                            'progress': progress,
+                            'percent': progress,
                             'message': f"Generated portrait for {asset['name']}..."
                         })
                         
@@ -4353,13 +4354,13 @@ def handle_generate_unified_assets(data):
                     info(f"Monster image generation not yet implemented for {asset['name']}")
                     completed += 1
                     progress = int((completed / total_assets) * 100)
-                    socketio.emit('generation_progress', {
+                    socketio.emit('unified_generation_progress', {
                         'phase': 'images',
-                        'progress': progress,
+                        'percent': progress,
                         'message': f"Skipped {asset['name']} (monster images not yet supported)..."
                     })
             
-            socketio.emit('generation_complete', {
+            socketio.emit('unified_generation_complete', {
                 'success': True,
                 'message': f"Successfully generated assets for {module_name}",
                 'generated_count': len(description_targets) + len([a for a in image_targets if a['type'] == 'npc'])
@@ -4367,7 +4368,7 @@ def handle_generate_unified_assets(data):
             
         except Exception as e:
             error(f"Asset generation failed: {e}")
-            socketio.emit('generation_complete', {
+            socketio.emit('unified_generation_complete', {
                 'success': False,
                 'error': str(e)
             })

@@ -2739,7 +2739,10 @@
                                 
                                 <!-- Generation Log -->
                                 <div class="section" style="margin-top: 20px;">
-                                    <h3>Generation Progress Log</h3>
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <h3 style="margin: 0;">Generation Progress Log</h3>
+                                        <button class="btn btn-secondary" onclick="clearMediaGenLog()" style="padding: 5px 15px; font-size: 14px;">Clear Log</button>
+                                    </div>
                                     <div class="log-container" id="mediaGenLog">
                                         <!-- Log entries will appear here -->
                                     </div>
@@ -6312,6 +6315,14 @@
             // Clear stored data
             window.pendingMediaGeneration = null;
         }
+        
+        function clearMediaGenLog() {
+            const logContainer = document.getElementById('mediaGenLog');
+            if (logContainer) {
+                logContainer.innerHTML = '';
+                addLog('mediaGenLog', 'Log cleared', 'info');
+            }
+        }
 
         // Socket event handlers for progress
         socket.on('unified_generation_progress', (data) => {
@@ -6349,19 +6360,45 @@
             showNotification('Asset generation complete!', 'success');
             addLog('mediaGenLog', 'Generation completed successfully!', 'success');
             
-            document.getElementById('generate-assets-btn').style.display = 'block';
-            document.getElementById('generation-progress-container').style.display = 'none';
+            // Show final stats if available
+            if (data.stats) {
+                addLog('mediaGenLog', `Final: ${data.stats.completed || 0} completed, ${data.stats.failed || 0} failed`, 'info');
+            }
             
-            // Rescan to update status
-            scanModuleAssets();
+            // Re-enable generate button
+            document.getElementById('generate-assets-btn').style.display = 'block';
+            
+            // Keep the log visible but hide only the progress bar
+            const progressBar = document.getElementById('media-gen-progress-bar');
+            const progressText = document.getElementById('media-gen-progress-text');
+            const statusMessage = document.getElementById('media-gen-status-message');
+            
+            if (progressBar) progressBar.style.width = '100%';
+            if (progressText) progressText.textContent = '100%';
+            if (statusMessage) statusMessage.textContent = 'Generation Complete!';
+            
+            // Don't hide the container - keep log visible
+            // document.getElementById('generation-progress-container').style.display = 'none';
+            
+            // Rescan to update status after a short delay
+            setTimeout(() => {
+                scanModuleAssets();
+            }, 1000);
         });
 
         socket.on('unified_generation_error', (data) => {
             showNotification('Generation error: ' + data.error, 'error');
             addLog('mediaGenLog', `Error: ${data.error}`, 'error');
             
+            // Re-enable generate button
             document.getElementById('generate-assets-btn').style.display = 'block';
-            document.getElementById('generation-progress-container').style.display = 'none';
+            
+            // Update status message but keep log visible
+            const statusMessage = document.getElementById('media-gen-status-message');
+            if (statusMessage) statusMessage.textContent = 'Generation Failed - See log for details';
+            
+            // Don't hide the container - keep log visible
+            // document.getElementById('generation-progress-container').style.display = 'none';
         });
 
         // Update tab switching to load modules for media generator
