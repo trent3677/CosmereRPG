@@ -6017,6 +6017,10 @@
                 return;
             }
 
+            // Clear any previous selections when scanning new module
+            selectedAssets.clear();
+            updateGenerateButton();
+
             // Show loading state
             document.getElementById('no-assets-message').style.display = 'none';
             document.getElementById('asset-table-container').style.display = 'none';
@@ -6364,6 +6368,13 @@
             if (data.stats) {
                 addLog('mediaGenLog', `Final: ${data.stats.completed || 0} completed, ${data.stats.failed || 0} failed`, 'info');
             }
+            
+            // Clear selections after successful generation
+            selectedAssets.clear();
+            updateGenerateButton();
+            
+            // Reload the assets to show updated status
+            scanModuleAssets();
             
             // Re-enable generate button
             document.getElementById('generate-assets-btn').style.display = 'block';
