@@ -4182,8 +4182,15 @@ def handle_generate_unified_assets(data):
             # Extract module context once for all descriptions
             module_context = bestiary_updater.extract_all_area_context(module_name)
             
-            # Phase 1: Generate descriptions for assets without them
-            description_targets = [a for a in assets if not a.get('has_description')]
+            # Phase 1: Generate descriptions for assets without them (or all if overwrite)
+            overwrite = options.get('overwrite', False)
+            if overwrite and options.get('generate_descriptions', True):
+                # If overwrite is enabled, generate for all assets
+                description_targets = assets
+            else:
+                # Otherwise only generate for assets without descriptions
+                description_targets = [a for a in assets if not a.get('has_description')]
+            
             if description_targets:
                 socketio.emit('unified_generation_progress', {
                     'percent': 0,
@@ -4261,8 +4268,15 @@ def handle_generate_unified_assets(data):
                         'message': f"Processed {asset['name']}..."
                     })
             
-            # Phase 2: Generate images for assets without them
-            image_targets = [a for a in assets if not a.get('has_image')]
+            # Phase 2: Generate images for assets without them (or all if overwrite)
+            overwrite = options.get('overwrite', False)
+            if overwrite:
+                # If overwrite is enabled, generate for all assets that were selected
+                image_targets = [a for a in assets if options.get('generate_images', True)]
+            else:
+                # Otherwise only generate for assets without images
+                image_targets = [a for a in assets if not a.get('has_image')]
+            
             if image_targets:
                 socketio.emit('unified_generation_progress', {
                     'phase': 'images',
