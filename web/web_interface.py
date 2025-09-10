@@ -4202,14 +4202,32 @@ def handle_generate_unified_assets(data):
                                         description_text = monster_data.get('description', '')
                                         info(f"Generated new description for {asset['name']}")
                                 
-                                # Save to module's monster file
+                                # Save to module's monster file AND bestiary
                                 if description_text:
+                                    # Save to module file
                                     monster_file = Path(f"modules/{module_name}/monsters/{asset['id']}.json")
                                     if monster_file.exists():
                                         existing_data = safe_read_json(str(monster_file))
                                         if existing_data:
                                             existing_data['description'] = description_text
                                             safe_write_json(str(monster_file), existing_data)
+                                    
+                                    # Also save to bestiary so MonsterGenerator can find it
+                                    bestiary_path = 'data/bestiary/monster_compendium.json'
+                                    bestiary_data = safe_read_json(bestiary_path) or {}
+                                    
+                                    if 'monsters' not in bestiary_data:
+                                        bestiary_data['monsters'] = {}
+                                    
+                                    # Add or update the monster in bestiary
+                                    if asset['id'] not in bestiary_data['monsters']:
+                                        bestiary_data['monsters'][asset['id']] = {}
+                                    
+                                    bestiary_data['monsters'][asset['id']]['name'] = asset['name']
+                                    bestiary_data['monsters'][asset['id']]['description'] = description_text
+                                    
+                                    safe_write_json(bestiary_path, bestiary_data)
+                                    info(f"Saved {asset['name']} description to both module and bestiary")
                                     
                                     completed += 1
                                     progress = int((completed / total_assets) * 100)
