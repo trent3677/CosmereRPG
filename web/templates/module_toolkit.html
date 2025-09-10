@@ -2642,21 +2642,21 @@
                         
                         <div class="config-row">
                             <div class="config-item">
-                                <label for="media-gen-module-select">Select Module:</label>
+                                <label for="media-gen-module-select">Select Module:<span class="tooltip-trigger" data-tooltip="Choose the adventure module to scan for missing NPC and monster assets.">?</span></label>
                                 <select id="media-gen-module-select" class="game-input">
                                     <option value="">-- Select a Module --</option>
                                 </select>
                             </div>
                             
                             <div class="config-item">
-                                <label for="media-gen-style-select">Art Style:</label>
+                                <label for="media-gen-style-select">Art Style:<span class="tooltip-trigger" data-tooltip="The artistic style for image generation. Custom styles you've created will also appear here.">?</span></label>
                                 <select id="media-gen-style-select" class="game-input">
                                     <!-- Dynamically populated -->
                                 </select>
                             </div>
                             
                             <div class="config-item">
-                                <label for="media-gen-model-select">AI Model:</label>
+                                <label for="media-gen-model-select">AI Model:<span class="tooltip-trigger" data-tooltip="The AI model for image generation. DALL-E 3 is recommended for most uses.">?</span></label>
                                 <select id="media-gen-model-select" class="game-input">
                                     <option value="dall-e-3">DALL-E 3 (Default)</option>
                                     <option value="gpt-image-1">GPT-Image (Premium)</option>
@@ -2668,14 +2668,14 @@
                             <div class="config-item">
                                 <label class="checkbox-label">
                                     <input type="checkbox" id="media-gen-descriptions" checked>
-                                    <span>Generate Missing Descriptions</span>
+                                    <span>Generate Missing Descriptions<span class="tooltip-trigger" data-tooltip="Creates AI-generated descriptions for NPCs and monsters that don't have them yet.">?</span></span>
                                 </label>
                             </div>
                             
                             <div class="config-item">
                                 <label class="checkbox-label">
                                     <input type="checkbox" id="media-gen-images" checked>
-                                    <span>Generate Images</span>
+                                    <span>Generate Images<span class="tooltip-trigger" data-tooltip="Creates portrait images based on the descriptions. Uncheck to only generate text descriptions.">?</span></span>
                                 </label>
                             </div>
                         </div>
@@ -2684,11 +2684,11 @@
                     <!-- Asset Table Section -->
                     <div class="section">
                         <div class="table-controls">
-                            <button class="btn btn-secondary" onclick="selectAllAssets()">Select All</button>
-                            <button class="btn btn-secondary" onclick="selectMissingAssets()">Select Missing</button>
-                            <button class="btn btn-secondary" onclick="selectNoDescriptionAssets()">Select No Description</button>
-                            <button class="btn btn-secondary" onclick="clearAssetSelection()">Clear Selection</button>
-                            <button class="btn btn-primary" id="scan-module-btn" onclick="scanModuleAssets()">Scan Module</button>
+                            <button class="btn btn-secondary" onclick="selectAllAssets()">Select All<span class="tooltip-trigger" data-tooltip="Select all NPCs and monsters in the module.">?</span></button>
+                            <button class="btn btn-secondary" onclick="selectMissingAssets()">Select Missing<span class="tooltip-trigger" data-tooltip="Select only assets that have no image files yet.">?</span></button>
+                            <button class="btn btn-secondary" onclick="selectNoDescriptionAssets()">Select No Description<span class="tooltip-trigger" data-tooltip="Select assets that need AI-generated descriptions.">?</span></button>
+                            <button class="btn btn-secondary" onclick="clearAssetSelection()">Clear Selection<span class="tooltip-trigger" data-tooltip="Deselect all currently selected assets.">?</span></button>
+                            <button class="btn btn-primary" id="scan-module-btn" onclick="scanModuleAssets()">Scan Module<span class="tooltip-trigger" data-tooltip="Analyze the selected module to find all NPCs and monsters that need assets.">?</span></button>
                         </div>
                         
                         <div id="asset-table-container" style="display: none;">
@@ -2720,7 +2720,7 @@
                     <div class="section">
                         <div class="generation-controls">
                             <button class="game-button primary" id="generate-assets-btn" onclick="generateSelectedAssets()" disabled>
-                                Generate Selected Assets
+                                Generate Selected Assets<span class="tooltip-trigger" data-tooltip="Start generating descriptions and images for all selected assets using the chosen style and model.">?</span>
                             </button>
                             
                             <div id="generation-progress-container" style="display: none;">
