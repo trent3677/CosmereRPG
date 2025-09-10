@@ -2722,54 +2722,10 @@ def handle_generate_image(data):
         print(f"ERROR: {error_msg}")
         emit('image_generation_error', {'message': error_msg})
 
-@socketio.on('generate_unified_assets')
-def handle_generate_unified_assets(data):
-    """Handle unified asset generation for a module"""
-    try:
-        from utils.bestiary_updater import BestiaryUpdater
-        from core.toolkit.monster_generator import MonsterImageGenerator
-        from core.toolkit.npc_generator import NPCImageGenerator
-        import threading
-        import time
-        import shutil
-        
-        module_name = data.get('module')
-        assets = data.get('assets', [])
-        style = data.get('style', 'photorealistic')
-        overwrite = data.get('overwrite', False)
-        generate_descriptions = data.get('generate_descriptions', True)
-        generate_images = data.get('generate_images', True)
-        
-        info(f"TOOLKIT: Starting unified generation for {len(assets)} assets in module {module_name}")
-        
-        def generate_assets():
-            """Background thread for asset generation"""
-            try:
-                total_assets = len(assets)
-                completed = 0
-                
-                # Phase 1: Generate descriptions for assets that need them
-                if generate_descriptions:
-                    emit('unified_generation_progress', {
-                        'percent': 0,
-                        'message': 'Phase 1: Generating descriptions...'
-                    })
-                    
-                    monsters_needing_descriptions = [a for a in assets if a['type'] == 'monster' and not a['has_description']]
-                    npcs_needing_descriptions = [a for a in assets if a['type'] == 'npc' and not a['has_description']]
-                    
-                    # Generate monster descriptions
-                    if monsters_needing_descriptions:
-                        bestiary = BestiaryUpdater()
-                        for i, asset in enumerate(monsters_needing_descriptions):
-                            try:
-                                info(f"TOOLKIT: Generating description for monster: {asset['name']}")
-                                # Extract module context for better descriptions
-                                context = extract_module_context_for_monsters(module_name)
-                                description = bestiary.generate_monster_description(asset['name'], context)
-                                
-                                # Save to bestiary in the correct structure
-                                bestiary_path = 'data/bestiary/monster_compendium.json'
+# REMOVED - Duplicate handler was here (lines 2725-2940)
+# The actual working implementation is in the second handle_generate_unified_assets function at line 4157
+
+""" BEGIN COMMENTED OUT DUPLICATE CODE
                                 bestiary_data = safe_read_json(bestiary_path) or {}
                                 
                                 # Ensure 'monsters' key exists (consistent with existing bestiary structure)
@@ -2861,7 +2817,7 @@ def handle_generate_unified_assets(data):
                         try:
                             if asset['type'] == 'monster':
                                 info(f"TOOLKIT: Generating image for monster: {asset['name']}")
-                                generator = MonsterImageGenerator(style)
+                                # generator = MonsterImageGenerator(style)  # This class doesn't exist
                                 
                                 # Get description from bestiary
                                 bestiary_data = safe_read_json('data/bestiary/monster_compendium.json') or {}
@@ -2897,7 +2853,7 @@ def handle_generate_unified_assets(data):
                             
                             elif asset['type'] == 'npc':
                                 info(f"TOOLKIT: Generating portrait for NPC: {asset['name']}")
-                                generator = NPCImageGenerator(style)
+                                # generator = NPCImageGenerator(style)  # This is also a placeholder
                                 
                                 # Get description from NPC compendium first
                                 description = ''
@@ -2962,9 +2918,7 @@ def handle_generate_unified_assets(data):
         thread.daemon = True
         thread.start()
         
-    except Exception as e:
-        error(f"TOOLKIT: Failed to start unified generation: {e}")
-        emit('unified_generation_error', {'error': str(e)})
+END COMMENTED OUT DUPLICATE CODE """
 
 def extract_module_context_for_monsters(module_name):
     """Extract context for monster description generation"""
@@ -4390,8 +4344,8 @@ def handle_generate_unified_assets(data):
                     style = options.get('style', 'photorealistic')
                     model = options.get('model', 'dall-e-3')
                     
-                    # Initialize monster generator with style
-                    monster_generator = MonsterGenerator(style)
+                    # Initialize monster generator (it gets API key from config)
+                    monster_generator = MonsterGenerator()
                     
                     for asset in monsters_to_image:
                         try:
@@ -4423,14 +4377,34 @@ def handle_generate_unified_assets(data):
                             # Generate the image
                             result = monster_generator.generate_monster_image(
                                 monster_id=asset['id'],
-                                monster_name=asset['name'],
-                                monster_description=description,
-                                pack_name=None,  # Save to module instead of pack
-                                module_name=module_name
+                                style=style,
+                                model=model,
+                                pack_name=None  # Save to module instead of pack
                             )
                             
                             if result.get('success'):
                                 info(f"Successfully generated image for {asset['name']}")
+                                
+                                # Copy the generated images to the module's media folder
+                                import shutil
+                                module_media_dir = Path(f"modules/{module_name}/media/monsters")
+                                module_media_dir.mkdir(parents=True, exist_ok=True)
+                                
+                                # Copy main image and thumbnail from the result paths
+                                if result.get('image_path'):
+                                    source_image = Path(result['image_path'])
+                                    if source_image.exists():
+                                        dest_image = module_media_dir / f"{asset['id']}.jpg"
+                                        shutil.copy2(source_image, dest_image)
+                                        info(f"Copied image to module: {dest_image}")
+                                
+                                if result.get('thumbnail_path'):
+                                    source_thumb = Path(result['thumbnail_path'])
+                                    if source_thumb.exists():
+                                        dest_thumb = module_media_dir / f"{asset['id']}_thumb.jpg"
+                                        shutil.copy2(source_thumb, dest_thumb)
+                                        info(f"Copied thumbnail to module: {dest_thumb}")
+                                
                                 socketio.emit('unified_generation_progress', {
                                     'percent': int((completed + 1) / total_assets * 100),
                                     'message': f"Generated image for {asset['name']}",
