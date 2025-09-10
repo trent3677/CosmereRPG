@@ -4166,6 +4166,7 @@ def handle_generate_unified_assets(data):
             import asyncio
             from utils.bestiary_updater import BestiaryUpdater
             from core.toolkit.npc_generator import NPCGenerator
+            from core.toolkit.monster_generator import MonsterImageGenerator
             from pathlib import Path
             import time
             import json
@@ -4348,17 +4349,84 @@ def handle_generate_unified_assets(data):
                         error(f"Failed to generate image for NPC {asset['name']}: {e}")
                         completed += 1
                 
-                # Generate monster images (would require monster image generator)
-                # For now, we'll skip actual monster image generation
-                for asset in monsters_to_image:
-                    info(f"Monster image generation not yet implemented for {asset['name']}")
-                    completed += 1
-                    progress = int((completed / total_assets) * 100)
-                    socketio.emit('unified_generation_progress', {
-                        'phase': 'images',
-                        'percent': progress,
-                        'message': f"Skipped {asset['name']} (monster images not yet supported)..."
-                    })
+                # Generate monster images
+                if monsters_to_image:
+                    style = options.get('style', 'photorealistic')
+                    model = options.get('model', 'dall-e-3')
+                    
+                    # Initialize monster generator with style
+                    monster_generator = MonsterImageGenerator(style)
+                    
+                    for asset in monsters_to_image:
+                        try:
+                            info(f"Generating image for monster: {asset['name']}")
+                            
+                            # Get monster description
+                            description = ""
+                            
+                            # First check monster compendium
+                            monster_compendium_path = 'data/bestiary/monster_compendium.json'
+                            if os.path.exists(monster_compendium_path):
+                                compendium_data = safe_read_json(monster_compendium_path) or {}
+                                monsters_dict = compendium_data.get('monsters', {})
+                                if asset['id'] in monsters_dict:
+                                    description = monsters_dict[asset['id']].get('description', '')
+                            
+                            # If no description in compendium, check module file
+                            if not description:
+                                monster_file = Path(f"modules/{module_name}/monsters/{asset['id']}.json")
+                                if monster_file.exists():
+                                    monster_data = safe_read_json(str(monster_file))
+                                    if monster_data:
+                                        description = monster_data.get('description', '')
+                            
+                            # Fallback description
+                            if not description:
+                                description = f"A fearsome {asset['name']} monster"
+                            
+                            # Generate the image
+                            result = monster_generator.generate_monster_image(
+                                monster_id=asset['id'],
+                                monster_name=asset['name'],
+                                monster_description=description,
+                                pack_name=None,  # Save to module instead of pack
+                                module_name=module_name
+                            )
+                            
+                            if result.get('success'):
+                                info(f"Successfully generated image for {asset['name']}")
+                                socketio.emit('unified_generation_progress', {
+                                    'percent': int((completed + 1) / total_assets * 100),
+                                    'message': f"Generated image for {asset['name']}",
+                                    'asset_id': asset['id'],
+                                    'asset_name': asset['name'],
+                                    'status': 'Image Generated'
+                                })
+                            else:
+                                error(f"Failed to generate image for {asset['name']}: {result.get('error')}")
+                                socketio.emit('unified_generation_progress', {
+                                    'percent': int((completed + 1) / total_assets * 100),
+                                    'message': f"Failed to generate image for {asset['name']}: {result.get('error')}",
+                                    'asset_id': asset['id'],
+                                    'asset_name': asset['name'],
+                                    'status': 'Failed'
+                                })
+                            
+                            completed += 1
+                            
+                            # Rate limiting between API calls
+                            time.sleep(3)
+                            
+                        except Exception as e:
+                            error(f"Failed to generate image for monster {asset['name']}: {e}")
+                            completed += 1
+                            socketio.emit('unified_generation_progress', {
+                                'percent': int(completed / total_assets * 100),
+                                'message': f"Error generating {asset['name']}: {str(e)}",
+                                'asset_id': asset['id'],
+                                'asset_name': asset['name'],
+                                'status': 'Error'
+                            })
             
             socketio.emit('unified_generation_complete', {
                 'success': True,
