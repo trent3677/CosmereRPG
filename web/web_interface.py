@@ -2281,11 +2281,37 @@ def handle_party_data_request():
                 if os.path.exists(player_file):
                     player_data = safe_read_json(player_file)
                     if player_data:
+                        # Extract spell data organized by level
+                        spells_by_level = {}
+                        spellcasting = player_data.get('spellcasting', {})
+                        if spellcasting.get('spells'):
+                            spells_data = spellcasting['spells']
+                            # Handle cantrips
+                            if spells_data.get('cantrips'):
+                                spells_by_level[0] = spells_data['cantrips']
+                            # Handle leveled spells (1st, 2nd, 3rd, etc.)
+                            for key in ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th']:
+                                if spells_data.get(key):
+                                    level_num = int(key[0])
+                                    spells_by_level[level_num] = spells_data[key]
+                        
                         party_members.append({
                             'name': player_data.get('name', player_name),
                             'type': 'player',
                             'currentHp': player_data.get('hitPoints', player_data.get('currentHp', 0)),
-                            'maxHp': player_data.get('maxHitPoints', player_data.get('maxHp', 0))
+                            'maxHp': player_data.get('maxHitPoints', player_data.get('maxHp', 0)),
+                            'level': player_data.get('level', 1),
+                            'class': player_data.get('class', 'Unknown'),
+                            'ac': player_data.get('armorClass', 10),
+                            'speed': player_data.get('speed', 30),
+                            'initiative': player_data.get('initiativeBonus', 0),
+                            'primaryAttack': {
+                                'bonus': player_data.get('attackBonus', 0),
+                                'damage': player_data.get('weaponDamage', '1d4')
+                            },
+                            'spellSlots': spellcasting.get('spellSlots', player_data.get('spellSlots', {})),
+                            'spells': spells_by_level,
+                            'conditions': player_data.get('conditions', [])
                         })
             except:
                 # Fallback if can't load player data
@@ -2306,11 +2332,37 @@ def handle_party_data_request():
                     if os.path.exists(npc_file):
                         npc_data = safe_read_json(npc_file)
                         if npc_data:
+                            # Extract spell data organized by level
+                            spells_by_level = {}
+                            spellcasting = npc_data.get('spellcasting', {})
+                            if spellcasting.get('spells'):
+                                spells_data = spellcasting['spells']
+                                # Handle cantrips
+                                if spells_data.get('cantrips'):
+                                    spells_by_level[0] = spells_data['cantrips']
+                                # Handle leveled spells (1st, 2nd, 3rd, etc.)
+                                for key in ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th']:
+                                    if spells_data.get(key):
+                                        level_num = int(key[0])
+                                        spells_by_level[level_num] = spells_data[key]
+                            
                             party_members.append({
                                 'name': npc_data.get('name', npc_name),
                                 'type': 'npc',
                                 'currentHp': npc_data.get('hitPoints', npc_data.get('currentHp', 0)),
-                                'maxHp': npc_data.get('maxHitPoints', npc_data.get('maxHp', 0))
+                                'maxHp': npc_data.get('maxHitPoints', npc_data.get('maxHp', 0)),
+                                'level': npc_data.get('level', 1),
+                                'class': npc_data.get('class', 'Unknown'),
+                                'ac': npc_data.get('armorClass', 10),
+                                'speed': npc_data.get('speed', 30),
+                                'initiative': npc_data.get('initiativeBonus', 0),
+                                'primaryAttack': {
+                                    'bonus': npc_data.get('attackBonus', 0),
+                                    'damage': npc_data.get('weaponDamage', '1d4')
+                                },
+                                'spellSlots': spellcasting.get('spellSlots', npc_data.get('spellSlots', {})),
+                                'spells': spells_by_level,
+                                'conditions': npc_data.get('conditions', [])
                             })
                             continue
             except:
