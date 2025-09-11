@@ -4498,7 +4498,7 @@
                 for (let level in stats.spellSlots) {
                     if (stats.spellSlots[level]) {
                         const current = stats.spellSlots[level].current || 0;
-                        const max = stats.spellSlots[level].max || stats.spellSlots[level];
+                        const max = stats.spellSlots[level].max !== undefined ? stats.spellSlots[level].max : stats.spellSlots[level];
                         slotInfo.push(`${level}: ${current}/${max}`);
                     }
                 }
