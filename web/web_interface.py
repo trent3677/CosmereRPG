@@ -2287,13 +2287,13 @@ def handle_party_data_request():
                         if spellcasting.get('spells'):
                             spells_data = spellcasting['spells']
                             # Handle cantrips
-                            if spells_data.get('cantrips'):
+                            if spells_data.get('cantrips') and len(spells_data['cantrips']) > 0:
                                 spells_by_level[0] = spells_data['cantrips']
-                            # Handle leveled spells (1st, 2nd, 3rd, etc.)
-                            for key in ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th']:
-                                if spells_data.get(key):
-                                    level_num = int(key[0])
-                                    spells_by_level[level_num] = spells_data[key]
+                            # Handle leveled spells (level1, level2, etc.)
+                            for i in range(1, 10):
+                                key = f'level{i}'
+                                if spells_data.get(key) and len(spells_data[key]) > 0:
+                                    spells_by_level[i] = spells_data[key]
                         
                         party_members.append({
                             'name': player_data.get('name', player_name),
@@ -2338,13 +2338,13 @@ def handle_party_data_request():
                             if spellcasting.get('spells'):
                                 spells_data = spellcasting['spells']
                                 # Handle cantrips
-                                if spells_data.get('cantrips'):
+                                if spells_data.get('cantrips') and len(spells_data['cantrips']) > 0:
                                     spells_by_level[0] = spells_data['cantrips']
-                                # Handle leveled spells (1st, 2nd, 3rd, etc.)
-                                for key in ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th']:
-                                    if spells_data.get(key):
-                                        level_num = int(key[0])
-                                        spells_by_level[level_num] = spells_data[key]
+                                # Handle leveled spells (level1, level2, etc.)
+                                for i in range(1, 10):
+                                    key = f'level{i}'
+                                    if spells_data.get(key) and len(spells_data[key]) > 0:
+                                        spells_by_level[i] = spells_data[key]
                             
                             party_members.append({
                                 'name': npc_data.get('name', npc_name),
