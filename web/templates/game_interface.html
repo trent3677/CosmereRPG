@@ -4464,7 +4464,7 @@
             let html = `<div class="stats-tooltip-header">${headerText}</div>`;
             
             // First line: HP | AC | Speed
-            html += '<div class="stats-tooltip-row" style="font-size: 11px;">';
+            html += '<div class="stats-tooltip-row" style="font-size: 12px;">';
             if (stats.currentHp !== undefined && stats.maxHp !== undefined) {
                 html += `<span>${stats.currentHp}/${stats.maxHp} HP</span>`;
             }
@@ -4478,7 +4478,7 @@
             
             // Second line: Attack | Init
             if (stats.primaryAttack || stats.initiative !== undefined) {
-                html += '<div class="stats-tooltip-row" style="font-size: 11px;">';
+                html += '<div class="stats-tooltip-row" style="font-size: 12px;">';
                 if (stats.primaryAttack) {
                     const bonus = stats.primaryAttack.bonus >= 0 ? '+' + stats.primaryAttack.bonus : stats.primaryAttack.bonus;
                     html += `<span>Atk: ${bonus} (${stats.primaryAttack.damage})</span>`;
@@ -4507,7 +4507,7 @@
                 }
                 // Only show the row if there are actual spell slots
                 if (slotInfo.length > 0) {
-                    html += '<div class="stats-tooltip-row" style="font-size: 10px; margin-top: 4px; border-top: 1px solid #444; padding-top: 3px;">';
+                    html += '<div class="stats-tooltip-row" style="font-size: 11px; margin-top: 4px; border-top: 1px solid #444; padding-top: 3px;">';
                     html += '<span style="color: #87CEEB;">Spell Slots: </span>';
                     html += '<span style="color: #ddd;">' + slotInfo.join(' • ') + '</span>';
                     html += '</div>';
@@ -4517,7 +4517,7 @@
             // Spells organized by level
             if (stats.spells && Object.keys(stats.spells).length > 0) {
                 html += '<div class="stats-tooltip-spells" style="margin-top: 4px; padding-top: 3px; border-top: 1px solid #444;">';
-                html += '<div style="font-size: 10px; color: #87CEEB; margin-bottom: 2px;">Spells Known:</div>';
+                html += '<div style="font-size: 11px; color: #87CEEB; margin-bottom: 2px;">Spells Known:</div>';
                 // Sort levels numerically
                 const sortedLevels = Object.keys(stats.spells).sort((a, b) => parseInt(a) - parseInt(b));
                 for (let level of sortedLevels) {
@@ -4532,17 +4532,32 @@
                     const spellList = stats.spells[level];
                     if (spellList && spellList.length > 0) {
                         html += `<div style="margin-top: 3px;">`;
-                        html += `<span style="font-size: 9px; color: #FFA500; font-weight: bold;">${levelName}:</span> `;
-                        html += `<span style="font-size: 9px; color: #f0f0f0;">${spellList.join(', ')}</span>`;
+                        html += `<span style="font-size: 10px; color: #FFA500; font-weight: bold;">${levelName}:</span> `;
+                        html += `<span style="font-size: 10px; color: #f0f0f0;">${spellList.join(', ')}</span>`;
                         html += `</div>`;
                     }
                 }
                 html += '</div>';
             }
             
+            // Class Features & Abilities
+            if (stats.classFeatures && stats.classFeatures.length > 0) {
+                html += '<div class="stats-tooltip-features" style="margin-top: 4px; padding-top: 3px; border-top: 1px solid #444;">';
+                html += '<div style="font-size: 11px; color: #FFD700; margin-bottom: 2px;">Class Features:</div>';
+                for (let feature of stats.classFeatures) {
+                    html += '<div style="font-size: 10px; color: #f0f0f0; margin-top: 2px;">';
+                    html += `• ${feature.name}`;
+                    if (feature.usage) {
+                        html += ` <span style="color: #87CEEB;">(${feature.usage})</span>`;
+                    }
+                    html += '</div>';
+                }
+                html += '</div>';
+            }
+            
             // Conditions/Status
             if (stats.conditions && stats.conditions.length > 0) {
-                html += '<div class="stats-tooltip-row" style="font-size: 10px; margin-top: 4px; padding-top: 3px; border-top: 1px solid #444;">';
+                html += '<div class="stats-tooltip-row" style="font-size: 11px; margin-top: 4px; padding-top: 3px; border-top: 1px solid #444;">';
                 html += '<span style="color: #ff6666; font-weight: bold;">Conditions: </span>';
                 html += `<span style="color: #ffaaaa;">${stats.conditions.join(', ')}</span>`;
                 html += '</div>';

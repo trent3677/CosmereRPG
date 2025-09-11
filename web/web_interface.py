@@ -2295,6 +2295,17 @@ def handle_party_data_request():
                                 if spells_data.get(key) and len(spells_data[key]) > 0:
                                     spells_by_level[i] = spells_data[key]
                         
+                        # Extract class features for tooltip
+                        class_features = []
+                        for feature in player_data.get('classFeatures', []):
+                            # Include feature name and brief info about usage if available
+                            feature_info = {'name': feature.get('name', '')}
+                            if 'usage' in feature:
+                                usage = feature['usage']
+                                if usage.get('current') is not None and usage.get('max'):
+                                    feature_info['usage'] = f"{usage['current']}/{usage['max']}"
+                            class_features.append(feature_info)
+                        
                         party_members.append({
                             'name': player_data.get('name', player_name),
                             'type': 'player',
@@ -2311,7 +2322,8 @@ def handle_party_data_request():
                             },
                             'spellSlots': spellcasting.get('spellSlots', player_data.get('spellSlots', {})),
                             'spells': spells_by_level,
-                            'conditions': player_data.get('conditions', [])
+                            'conditions': player_data.get('conditions', []),
+                            'classFeatures': class_features
                         })
             except:
                 # Fallback if can't load player data
@@ -2346,6 +2358,17 @@ def handle_party_data_request():
                                     if spells_data.get(key) and len(spells_data[key]) > 0:
                                         spells_by_level[i] = spells_data[key]
                             
+                            # Extract class features for tooltip
+                            class_features = []
+                            for feature in npc_data.get('classFeatures', []):
+                                # Include feature name and brief info about usage if available
+                                feature_info = {'name': feature.get('name', '')}
+                                if 'usage' in feature:
+                                    usage = feature['usage']
+                                    if usage.get('current') is not None and usage.get('max'):
+                                        feature_info['usage'] = f"{usage['current']}/{usage['max']}"
+                                class_features.append(feature_info)
+                            
                             party_members.append({
                                 'name': npc_data.get('name', npc_name),
                                 'type': 'npc',
@@ -2362,7 +2385,8 @@ def handle_party_data_request():
                                 },
                                 'spellSlots': spellcasting.get('spellSlots', npc_data.get('spellSlots', {})),
                                 'spells': spells_by_level,
-                                'conditions': npc_data.get('conditions', [])
+                                'conditions': npc_data.get('conditions', []),
+                                'classFeatures': class_features
                             })
                             continue
             except:
