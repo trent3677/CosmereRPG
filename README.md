@@ -103,10 +103,18 @@ Access the toolkit from the web interface or launch directly with `python launch
 - **Ability Generation** - Create unique abilities and attacks
 - **Visual Integration** - Assign portraits and animations from packs
 
+### Module Media Generator
+- **Batch Image Generation** - Create images for all NPCs and monsters in a module
+- **Missing Asset Detection** - Automatically identifies characters without images
+- **Style Consistency** - Apply consistent art styles across entire modules
+- **Description Generation** - AI creates detailed visual descriptions for image generation
+- **Progress Tracking** - Real-time status updates during batch generation
+- **Selective Overwrite** - Choose whether to replace existing images
+
 ### Graphic Pack System
+- **Reusable Asset Packs** - Share visual content across multiple modules
 - **Pack Manager** - Create, import, export, and manage visual content packs
-- **Photorealistic Pack Included** - High-quality portraits for characters and monsters
-- **Video Processing** - Convert character videos to animated portraits
+- **Module Independence** - Images stored in packs for easy module distribution
 - **Style Templates** - Multiple visual styles (photorealistic, fantasy art, pixel art)
 - **Thumbnail Generation** - Automatic thumbnail creation for galleries
 - **Pack Merging** - Combine multiple packs into custom collections
@@ -699,14 +707,22 @@ python launch_toolkit.py
 4. Review and customize as needed
 ```
 
-### Managing Graphic Packs
+### Managing Graphic Packs and Module Media
 ```python
 # From the toolkit interface:
-1. Go to "Graphic Packs" tab
-2. Create new pack or import ZIP
-3. Add monsters and NPCs
-4. Generate portraits with AI
-5. Export pack for sharing
+
+# Graphic Pack Management:
+1. Go to "Graphic Pack Management" tab
+2. Create new pack or select existing
+3. Set as active pack for image storage
+4. Export pack as ZIP for sharing
+
+# Module Media Generation:
+1. Go to "Module Media Generator" tab  
+2. Select module and art style
+3. Review NPCs/monsters without images
+4. Click "Generate Selected" for batch creation
+5. Images automatically saved to active pack
 ```
 
 ### Natural Language Storage
