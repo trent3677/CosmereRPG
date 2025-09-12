@@ -16,6 +16,7 @@ combat_conversation_compressed_output.json
 compress_monster_videos.py
 restore_character_backup.py
 dnd_map_generator.py
+dnd_map_generator.html
 
 # Original/uncompressed images
 raw_images/
