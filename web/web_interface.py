@@ -2315,7 +2315,7 @@ def handle_party_data_request():
                             'class': player_data.get('class', 'Unknown'),
                             'ac': player_data.get('armorClass', 10),
                             'speed': player_data.get('speed', 30),
-                            'initiative': player_data.get('initiativeBonus', 0),
+                            'initiative': player_data.get('initiative', 0),
                             'primaryAttack': {
                                 'bonus': player_data.get('attackBonus', 0),
                                 'damage': player_data.get('weaponDamage', '1d4')
@@ -2378,7 +2378,7 @@ def handle_party_data_request():
                                 'class': npc_data.get('class', 'Unknown'),
                                 'ac': npc_data.get('armorClass', 10),
                                 'speed': npc_data.get('speed', 30),
-                                'initiative': npc_data.get('initiativeBonus', 0),
+                                'initiative': npc_data.get('initiative', 0),
                                 'primaryAttack': {
                                     'bonus': npc_data.get('attackBonus', 0),
                                     'damage': npc_data.get('weaponDamage', '1d4')
