@@ -12,6 +12,10 @@ ENV/
 # Development and test files
 compression_development/
 development/
+combat_conversation_compressed_output.json
+compress_monster_videos.py
+restore_character_backup.py
+dnd_map_generator.py
 
 # Original/uncompressed images
 raw_images/
