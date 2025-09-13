@@ -762,7 +762,8 @@ FLAWS: {member_data['flaws']}
                     equipment_list = []
                     for item in npc_data['equipment']:
                         item_description = f"{item['item_name']} ({item['item_type']})"
-                        if item['quantity'] > 1:
+                        # Check if quantity exists before accessing it
+                        if item.get('quantity', 1) > 1:
                             item_description = f"{item_description} x{item['quantity']}"
                         equipment_list.append(item_description)
                     

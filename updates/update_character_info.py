@@ -104,6 +104,8 @@ import os
 from datetime import datetime
 from jsonschema import validate, ValidationError
 from openai import OpenAI
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import List, Tuple, Dict, Any, Optional
 
 # Import OpenAI usage tracking (safe - won't break if fails)
 try:
@@ -1809,16 +1811,31 @@ Please provide the CORRECT currency values:
                     pre_validation_xp = pre_validation_data.get('experience_points', 0) if pre_validation_data else 0
                     print(f"DEBUG: [XP Tracking] {character_name} XP BEFORE validation: {pre_validation_xp}")
                     
-                    info(f"[Character Validator] Starting validation for {character_name}...", category="character_validation")
+                    info(f"[Character Validator] Starting smart validation for {character_name}...", category="character_validation")
                     validator = AICharacterValidator()
-                    validated_data, validation_success = validator.validate_character_file_safe(character_path)
-                    
-                    if validation_success and validator.corrections_made:
-                        debug("VALIDATION: Character auto-validated with corrections...", category="character_validation")
-                    elif validation_success:
-                        debug("VALIDATION: Character validated - no corrections needed", category="character_validation")
+
+                    # Load character data for smart validation
+                    char_data = safe_read_json(character_path)
+                    if char_data:
+                        # Use smart validation that checks cache first
+                        validated_data = validator.validate_and_correct_character_smart(char_data)
+
+                        # Save the validated data back with better error handling
+                        if validated_data != char_data:
+                            # Ensure write completes successfully
+                            write_success = safe_write_json(character_path, validated_data)
+                            if write_success:
+                                debug("VALIDATION: Character auto-validated with corrections (using cache where possible)...", category="character_validation")
+                                validation_success = True
+                            else:
+                                error(f"VALIDATION: Failed to write validated data for {character_name}", category="character_validation")
+                                validation_success = False
+                        else:
+                            debug("VALIDATION: Character validated - no corrections needed (cache hits used)", category="character_validation")
+                            validation_success = True
                     else:
-                        warning("VALIDATION: Character validation failed, but update completed", category="character_validation")
+                        warning("VALIDATION: Could not load character data for validation", category="character_validation")
+                        validation_success = False
                     
                     # DEBUG: Check XP after validation
                     post_validation_data = safe_read_json(character_path)
@@ -1980,6 +1997,249 @@ def list_character_backups(character_name, character_role=None):
         error(f"FAILURE: Error listing backups", exception=e, category="file_operations")
     
     return backups
+
+
+def update_multiple_characters_parallel(
+    character_updates_list: List[Tuple[str, str, Optional[str]]], 
+    max_workers: int = 4
+) -> Dict[str, bool]:
+    """
+    Update multiple characters in parallel using ThreadPoolExecutor.
+    Reduces total processing time when updating multiple characters.
+    
+    Args:
+        character_updates_list: List of tuples (character_name, changes, character_role)
+                               character_role can be None for auto-detection
+        max_workers: Maximum number of parallel threads (default 4)
+    
+    Returns:
+        Dict mapping character names to update results (True/False)
+    
+    Example:
+        updates = [
+            ("Eirik Hearthwise", "Restore all spell slots after long rest", "player"),
+            ("Ranger Thane", "Heal to full HP after long rest", "player"),
+            ("Lyra Nyx", "Restore all spell slots after long rest", "player"),
+            ("Thorin Ironforge", "Heal to full HP after long rest", "player")
+        ]
+        results = update_multiple_characters_parallel(updates)
+        # All 4 characters updated simultaneously instead of sequentially
+    """
+    info(f"[PARALLEL UPDATE] Starting parallel update for {len(character_updates_list)} characters", 
+         category="character_updates")
+    start_time = time.time()
+    
+    results = {}
+    errors = {}
+    
+    # Create a thread pool executor
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        # Submit all character updates to the thread pool
+        future_to_char = {}
+        for char_name, changes, role in character_updates_list:
+            future = executor.submit(
+                update_character_info,
+                char_name,
+                changes,
+                character_role=role
+            )
+            future_to_char[future] = char_name
+            debug(f"[PARALLEL UPDATE] Submitted task for {char_name}: {changes[:50]}...", 
+                  category="character_updates")
+        
+        # Collect results as they complete
+        for future in as_completed(future_to_char):
+            char_name = future_to_char[future]
+            try:
+                result = future.result()
+                results[char_name] = result
+                info(f"[PARALLEL UPDATE] Completed {char_name}: {'Success' if result else 'Failed'}", 
+                     category="character_updates")
+            except Exception as e:
+                error_msg = f"Error updating {char_name}: {str(e)}"
+                error(f"[PARALLEL UPDATE] {error_msg}", category="character_updates")
+                errors[char_name] = error_msg
+                results[char_name] = False
+    
+    elapsed = time.time() - start_time
+    info(f"[PARALLEL UPDATE] Completed all updates in {elapsed:.2f} seconds", 
+         category="character_updates")
+    
+    # Report summary
+    successful = sum(1 for r in results.values() if r)
+    failed = len(results) - successful
+    info(f"[PARALLEL UPDATE] Summary: {successful} successful, {failed} failed", 
+         category="character_updates")
+    
+    if errors:
+        warning(f"[PARALLEL UPDATE] Errors: {list(errors.keys())}", 
+                category="character_updates")
+    
+    return results
+
+
+def validate_multiple_characters_parallel(
+    character_list: List[Dict[str, Any]] = None,
+    character_names: List[str] = None,
+    max_workers: int = 4
+) -> Dict[str, Dict[str, Any]]:
+    """
+    Validate multiple characters in parallel using the optimized AICharacterValidator.
+    Uses smart batching and caching to minimize API calls.
+    
+    Args:
+        character_list: List of character data dictionaries (if already loaded)
+        character_names: List of character names to load and validate
+        max_workers: Maximum number of parallel validation workers
+    
+    Returns:
+        Dict mapping character names to validation results
+    
+    Example:
+        # After combat, validate all party members
+        results = validate_multiple_characters_parallel(
+            character_names=["Eirik Hearthwise", "Ranger Thane", "Lyra Nyx", "Thorin Ironforge"]
+        )
+        # Smart validator checks cache first, only calls API for changed data
+    """
+    # Load character data if names provided
+    if character_names and not character_list:
+        info(f"[PARALLEL VALIDATION] Loading {len(character_names)} characters", 
+             category="character_validation")
+        
+        character_list = []
+        party_tracker_data = safe_json_load("party_tracker.json")
+        current_module = party_tracker_data.get("module", "").replace(" ", "_") if party_tracker_data else None
+        path_manager = ModulePathManager(current_module)
+        
+        for char_name in character_names:
+            char_path = get_character_path(char_name)
+            if char_path and os.path.exists(char_path):
+                char_data = safe_read_json(char_path)
+                if char_data:
+                    character_list.append(char_data)
+                    debug(f"[PARALLEL VALIDATION] Loaded {char_name}", 
+                          category="character_validation")
+            else:
+                warning(f"[PARALLEL VALIDATION] Could not find: {char_name}", 
+                        category="character_validation")
+    
+    if not character_list:
+        warning("[PARALLEL VALIDATION] No characters to validate", 
+                category="character_validation")
+        return {}
+    
+    info(f"[PARALLEL VALIDATION] Starting smart validation for {len(character_list)} characters", 
+         category="character_validation")
+    start_time = time.time()
+    
+    # Use the optimized smart batching validator with caching
+    validator = AICharacterValidator()
+    
+    # Check what needs validation first (cache check)
+    validation_needs = {}
+    for char in character_list:
+        char_name = char.get('name', 'Unknown')
+        needs = validator.check_validation_needs(char)
+        validation_needs[char_name] = needs
+        
+        # Log what will be validated
+        validators_needed = [v for v, needed in needs.items() if needed]
+        if validators_needed:
+            info(f"[PARALLEL VALIDATION] {char_name} needs: {', '.join(validators_needed)}", 
+                 category="character_validation")
+        else:
+            info(f"[PARALLEL VALIDATION] {char_name} fully cached - no API calls", 
+                 category="character_validation")
+    
+    # Run smart batched validation (only calls API for non-cached data)
+    results = validator.validate_multiple_characters_smart(character_list)
+    
+    elapsed = time.time() - start_time
+    info(f"[PARALLEL VALIDATION] Completed in {elapsed:.2f} seconds", 
+         category="character_validation")
+    
+    # Count actual API calls made
+    api_calls_made = sum(
+        sum(1 for v, needed in needs.items() if needed)
+        for needs in validation_needs.values()
+    )
+    api_calls_without_cache = len(character_list) * 3  # AC, inventory, currency
+    
+    info(f"[PARALLEL VALIDATION] API calls: {api_calls_made}/{api_calls_without_cache} " +
+         f"(saved {api_calls_without_cache - api_calls_made} calls via cache)", 
+         category="character_validation")
+    
+    return results
+
+
+def update_party_parallel(changes_dict: Dict[str, str], max_workers: int = 4) -> Dict[str, bool]:
+    """
+    Convenience function to update all party members in parallel.
+    Common use cases: party rest, area effects, XP distribution.
+    
+    Args:
+        changes_dict: Dict mapping character names to their changes
+        max_workers: Maximum number of parallel threads
+    
+    Returns:
+        Dict mapping character names to update results
+    
+    Example - Party Long Rest:
+        changes = {
+            "Eirik Hearthwise": "Long rest: Restore all HP and spell slots",
+            "Ranger Thane": "Long rest: Restore all HP",
+            "Lyra Nyx": "Long rest: Restore all HP and spell slots",
+            "Thorin Ironforge": "Long rest: Restore all HP"
+        }
+        results = update_party_parallel(changes)
+    
+    Example - Combat XP Distribution:
+        changes = {
+            "Eirik Hearthwise": "Gain 250 XP from defeating goblins",
+            "Ranger Thane": "Gain 250 XP from defeating goblins",
+            "Lyra Nyx": "Gain 250 XP from defeating goblins",
+            "Thorin Ironforge": "Gain 250 XP from defeating goblins"
+        }
+        results = update_party_parallel(changes)
+    """
+    # Convert dict to list of tuples for parallel processing
+    updates_list = [(name, change, None) for name, change in changes_dict.items()]
+    return update_multiple_characters_parallel(updates_list, max_workers)
+
+
+def validate_party_parallel(max_workers: int = 4) -> Dict[str, Dict[str, Any]]:
+    """
+    Convenience function to validate all party members in parallel.
+    Uses smart caching to minimize API calls - only validates changed data.
+    
+    Args:
+        max_workers: Maximum number of parallel validation threads
+    
+    Returns:
+        Dict mapping character names to validation results
+    
+    Example:
+        # After combat ends, validate all party members
+        results = validate_party_parallel()
+        # Only makes API calls for data that changed during combat
+    """
+    # Get current party members from tracker
+    party_tracker = safe_json_load("party_tracker.json")
+    if not party_tracker or "partyMembers" not in party_tracker:
+        warning("[PARALLEL VALIDATION] No party members found", 
+                category="character_validation")
+        return {}
+    
+    party_members = party_tracker["partyMembers"]
+    info(f"[PARALLEL VALIDATION] Validating party: {', '.join(party_members)}", 
+         category="character_validation")
+    
+    return validate_multiple_characters_parallel(
+        character_names=party_members,
+        max_workers=max_workers
+    )
+
 
 if __name__ == "__main__":
     # Test the unified system

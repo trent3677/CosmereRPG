@@ -1,0 +1,29 @@
+{
+  "Eirik Hearthwise": {
+    "ac_hash": "86ab7c4f607f88b416cc9c37838b28f431dda863086a0e900f025f9a8824da42",
+    "last_ac_validation": "2025-09-13T07:25:02.792198",
+    "ac_value": 16,
+    "inventory_hash": "de96f2771ad3b6815ad6563f81a1a1ef4cdbc529c8900a679da3fbf5fe6f9945",
+    "last_inventory_validation": "2025-09-13T07:24:47.370841",
+    "currency_hash": "cdaf69acd359e1eb4ec1374721df09cc8cf427ea644ff8893d3acfa5b7b0fd71",
+    "last_currency_validation": "2025-09-13T07:24:49.314893"
+  },
+  "Ranger Thane": {
+    "ac_hash": "3b76fb9bc6082b228d1378dde703e430e56627d2355ab62e78863ac1b8a62d71",
+    "last_ac_validation": "2025-09-13T07:24:44.376630",
+    "ac_value": 15,
+    "inventory_hash": "978d96049e007fb505ede5701d32f5005d544bd3a2ccfc785b5228e810b951f7",
+    "last_inventory_validation": "2025-09-13T08:35:42.896170",
+    "currency_hash": "b223bcdcfb4de44502b23ff61d78f1fb4b8c43ba81f6c8c9c262f8f10e90fb0d",
+    "last_currency_validation": "2025-09-13T07:24:50.748970"
+  },
+  "Scout Elen": {
+    "ac_hash": "d6e0ccc88b9ac3b7f66dad5bb511a27b6b5d0ba2de73dc972d73cec7db4351c4",
+    "last_ac_validation": "2025-09-13T08:35:52.442822",
+    "ac_value": 16,
+    "inventory_hash": "ce86f04024004fd9397ac4a581fa10139233fa31039448bcce6d0d4d9306608b",
+    "last_inventory_validation": "2025-09-13T08:35:52.471344",
+    "currency_hash": "eab33ef11dd396eddc81664a156965c73f4d0e8f078f6081d1c1dd35a723bcd9",
+    "last_currency_validation": "2025-09-13T08:35:52.497364"
+  }
+}
