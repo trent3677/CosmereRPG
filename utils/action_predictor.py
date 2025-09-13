@@ -67,6 +67,8 @@ ALWAYS RETURN TRUE for:
 
 NOTE: updateTime is excluded from prediction as it's called for almost every interaction.
 
+SPECIAL: Return FALSE for simple rest requests ("I take a long rest", "short rest", "we rest") - these have formulaic responses the mini model can handle.
+
 RETURN FALSE for pure roleplay:
 - Questions about lore/NPCs/world
 - Simple dialogue ("I say...", "Tell me about...")
@@ -79,7 +81,6 @@ KEY PATTERNS:
 TRUE INDICATORS:
 - "I pick up/take/grab" → inventory change
 - "I go to/travel to/enter" → location change  
-- "I rest/sleep" → time + character update
 - "I cast/use/drink" → character update
 - "I attack/fight" → combat encounter
 - "I store/retrieve" → storage action
@@ -116,7 +117,7 @@ Examples:
 - "I go to the tavern" → TRUE (location change)  
 - "What's in this room?" → FALSE (asking for description)
 - "I tell the guard about the bandits" → FALSE (pure dialogue)
-- "I rest for 8 hours" → TRUE (time + character updates)
+- "I take a long rest" → FALSE (simple rest - mini model can handle)
 - "I rolled a natural 20!" → TRUE (dice outcomes typically trigger character/plot updates)
 - "I search for signs of danger" → TRUE (investigation actions often update plot with discoveries)
 - "Error Note: Your previous response failed validation" → TRUE (error corrections often require re-doing actions)

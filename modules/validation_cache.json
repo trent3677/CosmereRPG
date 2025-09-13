@@ -5,8 +5,8 @@
     "ac_value": 16,
     "inventory_hash": "de96f2771ad3b6815ad6563f81a1a1ef4cdbc529c8900a679da3fbf5fe6f9945",
     "last_inventory_validation": "2025-09-13T07:24:47.370841",
-    "currency_hash": "cdaf69acd359e1eb4ec1374721df09cc8cf427ea644ff8893d3acfa5b7b0fd71",
-    "last_currency_validation": "2025-09-13T07:24:49.314893"
+    "currency_hash": "dd9b82f012b8bc9984653ffa74f6e24053d1a0fd0de6e7b9fb44d7251456142c",
+    "last_currency_validation": "2025-09-13T12:46:41.485679"
   },
   "Ranger Thane": {
     "ac_hash": "3b76fb9bc6082b228d1378dde703e430e56627d2355ab62e78863ac1b8a62d71",
@@ -14,8 +14,8 @@
     "ac_value": 15,
     "inventory_hash": "978d96049e007fb505ede5701d32f5005d544bd3a2ccfc785b5228e810b951f7",
     "last_inventory_validation": "2025-09-13T08:35:42.896170",
-    "currency_hash": "b223bcdcfb4de44502b23ff61d78f1fb4b8c43ba81f6c8c9c262f8f10e90fb0d",
-    "last_currency_validation": "2025-09-13T07:24:50.748970"
+    "currency_hash": "be46ac503853c571ea02191ba4ad05d38adaa1f99e611451d63a9d8f0934b3a3",
+    "last_currency_validation": "2025-09-13T12:45:54.632142"
   },
   "Scout Elen": {
     "ac_hash": "d6e0ccc88b9ac3b7f66dad5bb511a27b6b5d0ba2de73dc972d73cec7db4351c4",
