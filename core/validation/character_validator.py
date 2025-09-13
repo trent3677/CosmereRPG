@@ -969,12 +969,18 @@ class AICharacterValidator:
             ai_response = response.choices[0].message.content.strip()
             
             # Parse AI response to get corrected character data
-            corrected_data = self.parse_ai_validation_response(ai_response, character_data)
-            
+            corrected_data = self.parse_ai_validation_response(ai_response, ac_relevant_data)
+
+            # CRITICAL FIX: Merge the corrections into original data, don't replace!
+            # The AI only returns the extracted subset with corrections
+            # We need to merge those corrections back into the full character data
+            from updates.update_character_info import deep_merge_dict
+            merged_data = deep_merge_dict(character_data, corrected_data)
+
             # Update cache with new validation results
-            self._update_ac_cache(character_name, ac_hash, corrected_data)
-            
-            return corrected_data
+            self._update_ac_cache(character_name, ac_hash, merged_data)
+
+            return merged_data
             
         except Exception as e:
             self.logger.error(f"AI validation failed: {str(e)}")
