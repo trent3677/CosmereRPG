@@ -25,7 +25,7 @@ from utils.compression.location_compressor import compress_location
 from model_config import COMPRESSION_MAX_WORKERS
 
 class ParallelConversationCompressor:
-    def __init__(self, cache_file: str = "modules/conversation_history/compression_cache.json", max_workers: int = None):
+    def __init__(self, cache_file: str = "modules/conversation_history/compression_cache.json", max_workers: int = None, inject_module_creation: bool = False):
         """Initialize with a cache file for storing compressed sections"""
         self.cache_file = cache_file
         self.cache = self.load_cache()
@@ -35,6 +35,7 @@ class ParallelConversationCompressor:
         self.completed_count = 0
         self.total_sections = 0
         self.cache_hits = []  # Track cache hits for batch reporting
+        self.inject_module_creation = inject_module_creation  # Flag for module transition injection
         
     def load_cache(self) -> Dict[str, Any]:
         """Load existing cache from file"""
@@ -202,7 +203,7 @@ class ParallelConversationCompressor:
         """Replace the main system prompt with compressed version if applicable"""
         if message.get("role") == "system" and "content" in message:
             content = message["content"]
-            
+
             # Check if this is the main DM system prompt
             if "You are a world-class 5th edition Dungeon" in content:
                 # Load the compressed system prompt
@@ -210,20 +211,29 @@ class ParallelConversationCompressor:
                 if compressed_prompt_file.exists():
                     with open(compressed_prompt_file, 'r', encoding='utf-8') as f:
                         compressed_content = f.read()
-                    
+
+                    # If module creation injection is enabled, append the module transition prompt
+                    if self.inject_module_creation:
+                        module_transition_file = Path("prompts/generators/module_transition.txt")
+                        if module_transition_file.exists():
+                            with open(module_transition_file, 'r', encoding='utf-8') as f:
+                                module_transition_content = f.read()
+                            compressed_content += "\n\n" + module_transition_content
+                            print(f"[SYSTEM PROMPT] Module transition prompt injected ({len(module_transition_content):,} chars)")
+
                     original_len = len(content)
                     compressed_len = len(compressed_content)
                     reduction = (1 - compressed_len/original_len) * 100
-                    
+
                     print(f"\n[SYSTEM PROMPT] Replacing main system prompt:")
                     print(f"  Original: {original_len:,} chars")
                     print(f"  Compressed: {compressed_len:,} chars")
                     print(f"  Reduction: {reduction:.1f}%")
-                    
+
                     new_message = message.copy()
                     new_message["content"] = compressed_content
                     return new_message
-        
+
         return message
     
     def process_conversation_history(self, conversation_file: str) -> List[Dict[str, Any]]:

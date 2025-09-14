@@ -458,11 +458,17 @@ def update_conversation_history(conversation_history, party_tracker_data, plot_d
         else:
             world_state_parts.append(f"Current module: {current_module} (no other modules detected)")
             
-        # Add hub information if available
+        # Add hub information if available with details
         hubs = campaign_manager.campaign_data.get('hubs', {})
         if hubs:
-            hub_names = list(hubs.keys())
-            world_state_parts.append(f"Established hubs: {', '.join(hub_names)}")
+            hub_details = []
+            for hub_name, hub_data in hubs.items():
+                hub_type = hub_data.get('hubType', 'settlement')
+                services = hub_data.get('services', [])
+                ownership = hub_data.get('ownership', 'party')
+                services_str = ', '.join(services[:3]) if services else 'basic services'  # Limit to first 3 services
+                hub_details.append(f"{hub_name} ({hub_type} with {services_str}, {ownership} owned)")
+            world_state_parts.append(f"Established hubs: {'; '.join(hub_details)}")
             
         if world_state_parts:
             world_state_message = "WORLD STATE CONTEXT:\n" + "\n".join(world_state_parts)

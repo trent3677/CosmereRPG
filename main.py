@@ -920,7 +920,8 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
                 json.dump(validation_conversation, f, indent=2, ensure_ascii=False)
             
             # Compress using the parallel compressor with caching
-            compressor = ParallelConversationCompressor()
+            # Module creation flag is not available in validation context
+            compressor = ParallelConversationCompressor(inject_module_creation=False)
             validation_messages_to_send = compressor.process_conversation_history(str(temp_file))
             
             # Clean up temp file
@@ -1899,7 +1900,12 @@ def get_ai_response(conversation_history, validation_retry_count=0):
                 json.dump(conversation_history, f, indent=2, ensure_ascii=False)
             
             # Compress using our working compressor with settings from config
-            compressor = ParallelConversationCompressor()
+            # Pass the module creation flag to the compressor if available in this context
+            try:
+                inject_flag = should_inject_creation_prompt
+            except NameError:
+                inject_flag = False
+            compressor = ParallelConversationCompressor(inject_module_creation=inject_flag)
             messages_to_send = compressor.process_conversation_history(str(temp_file))
             
             # Clean up temp file
@@ -2793,6 +2799,7 @@ def main_game_loop():
                         debug(f"FILE_OP: Module creation prompt loaded ({len(module_creation_prompt)} characters)", category="module_management")
                     else:
                         warning("FILE_OP: module_creation_prompt.txt not found!", category="module_management")
+
                 else:
                     incomplete_modules = [name for name, summary in completion_summary.items() if not summary["is_complete"]]
                     if incomplete_modules:
@@ -2823,6 +2830,23 @@ def main_game_loop():
                 party_npcs_formatted.append(f"{npc['name']} ({npc['role']})") 
             party_npcs_str = ", ".join(party_npcs_formatted) if party_npcs_formatted else "None"
         
+            # Get established hubs information
+            established_hubs_str = ""
+            try:
+                from core.managers.campaign_manager import CampaignManager
+                campaign_manager = CampaignManager()
+                hubs = campaign_manager.get_available_hubs()
+                if hubs:
+                    hub_details = []
+                    for hub in hubs:
+                        hub_data = campaign_manager.campaign_data['hubs'].get(hub, {})
+                        ownership = hub_data.get('ownership', 'party')
+                        hub_type = hub_data.get('hubType', 'settlement')
+                        hub_details.append(f"{hub} ({hub_type}, {ownership})")
+                    established_hubs_str = f" Established hubs: {', '.join(hub_details)}."
+            except Exception as e:
+                debug(f"Could not load hub information: {e}", category="dm_note")
+
             # Build DM note - exclude plot/quest info when module creation is active
             if should_inject_creation_prompt:
                 # Simplified DM note for module creation - no confusing plot/quest info
@@ -2832,7 +2856,7 @@ def main_game_loop():
                     f"Party members: {party_members_str}. "
                     f"Party NPCs: {party_npcs_str}. "
                     f"Party stats: {party_stats_str}. "
-                    f"Adjacent locations in this area: {connected_locations_display_str}{connected_areas_display_str}{available_modules_str}.\n")
+                    f"Adjacent locations in this area: {connected_locations_display_str}{connected_areas_display_str}{available_modules_str}{established_hubs_str}.\n")
             else:
                 # Normal DM note with all plot/quest/monster info
                 dm_note = (f"Dungeon Master Note: Current date and time: {date_time_str}, {current_season} season. "
@@ -2842,7 +2866,7 @@ def main_game_loop():
                     f"Party NPCs: {party_npcs_str}. "
                     f"Party stats: {party_stats_str}. "
                     # --- MODIFIED LINE TO INCLUDE CONNECTIVITY ---
-                    f"Adjacent locations in this area: {connected_locations_display_str}{connected_areas_display_str}{available_modules_str}.\n"
+                    f"Adjacent locations in this area: {connected_locations_display_str}{connected_areas_display_str}{available_modules_str}{established_hubs_str}.\n"
                     # --- END OF MODIFIED LINE ---
                     f"Active plot points for this location:\n{plot_points_str}\n"
                     f"Active side quests for this location:\n{side_quests_str}\n"
