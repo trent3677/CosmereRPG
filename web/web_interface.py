@@ -53,6 +53,7 @@ import queue
 import time
 import webbrowser
 from datetime import datetime
+from collections import deque
 import io
 import zipfile
 from contextlib import redirect_stdout, redirect_stderr
@@ -153,6 +154,43 @@ game_thread = None
 original_stdout = sys.stdout
 original_stderr = sys.stderr
 original_stdin = sys.stdin
+
+# Message cache for persistence across restarts
+MESSAGE_CACHE_FILE = "modules/conversation_history/game_interface_cache.json"
+MESSAGE_CACHE_SIZE = 15  # Keep last 15 messages
+message_cache = deque(maxlen=MESSAGE_CACHE_SIZE)
+
+# Message cache functions
+def load_message_cache():
+    """Load message cache from file"""
+    global message_cache
+    try:
+        if os.path.exists(MESSAGE_CACHE_FILE):
+            with open(MESSAGE_CACHE_FILE, 'r', encoding='utf-8') as f:
+                cached_messages = json.load(f)
+                message_cache = deque(cached_messages, maxlen=MESSAGE_CACHE_SIZE)
+                print(f"[MESSAGE_CACHE] Loaded {len(message_cache)} cached messages")
+                return cached_messages
+    except Exception as e:
+        print(f"[MESSAGE_CACHE] Failed to load cache: {e}")
+    return []
+
+def save_message_cache():
+    """Save message cache to file"""
+    try:
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(MESSAGE_CACHE_FILE), exist_ok=True)
+        with open(MESSAGE_CACHE_FILE, 'w', encoding='utf-8') as f:
+            json.dump(list(message_cache), f, indent=2)
+    except Exception as e:
+        print(f"[MESSAGE_CACHE] Failed to save cache: {e}")
+
+def add_to_message_cache(message):
+    """Add a message to the cache and save it"""
+    # Only cache narration and user-input types
+    if message.get('type') in ['narration', 'user-input']:
+        message_cache.append(message)
+        save_message_cache()
 
 # Status callback function
 def emit_status_update(status_message, is_processing):
@@ -256,10 +294,12 @@ class WebOutputCapture:
                                 # Remove "Dungeon Master:" prefix from the beginning if present
                                 combined_content = combined_content.replace('Dungeon Master:', '', 1).strip()
                                 if combined_content.strip():  # Only send if there's actual content
-                                    game_output_queue.put({
+                                    message = {
                                         'type': 'narration',
                                         'content': combined_content
-                                    })
+                                    }
+                                    game_output_queue.put(message)
+                                    add_to_message_cache(message)
                                     # Debug trace for successful DM output
                                     debug_output_queue.put({
                                         'type': 'debug',
@@ -320,10 +360,12 @@ class WebOutputCapture:
                                     combined_content = '\n'.join(self.dm_buffer)
                                     combined_content = combined_content.replace('Dungeon Master:', '', 1).strip()
                                     if combined_content.strip():
-                                        game_output_queue.put({
+                                        message = {
                                             'type': 'narration',
                                             'content': combined_content
-                                        })
+                                        }
+                                        game_output_queue.put(message)
+                                        add_to_message_cache(message)
                                 except Exception:
                                     # If DM content processing fails, just continue
                                     pass
@@ -384,10 +426,12 @@ class WebOutputCapture:
             # Remove "Dungeon Master:" prefix from the beginning if present
             combined_content = combined_content.replace('Dungeon Master:', '', 1).strip()
             if combined_content.strip():  # Only send if there's actual content
-                game_output_queue.put({
+                message = {
                     'type': 'narration',
                     'content': combined_content
-                })
+                }
+                game_output_queue.put(message)
+                add_to_message_cache(message)
             self.in_dm_section = False
             self.dm_buffer = []
         
@@ -1887,12 +1931,18 @@ def get_module_unified_assets(module_name):
 def handle_connect():
     """Handle client connection"""
     emit('connected', {'data': 'Connected to NeverEndingQuest'})
-    
+
+    # Load and send cached messages from previous session
+    cached_messages = load_message_cache()
+    if cached_messages:
+        emit('cached_messages', cached_messages)
+        print(f"[MESSAGE_CACHE] Sent {len(cached_messages)} cached messages to client")
+
     # Send any queued messages
     while not game_output_queue.empty():
         msg = game_output_queue.get()
         emit('game_output', msg)
-    
+
     while not debug_output_queue.empty():
         msg = debug_output_queue.get()
         emit('debug_output', msg)
@@ -1904,10 +1954,12 @@ def handle_user_input(data):
     user_input_queue.put(user_input)
     
     # Echo the input back to the game output
-    emit('game_output', {
+    message = {
         'type': 'user-input',
         'content': user_input
-    })
+    }
+    emit('game_output', message)
+    add_to_message_cache(message)
 
 @socketio.on('action')
 def handle_action(data):
@@ -1972,8 +2024,12 @@ def handle_action(data):
     elif action_type == 'nuclearReset':
         try:
             reset_campaign.perform_reset_logic()
+            # Clear the message cache on campaign reset
+            global message_cache
+            message_cache.clear()
+            save_message_cache()
             emit('reset_complete', {'message': 'Campaign has been reset. Reloading...'})
-            socketio.sleep(1) 
+            socketio.sleep(1)
             print("INFO: Campaign reset complete. Server is shutting down for restart.")
             os._exit(0)
         except Exception as e:

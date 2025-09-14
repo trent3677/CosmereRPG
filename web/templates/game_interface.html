@@ -4876,9 +4876,28 @@
             loadLocationData();
             requestInitiativeData(); // Check for combat on game start
         });
-        
-        socket.on('game_output', (message) => { 
-            addMessage('game-output', message); 
+
+        // Handle cached messages from previous session
+        socket.on('cached_messages', (messages) => {
+            console.log(`[MESSAGE_CACHE] Restoring ${messages.length} cached messages`);
+            // Add a divider to show where cached messages end
+            if (messages.length > 0) {
+                addMessage('game-output', {
+                    type: 'system',
+                    content: '--- Previous Session Messages ---'
+                });
+                messages.forEach(msg => {
+                    addMessage('game-output', msg);
+                });
+                addMessage('game-output', {
+                    type: 'system',
+                    content: '--- Current Session ---'
+                });
+            }
+        });
+
+        socket.on('game_output', (message) => {
+            addMessage('game-output', message);
             // Check for combat immediately after any game output
             requestInitiativeData();
             // After any game output, refresh plot data with a slight delay
