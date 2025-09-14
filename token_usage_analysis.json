@@ -1,0 +1,95 @@
+{
+  "summary": {
+    "total_entries": 2401,
+    "total_cost": 48.88,
+    "models": {
+      "gpt-4.1-mini-2025-04-14": {
+        "calls": 925,
+        "total_tokens": 8978086,
+        "prompt_tokens": 8720882,
+        "completion_tokens": 257204
+      },
+      "gpt-4.1-2025-04-14": {
+        "calls": 1474,
+        "total_tokens": 17741795,
+        "prompt_tokens": 17333780,
+        "completion_tokens": 408015
+      },
+      "gpt-4o-mini-2024-07-18": {
+        "calls": 2,
+        "total_tokens": 65144,
+        "prompt_tokens": 64758,
+        "completion_tokens": 386
+      }
+    }
+  },
+  "by_category": {
+    "Main Game Loop": {
+      "calls": 349,
+      "total_tokens": 8293998,
+      "percentage": 31.0
+    },
+    "unknown": {
+      "calls": 1164,
+      "total_tokens": 9700157,
+      "percentage": 36.2
+    },
+    "Other": {
+      "calls": 623,
+      "total_tokens": 6544340,
+      "percentage": 24.4
+    },
+    "Summaries/Compression": {
+      "calls": 31,
+      "total_tokens": 59915,
+      "percentage": 0.2
+    },
+    "Content Generation": {
+      "calls": 31,
+      "total_tokens": 42819,
+      "percentage": 0.2
+    },
+    "Combat": {
+      "calls": 203,
+      "total_tokens": 2143796,
+      "percentage": 8.0
+    }
+  },
+  "top_endpoints": [
+    {
+      "endpoint": "main_dm",
+      "calls": 349,
+      "total_tokens": 8293998
+    },
+    {
+      "endpoint": "character_validation",
+      "calls": 315,
+      "total_tokens": 4398603
+    },
+    {
+      "endpoint": "combat_validation",
+      "calls": 203,
+      "total_tokens": 2143796
+    },
+    {
+      "endpoint": "validation",
+      "calls": 299,
+      "total_tokens": 1852181
+    },
+    {
+      "endpoint": "web_validation",
+      "calls": 9,
+      "total_tokens": 293556
+    },
+    {
+      "endpoint": "narration_generator",
+      "calls": 31,
+      "total_tokens": 59915
+    },
+    {
+      "endpoint": "narrative_stitching",
+      "calls": 31,
+      "total_tokens": 42819
+    }
+  ]
+}

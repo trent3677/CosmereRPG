@@ -61,9 +61,6 @@ making it flexible and adaptable to any character structure or edge case.
 import json
 import copy
 import logging
-import os
-import hashlib
-from datetime import datetime
 from typing import Dict, List, Any, Optional
 from openai import OpenAI
 
@@ -83,7 +80,7 @@ set_script_name(__name__)
 
 class AICharacterValidator:
     def __init__(self):
-        """Initialize AI-powered validator with caching"""
+        """Initialize AI-powered validator"""
         self.logger = logging.getLogger(__name__)
         try:
             self.client = OpenAI(api_key=OPENAI_API_KEY)
@@ -98,582 +95,6 @@ class AICharacterValidator:
             info("3. Try running in a different environment", category="character_validation")
             raise
         self.corrections_made = []
-        
-        # Load prompts from external files
-        self.ac_prompt = self._load_prompt('character_validator_ac.txt')
-        self.inventory_prompt = self._load_prompt('character_validator_inventory.txt')
-        
-        # Initialize validation cache
-        self.cache_file = os.path.join('modules', 'validation_cache.json')
-        self.validation_cache = self._load_cache()
-    
-    def _load_prompt(self, filename: str) -> str:
-        """
-        Load a prompt from an external file
-        
-        Args:
-            filename: Name of the prompt file
-            
-        Returns:
-            Content of the prompt file
-        """
-        prompt_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'prompts', filename)
-        
-        try:
-            with open(prompt_path, 'r', encoding='utf-8') as f:
-                prompt = f.read()
-                debug(f"Loaded prompt from {filename}: {len(prompt)} characters", category="character_validation")
-                return prompt
-        except FileNotFoundError:
-            error(f"Prompt file not found: {prompt_path}", category="character_validation")
-            # Fall back to empty prompt if file not found
-            return ""
-        except Exception as e:
-            error(f"Error loading prompt from {filename}: {str(e)}", category="character_validation")
-            return ""
-    
-    def extract_ac_relevant_data(self, character_data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Extract only the fields relevant for AC validation.
-        This dramatically reduces token usage from ~7800 to ~500-800.
-        
-        Based on Gemini consultation, includes all D&D 5e AC-affecting fields:
-        - Core context (class, race) for AC rules
-        - All ability scores needed for Unarmored Defense
-        - Equipment effects array with structured AC data
-        - Racial traits and feats that could affect AC
-        - Armor proficiencies for validation
-        
-        Args:
-            character_data: Full character JSON data
-            
-        Returns:
-            Minimal data needed for AC validation
-        """
-        # Start with essential fields including class and race for context
-        ac_data = {
-            'name': character_data.get('name', 'Unknown'),
-            'armorClass': character_data.get('armorClass', 10),
-            'class': character_data.get('class', 'Unknown'),  # Critical for Unarmored Defense rules
-            'race': character_data.get('race', 'Unknown'),    # Critical for natural armor (Tortle, etc.)
-            'abilities': {
-                'dexterity': character_data.get('abilities', {}).get('dexterity', 10),
-                'constitution': character_data.get('abilities', {}).get('constitution', 10),  # Barbarian Unarmored Defense
-                'wisdom': character_data.get('abilities', {}).get('wisdom', 10)  # Monk Unarmored Defense
-            }
-        }
-        
-        # Include armor proficiencies to validate proper armor usage
-        proficiencies = character_data.get('proficiencies', {})
-        if 'armor' in proficiencies:
-            ac_data['proficiencies'] = {'armor': proficiencies['armor']}
-        
-        # Process equipment_effects array - HIGH PRIORITY (structured AC data)
-        equipment_effects = character_data.get('equipment_effects', [])
-        ac_equipment_effects = []
-        for effect in equipment_effects:
-            # Include effects that explicitly target AC
-            if effect.get('target', '').upper() == 'AC' or 'ac' in effect.get('target', '').lower():
-                ac_equipment_effects.append(effect)
-        
-        if ac_equipment_effects:
-            ac_data['equipment_effects'] = ac_equipment_effects
-        
-        # Filter equipment to only AC-relevant items (refined logic)
-        equipment = character_data.get('equipment', [])
-        ac_relevant_equipment = []
-        
-        for item in equipment:
-            item_name = item.get('item_name', '').lower()
-            item_type = item.get('item_type', '').lower()
-            description = item.get('description', '').lower()
-            equipped = item.get('equipped', False)
-            
-            # Include if it's armor, shield, or potentially magical AC item
-            include_item = False
-            
-            # Always include armor and shields
-            if item_type == 'armor' or 'armor' in item_name or 'shield' in item_name:
-                include_item = True
-            
-            # Check for explicit AC bonuses in item fields
-            elif 'ac_base' in item or 'ac_bonus' in item:
-                include_item = True
-            
-            # Include equipped items with specific AC patterns in description
-            elif equipped:
-                # Look for explicit AC bonuses like "+1 to AC", "bonus to AC"
-                if any(pattern in description for pattern in ['+1 to ac', '+2 to ac', 'bonus to ac', 'armor class']):
-                    include_item = True
-                # Check known AC-boosting item names
-                elif any(ac_item in item_name for ac_item in ['ring of protection', 'cloak of protection', 'bracers of defense']):
-                    include_item = True
-            
-            if include_item:
-                # Include all armor-related fields for proper validation
-                item_data = {
-                    'item_name': item.get('item_name'),
-                    'item_type': item.get('item_type'),
-                    'equipped': item.get('equipped', False),
-                    'description': item.get('description', '')[:200]  # Limit description length
-                }
-                
-                # Include armor-specific fields if present
-                for field in ['ac_base', 'ac_bonus', 'dex_limit', 'armor_category', 'stealth_disadvantage']:
-                    if field in item:
-                        item_data[field] = item[field]
-                
-                ac_relevant_equipment.append(item_data)
-        
-        ac_data['equipment'] = ac_relevant_equipment
-        
-        # Include class features that might affect AC (like Defense fighting style, Unarmored Defense)
-        class_features = character_data.get('classFeatures', [])
-        ac_relevant_features = []
-        
-        for feature in class_features:
-            feature_name = feature.get('name', '').lower()
-            feature_desc = feature.get('description', '').lower()
-            # Expanded keywords to catch Unarmored Defense and other AC features
-            if any(keyword in feature_name for keyword in ['defense', 'armor', 'ac', 'protection', 'shield', 'unarmored']):
-                ac_relevant_features.append(feature)
-            # Also check description for AC mentions
-            elif any(keyword in feature_desc for keyword in ['armor class', 'ac equal', 'ac bonus']):
-                ac_relevant_features.append(feature)
-        
-        if ac_relevant_features:
-            ac_data['classFeatures'] = ac_relevant_features
-        
-        # Include racial traits (for natural armor like Tortle)
-        racial_traits = character_data.get('racialTraits', [])
-        ac_relevant_traits = []
-        
-        for trait in racial_traits:
-            trait_name = trait.get('name', '').lower()
-            trait_desc = trait.get('description', '').lower()
-            if any(keyword in trait_name + trait_desc for keyword in ['armor', 'ac', 'natural armor', 'protection']):
-                ac_relevant_traits.append(trait)
-        
-        if ac_relevant_traits:
-            ac_data['racialTraits'] = ac_relevant_traits
-        
-        # Include feats (for Defensive Duelist, Medium Armor Master, etc.)
-        feats = character_data.get('feats', [])
-        ac_relevant_feats = []
-        
-        for feat in feats:
-            # If feat is a string, check the name
-            if isinstance(feat, str):
-                feat_lower = feat.lower()
-                if any(keyword in feat_lower for keyword in ['defense', 'armor', 'ac', 'duelist']):
-                    ac_relevant_feats.append(feat)
-            # If feat is a dict, check name and description
-            elif isinstance(feat, dict):
-                feat_name = feat.get('name', '').lower()
-                feat_desc = feat.get('description', '').lower()
-                if any(keyword in feat_name + feat_desc for keyword in ['defense', 'armor', 'ac', 'duelist']):
-                    ac_relevant_feats.append(feat)
-        
-        if ac_relevant_feats:
-            ac_data['feats'] = ac_relevant_feats
-        
-        # Include active effects if present (mage armor, shield spell, etc.)
-        active_effects = character_data.get('activeEffects', [])
-        if active_effects:
-            ac_data['activeEffects'] = active_effects
-        
-        # Log the reduction
-        original_size = len(json.dumps(character_data))
-        reduced_size = len(json.dumps(ac_data))
-        reduction_pct = (1 - reduced_size/original_size) * 100
-        
-        debug(f"[AC Extraction] Reduced data from {original_size:,} to {reduced_size:,} chars ({reduction_pct:.1f}% reduction)", category="character_validation")
-        debug(f"[AC Extraction] Equipment: {len(equipment)} -> {len(ac_relevant_equipment)} items", category="character_validation")
-        debug(f"[AC Extraction] Equipment effects: {len(equipment_effects)} -> {len(ac_equipment_effects)} AC-relevant", category="character_validation")
-        debug(f"[AC Extraction] Included: {len(ac_relevant_features)} class features, {len(ac_relevant_traits)} racial traits, {len(ac_relevant_feats)} feats", category="character_validation")
-        
-        return ac_data
-    
-    def extract_inventory_data(self, character_data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Extract only inventory-relevant data for validation.
-        Focus on items that commonly have categorization issues.
-        
-        Based on Gemini consultation:
-        - Check equipment items that might be miscategorized as miscellaneous
-        - Exclude high-confidence miscellaneous items
-        - Include ambiguous items like scrolls regardless of type
-        
-        Args:
-            character_data: Full character JSON data
-            
-        Returns:
-            Minimal data needed for inventory validation
-        """
-        inventory_data = {
-            'name': character_data.get('name', 'Unknown'),
-            'equipment': []
-        }
-        
-        equipment = character_data.get('equipment', [])
-        
-        # Filter to items most likely to need validation
-        for item in equipment:
-            item_name = item.get('item_name', '').lower()
-            item_type = item.get('item_type', '').lower()
-            description = item.get('description', '').lower()
-            
-            include = False
-            
-            # 1. Check miscellaneous items (but exclude high-confidence ones)
-            if item_type == 'miscellaneous':
-                # Exclude items that are almost certainly correct miscellaneous
-                high_confidence_misc = ['gemstone', 'coin', 'gold', 'silver', 'copper', 
-                                       'signet', 'deed', 'letter', 'page', 'parchment',
-                                       'medallion', 'brooch', 'locket', 'chalice', 'goblet',
-                                       'crown', 'ingot', 'relic']
-                
-                # Don't validate if it's a high-confidence miscellaneous item
-                if not any(keyword in item_name for keyword in high_confidence_misc):
-                    # But DO include if it might be something else
-                    if any(keyword in item_name for keyword in ['arrow', 'bolt', 'bullet', 'dart']):
-                        include = True  # Likely ammunition
-                    elif any(keyword in item_name for keyword in ['ration', 'food', 'bread', 'meat', 'potion', 'scroll', 'elixir']):
-                        include = True  # Likely consumable
-                    elif any(keyword in item_name for keyword in ['torch', 'rope', 'tools', 'kit', 'pack', 'bedroll', 'tent']):
-                        include = True  # Likely equipment
-                    else:
-                        # Include other miscellaneous for review (but not high-confidence ones)
-                        include = True
-            
-            # 2. Check equipment items that might be miscellaneous (rings, amulets, etc)
-            elif item_type == 'equipment':
-                # These are often miscategorized as equipment when they should be miscellaneous
-                if any(keyword in item_name for keyword in ['ring', 'amulet', 'talisman', 'symbol', 'pendant', 'necklace']):
-                    include = True  # Often should be miscellaneous
-                # Check for scrolls which are ambiguous
-                elif 'scroll' in item_name:
-                    include = True  # Could be consumable or equipment
-                # Include items with special/magical effects that might be miscellaneous
-                elif any(keyword in description for keyword in ['summon', 'magical', 'enchanted', 'artifact']):
-                    include = True  # Might be miscellaneous
-            
-            # 3. Check weapons that might be ammunition
-            elif item_type == 'weapon' and any(keyword in item_name for keyword in ['arrow', 'bolt', 'bullet', 'dart']):
-                include = True  # Ammunition miscategorized as weapon
-            
-            # 4. Check for consumables miscategorized as other types
-            elif item_type != 'consumable' and any(keyword in item_name for keyword in ['potion', 'elixir', 'ration', 'food', 'water', 'ale', 'wine']):
-                include = True  # Should be consumable
-            
-            # 5. Check for equipment miscategorized as other types  
-            elif item_type != 'equipment' and any(keyword in item_name for keyword in ['rope', 'torch', 'lantern', 'tools', 'kit', 'pack', 'bedroll', 'tent', 'map']):
-                include = True  # Should be equipment
-            
-            # 6. Always check items with "scroll" regardless of current type (ambiguous)
-            elif 'scroll' in item_name:
-                include = True  # Scrolls are ambiguous - could be consumable or equipment/misc
-            
-            if include:
-                # Only include necessary fields
-                inventory_data['equipment'].append({
-                    'item_name': item.get('item_name'),
-                    'item_type': item.get('item_type'),
-                    'description': item.get('description', '')[:150],  # Slightly longer for context
-                    'quantity': item.get('quantity', 1)
-                })
-        
-        # Log the reduction
-        original_count = len(equipment)
-        filtered_count = len(inventory_data['equipment'])
-        
-        debug(f"[Inventory Extraction] Filtered items from {original_count} to {filtered_count} for validation", category="character_validation")
-        
-        return inventory_data
-    
-    def extract_currency_consolidation_data(self, character_data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Extract only items relevant for currency and ammunition consolidation.
-        Focus on items that might be loose coins or ammunition to consolidate.
-        
-        Enhanced based on Gemini consultation:
-        - Expanded exclusion list for false positives
-        - Added locked/sealed container detection
-        - Improved container keywords
-        - Consolidated ammunition checks
-        
-        Args:
-            character_data: Full character JSON data
-            
-        Returns:
-            Minimal data needed for consolidation validation
-        """
-        consolidation_data = {
-            'name': character_data.get('name', 'Unknown'),
-            'currency': character_data.get('currency', {}),
-            'ammunition': character_data.get('ammunition', []),
-            'equipment': []
-        }
-        
-        equipment = character_data.get('equipment', [])
-        
-        # Filter to items that might need consolidation
-        for item in equipment:
-            item_name = item.get('item_name', '').lower()
-            item_type = item.get('item_type', '').lower()
-            description = item.get('description', '').lower()
-            
-            include = False
-            
-            # Skip locked/sealed containers upfront (Gemini recommendation)
-            if any(lock_word in item_name for lock_word in ['locked', 'sealed', 'trapped']):
-                continue  # Skip this item entirely
-            
-            # 1. Check for loose currency items
-            currency_keywords = ['coin', 'gold', 'silver', 'copper', 'platinum', 'electrum', 
-                               'gp', 'sp', 'cp', 'pp', 'ep', 'piece', 'pieces']
-            if any(keyword in item_name for keyword in currency_keywords):
-                # Expanded exclusion list based on Gemini's recommendations
-                exclude_valuables = ['ring', 'medallion', 'necklace', 'brooch', 'crown', 
-                                   'goblet', 'chalice', 'whistle', 'mirror', 'ingot', 
-                                   'flask', 'reliquary', 'icon', 'locket', 'statue',
-                                   'pendant', 'amulet', 'jewel', 'gem', 'pearl']
-                if not any(exclude in item_name for exclude in exclude_valuables):
-                    # Also check if description indicates it's a valuable (not loose coins)
-                    if not any(value_phrase in description for value_phrase in ['valued at', 'worth', 'value of']):
-                        include = True
-            
-            # 2. Check for bags/pouches that might contain coins
-            # Added 'coinpurse' per Gemini's recommendation
-            elif any(container in item_name for container in ['bag', 'pouch', 'purse', 'sack', 'coinpurse']):
-                # Only if not locked/sealed (already filtered above) and mentions coins
-                if any(curr in description for curr in ['coin', 'gold', 'silver', 'copper', 'gp', 'sp', 'cp']):
-                    include = True
-            
-            # 3. Consolidated ammunition check (Gemini recommendation)
-            # Check both name and description in one pass
-            ammo_keywords = ['arrow', 'bolt', 'bullet', 'dart', 'shot', 'quiver', 
-                           'case', 'sling', 'stone', 'needle', 'ammunition', 'projectile']
-            if not include:  # Only check if not already included
-                if any(keyword in item_name for keyword in ammo_keywords):
-                    include = True
-                elif any(keyword in description for keyword in ammo_keywords):
-                    include = True
-            
-            if include:
-                # Only include necessary fields
-                consolidation_data['equipment'].append({
-                    'item_name': item.get('item_name'),
-                    'item_type': item.get('item_type'),
-                    'description': item.get('description', ''),  # Full description needed for parsing amounts
-                    'quantity': item.get('quantity', 1)
-                })
-        
-        # Log the reduction
-        original_count = len(equipment)
-        filtered_count = len(consolidation_data['equipment'])
-        
-        debug(f"[Currency Extraction] Filtered items from {original_count} to {filtered_count} for consolidation", category="character_validation")
-        
-        return consolidation_data
-    
-    def _load_cache(self) -> Dict[str, Any]:
-        """
-        Load validation cache from file
-        
-        Returns:
-            Cache dictionary or empty dict if not found
-        """
-        if os.path.exists(self.cache_file):
-            cache = safe_read_json(self.cache_file)
-            if cache:
-                debug(f"[Validation Cache] Loaded cache with {len(cache)} entries", category="character_validation")
-                return cache
-        return {}
-    
-    def _save_cache(self):
-        """Save validation cache to file"""
-        try:
-            safe_write_json(self.cache_file, self.validation_cache)
-            debug(f"[Validation Cache] Saved cache with {len(self.validation_cache)} entries", category="character_validation")
-        except Exception as e:
-            error(f"Failed to save validation cache: {str(e)}", category="character_validation")
-    
-    def _compute_ac_hash(self, ac_data: Dict[str, Any]) -> str:
-        """
-        Compute a hash of AC-relevant data for caching
-        
-        Args:
-            ac_data: AC-relevant data extracted from character
-            
-        Returns:
-            SHA-256 hash of the data
-        """
-        # Create a stable JSON representation for hashing
-        json_str = json.dumps(ac_data, sort_keys=True, separators=(',', ':'))
-        return hashlib.sha256(json_str.encode()).hexdigest()
-    
-    def _is_ac_validation_cached(self, character_name: str, ac_hash: str) -> bool:
-        """
-        Check if AC validation is cached and still valid
-        
-        Args:
-            character_name: Name of the character
-            ac_hash: Hash of current AC-relevant data
-            
-        Returns:
-            True if cached and unchanged, False otherwise
-        """
-        if character_name not in self.validation_cache:
-            return False
-        
-        cache_entry = self.validation_cache[character_name]
-        
-        # Check if AC data has changed
-        if cache_entry.get('ac_hash') != ac_hash:
-            debug(f"[Validation Cache] AC data changed for {character_name}", category="character_validation")
-            return False
-        
-        # Check if cache is still fresh (optional: add time-based expiry)
-        # For now, we'll keep cache valid indefinitely until data changes
-        
-        debug(f"[Validation Cache] Using cached AC validation for {character_name}", category="character_validation")
-        return True
-    
-    def _update_ac_cache(self, character_name: str, ac_hash: str, validated_data: Dict[str, Any]):
-        """
-        Update cache with new AC validation results
-        
-        Args:
-            character_name: Name of the character
-            ac_hash: Hash of AC-relevant data
-            validated_data: Validated character data
-        """
-        if character_name not in self.validation_cache:
-            self.validation_cache[character_name] = {}
-        
-        self.validation_cache[character_name].update({
-            'ac_hash': ac_hash,
-            'last_ac_validation': datetime.now().isoformat(),
-            'ac_value': validated_data.get('armorClass', 10)
-        })
-        
-        self._save_cache()
-        debug(f"[Validation Cache] Updated AC cache for {character_name}", category="character_validation")
-    
-    def _compute_inventory_hash(self, inventory_data: Dict[str, Any]) -> str:
-        """
-        Compute a hash of inventory data for caching
-        
-        Args:
-            inventory_data: Inventory-relevant data extracted from character
-            
-        Returns:
-            SHA-256 hash of the data
-        """
-        # Create a stable JSON representation for hashing
-        json_str = json.dumps(inventory_data, sort_keys=True, separators=(',', ':'))
-        return hashlib.sha256(json_str.encode()).hexdigest()
-    
-    def _is_inventory_validation_cached(self, character_name: str, inventory_hash: str) -> bool:
-        """
-        Check if inventory validation is cached and still valid
-        
-        Args:
-            character_name: Name of the character
-            inventory_hash: Hash of current inventory data
-            
-        Returns:
-            True if cached and unchanged, False otherwise
-        """
-        if character_name not in self.validation_cache:
-            return False
-        
-        cache_entry = self.validation_cache[character_name]
-        
-        # Check if inventory data has changed
-        if cache_entry.get('inventory_hash') != inventory_hash:
-            debug(f"[Validation Cache] Inventory data changed for {character_name}", category="character_validation")
-            return False
-        
-        debug(f"[Validation Cache] Using cached inventory validation for {character_name}", category="character_validation")
-        return True
-    
-    def _update_inventory_cache(self, character_name: str, inventory_hash: str):
-        """
-        Update cache with new inventory validation results
-        
-        Args:
-            character_name: Name of the character
-            inventory_hash: Hash of inventory data
-        """
-        if character_name not in self.validation_cache:
-            self.validation_cache[character_name] = {}
-        
-        self.validation_cache[character_name].update({
-            'inventory_hash': inventory_hash,
-            'last_inventory_validation': datetime.now().isoformat()
-        })
-        
-        self._save_cache()
-        debug(f"[Validation Cache] Updated inventory cache for {character_name}", category="character_validation")
-    
-    def _compute_currency_hash(self, consolidation_data: Dict[str, Any]) -> str:
-        """
-        Compute a hash of currency consolidation data for caching
-        
-        Args:
-            consolidation_data: Currency-relevant data extracted from character
-            
-        Returns:
-            SHA-256 hash of the data
-        """
-        # Create a stable JSON representation for hashing
-        json_str = json.dumps(consolidation_data, sort_keys=True, separators=(',', ':'))
-        return hashlib.sha256(json_str.encode()).hexdigest()
-    
-    def _is_currency_validation_cached(self, character_name: str, currency_hash: str) -> bool:
-        """
-        Check if currency consolidation is cached and still valid
-        
-        Args:
-            character_name: Name of the character
-            currency_hash: Hash of current currency consolidation data
-            
-        Returns:
-            True if cached and unchanged, False otherwise
-        """
-        if character_name not in self.validation_cache:
-            return False
-        
-        cache_entry = self.validation_cache[character_name]
-        
-        # Check if currency data has changed
-        if cache_entry.get('currency_hash') != currency_hash:
-            debug(f"[Validation Cache] Currency data changed for {character_name}", category="character_validation")
-            return False
-        
-        debug(f"[Validation Cache] Using cached currency consolidation for {character_name}", category="character_validation")
-        return True
-    
-    def _update_currency_cache(self, character_name: str, currency_hash: str):
-        """
-        Update cache with new currency consolidation results
-        
-        Args:
-            character_name: Name of the character
-            currency_hash: Hash of currency consolidation data
-        """
-        if character_name not in self.validation_cache:
-            self.validation_cache[character_name] = {}
-        
-        self.validation_cache[character_name].update({
-            'currency_hash': currency_hash,
-            'last_currency_validation': datetime.now().isoformat()
-        })
-        
-        self._save_cache()
-        debug(f"[Validation Cache] Updated currency cache for {character_name}", category="character_validation")
         
     def validate_and_correct_character(self, character_data: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -723,234 +144,18 @@ class AICharacterValidator:
         
         return corrected_data
     
-    def check_validation_needs(self, character_data: Dict[str, Any]) -> Dict[str, bool]:
-        """
-        Check which validations actually need API calls (not cached)
-        
-        Args:
-            character_data: Character JSON data
-            
-        Returns:
-            Dictionary indicating which validations need API calls
-        """
-        character_name = character_data.get('name', 'Unknown')
-        needs_validation = {
-            'ac': False,
-            'inventory': False,
-            'currency': False,
-            'class_features': False  # Always validate for now (no caching yet)
-        }
-        
-        # Extract data for each validator
-        ac_data = self.extract_ac_relevant_data(character_data)
-        ac_hash = self._compute_ac_hash(ac_data)
-        
-        inventory_data = self.extract_inventory_data(character_data)
-        inventory_hash = self._compute_inventory_hash(inventory_data)
-        
-        currency_data = self.extract_currency_consolidation_data(character_data)
-        currency_hash = self._compute_currency_hash(currency_data)
-        
-        # Check cache for each
-        if not self._is_ac_validation_cached(character_name, ac_hash):
-            needs_validation['ac'] = True
-            debug(f"[Smart Batch] {character_name} needs AC validation", category="character_validation")
-        
-        if len(inventory_data['equipment']) > 0 and not self._is_inventory_validation_cached(character_name, inventory_hash):
-            needs_validation['inventory'] = True
-            debug(f"[Smart Batch] {character_name} needs inventory validation", category="character_validation")
-        
-        if len(currency_data['equipment']) > 0 and not self._is_currency_validation_cached(character_name, currency_hash):
-            needs_validation['currency'] = True
-            debug(f"[Smart Batch] {character_name} needs currency validation", category="character_validation")
-        
-        # Class features don't have caching yet, always validate if batched
-        needs_validation['class_features'] = False  # Disable for now unless specifically needed
-        
-        return needs_validation
-    
-    def validate_and_correct_character_smart(self, character_data: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Smart validation that only calls validators that need updates
-        
-        Args:
-            character_data: Character JSON data
-            
-        Returns:
-            AI-corrected character data
-        """
-        character_name = character_data.get('name', 'Unknown')
-        info(f"[Smart Validator] Checking {character_name} for needed validations...", category="character_validation")
-        
-        # Check what needs validation
-        needs = self.check_validation_needs(character_data)
-        
-        # Count how many validations are needed
-        needed_count = sum(1 for v in needs.values() if v)
-        
-        if needed_count == 0:
-            print(f"DEBUG: [Smart Validator] {character_name} - All validations cached, skipping API calls")
-            info(f"[Smart Validator] {character_name} - All validations cached, skipping API calls", category="character_validation")
-            return character_data
-
-        print(f"DEBUG: [Smart Validator] {character_name} needs {needed_count} validation(s)")
-        info(f"[Smart Validator] {character_name} needs {needed_count} validation(s)", category="character_validation")
-        
-        # Apply only needed validations
-        corrected_data = character_data
-        
-        if needs['ac']:
-            corrected_data = self.ai_validate_armor_class(corrected_data)
-        
-        if needs['inventory']:
-            corrected_data = self.ai_validate_inventory_categories(corrected_data)
-        
-        if needs['currency']:
-            corrected_data = self.ai_consolidate_inventory(corrected_data)
-        
-        # Non-AI validations (always run, they're fast)
-        corrected_data = self.validate_status_condition_consistency(corrected_data)
-        corrected_data = self.ensure_currency_integrity(corrected_data)
-        corrected_data = self.consolidate_ammunition(corrected_data)
-        
-        return corrected_data
-    
-    def validate_multiple_characters_smart(self, character_list: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """
-        Validate multiple characters with smart batching based on cache status
-        Only creates batches for validators that need API calls
-        
-        Args:
-            character_list: List of character data dictionaries
-            
-        Returns:
-            List of validated character data
-        """
-        if not character_list:
-            return []
-        
-        info(f"[Smart Batch] Processing {len(character_list)} characters", category="character_validation")
-        
-        # Group characters by validation needs
-        validation_batches = {
-            'ac': [],
-            'inventory': [],
-            'currency': []
-        }
-        
-        # Track which characters need which validations
-        character_needs = {}
-        
-        for character in character_list:
-            char_name = character.get('name', 'Unknown')
-            needs = self.check_validation_needs(character)
-            character_needs[char_name] = needs
-            
-            # Add to appropriate batches
-            if needs['ac']:
-                validation_batches['ac'].append(character)
-            if needs['inventory']:
-                validation_batches['inventory'].append(character)
-            if needs['currency']:
-                validation_batches['currency'].append(character)
-        
-        # Report batch sizes
-        info(f"[Smart Batch] AC batch: {len(validation_batches['ac'])} characters", category="character_validation")
-        info(f"[Smart Batch] Inventory batch: {len(validation_batches['inventory'])} characters", category="character_validation")
-        info(f"[Smart Batch] Currency batch: {len(validation_batches['currency'])} characters", category="character_validation")
-        
-        # Process batches (could be parallelized in future)
-        results = {}
-        
-        # Batch AC validations
-        if validation_batches['ac']:
-            info(f"[Smart Batch] Processing AC validations for {len(validation_batches['ac'])} characters", category="character_validation")
-            for character in validation_batches['ac']:
-                char_name = character.get('name', 'Unknown')
-                validated = self.ai_validate_armor_class(character)
-                results[char_name] = validated
-        
-        # Batch inventory validations
-        if validation_batches['inventory']:
-            info(f"[Smart Batch] Processing inventory validations for {len(validation_batches['inventory'])} characters", category="character_validation")
-            for character in validation_batches['inventory']:
-                char_name = character.get('name', 'Unknown')
-                # Use existing result if already validated, otherwise use original
-                base_data = results.get(char_name, character)
-                validated = self.ai_validate_inventory_categories(base_data)
-                results[char_name] = validated
-        
-        # Batch currency validations
-        if validation_batches['currency']:
-            info(f"[Smart Batch] Processing currency validations for {len(validation_batches['currency'])} characters", category="character_validation")
-            for character in validation_batches['currency']:
-                char_name = character.get('name', 'Unknown')
-                # Use existing result if already validated, otherwise use original
-                base_data = results.get(char_name, character)
-                validated = self.ai_consolidate_inventory(base_data)
-                results[char_name] = validated
-        
-        # Apply non-AI validations to all characters
-        final_results = []
-        for character in character_list:
-            char_name = character.get('name', 'Unknown')
-            
-            # Use validated version if exists, otherwise original
-            char_data = results.get(char_name, character)
-            
-            # Always apply non-AI validations
-            char_data = self.validate_status_condition_consistency(char_data)
-            char_data = self.ensure_currency_integrity(char_data)
-            char_data = self.consolidate_ammunition(char_data)
-            
-            final_results.append(char_data)
-        
-        # Report savings
-        total_possible = len(character_list) * 3  # 3 validators per character
-        total_called = len(validation_batches['ac']) + len(validation_batches['inventory']) + len(validation_batches['currency'])
-        total_skipped = total_possible - total_called
-        
-        print(f"DEBUG: [Smart Batch] Complete: {total_called}/{total_possible} API calls made ({total_skipped} skipped due to caching)")
-        info(f"[Smart Batch] Complete: {total_called}/{total_possible} API calls made ({total_skipped} skipped due to caching)", category="character_validation")
-        
-        return final_results
-    
     def ai_validate_armor_class(self, character_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Use AI to validate and correct Armor Class calculation with caching
+        Use AI to validate and correct Armor Class calculation
         
         Args:
             character_data: Character JSON data
             
         Returns:
-            Character data with AI-corrected AC (from cache if unchanged)
+            Character data with AI-corrected AC
         """
         
-        # Extract only AC-relevant data to reduce tokens
-        ac_relevant_data = self.extract_ac_relevant_data(character_data)
-        
-        # Compute hash of AC-relevant data
-        character_name = character_data.get('name', 'Unknown')
-        ac_hash = self._compute_ac_hash(ac_relevant_data)
-        
-        # Check if validation is cached and unchanged
-        if self._is_ac_validation_cached(character_name, ac_hash):
-            # Return original data - no changes needed since cached validation passed
-            print(f"DEBUG: [Validation Cache] Skipping AC validation for {character_name} - data unchanged")
-            info(f"[Validation Cache] Skipping AC validation for {character_name} - data unchanged", category="character_validation")
-            
-            # Log cache hit statistics
-            if character_name in self.validation_cache:
-                cache_entry = self.validation_cache[character_name]
-                debug(f"[Validation Cache] Last validated: {cache_entry.get('last_ac_validation')}", category="character_validation")
-                debug(f"[Validation Cache] Cached AC value: {cache_entry.get('ac_value')}", category="character_validation")
-            
-            return character_data
-        
-        # Data has changed or not cached - perform validation
-        print(f"DEBUG: [Validation Cache] Running AC validation for {character_name} - new/changed data")
-        info(f"[Validation Cache] Running AC validation for {character_name} - new/changed data", category="character_validation")
-        validation_prompt = self.build_ac_validation_prompt(ac_relevant_data)
+        validation_prompt = self.build_ac_validation_prompt(character_data)
         
         try:
             response = self.client.chat.completions.create(
@@ -974,18 +179,9 @@ class AICharacterValidator:
             ai_response = response.choices[0].message.content.strip()
             
             # Parse AI response to get corrected character data
-            corrected_data = self.parse_ai_validation_response(ai_response, ac_relevant_data)
-
-            # CRITICAL FIX: Merge the corrections into original data, don't replace!
-            # The AI only returns the extracted subset with corrections
-            # We need to merge those corrections back into the full character data
-            from updates.update_character_info import deep_merge_dict
-            merged_data = deep_merge_dict(character_data, corrected_data)
-
-            # Update cache with new validation results
-            self._update_ac_cache(character_name, ac_hash, merged_data)
-
-            return merged_data
+            corrected_data = self.parse_ai_validation_response(ai_response, character_data)
+            
+            return corrected_data
             
         except Exception as e:
             self.logger.error(f"AI validation failed: {str(e)}")
@@ -993,55 +189,22 @@ class AICharacterValidator:
     
     def ai_validate_inventory_categories(self, character_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Use AI to validate and correct inventory item categorization with caching
+        Use AI to validate and correct inventory item categorization
         Following the main character updater pattern: return only changes, use deep merge
         
         Args:
             character_data: Character JSON data
             
         Returns:
-            Character data with AI-corrected inventory categories (from cache if unchanged)
+            Character data with AI-corrected inventory categories
         """
-        
-        # Extract only inventory data that needs validation
-        inventory_data = self.extract_inventory_data(character_data)
-        
-        # Compute hash of inventory data
-        character_name = character_data.get('name', 'Unknown')
-        inventory_hash = self._compute_inventory_hash(inventory_data)
-        
-        # Check if validation is cached and unchanged
-        if self._is_inventory_validation_cached(character_name, inventory_hash):
-            # Return original data - no changes needed since cached validation passed
-            print(f"DEBUG: [Validation Cache] Skipping inventory validation for {character_name} - data unchanged")
-            info(f"[Validation Cache] Skipping inventory validation for {character_name} - data unchanged", category="character_validation")
-            
-            # Log cache hit statistics
-            if character_name in self.validation_cache:
-                cache_entry = self.validation_cache[character_name]
-                debug(f"[Validation Cache] Last validated: {cache_entry.get('last_inventory_validation')}", category="character_validation")
-            
-            return character_data
-        
-        # If no items need validation, skip API call
-        if len(inventory_data['equipment']) == 0:
-            print(f"DEBUG: [Inventory Validation] No suspicious items found for {character_name} - skipping validation")
-            info(f"[Inventory Validation] No suspicious items found for {character_name} - skipping validation", category="character_validation")
-            # Update cache to avoid checking again
-            self._update_inventory_cache(character_name, inventory_hash)
-            return character_data
-        
-        # Data has changed or not cached - perform validation
-        print(f"DEBUG: [Validation Cache] Running inventory validation for {character_name} - {len(inventory_data['equipment'])} items to check")
-        info(f"[Validation Cache] Running inventory validation for {character_name} - {len(inventory_data['equipment'])} items to check", category="character_validation")
         
         max_attempts = 3
         attempt = 1
         
         while attempt <= max_attempts:
             try:
-                # Build prompt with filtered inventory data
-                validation_prompt = self.build_inventory_validation_prompt(inventory_data)
+                validation_prompt = self.build_inventory_validation_prompt(character_data)
                 
                 response = self.client.chat.completions.create(
                     model=CHARACTER_VALIDATOR_MODEL,
@@ -1066,9 +229,6 @@ class AICharacterValidator:
                 
                 # Parse AI response to get inventory updates only
                 inventory_updates = self.parse_inventory_validation_response(ai_response, character_data)
-                
-                # Update cache with validation results
-                self._update_inventory_cache(character_name, inventory_hash)
                 
                 if inventory_updates:
                     # Apply updates using deep merge (same pattern as main character updater)
@@ -1095,11 +255,6 @@ class AICharacterValidator:
         Returns:
             System prompt with 5th edition rules and examples
         """
-        # Return cached prompt loaded from file
-        if self.ac_prompt:
-            return self.ac_prompt
-        
-        # Fallback to hardcoded prompt if file loading failed
         return """You are an expert character validator for the 5th edition of the world's most popular role playing game. Your job is to validate and correct character data to ensure it follows the rules accurately.
 
 ## PRIMARY TASK: ARMOR CLASS VALIDATION
@@ -1309,11 +464,6 @@ Provide the corrected character data with proper AC calculation."""
         Returns:
             System prompt with inventory categorization rules
         """
-        # Return cached prompt loaded from file
-        if self.inventory_prompt:
-            return self.inventory_prompt
-        
-        # Fallback to hardcoded prompt if file loading failed
         return """You are an expert inventory categorization validator for the 5th edition of the world's most popular role playing game. Your job is to ensure all inventory items are correctly categorized according to standard item types.
 
 ## PRIMARY TASK: INVENTORY CATEGORIZATION VALIDATION
@@ -1958,7 +1108,7 @@ Remember to return a single JSON response with all four validation results."""
     
     def ai_consolidate_inventory(self, character_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Use AI to consolidate loose currency and ammunition into their proper sections with caching
+        Use AI to consolidate loose currency and ammunition into their proper sections
         Following the main character updater pattern: return only changes, use deep merge
         
         Consolidates:
@@ -1975,48 +1125,18 @@ Remember to return a single JSON response with all four validation results."""
             character_data: Character JSON data
             
         Returns:
-            Character data with consolidated currency and ammunition (from cache if unchanged)
+            Character data with consolidated currency and ammunition
         """
         
-        # Extract only currency/ammo relevant data
-        consolidation_data = self.extract_currency_consolidation_data(character_data)
-        
-        # Compute hash of consolidation data
-        character_name = character_data.get('name', 'Unknown')
-        currency_hash = self._compute_currency_hash(consolidation_data)
-        
-        # Check if validation is cached and unchanged
-        if self._is_currency_validation_cached(character_name, currency_hash):
-            # Return original data - no changes needed since cached validation passed
-            print(f"DEBUG: [Validation Cache] Skipping currency consolidation for {character_name} - data unchanged")
-            info(f"[Validation Cache] Skipping currency consolidation for {character_name} - data unchanged", category="character_validation")
-            
-            # Log cache hit statistics
-            if character_name in self.validation_cache:
-                cache_entry = self.validation_cache[character_name]
-                debug(f"[Validation Cache] Last validated: {cache_entry.get('last_currency_validation')}", category="character_validation")
-            
-            return character_data
-        
-        # If no items need consolidation, skip API call
-        if len(consolidation_data['equipment']) == 0:
-            print(f"DEBUG: [Currency Consolidation] No currency/ammo items found for {character_name} - skipping consolidation")
-            info(f"[Currency Consolidation] No currency/ammo items found for {character_name} - skipping consolidation", category="character_validation")
-            # Update cache to avoid checking again
-            self._update_currency_cache(character_name, currency_hash)
-            return character_data
-        
-        # Data has changed or not cached - perform consolidation
-        print(f"DEBUG: [AI Validator] Checking {character_name}'s inventory for consolidation opportunities...")
-        info(f"[Validation Cache] Running currency consolidation for {character_name} - {len(consolidation_data['equipment'])} items to check", category="character_validation")
+        print(f"DEBUG: [AI Validator] Checking {character_data.get('name', 'Unknown')}'s inventory for consolidation opportunities...")
+        info(f"[AI Validator] Checking {character_data.get('name', 'Unknown')}'s inventory for consolidation opportunities...", category="character_validation")
         
         max_attempts = 3
         attempt = 1
         
         while attempt <= max_attempts:
             try:
-                # Build prompt with filtered data
-                consolidation_prompt = self.build_inventory_consolidation_prompt(consolidation_data)
+                consolidation_prompt = self.build_inventory_consolidation_prompt(character_data)
                 
                 response = self.client.chat.completions.create(
                     model=CHARACTER_VALIDATOR_MODEL,
@@ -2040,9 +1160,6 @@ Remember to return a single JSON response with all four validation results."""
                 
                 # Parse AI response to get consolidation updates only
                 consolidation_updates = self.parse_currency_consolidation_response(ai_response, character_data)
-                
-                # Update cache with validation results
-                self._update_currency_cache(character_name, currency_hash)
                 
                 if consolidation_updates:
                     # Apply updates using deep merge (same pattern as main character updater)

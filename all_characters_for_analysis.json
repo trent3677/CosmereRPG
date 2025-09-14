@@ -1,0 +1,1372 @@
+{
+  "Eirik Hearthwise": {
+    "character_role": "player",
+    "character_type": "player",
+    "name": "Eirik Hearthwise",
+    "type": "player",
+    "size": "Medium",
+    "level": 5,
+    "race": "Human",
+    "class": "Cleric",
+    "alignment": "chaotic good",
+    "background": "Soldier",
+    "status": "alive",
+    "condition": "none",
+    "condition_affected": [],
+    "hitPoints": 40,
+    "maxHitPoints": 40,
+    "armorClass": 17,
+    "initiative": 1,
+    "speed": 30,
+    "abilities": {
+      "strength": 14,
+      "dexterity": 13,
+      "constitution": 15,
+      "intelligence": 11,
+      "wisdom": 17,
+      "charisma": 9
+    },
+    "savingThrows": [
+      "wisdom",
+      "charisma"
+    ],
+    "skills": {
+      "athletics": 4,
+      "intimidation": -1,
+      "medicine": 5,
+      "insight": 5
+    },
+    "proficiencyBonus": 3,
+    "senses": {
+      "darkvision": 0,
+      "passivePerception": 13
+    },
+    "languages": [
+      "Common",
+      "Dwarvish"
+    ],
+    "proficiencies": {
+      "armor": [
+        "light",
+        "medium",
+        "heavy",
+        "shields"
+      ],
+      "weapons": [
+        "simple"
+      ],
+      "tools": [
+        "gaming set",
+        "vehicles (land)"
+      ]
+    },
+    "damageVulnerabilities": [],
+    "damageResistances": [
+      "poison",
+      "poison from Giant Spider"
+    ],
+    "damageImmunities": [],
+    "conditionImmunities": [
+      "poisoned"
+    ],
+    "classFeatures": [
+      {
+        "name": "Channel Divinity (2/rest)",
+        "description": "You can now use your Channel Divinity twice between rests instead of once.",
+        "source": "Cleric",
+        "usage": {
+          "current": 2,
+          "max": 2,
+          "refreshOn": "longRest"
+        }
+      },
+      {
+        "name": "Destroy Undead (CR 1/2)",
+        "description": "When an undead of CR 1/2 or lower fails its saving throw against your Turn Undead, it is instantly destroyed.",
+        "source": "Cleric"
+      },
+      {
+        "name": "Divine Domain: Life",
+        "description": "You gain proficiency with heavy armor. Bless and Cure Wounds are always prepared. Your healing spells heal additional hit points equal to 2 + the spell's level (Disciple of Life).",
+        "source": "Cleric"
+      },
+      {
+        "name": "Preserve Life (Channel Divinity Option)",
+        "description": "As an action, you can restore a total of HP equal to five times your cleric level (25 HP at level 5), divided among any creatures within 30 feet of you, not to heal a creature above half its hit point maximum.",
+        "source": "Life Domain",
+        "usage": {
+          "current": 2,
+          "max": 2,
+          "refreshOn": "longRest"
+        }
+      },
+      {
+        "name": "Spellcasting",
+        "description": "You can cast prepared cleric spells using Wisdom as your spellcasting ability. You can use a holy symbol as a spellcasting focus. Spell Save DC 14, Spell Attack +6.",
+        "source": "Cleric"
+      }
+    ],
+    "racialTraits": [
+      {
+        "name": "Ability Score Increase",
+        "description": "Your ability scores each increase by 1.",
+        "source": "Human"
+      },
+      {
+        "name": "Extra Language",
+        "description": "You can speak, read, and write one extra language of your choice.",
+        "source": "Human"
+      }
+    ],
+    "backgroundFeature": {
+      "name": "Military Rank",
+      "description": "You have a military rank from your career as a soldier. Soldiers loyal to your former military organization still recognize your authority and influence, and they defer to you if they are of a lower rank. Knowledge gained: The cleansing ritual involves bringing sunlight to the Stone, blessing it with pure water, and using the blade of sacrifice to break the curse.",
+      "source": "Soldier"
+    },
+    "temporaryEffects": [],
+    "injuries": [],
+    "equipment_effects": [
+      {
+        "name": "Guard captain's enchanted crossbow - Bonus",
+        "type": "bonus",
+        "target": "attack rolls",
+        "value": 1,
+        "description": "+1 bonus to attack rolls",
+        "source": "Guard captain's enchanted crossbow"
+      },
+      {
+        "name": "Guard captain's enchanted crossbow - Bonus",
+        "type": "bonus",
+        "target": "damage rolls",
+        "value": 1,
+        "description": "+1 bonus to damage rolls",
+        "source": "Guard captain's enchanted crossbow"
+      },
+      {
+        "name": "Tarnished holy symbol (protects vs. shadow relic influence) - Resistance",
+        "type": "resistance",
+        "target": "shadow relic influence",
+        "value": null,
+        "description": "Protection against shadow relic corruption and influence",
+        "source": "Tarnished holy symbol (protects vs. shadow relic influence)"
+      },
+      {
+        "name": "Shield AC Bonus",
+        "type": "bonus",
+        "target": "AC",
+        "value": 0,
+        "description": "Shield provides +0 AC",
+        "source": "Shield"
+      }
+    ],
+    "feats": [],
+    "equipment": [
+      {
+        "item_name": "Mace",
+        "item_type": "weapon",
+        "item_subtype": "other",
+        "description": "A simple melee weapon.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Scale mail",
+        "item_type": "armor",
+        "item_subtype": "other",
+        "description": "Medium armor (AC 14 + Dex modifier, max 2).",
+        "quantity": 1,
+        "ac_base": 14,
+        "ac_bonus": 0,
+        "dex_limit": 2,
+        "armor_category": "medium",
+        "stealth_disadvantage": true,
+        "equipped": true
+      },
+      {
+        "item_name": "Shield",
+        "item_type": "armor",
+        "item_subtype": "other",
+        "description": "A shield that increases AC by 2.",
+        "quantity": 1,
+        "ac_base": 2,
+        "ac_bonus": 0,
+        "dex_limit": null,
+        "armor_category": "shield",
+        "stealth_disadvantage": false,
+        "equipped": true
+      },
+      {
+        "item_name": "Light crossbow",
+        "item_type": "weapon",
+        "item_subtype": "other",
+        "description": "A simple ranged weapon (1d8 piercing, range 80/320).",
+        "quantity": 1,
+        "equipped": false
+      },
+      {
+        "item_name": "Priest's pack",
+        "item_type": "equipment",
+        "item_subtype": "other",
+        "description": "Contains holy symbol, stub of black wax, and pouch of powdered silver.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Holy symbol",
+        "item_type": "equipment",
+        "item_subtype": "amulet",
+        "description": "A holy symbol that protects against the influence of the shadow relic.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Pouch",
+        "item_type": "miscellaneous",
+        "item_subtype": "other",
+        "description": "A small pouch for coins. Contains several silver coins and an iron ring inscribed with unfamiliar runes found beneath stones after the serpent battle.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Sturdy gloves",
+        "item_type": "miscellaneous",
+        "item_subtype": "gloves",
+        "description": "Protective gloves to shield hands from magical thorns.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Coded Parchment",
+        "item_type": "miscellaneous",
+        "description": "A crumpled scrap of parchment with coded watch schedules and a rough map of ranger patrol routes.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Climbing Rope",
+        "item_type": "equipment",
+        "description": "A coil of sturdy climbing rope taken as a token from the bandits.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Heavy iron key",
+        "item_type": "equipment",
+        "description": "A heavy iron key taken from Captain Gorvek's possessions. Taken to the cellar from Cira, prepared to investigate the disturbances below the Wyrd Lantern Inn.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Old bronze key marked with a faded raven sigil",
+        "item_type": "equipment",
+        "description": "Received from Elder Mirna. She entrusted the party with the relic in hopes of uncovering the truth about the disappearances.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Rusted dagger with smuggler runes",
+        "item_type": "weapon",
+        "description": "An old rusted dagger inscribed with smuggler runes, recovered from a hidden alcove in the tunnel.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Torn piece of Scout Elen's blue cloak",
+        "item_type": "miscellaneous",
+        "item_subtype": "cloak",
+        "description": "A torn piece of the blue cloak once worn by Scout Elen, found in the smuggler's tunnel. Found blue thread and broken arrow shaft matching Kira's gear at the Lost Ward Circle--evidence that both Elen and Kira passed through and moved toward the Keeper's Cottage.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Old smuggler's lantern (still functional, but empty)",
+        "item_type": "equipment",
+        "description": "An old smuggler's lantern found in the tunnel; it is fully functional and refilled with Keeper Morvath's oil, ready for use.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Carved bone talisman",
+        "item_type": "miscellaneous",
+        "description": "A carved bone talisman given by Keeper Morvath as a ritual component.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Pouch of dried Gloamwood roots",
+        "item_type": "consumable",
+        "item_subtype": "other",
+        "description": "A pouch containing dried Gloamwood roots, used as ritual components.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Travel Ration",
+        "item_type": "consumable",
+        "item_subtype": "food",
+        "description": "A standard travel ration to sustain a character for one day.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Silver Whistle",
+        "item_type": "equipment",
+        "description": "A small silver whistle used for signaling.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Ranger's Journal",
+        "item_type": "equipment",
+        "description": "A journal containing notes and maps from a seasoned ranger.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Detailed Parchment Map",
+        "item_type": "equipment",
+        "description": "A detailed map showing the surrounding region, useful for navigation.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Cracked Silver Mirror",
+        "item_type": "miscellaneous",
+        "description": "A cracked silver mirror with initials E.R. Inscribed with a value of 5 gp.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Tarnished silver medallion",
+        "item_type": "miscellaneous",
+        "description": "Knight's insignia, valued at 10 gp.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Small locked coffer",
+        "item_type": "equipment",
+        "description": "A small locked coffer discovered beneath the fallen knight statue.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Knight's broken sword",
+        "item_type": "weapon",
+        "description": "A broken sword once wielded by a knight, now damaged and worn.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Small coffer (sealed)",
+        "item_type": "equipment",
+        "description": "A small coffer that has been opened; previously tightly sealed, contents were unknown.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Folded parchment bearing the knight's crest and message",
+        "item_type": "miscellaneous",
+        "description": "A folded parchment discovered inside the small coffer, bearing the knight's crest and a message.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Knight's Heart Amulet (artifact connected to Sir Garran's past)",
+        "item_type": "miscellaneous",
+        "description": "An artifact amulet linked to the history of Sir Garran.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Vial of blessed water (acts as potion of healing against undead damage only)",
+        "item_type": "consumable",
+        "item_subtype": "potion",
+        "description": "A vial containing blessed water effective as a healing potion against undead damage.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Small silver key (opens a secret compartment beneath the altar)",
+        "item_type": "equipment",
+        "description": "A small silver key used to unlock a secret compartment beneath the altar.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Chaplain's journal describing the shadow relic's arrival and early influence",
+        "item_type": "miscellaneous",
+        "description": "A journal kept by the chaplain detailing the shadow relic's arrival and its early effects.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Scroll of Protection from Undead",
+        "item_type": "consumable",
+        "item_subtype": "scroll",
+        "description": "A scroll containing the Protection from Undead spell.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Love letter from guard's coinpurse",
+        "item_type": "miscellaneous",
+        "description": "A heartfelt love letter found inside a guard's coinpurse.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Lucky bone die",
+        "item_type": "miscellaneous",
+        "description": "A small carved bone die believed to bring luck.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Commander's horn",
+        "item_type": "equipment",
+        "item_subtype": "other",
+        "description": "Summons spectral allies once in dire need.",
+        "quantity": 1,
+        "magical": true,
+        "effects": [
+          {
+            "type": "other",
+            "target": "summon spectral allies",
+            "value": 1,
+            "description": "Can summon spectral allies once when in dire need"
+          }
+        ]
+      },
+      {
+        "item_name": "Silver ring",
+        "item_type": "miscellaneous",
+        "item_subtype": "ring",
+        "description": "A silver ring valued at 25 gp.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Partial map showing an intact passage near the Broken Tower",
+        "item_type": "equipment",
+        "item_subtype": "other",
+        "description": "A partial map revealing an intact passage near the Broken Tower.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Sanctuary Elixir",
+        "item_type": "consumable",
+        "item_subtype": "potion",
+        "description": "A potion that grants the Sanctuary spell effect when consumed.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Celestial Map (detailed)",
+        "item_type": "equipment",
+        "description": "A detailed celestial map used for navigation and ritual purposes.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Ritual Components",
+        "item_type": "equipment",
+        "description": "Various components used for casting rituals.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Lord Vael's signet ring",
+        "item_type": "miscellaneous",
+        "description": "A signet ring belonging to Lord Vael, engraved with his family crest.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Enchanted goblet",
+        "item_type": "miscellaneous",
+        "description": "A finely crafted goblet with faint magical aura, used in ceremonial rituals.",
+        "quantity": 1,
+        "magical": true,
+        "effects": [
+          {
+            "type": "other",
+            "target": "ceremonial rituals",
+            "value": null,
+            "description": "Faint magical aura enhances ceremonial rituals"
+          }
+        ]
+      },
+      {
+        "item_name": "Jeweled ceremonial dagger",
+        "item_type": "weapon",
+        "description": "A ceremonial dagger adorned with jewels, symbolizing authority and heritage.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Family chronicle",
+        "item_type": "equipment",
+        "description": "A bound book detailing the history and lineage of a noble family.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Scribe's incomplete journal pages",
+        "item_type": "equipment",
+        "description": "Loose pages from a journal containing fragmented notes and observations. Additional pages recovered from Great Hall debris.",
+        "quantity": 3
+      },
+      {
+        "item_name": "Jailer's Key Ring (opens cell doors in The Gaol)",
+        "item_type": "equipment",
+        "description": "A key ring containing keys used to open cell doors in The Gaol.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Echo Crystal",
+        "item_type": "miscellaneous",
+        "description": "A crystal that can replay sounds it has absorbed when activated.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Potion of Heroism",
+        "item_type": "consumable",
+        "item_subtype": "potion",
+        "description": "A magical potion that grants temporary hit points and bolsters bravery.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Guard captain's enchanted crossbow",
+        "item_type": "weapon",
+        "description": "+1 bonus to attack and damage rolls. A finely crafted crossbow bearing the captain's insignia.",
+        "quantity": 1,
+        "equipped": true,
+        "effects": [
+          {
+            "type": "bonus",
+            "target": "attack rolls",
+            "value": 1,
+            "description": "+1 bonus to attack rolls"
+          },
+          {
+            "type": "bonus",
+            "target": "damage rolls",
+            "value": 1,
+            "description": "+1 bonus to damage rolls"
+          }
+        ]
+      },
+      {
+        "item_name": "Roster mentioning special prisoner",
+        "item_type": "miscellaneous",
+        "description": "A worn roster listing the names and statuses of prisoners, including a special prisoner of interest.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Sir Garran's letter",
+        "item_type": "miscellaneous",
+        "description": "A letter from Sir Garran ordering the captain to end him if he becomes corrupted.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Tarnished holy symbol (protects vs. shadow relic influence)",
+        "item_type": "equipment",
+        "item_subtype": "amulet",
+        "description": "A tarnished holy symbol that protects against the influence of the shadow relic.",
+        "quantity": 1,
+        "equipped": true,
+        "effects": [
+          {
+            "type": "resistance",
+            "target": "shadow relic influence",
+            "value": null,
+            "description": "Protection against shadow relic corruption and influence"
+          }
+        ]
+      },
+      {
+        "item_name": "Cryptic Map of Relic Chamber Vulnerabilities",
+        "item_type": "equipment",
+        "description": "A cryptic map revealing vulnerabilities in the Relic Chamber, discovered within a secret compartment behind the crowned skull ritual ward.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Sir Garran's sword +2",
+        "item_type": "weapon",
+        "description": "A finely crafted sword belonging to Sir Garran, enchanted with a +2 bonus to attack and damage rolls.",
+        "quantity": 1,
+        "equipped": false,
+        "effects": [
+          {
+            "type": "bonus",
+            "target": "attack rolls",
+            "value": 2,
+            "description": "+2 bonus to attack rolls"
+          },
+          {
+            "type": "bonus",
+            "target": "damage rolls",
+            "value": 2,
+            "description": "+2 bonus to damage rolls"
+          }
+        ]
+      },
+      {
+        "item_name": "Vial of shadow essence",
+        "item_type": "consumable",
+        "item_subtype": "other",
+        "description": "A mysterious vial containing concentrated shadow essence, potentially useful for dark rituals or crafting.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Amulet of protection against shadow magic",
+        "item_type": "equipment",
+        "item_subtype": "amulet",
+        "description": "An amulet that grants resistance to shadow magic effects.",
+        "quantity": 1,
+        "equipped": false,
+        "effects": [
+          {
+            "type": "resistance",
+            "target": "shadow magic",
+            "value": null,
+            "description": "Resistance to shadow magic"
+          }
+        ]
+      },
+      {
+        "item_name": "Ancient scrolls detailing the relic",
+        "item_type": "equipment",
+        "description": "A collection of ancient scrolls providing detailed history and knowledge about the shadow relic.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Deed to Shadowfall Keep",
+        "item_type": "miscellaneous",
+        "description": "A legal deed granting ownership rights to Shadowfall Keep, inscribed on heavy parchment.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Ring of Warding",
+        "item_type": "equipment",
+        "item_subtype": "ring",
+        "description": "A magical ring that grants advantage on saving throws against fear effects.",
+        "quantity": 1,
+        "equipped": false,
+        "effects": [
+          {
+            "type": "advantage",
+            "target": "saving throws against fear effects",
+            "value": null,
+            "description": "Advantage on saving throws against fear effects"
+          }
+        ]
+      },
+      {
+        "item_name": "Gemstones",
+        "item_type": "miscellaneous",
+        "description": "Precious gemstones recovered from the Gloam-Tide Vault treasure hoard.",
+        "quantity": 2
+      },
+      {
+        "item_name": "Crude map showing safe paths through the marsh",
+        "item_type": "equipment",
+        "description": "A crude map provided by Finn Caster, detailing safe paths through the marsh.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Sanctum Lantern",
+        "item_type": "equipment",
+        "description": "A lantern borrowed from Sister Hela, used to illuminate the Sanctum of Sable Flames.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Sanctified bowl",
+        "item_type": "equipment",
+        "description": "A sanctified bowl uncovered from the hidden compartment beneath the dais.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Slip of parchment with ritual instructions",
+        "item_type": "miscellaneous",
+        "description": "A slip of parchment containing ritual instructions uncovered from the hidden compartment beneath the dais.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Bundle of black candles",
+        "item_type": "consumable",
+        "item_subtype": "other",
+        "description": "A bundle of black candles uncovered from the hidden compartment beneath the dais.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Brittle prayer book with cryptic marginalia",
+        "item_type": "equipment",
+        "description": "An old, fragile prayer book filled with cryptic marginal notes and symbols.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Bundle of black ritual candles",
+        "item_type": "consumable",
+        "item_subtype": "other",
+        "description": "A bundle of black candles used in dark rituals, found in a hidden compartment in the altar.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Silver locket bearing the lighthouse crest",
+        "item_type": "miscellaneous",
+        "item_subtype": "amulet",
+        "description": "A silver locket engraved with the crest of the lighthouse, found hidden within the altar.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Sable-gold reliquary",
+        "item_type": "miscellaneous",
+        "description": "An ornate reliquary crafted of sable gold, radiating a faint protective aura.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Silvered Icon of the Tides",
+        "item_type": "miscellaneous",
+        "description": "A small silvered icon depicting the tides, used in ancient rituals.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Ritual dagger inscribed with protective runes",
+        "item_type": "weapon",
+        "description": "A finely crafted dagger bearing protective runes, used in sacred ceremonies.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Bundle of yellowed pages",
+        "item_type": "miscellaneous",
+        "description": "A bundle of yellowed pages discovered in a hidden compartment in the desk.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Glass vial of iridescent blue liquid",
+        "item_type": "consumable",
+        "item_subtype": "other",
+        "description": "A glass vial containing an iridescent blue liquid found in the hidden compartment.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Potion of Water Breathing",
+        "item_type": "consumable",
+        "item_subtype": "potion",
+        "description": "A potion that allows the drinker to breathe underwater for 1 hour.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Tarnished silver locket",
+        "item_type": "miscellaneous",
+        "item_subtype": "amulet",
+        "description": "An old tarnished silver locket found on the rocky shoreline, half-buried in kelp and sand.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Rusted iron brooch with cracked blue glass",
+        "item_type": "miscellaneous",
+        "description": "A rusted iron brooch inset with cracked blue glass, found tangled in oilskin on the shoreline.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Waterlogged scraps of parchment",
+        "item_type": "miscellaneous",
+        "description": "Fragile, waterlogged scraps of parchment discovered inside an oilskin pouch along the rocky shore.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Elixir of Purification",
+        "item_type": "consumable",
+        "item_subtype": "potion",
+        "description": "A single-use elixir that removes one curse or poison when consumed.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Ancient coins",
+        "item_type": "miscellaneous",
+        "description": "Coins recovered from the Gloam-Tide Vault treasure hoard.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Sable gold ingot",
+        "item_type": "miscellaneous",
+        "description": "A 1/4 share of a sable gold ingot worth approximately 12 gp, used as a ritual component.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Ceremonial chalice inlaid with obsidian",
+        "item_type": "miscellaneous",
+        "description": "A 1/4 share of a ceremonial chalice inlaid with obsidian, valued at approximately 18 gp.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Drowned King's Signet",
+        "item_type": "miscellaneous",
+        "description": "A signet ring belonging to the Drowned King, recovered from the throne room.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Corroded ceremonial trident",
+        "item_type": "weapon",
+        "description": "An ancient ceremonial trident, corroded and unrestored, recovered from the Drowned Sovereign's Court.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Jet-black crown",
+        "item_type": "miscellaneous",
+        "description": "A jet-black crown recovered from the Drowned King's court. Valuable but a cursed relic.",
+        "quantity": 1
+      },
+      {
+        "item_name": "Torn journal page with cryptic instructions",
+        "item_type": "miscellaneous",
+        "description": "A torn journal page containing cryptic instructions and references to the Brinefire Alchemist's Den.",
+        "quantity": 1
+      }
+    ],
+    "ammunition": [
+      {
+        "name": "Crossbow bolt",
+        "quantity": 56,
+        "description": "Standard crossbow bolts for use with a light crossbow."
+      }
+    ],
+    "attacksAndSpellcasting": [
+      {
+        "name": "Guard captain's enchanted crossbow",
+        "attackBonus": 4,
+        "damageDice": "1d8",
+        "damageBonus": 2,
+        "damageType": "piercing",
+        "type": "ranged",
+        "description": "A finely crafted crossbow bearing the captain's insignia. +1 bonus to attack and damage rolls."
+      },
+      {
+        "name": "Light crossbow",
+        "attackBonus": 3,
+        "damageDice": "1d8",
+        "damageBonus": 1,
+        "damageType": "piercing",
+        "type": "ranged",
+        "description": "Simple ranged weapon. Attack: +3 to hit, range 80/320 ft. Hit: 1d8+1 piercing."
+      },
+      {
+        "name": "Mace",
+        "attackBonus": 4,
+        "damageDice": "1d6",
+        "damageBonus": 2,
+        "damageType": "bludgeoning",
+        "type": "melee",
+        "description": "Simple melee weapon. Attack: +4 to hit, reach 5 ft. Hit: 1d6+2 bludgeoning."
+      },
+      {
+        "name": "Sacred Flame",
+        "attackBonus": 0,
+        "damageDice": "1d8",
+        "damageBonus": 0,
+        "damageType": "radiant",
+        "type": "spell",
+        "description": "Cantrip. Target must succeed on a Dexterity save or take 1d8 radiant damage."
+      }
+    ],
+    "spellcasting": {
+      "ability": "wisdom",
+      "spellSaveDC": 14,
+      "spellAttackBonus": 6,
+      "spells": {
+        "cantrips": [
+          "Sacred Flame",
+          "Guidance",
+          "Spare the Dying"
+        ],
+        "level1": [
+          "Bless",
+          "Cure Wounds",
+          "Healing Word",
+          "Detect Magic"
+        ],
+        "level2": [
+          "Aid",
+          "Spiritual Weapon"
+        ],
+        "level3": [
+          "Mass Healing Word",
+          "Spirit Guardians",
+          "Dispel Magic",
+          "Revivify"
+        ],
+        "level4": [],
+        "level5": [],
+        "level6": [],
+        "level7": [],
+        "level8": [],
+        "level9": []
+      },
+      "spellSlots": {
+        "level1": {
+          "current": 4,
+          "max": 4
+        },
+        "level2": {
+          "current": 3,
+          "max": 3
+        },
+        "level3": {
+          "current": 2,
+          "max": 2
+        },
+        "level4": {
+          "current": 0,
+          "max": 0
+        },
+        "level5": {
+          "current": 0,
+          "max": 0
+        },
+        "level6": {
+          "current": 0,
+          "max": 0
+        },
+        "level7": {
+          "current": 0,
+          "max": 0
+        },
+        "level8": {
+          "current": 0,
+          "max": 0
+        },
+        "level9": {
+          "current": 0,
+          "max": 0
+        }
+      },
+      "preparedSpells": [
+        "Healing Word",
+        "Detect Magic",
+        "Aid",
+        "Spiritual Weapon",
+        "Mass Healing Word",
+        "Spirit Guardians",
+        "Dispel Magic",
+        "Revivify"
+      ]
+    },
+    "currency": {
+      "gold": 230,
+      "silver": 83,
+      "copper": 39
+    },
+    "experience_points": 10233,
+    "exp_required_for_next_level": 14000,
+    "challengeRating": 0.25,
+    "personality_traits": "Cheerful and full of jokes to put others at ease, but this masks his deep grief over the loss of his previous unit. Sila's trust in Eirik and Kira has grown after the safe return of her chest, strengthening their reputation at the outpost.",
+    "ideals": "Redemption. Every life saved is a step toward atoning for the lives he failed to save.",
+    "bonds": "Carries a dog tag from his fallen unit as a constant reminder of his promise to protect others. Has earned Sila's continued support and access to her supplies following the recovery of her chest.",
+    "flaws": "Reckless in the face of danger, terrified of losing friends again and willing to take great risks to prevent it."
+  },
+  "Ranger Thane": {
+    "character_role": "npc",
+    "character_type": "npc",
+    "name": "Ranger Thane",
+    "type": "npc",
+    "size": "Medium",
+    "level": 5,
+    "race": "Half-Orc",
+    "class": "Ranger",
+    "alignment": "chaotic good",
+    "background": "Outlander",
+    "status": "alive",
+    "condition": "none",
+    "condition_affected": [],
+    "hitPoints": 50,
+    "maxHitPoints": 50,
+    "armorClass": 15,
+    "initiative": 3,
+    "speed": 30,
+    "abilities": {
+      "strength": 12,
+      "dexterity": 17,
+      "constitution": 16,
+      "intelligence": 10,
+      "wisdom": 13,
+      "charisma": 9
+    },
+    "savingThrows": [
+      "strength",
+      "dexterity"
+    ],
+    "skills": {
+      "athletics": 5,
+      "survival": 5,
+      "perception": 3,
+      "stealth": 6,
+      "nature": 2
+    },
+    "proficiencyBonus": 3,
+    "senses": {
+      "darkvision": 60,
+      "passivePerception": 13
+    },
+    "languages": [
+      "Common",
+      "Orc",
+      "Goblin"
+    ],
+    "proficiencies": {
+      "armor": [
+        "Light",
+        "Medium",
+        "Shields"
+      ],
+      "weapons": [
+        "Simple",
+        "Martial"
+      ],
+      "tools": []
+    },
+    "damageVulnerabilities": [],
+    "damageResistances": [],
+    "damageImmunities": [],
+    "conditionImmunities": [],
+    "classFeatures": [
+      {
+        "name": "Ability Score Improvement",
+        "description": "Dexterity +1 (to 17), Constitution +1 (to 16).",
+        "source": "Ranger Level 4"
+      },
+      {
+        "name": "Action Surge",
+        "description": "Allows the use of an additional action on your turn. Regained on a short or long rest.",
+        "usage": {
+          "current": 1,
+          "max": 1,
+          "refreshOn": "shortRest"
+        }
+      },
+      {
+        "name": "Extra Attack",
+        "description": "You can Attack twice, instead of once, whenever you take the Attack action on Your Turn.",
+        "source": "Ranger Level 5"
+      },
+      {
+        "name": "Favored Enemy",
+        "description": "Advantage on Survival checks to track favored enemies (humanoids: elves, humans); advantage on Intelligence checks to recall information about them.",
+        "source": "Ranger"
+      },
+      {
+        "name": "Fighting Style (Archery)",
+        "description": "+2 bonus to attack rolls you make with ranged weapons.",
+        "source": "Ranger"
+      },
+      {
+        "name": "Hit Dice",
+        "description": "5d10",
+        "current": 3,
+        "max": 5
+      },
+      {
+        "name": "Natural Explorer",
+        "description": "Forest: Double proficiency bonus for proficient skills when in favored terrain; ignore difficult terrain; cannot become lost except by magic; remain alert to danger while traveling; move stealthily at a normal pace when alone; find twice as much food when foraging; learn exact number, sizes, and how long ago creatures passed through area.",
+        "source": "Ranger"
+      },
+      {
+        "name": "Ranger Archetype (Corrupted Hunter)",
+        "description": "A twisted, corrupted path focusing on hunting and cursing victims.",
+        "source": "Ranger"
+      },
+      {
+        "name": "Second Wind",
+        "description": "You have a limited well of stamina that you can draw on to protect yourself from harm. On your turn, you can use a bonus action to regain hit points equal to 1d10 + your fighter level. Regained on a short or long rest.",
+        "usage": {
+          "current": 1,
+          "max": 1,
+          "refreshOn": "shortRest"
+        }
+      },
+      {
+        "name": "Spellcasting",
+        "description": "Can cast ranger spells using Wisdom as spellcasting ability.",
+        "source": "Ranger"
+      }
+    ],
+    "racialTraits": [
+      {
+        "name": "Darkvision",
+        "description": "Can see in darkness up to 60 feet as if it were dim light.",
+        "source": "Half-Orc"
+      },
+      {
+        "name": "Relentless Endurance",
+        "description": "When reduced to 0 hit points but not killed outright, drop to 1 hit point instead (once per long rest).",
+        "source": "Half-Orc"
+      },
+      {
+        "name": "Savage Attacks",
+        "description": "When scoring a critical hit with a melee weapon, can roll one of the weapon\u2019s damage dice one additional time and add it to the extra damage of the critical hit.",
+        "source": "Half-Orc"
+      }
+    ],
+    "backgroundFeature": {
+      "name": "Wanderer",
+      "description": "Has excellent memory for maps and geography, and can always recall the general layout of terrain, settlements, and other features. Can find food and fresh water for self and up to five others each day, provided the land offers berries, small game, water, and so forth. Recently helped recover clues: torn cloak piece and smuggler's lantern. Noted warnings left by smugglers on the tunnel wall and evidence of Elen's hurried passage.",
+      "source": "Outlander"
+    },
+    "temporaryEffects": [],
+    "injuries": [],
+    "equipment_effects": [],
+    "feats": [],
+    "equipment": [
+      {
+        "item_name": "Longbow",
+        "item_type": "weapon",
+        "item_subtype": "other",
+        "description": "A curved bow granting ranged attacks.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Shortsword",
+        "item_type": "weapon",
+        "item_subtype": "other",
+        "description": "A short, light, and versatile sword. Usable, corroded.",
+        "quantity": 1,
+        "equipped": true,
+        "magical": false
+      },
+      {
+        "item_name": "Studded Leather Armor",
+        "item_type": "armor",
+        "item_subtype": "other",
+        "description": "Medium armor made from toughened leather reinforced with rivets.",
+        "quantity": 1,
+        "equipped": true,
+        "magical": false,
+        "ac_base": 12,
+        "ac_bonus": 0,
+        "dex_limit": null,
+        "armor_category": "light",
+        "stealth_disadvantage": false
+      },
+      {
+        "item_name": "Explorer's Pack",
+        "item_type": "equipment",
+        "item_subtype": "other",
+        "description": "Pack with useful gear for exploration.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Pouch of Gold Coins",
+        "item_type": "miscellaneous",
+        "description": "A small pouch filled with assorted gold coins, collected from elite bodyguards.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Iron Knuckles with Bandit Runes",
+        "item_type": "weapon",
+        "description": "Heavy iron knuckles inscribed with bandit runes, collected from elite bodyguards.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Battered Crossbow",
+        "item_type": "weapon",
+        "description": "A worn and battered crossbow, collected from elite bodyguards.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Leather Bracer with Coded Marks",
+        "item_type": "miscellaneous",
+        "item_subtype": "other",
+        "description": "A leather bracer adorned with coded marks, collected from elite bodyguards.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Commander's key",
+        "item_type": "miscellaneous",
+        "description": "A key recovered from the barracks debris.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Carved Wooden Token with Garrison Insignia",
+        "item_type": "miscellaneous",
+        "item_subtype": "other",
+        "description": "A wooden token bearing the garrison insignia, recovered recently.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Original Keep Layout Map with Route to the Broken Tower",
+        "item_type": "equipment",
+        "description": "A detailed map showing the original layout of the keep and the route to the Broken Tower.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Antique silver flask of potent spirits",
+        "item_type": "consumable",
+        "item_subtype": "potion",
+        "description": "Heals 2d4+2 HP and grants advantage on fear saves for 1 hour.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Pouch of Dried Rations",
+        "item_type": "consumable",
+        "item_subtype": "food",
+        "description": "A pouch containing dried rations suitable for travel.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Spare Bowstring",
+        "item_type": "equipment",
+        "item_subtype": "other",
+        "description": "A spare bowstring for repairing or replacing worn strings on bows.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Pouch of Silver Coins",
+        "item_type": "miscellaneous",
+        "description": "A small pouch containing silver coins discovered under a loose floorboard beneath the bed.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Potion of Heroism",
+        "item_type": "consumable",
+        "item_subtype": "potion",
+        "description": "A swirling gold liquid that grants 10 temporary hit points and bless effect for 1 hour.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": true
+      },
+      {
+        "item_name": "Ancient coins and gemstones",
+        "item_type": "miscellaneous",
+        "description": "A mixed collection of ancient coins and gemstones divided from the treasure hoard.",
+        "quantity": 2,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Sable gold ingot",
+        "item_type": "miscellaneous",
+        "description": "A 1/4 share of a sable gold ingot, worth approximately 12 gp and used as a ritual component.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Ceremonial chalice inlaid with obsidian",
+        "item_type": "miscellaneous",
+        "description": "A 1/4 share of a ceremonial chalice adorned with obsidian, valued around 18 gp.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      },
+      {
+        "item_name": "Vial of Preserved Holy Water",
+        "item_type": "consumable",
+        "item_subtype": "other",
+        "description": "A vial containing preserved holy water that glows faintly.",
+        "quantity": 1,
+        "equipped": false,
+        "magical": false
+      }
+    ],
+    "ammunition": [
+      {
+        "name": "Arrows",
+        "quantity": 51,
+        "description": "Standard arrows for use with a longbow or shortbow"
+      }
+    ],
+    "attacksAndSpellcasting": [
+      {
+        "name": "Longbow",
+        "attackBonus": 7,
+        "damageDice": "1d8",
+        "damageBonus": 3,
+        "damageType": "piercing",
+        "type": "ranged",
+        "description": "Range 150/600 ft. Ammunition, two-handed."
+      },
+      {
+        "name": "Shortsword",
+        "attackBonus": 5,
+        "damageDice": "1d6",
+        "damageBonus": 3,
+        "damageType": "piercing",
+        "type": "melee",
+        "description": "Finesse, light."
+      }
+    ],
+    "spellcasting": {
+      "ability": "wisdom",
+      "spellSaveDC": 13,
+      "spellAttackBonus": 5,
+      "spells": {
+        "cantrips": [],
+        "level1": [
+          "Hunter's Mark",
+          "Goodberry",
+          "Cure Wounds",
+          "Detect Magic"
+        ],
+        "level2": [
+          "Pass without Trace",
+          "Spike Growth"
+        ],
+        "level3": [],
+        "level4": [],
+        "level5": [],
+        "level6": [],
+        "level7": [],
+        "level8": [],
+        "level9": []
+      },
+      "spellSlots": {
+        "level1": {
+          "current": 4,
+          "max": 4
+        },
+        "level2": {
+          "current": 2,
+          "max": 2
+        },
+        "level3": {
+          "current": 0,
+          "max": 0
+        },
+        "level4": {
+          "current": 0,
+          "max": 0
+        },
+        "level5": {
+          "current": 0,
+          "max": 0
+        },
+        "level6": {
+          "current": 0,
+          "max": 0
+        },
+        "level7": {
+          "current": 0,
+          "max": 0
+        },
+        "level8": {
+          "current": 0,
+          "max": 0
+        },
+        "level9": {
+          "current": 0,
+          "max": 0
+        }
+      },
+      "preparedSpells": [
+        "Hunter's Mark",
+        "Goodberry",
+        "Cure Wounds",
+        "Detect Magic",
+        "Pass without Trace",
+        "Spike Growth"
+      ]
+    },
+    "currency": {
+      "gold": 25,
+      "silver": 6,
+      "copper": 23
+    },
+    "experience_points": 11183,
+    "exp_required_for_next_level": 14000,
+    "challengeRating": 2,
+    "personality_traits": "Gruff, speaks little, haunted by visions of the wild. Witnessed the restoration of the Withered Hart. Received Keeper Morvath's counsel. Encouraged Eirik to accept the Keeper's task and stands ready to help restore the Lost Ward Circle.",
+    "ideals": "Only the strong survive; the weak feed the corrupted woods. Reinforced resolve to defend the woods.",
+    "bonds": "Owes allegiance to a dark spirit of the forest.",
+    "flaws": "Quick to violence, trusts no one, sometimes loses control to the corruption."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "total_api_endpoints": 54,
+  "models_in_use": {
+    "gpt-4.1-2025-04-14": "Primary model for complex tasks",
+    "gpt-4.1-mini-2025-04-14": "Secondary model for simple tasks",
+    "gpt-5-mini-2025-08-07": "Optional, for testing",
+    "gemini-1.5-flash": "Large file analysis"
+  },
+  "optimization_features": {
+    "intelligent_routing": true,
+    "compression": true,
+    "caching": true,
+    "batch_processing": true
+  },
+  "categories": [
+    "Main Game Loop",
+    "Combat System",
+    "Character Management",
+    "Module Generation",
+    "Content Generation",
+    "Action Processing",
+    "Narrative & Summaries",
+    "Web Interface",
+    "Compression",
+    "Validation"
+  ]
+}

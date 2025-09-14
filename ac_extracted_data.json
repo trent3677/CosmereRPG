@@ -1,0 +1,68 @@
+{
+  "name": "Eirik Hearthwise",
+  "armorClass": 17,
+  "class": "Cleric",
+  "race": "Human",
+  "abilities": {
+    "dexterity": 13,
+    "constitution": 15,
+    "wisdom": 17
+  },
+  "proficiencies": {
+    "armor": [
+      "light",
+      "medium",
+      "heavy",
+      "shields"
+    ]
+  },
+  "equipment_effects": [
+    {
+      "name": "Guard captain's enchanted crossbow - Bonus",
+      "type": "bonus",
+      "target": "attack rolls",
+      "value": 1,
+      "description": "+1 bonus to attack rolls",
+      "source": "Guard captain's enchanted crossbow"
+    },
+    {
+      "name": "Shield AC Bonus",
+      "type": "bonus",
+      "target": "AC",
+      "value": 0,
+      "description": "Shield provides +0 AC",
+      "source": "Shield"
+    }
+  ],
+  "equipment": [
+    {
+      "item_name": "Scale mail",
+      "item_type": "armor",
+      "equipped": true,
+      "description": "Medium armor (AC 14 + Dex modifier, max 2).",
+      "ac_base": 14,
+      "ac_bonus": 0,
+      "dex_limit": 2,
+      "armor_category": "medium",
+      "stealth_disadvantage": true
+    },
+    {
+      "item_name": "Shield",
+      "item_type": "armor",
+      "equipped": true,
+      "description": "A shield that increases AC by 2.",
+      "ac_base": 2,
+      "ac_bonus": 0,
+      "dex_limit": null,
+      "armor_category": "shield",
+      "stealth_disadvantage": false
+    }
+  ],
+  "racialTraits": [
+    {
+      "name": "Ability Score Increase",
+      "description": "Your ability scores each increase by 1.",
+      "source": "Human"
+    }
+  ]
+}

@@ -1,0 +1,515 @@
+{
+  "total_calls": 54,
+  "models": {
+    "Gemini: self.default_model": 1,
+    "DM_MAIN_MODEL": 12,
+    "gpt-4.1-mini-2025-04-14": 5,
+    "variable": 3,
+    "SCHEMA_UPDATER_MODEL": 1,
+    "\"gpt-4-0125-preview\"": 1,
+    "\"gpt-4o\"": 1,
+    "ADVENTURE_SUMMARY_MODEL": 4,
+    "gpt-4.1-2025-04-14": 3,
+    "NPC_BUILDER_MODEL": 1,
+    "COMBAT_DIALOGUE_SUMMARY_MODEL": 1,
+    "DM_MINI_MODEL": 5,
+    "GPT5_MINI_MODEL": 1,
+    "COMBAT_MAIN_MODEL": 3,
+    "combat_model": 2,
+    "LEVEL_UP_MODEL": 2,
+    "DM_VALIDATION_MODEL": 1,
+    "PLOT_UPDATE_MODEL": 1,
+    "config.DM_EFFECTS_MODEL if hasattr(config": 1,
+    "ENCOUNTER_UPDATE_MODEL": 1,
+    "ACTION_PREDICTION_MODEL": 1,
+    "NPC_INFO_UPDATE_MODEL": 1,
+    "NARRATIVE_COMPRESSION_MODEL": 1,
+    "LOCATION_COMPRESSION_MODEL": 1
+  },
+  "detailed_calls": [
+    {
+      "file": "gemini_tool.py",
+      "line": 188,
+      "function": "_enforce_rate_limit",
+      "model": "Gemini: self.default_model",
+      "api_type": "Gemini"
+    },
+    {
+      "file": "main.py",
+      "line": 312,
+      "function": "generate_arrival_narration",
+      "model": "DM_MAIN_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "main.py",
+      "line": 381,
+      "function": "generate_seamless_transition_narration",
+      "model": "DM_MAIN_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "main.py",
+      "line": 1390,
+      "function": "generate_module_summary",
+      "model": "config.DM_SUMMARIZATION_MODEL",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "main.py",
+      "line": 1933,
+      "function": "get_ai_response",
+      "model": "selected_model",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "main.py",
+      "line": 1947,
+      "function": "get_ai_response",
+      "model": "selected_model",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "modify.py",
+      "line": 44,
+      "function": "update_json_schema",
+      "model": "SCHEMA_UPDATER_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "module_prompt_randomness_test.py",
+      "line": 66,
+      "function": "run_single_test",
+      "model": "\"gpt-4-0125-preview\"",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "summary_test.py",
+      "line": 78,
+      "function": "generate_summary",
+      "model": "\"gpt-4o\"",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/ai/action_handler.py",
+      "line": 373,
+      "function": "run_combat_simulation",
+      "model": "config.DM_MINI_MODEL",
+      "temperature": 0.1,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/ai/action_handler.py",
+      "line": 1794,
+      "function": "get_ai_npc_movement_decision",
+      "model": "config.NPC_INFO_UPDATE_MODEL",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/ai/adv_summary.py",
+      "line": 228,
+      "function": "update_location_json",
+      "model": "ADVENTURE_SUMMARY_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/ai/adv_summary.py",
+      "line": 463,
+      "function": "generate_adventure_summary",
+      "model": "ADVENTURE_SUMMARY_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/ai/cumulative_summary.py",
+      "line": 281,
+      "function": "generate_location_summary",
+      "model": "ADVENTURE_SUMMARY_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/ai/cumulative_summary.py",
+      "line": 555,
+      "function": "generate_enhanced_adventure_summary",
+      "model": "ADVENTURE_SUMMARY_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/generators/area_generator.py",
+      "line": 126,
+      "function": "__init__",
+      "model": "DM_MAIN_MODEL",
+      "temperature": 0.8,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/generators/area_generator.py",
+      "line": 556,
+      "function": "__init__",
+      "model": "DM_MAIN_MODEL",
+      "temperature": 0.8,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/generators/location_generator.py",
+      "line": 419,
+      "function": "__init__",
+      "model": "DM_MAIN_MODEL",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/generators/location_generator.py",
+      "line": 542,
+      "function": "__init__",
+      "model": "DM_MAIN_MODEL",
+      "temperature": 0.8,
+      "max_tokens": "default",
+      "response_format": "json_object"
+    },
+    {
+      "file": "core/generators/module_builder.py",
+      "line": 639,
+      "function": "unify_plots",
+      "model": "DM_MAIN_MODEL",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "json_object"
+    },
+    {
+      "file": "core/generators/module_builder.py",
+      "line": 891,
+      "function": "_generate_enhanced_plot_hooks",
+      "model": "DM_MAIN_MODEL",
+      "temperature": 0.6,
+      "max_tokens": "default",
+      "response_format": "json_object"
+    },
+    {
+      "file": "core/generators/module_builder.py",
+      "line": 1346,
+      "function": "main",
+      "model": "config.DM_SUMMARIZATION_MODEL",
+      "temperature": 0.3,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/generators/module_generator.py",
+      "line": 507,
+      "function": "__init__",
+      "model": "DM_MAIN_MODEL",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/generators/monster_builder.py",
+      "line": 181,
+      "function": "generate_monster",
+      "model": "config.MONSTER_BUILDER_MODEL",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/generators/npc_builder.py",
+      "line": 126,
+      "function": "generate_npc",
+      "model": "NPC_BUILDER_MODEL",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/generators/plot_generator.py",
+      "line": 347,
+      "function": "__init__",
+      "model": "DM_MAIN_MODEL",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/generators/plot_generator.py",
+      "line": 414,
+      "function": "__init__",
+      "model": "DM_MAIN_MODEL",
+      "temperature": 0.8,
+      "max_tokens": "default",
+      "response_format": "json_object"
+    },
+    {
+      "file": "core/managers/combat_manager.py",
+      "line": 997,
+      "function": "summarize_dialogue",
+      "model": "COMBAT_DIALOGUE_SUMMARY_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/managers/combat_manager.py",
+      "line": 1787,
+      "function": "generate_combat_round_summary",
+      "model": "DM_MINI_MODEL",
+      "temperature": 0.1,
+      "max_tokens": "default",
+      "response_format": "json_object"
+    },
+    {
+      "file": "core/managers/combat_manager.py",
+      "line": 2187,
+      "function": "run_combat_simulation",
+      "model": "GPT5_MINI_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/managers/combat_manager.py",
+      "line": 2204,
+      "function": "run_combat_simulation",
+      "model": "COMBAT_MAIN_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/managers/combat_manager.py",
+      "line": 2287,
+      "function": "run_combat_simulation",
+      "model": "COMBAT_MAIN_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/managers/combat_manager.py",
+      "line": 2820,
+      "function": "check_all_monsters_defeated",
+      "model": "combat_model",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/managers/combat_manager.py",
+      "line": 2836,
+      "function": "check_all_monsters_defeated",
+      "model": "combat_model",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/managers/combat_manager.py",
+      "line": 2853,
+      "function": "check_all_monsters_defeated",
+      "model": "COMBAT_MAIN_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/managers/initiative_tracker_ai.py",
+      "line": 170,
+      "function": "generate_live_initiative_tracker",
+      "model": "DM_MAIN_MODEL",
+      "temperature": 0.1,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/managers/level_up_manager.py",
+      "line": 201,
+      "function": "_get_ai_response",
+      "model": "LEVEL_UP_MODEL",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/managers/level_up_manager.py",
+      "line": 231,
+      "function": "_validate_level_up_response",
+      "model": "DM_VALIDATION_MODEL",
+      "temperature": 0.2,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "core/validation/npc_codex_generator.py",
+      "line": 256,
+      "function": "extract_npcs_with_ai",
+      "model": "config.DM_MAIN_MODEL",
+      "temperature": 0.1,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "updates/plot_update.py",
+      "line": 149,
+      "function": "update_plot",
+      "model": "PLOT_UPDATE_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "updates/update_character_effects.py",
+      "line": 199,
+      "function": "track_response",
+      "model": "config.DM_EFFECTS_MODEL if hasattr(config",
+      "temperature": 0.3,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "updates/update_character_info.py",
+      "line": 1450,
+      "function": "update_character_info",
+      "model": "model",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "updates/update_encounter.py",
+      "line": 83,
+      "function": "update_encounter",
+      "model": "ENCOUNTER_UPDATE_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "utils/action_predictor.py",
+      "line": 146,
+      "function": "predict_actions_required",
+      "model": "ACTION_PREDICTION_MODEL",
+      "temperature": 0.1,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "utils/level_up.py",
+      "line": 99,
+      "function": "get_npc_level_up_changes",
+      "model": "LEVEL_UP_MODEL",
+      "temperature": 0.3,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "utils/prompt_sanitizer.py",
+      "line": 33,
+      "function": "global",
+      "model": "DM_MINI_MODEL",
+      "temperature": 0.3,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "utils/quest_player_formatter.py",
+      "line": 83,
+      "function": "format_quest_batch",
+      "model": "DM_MINI_MODEL",
+      "temperature": "default",
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "utils/reconcile_location_state.py",
+      "line": 133,
+      "function": "run",
+      "model": "NPC_INFO_UPDATE_MODEL",
+      "temperature": 0.2,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "utils/startup_wizard.py",
+      "line": 1624,
+      "function": "get_ai_response",
+      "model": "config.DM_MAIN_MODEL",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "utils/startup_wizard.py",
+      "line": 1722,
+      "function": "get_ai_starting_location",
+      "model": "config.DM_MINI_MODEL",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "utils/compression/ai_narrative_compressor_agentic.py",
+      "line": 230,
+      "function": "track_response",
+      "model": "NARRATIVE_COMPRESSION_MODEL",
+      "temperature": 0.1,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "utils/compression/location_compressor.py",
+      "line": 138,
+      "function": "track_response",
+      "model": "LOCATION_COMPRESSION_MODEL",
+      "temperature": 0.1,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "web/web_interface.py",
+      "line": 1537,
+      "function": "promote_to_bestiary",
+      "model": "DM_MINI_MODEL",
+      "temperature": 0.7,
+      "max_tokens": "default",
+      "response_format": "text"
+    },
+    {
+      "file": "web/web_interface.py",
+      "line": 3386,
+      "function": "generate_descriptions",
+      "model": "DM_MINI_MODEL",
+      "temperature": 0.8,
+      "max_tokens": "default",
+      "response_format": "text"
+    }
+  ]
+}
