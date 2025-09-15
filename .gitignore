@@ -418,3 +418,4 @@ init_prompt_test_history.json
 sample_current_location.md
 telemetry_log.jsonl
 development/
+modules/validation_cache.json
