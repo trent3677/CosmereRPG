@@ -2179,6 +2179,10 @@ def main_game_loop():
     # Ensure debug directories and files exist
     import os
     os.makedirs("debug/logs", exist_ok=True)
+    os.makedirs("debug/api_captures", exist_ok=True)
+    os.makedirs("debug/combat", exist_ok=True)
+
+    # Create prompt_validation.json if it doesn't exist
     if not os.path.exists("debug/logs/prompt_validation.json"):
         with open("debug/logs/prompt_validation.json", "w") as f:
             f.write("[]")  # Initialize with empty array
