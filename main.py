@@ -2176,15 +2176,22 @@ def check_all_modules_plot_completion():
 def main_game_loop():
     global needs_conversation_history_update
 
+    # Ensure debug directories and files exist
+    import os
+    os.makedirs("debug/logs", exist_ok=True)
+    if not os.path.exists("debug/logs/prompt_validation.json"):
+        with open("debug/logs/prompt_validation.json", "w") as f:
+            f.write("[]")  # Initialize with empty array
+
     # Check if first-time setup is needed
     try:
         from utils.startup_wizard import startup_required, run_startup_sequence
-        
+
         if startup_required():
             print("[D20] Welcome to your 5th Edition Adventure! [D20]")
             print("It looks like this is your first time, or you need to set up a character.")
             print("Let's get you ready for adventure!\n")
-            
+
             success = run_startup_sequence()
             if not success:
                 print("[ERROR] Setup was cancelled or failed. Cannot start game loop.")
