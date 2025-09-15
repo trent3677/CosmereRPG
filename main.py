@@ -974,6 +974,9 @@ def validate_ai_response(primary_response, user_input, validation_prompt_text, c
                     "reason": reason
                 }
 
+                # Ensure debug/logs directory exists
+                os.makedirs("debug/logs", exist_ok=True)
+
                 with open("debug/logs/prompt_validation.json", "a", encoding="utf-8") as log_file:
                     json.dump(log_entry, log_file)
                     log_file.write("\n")  # Add a newline for better readability
