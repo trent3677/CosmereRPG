@@ -252,6 +252,18 @@
       ],
       "source_file": "generate_bestiary_batch10.py"
     },
+    "silent_king_effigy": {
+      "name": "Silent King Effigy",
+      "type": "construct",
+      "description": "An 8-foot tall stone construct carved in the likeness of an ancient king, standing eternally in the flooded sanctum. Its form is regal yet weathered, draped in sculpted robes that seem to ripple despite being solid stone. The crown upon its head is part of the carving itself, inset with dark crystals that pulse with shadow energy. Water damage has left mineral deposits streaking down its face like eternal tears. When dormant, it appears as merely another statue among the effigies, but when awakened, purple-black energy courses through the carved channels in its body. Its movements are deliberate and ceremonial, each gesture reminiscent of royal decrees. The construct's stone flesh shows signs of shadow corruption - veins of dark crystal spreading like infection through the marble. In its right hand it holds a scepter of office that serves as both symbol and weapon. The left hand bears a shield emblazoned with forgotten heraldry. When it moves, water cascades from its joints, and its footsteps echo with the authority of dead kings. The eyes are empty sockets that burn with cold fire when active, judging all who would disturb the sanctity of the royal dead.",
+      "tags": [
+        "construct",
+        "undead",
+        "guardian",
+        "shadow-touched"
+      ],
+      "source_file": "manual_addition"
+    },
     "stone_golem": {
       "name": "Stone Golem",
       "type": "construct",

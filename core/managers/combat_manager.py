@@ -3168,10 +3168,15 @@ Rules:
                        if character_name:
                            if character_name not in final_character_updates:
                                final_character_updates[character_name] = []
-                           
-                           final_hp = creature.get("currentHitPoints")
-                           final_character_updates[character_name].append(f"set hitPoints to {final_hp}")
-                           
+
+                           # CRITICAL FIX: Don't set HP from encounter file - character file is source of truth
+                           # The encounter file may have stale HP values that would overwrite healing done during combat
+                           # Only award XP when combat ends
+
+                           # COMMENTED OUT: This line was setting HP from the encounter file, which can be stale
+                           # final_hp = creature.get("currentHitPoints")
+                           # final_character_updates[character_name].append(f"set hitPoints to {final_hp}")
+
                            if xp_awarded > 0:
                                final_character_updates[character_name].append(f"awarded {xp_awarded} experience points")
 

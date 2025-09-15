@@ -2379,7 +2379,8 @@ def handle_party_data_request():
                                 damage_str = damage_dice
                             primary_attack = {
                                 'bonus': first_attack.get('attackBonus', 0),
-                                'damage': damage_str
+                                'damage': damage_str,
+                                'name': first_attack.get('name', 'Attack')
                             }
 
                         party_members.append({
@@ -2459,7 +2460,8 @@ def handle_party_data_request():
                                     damage_str = damage_dice
                                 primary_attack = {
                                     'bonus': first_attack.get('attackBonus', 0),
-                                    'damage': damage_str
+                                    'damage': damage_str,
+                                    'name': first_attack.get('name', 'Attack')
                                 }
 
                             party_members.append({
@@ -2581,9 +2583,17 @@ def handle_initiative_data_request():
             reverse=True
         )
 
-        # Prepare clean data for frontend
-        combatant_list = [
-            {
+        # Prepare clean data for frontend with full character data for tooltips
+        from utils.module_path_manager import ModulePathManager
+        from updates.update_character_info import normalize_character_name, find_character_file_fuzzy
+
+        party_tracker = safe_read_json("party_tracker.json")
+        current_module = party_tracker.get("module", "").replace(" ", "_") if party_tracker else ""
+        path_manager = ModulePathManager(current_module) if current_module else None
+
+        combatant_list = []
+        for c in sorted_combatants:
+            combatant_data = {
                 "name": c.get("name"),
                 "type": c.get("type"),  # 'player', 'npc', or 'enemy'
                 "initiative": c.get("initiative"),
@@ -2592,8 +2602,89 @@ def handle_initiative_data_request():
                 "monsterType": c.get("monsterType"),  # For enemy type lookup
                 "class": c.get("class")  # For NPC class lookup
             }
-            for c in sorted_combatants
-        ]
+
+            # Load full character data for players and NPCs to enable tooltips
+            if path_manager and c.get("type") in ['player', 'npc']:
+                try:
+                    character_name = normalize_character_name(c.get("name", ""))
+
+                    # Try to load character data
+                    if c.get("type") == 'npc':
+                        # Use fuzzy matching for NPCs
+                        matched_name = find_character_file_fuzzy(character_name)
+                        if matched_name:
+                            char_file = path_manager.get_character_path(matched_name)
+                        else:
+                            char_file = None
+                    else:
+                        # Direct path for players
+                        char_file = path_manager.get_character_path(character_name)
+
+                    if char_file and os.path.exists(char_file):
+                        char_data = safe_read_json(char_file)
+                        if char_data:
+                            # Extract spell data organized by level
+                            spells_by_level = {}
+                            spellcasting = char_data.get('spellcasting', {})
+                            if spellcasting.get('spells'):
+                                spells_data = spellcasting['spells']
+                                # Handle cantrips
+                                if spells_data.get('cantrips') and len(spells_data['cantrips']) > 0:
+                                    spells_by_level[0] = spells_data['cantrips']
+                                # Handle leveled spells (level1, level2, etc.)
+                                for i in range(1, 10):
+                                    key = f'level{i}'
+                                    if spells_data.get(key) and len(spells_data[key]) > 0:
+                                        spells_by_level[i] = spells_data[key]
+
+                            # Extract class features for tooltip
+                            class_features = []
+                            for feature in char_data.get('classFeatures', []):
+                                feature_info = {'name': feature.get('name', '')}
+                                if 'usage' in feature:
+                                    usage = feature['usage']
+                                    if usage.get('current') is not None and usage.get('max'):
+                                        feature_info['usage'] = f"{usage['current']}/{usage['max']}"
+                                class_features.append(feature_info)
+
+                            # Get primary attack from attacksAndSpellcasting
+                            primary_attack = {'bonus': 0, 'damage': '1d4'}  # Default unarmed
+                            attacks = char_data.get('attacksAndSpellcasting', [])
+                            if attacks and isinstance(attacks, list) and len(attacks) > 0:
+                                # Use the first attack as primary
+                                first_attack = attacks[0]
+                                damage_dice = first_attack.get('damageDice', '1d4')
+                                damage_bonus = first_attack.get('damageBonus', 0)
+                                # Format damage string properly
+                                if damage_bonus > 0:
+                                    damage_str = f"{damage_dice}+{damage_bonus}"
+                                elif damage_bonus < 0:
+                                    damage_str = f"{damage_dice}{damage_bonus}"
+                                else:
+                                    damage_str = damage_dice
+                                primary_attack = {
+                                    'bonus': first_attack.get('attackBonus', 0),
+                                    'damage': damage_str,
+                                    'name': first_attack.get('name', 'Attack')
+                                }
+
+                            # Add full character data for tooltips
+                            combatant_data.update({
+                                'level': char_data.get('level', 1),
+                                'ac': char_data.get('armorClass', 10),
+                                'speed': char_data.get('speed', 30),
+                                'primaryAttack': primary_attack,
+                                'spellSlots': spellcasting.get('spellSlots', char_data.get('spellSlots', {})),
+                                'spells': spells_by_level,
+                                'conditions': char_data.get('conditions', []),
+                                'classFeatures': class_features,
+                                'abilities': char_data.get('abilities', {})
+                            })
+                except Exception as e:
+                    # Log error but continue with minimal data
+                    error(f"Error loading character data for {c.get('name', 'unknown')}: {e}", category="web_interface")
+
+            combatant_list.append(combatant_data)
 
         # Send the data to the browser
         emit('initiative_data_response', {

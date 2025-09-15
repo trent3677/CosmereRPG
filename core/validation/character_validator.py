@@ -772,25 +772,27 @@ class AICharacterValidator:
     def validate_and_correct_character_smart(self, character_data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Smart validation that only calls validators that need updates
-        
+
         Args:
             character_data: Character JSON data
-            
+
         Returns:
             AI-corrected character data
         """
         character_name = character_data.get('name', 'Unknown')
         info(f"[Smart Validator] Checking {character_name} for needed validations...", category="character_validation")
-        
+
         # Check what needs validation
         needs = self.check_validation_needs(character_data)
-        
+
         # Count how many validations are needed
         needed_count = sum(1 for v in needs.values() if v)
-        
+
         if needed_count == 0:
             print(f"DEBUG: [Smart Validator] {character_name} - All validations cached, skipping API calls")
             info(f"[Smart Validator] {character_name} - All validations cached, skipping API calls", category="character_validation")
+            # When validation is cached, return character data unchanged
+            # This preserves all current values including HP, spell slots, etc.
             return character_data
 
         print(f"DEBUG: [Smart Validator] {character_name} needs {needed_count} validation(s)")
