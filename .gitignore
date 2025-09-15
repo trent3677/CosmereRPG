@@ -417,3 +417,4 @@ init_prompt_test_history.json
 # Sample files
 sample_current_location.md
 telemetry_log.jsonl
+development/
