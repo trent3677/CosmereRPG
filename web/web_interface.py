@@ -2362,6 +2362,26 @@ def handle_party_data_request():
                                     feature_info['usage'] = f"{usage['current']}/{usage['max']}"
                             class_features.append(feature_info)
                         
+                        # Get primary attack from attacksAndSpellcasting
+                        primary_attack = {'bonus': 0, 'damage': '1d4'}  # Default unarmed
+                        attacks = player_data.get('attacksAndSpellcasting', [])
+                        if attacks and isinstance(attacks, list) and len(attacks) > 0:
+                            # Use the first attack as primary
+                            first_attack = attacks[0]
+                            damage_dice = first_attack.get('damageDice', '1d4')
+                            damage_bonus = first_attack.get('damageBonus', 0)
+                            # Format damage string properly
+                            if damage_bonus > 0:
+                                damage_str = f"{damage_dice}+{damage_bonus}"
+                            elif damage_bonus < 0:
+                                damage_str = f"{damage_dice}{damage_bonus}"
+                            else:
+                                damage_str = damage_dice
+                            primary_attack = {
+                                'bonus': first_attack.get('attackBonus', 0),
+                                'damage': damage_str
+                            }
+
                         party_members.append({
                             'name': player_data.get('name', player_name),
                             'type': 'player',
@@ -2372,10 +2392,7 @@ def handle_party_data_request():
                             'ac': player_data.get('armorClass', 10),
                             'speed': player_data.get('speed', 30),
                             'initiative': player_data.get('initiative', 0),
-                            'primaryAttack': {
-                                'bonus': player_data.get('attackBonus', 0),
-                                'damage': player_data.get('weaponDamage', '1d4')
-                            },
+                            'primaryAttack': primary_attack,
                             'spellSlots': spellcasting.get('spellSlots', player_data.get('spellSlots', {})),
                             'spells': spells_by_level,
                             'conditions': player_data.get('conditions', []),
@@ -2425,6 +2442,26 @@ def handle_party_data_request():
                                         feature_info['usage'] = f"{usage['current']}/{usage['max']}"
                                 class_features.append(feature_info)
                             
+                            # Get primary attack from attacksAndSpellcasting
+                            primary_attack = {'bonus': 0, 'damage': '1d4'}  # Default unarmed
+                            attacks = npc_data.get('attacksAndSpellcasting', [])
+                            if attacks and isinstance(attacks, list) and len(attacks) > 0:
+                                # Use the first attack as primary
+                                first_attack = attacks[0]
+                                damage_dice = first_attack.get('damageDice', '1d4')
+                                damage_bonus = first_attack.get('damageBonus', 0)
+                                # Format damage string properly
+                                if damage_bonus > 0:
+                                    damage_str = f"{damage_dice}+{damage_bonus}"
+                                elif damage_bonus < 0:
+                                    damage_str = f"{damage_dice}{damage_bonus}"
+                                else:
+                                    damage_str = damage_dice
+                                primary_attack = {
+                                    'bonus': first_attack.get('attackBonus', 0),
+                                    'damage': damage_str
+                                }
+
                             party_members.append({
                                 'name': npc_data.get('name', npc_name),
                                 'type': 'npc',
@@ -2435,10 +2472,7 @@ def handle_party_data_request():
                                 'ac': npc_data.get('armorClass', 10),
                                 'speed': npc_data.get('speed', 30),
                                 'initiative': npc_data.get('initiative', 0),
-                                'primaryAttack': {
-                                    'bonus': npc_data.get('attackBonus', 0),
-                                    'damage': npc_data.get('weaponDamage', '1d4')
-                                },
+                                'primaryAttack': primary_attack,
                                 'spellSlots': spellcasting.get('spellSlots', npc_data.get('spellSlots', {})),
                                 'spells': spells_by_level,
                                 'conditions': npc_data.get('conditions', []),
