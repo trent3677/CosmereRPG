@@ -14,8 +14,32 @@
         
         <div id="character-section">
             <h2>Characters</h2>
-            <button onclick="createNewCharacter()">Create New Character</button>
-            <div id="character-list"></div>
+            <div class="grid-2">
+                <div>
+                    <h3>Create New</h3>
+                    <label>
+                        Name
+                        <input id="new-char-name" type="text" placeholder="Kaladin">
+                    </label>
+                    <label>
+                        Heritage
+                        <input id="new-char-heritage" type="text" placeholder="Alethi">
+                    </label>
+                    <label>
+                        Path
+                        <input id="new-char-path" type="text" placeholder="Windrunner">
+                    </label>
+                    <label>
+                        Origin
+                        <input id="new-char-origin" type="text" placeholder="Roshar">
+                    </label>
+                    <button onclick="createNewCharacter()">Create Character</button>
+                </div>
+                <div>
+                    <h3>Saved</h3>
+                    <div id="character-list"></div>
+                </div>
+            </div>
         </div>
         
         <div id="dice-section">
@@ -30,6 +54,41 @@
             <input id="rule-query" type="text" placeholder="Search rules (e.g., Plot Die)">
             <button onclick="searchRules()">Search</button>
             <div id="rule-results"></div>
+        </div>
+
+        <div id="investiture-section">
+            <h2>Investiture</h2>
+            <div class="grid-2">
+                <div>
+                    <h3>Update Pool</h3>
+                    <label>
+                        Character
+                        <select id="char-select"></select>
+                    </label>
+                    <label>
+                        Type
+                        <input id="inv-type" type="text" placeholder="Allomancy / Surgebinding">
+                    </label>
+                    <label>
+                        Points
+                        <input id="inv-points" type="number" min="0" value="0">
+                    </label>
+                    <label>
+                        Max Points
+                        <input id="inv-max" type="number" min="0" value="0">
+                    </label>
+                    <button onclick="updateInvestiture()">Save Investiture</button>
+                </div>
+                <div>
+                    <h3>Use Power</h3>
+                    <label>
+                        Power
+                        <select id="power-select"></select>
+                    </label>
+                    <button onclick="applyPower()">Apply Cost</button>
+                    <div id="inv-status" class="status"></div>
+                </div>
+            </div>
         </div>
     </div>
     
