@@ -1,0 +1,40 @@
+# Cosmere RPG App Requirements
+# Extended from NeverEndingQuest base requirements
+
+# Core dependencies from NeverEndingQuest
+openai>=1.0.0                  # AI integration (optional)
+Flask>=2.3.0                   # Web framework
+Flask-SocketIO>=5.3.0          # Real-time updates
+python-socketio>=5.9.0         # WebSocket support
+jsonschema>=4.17.0             # Data validation
+termcolor>=2.3.0               # Terminal colors
+tqdm>=4.65.0                   # Progress bars
+requests>=2.31.0               # HTTP requests
+Pillow>=10.0.0                 # Image processing
+
+# PDF Processing
+PyPDF2>=3.0.0                  # PDF text extraction
+pdfplumber>=0.9.0              # Advanced PDF parsing
+python-poppler>=0.3.0          # PDF rendering (optional)
+
+# Data Processing
+pandas>=2.0.0                  # Data manipulation
+numpy>=1.24.0                  # Numerical operations
+
+# Database (for rules storage)
+sqlalchemy>=2.0.0              # Database ORM
+alembic>=1.11.0                # Database migrations
+
+# Search functionality
+whoosh>=2.7.4                  # Full-text search engine
+
+# Development tools
+pytest>=7.0.0                  # Testing
+black>=23.0.0                  # Code formatting
+flake8>=6.0.0                  # Linting
+mypy>=1.0.0                    # Type checking
+
+# Optional: For AI-enhanced features
+# anthropic>=0.7.0             # Claude API (alternative to OpenAI)
+# langchain>=0.0.200           # AI chain management
+# chromadb>=0.4.0              # Vector database for rules

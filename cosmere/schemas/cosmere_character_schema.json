@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Cosmere RPG Character",
+  "type": "object",
+  "required": ["name", "heritage", "path", "origin", "stats", "talents", "investiture"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Character name"
+    },
+    "heritage": {
+      "type": "string",
+      "enum": ["Alethi", "Veden", "Thaylen", "Shin", "Herdazian", "Reshi", "Purelaker", "Skaa", "Noble", "Terris", "Other"],
+      "description": "Character's heritage/ancestry"
+    },
+    "path": {
+      "type": "string",
+      "enum": ["Soldier", "Scholar", "Diplomat", "Criminal", "Artisan", "Explorer", "Noble", "Commoner"],
+      "description": "Character's chosen path"
+    },
+    "origin": {
+      "type": "string",
+      "description": "Character's background story"
+    },
+    "level": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20,
+      "default": 1
+    },
+    "stats": {
+      "type": "object",
+      "required": ["strength", "speed", "intellect", "willpower", "awareness", "persuasion"],
+      "properties": {
+        "strength": {"type": "integer", "minimum": -2, "maximum": 5},
+        "speed": {"type": "integer", "minimum": -2, "maximum": 5},
+        "intellect": {"type": "integer", "minimum": -2, "maximum": 5},
+        "willpower": {"type": "integer", "minimum": -2, "maximum": 5},
+        "awareness": {"type": "integer", "minimum": -2, "maximum": 5},
+        "persuasion": {"type": "integer", "minimum": -2, "maximum": 5}
+      }
+    },
+    "derived_stats": {
+      "type": "object",
+      "properties": {
+        "hp": {"type": "integer", "minimum": 1},
+        "max_hp": {"type": "integer", "minimum": 1},
+        "deflect": {"type": "integer", "minimum": 0},
+        "armor": {"type": "integer", "minimum": 0},
+        "mental_fortitude": {"type": "integer", "minimum": 0},
+        "physical_fortitude": {"type": "integer", "minimum": 0}
+      }
+    },
+    "talents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "tier": {"type": "integer", "minimum": 1, "maximum": 5}
+        }
+      }
+    },
+    "investiture": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["None", "Allomancy", "Feruchemy", "Hemalurgy", "Surgebinding", "AonDor", "Awakening", "Sand Mastery", "Other"]
+        },
+        "powers": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "investiture_points": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "max_investiture": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        }
+      }
+    },
+    "equipment": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "type": {"type": "string"},
+          "quantity": {"type": "integer", "default": 1},
+          "properties": {"type": "object"}
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  }
+}
