@@ -2464,6 +2464,16 @@ def handle_party_data_request():
                                     'name': first_attack.get('name', 'Attack')
                                 }
 
+                            # Get ammunition data
+                            ammunition_info = []
+                            ammunition = npc_data.get('ammunition', [])
+                            if ammunition:
+                                for ammo in ammunition:
+                                    if isinstance(ammo, dict):
+                                        ammo_name = ammo.get('name', 'Unknown')
+                                        ammo_qty = ammo.get('quantity', 0)
+                                        ammunition_info.append({'name': ammo_name, 'quantity': ammo_qty})
+
                             party_members.append({
                                 'name': npc_data.get('name', npc_name),
                                 'type': 'npc',
@@ -2475,6 +2485,7 @@ def handle_party_data_request():
                                 'speed': npc_data.get('speed', 30),
                                 'initiative': npc_data.get('initiative', 0),
                                 'primaryAttack': primary_attack,
+                                'ammunition': ammunition_info,
                                 'spellSlots': spellcasting.get('spellSlots', npc_data.get('spellSlots', {})),
                                 'spells': spells_by_level,
                                 'conditions': npc_data.get('conditions', []),
@@ -2668,12 +2679,23 @@ def handle_initiative_data_request():
                                     'name': first_attack.get('name', 'Attack')
                                 }
 
+                            # Get ammunition data for combat tooltips
+                            ammunition_info = []
+                            ammunition = char_data.get('ammunition', [])
+                            if ammunition:
+                                for ammo in ammunition:
+                                    if isinstance(ammo, dict):
+                                        ammo_name = ammo.get('name', 'Unknown')
+                                        ammo_qty = ammo.get('quantity', 0)
+                                        ammunition_info.append({'name': ammo_name, 'quantity': ammo_qty})
+
                             # Add full character data for tooltips
                             combatant_data.update({
                                 'level': char_data.get('level', 1),
                                 'ac': char_data.get('armorClass', 10),
                                 'speed': char_data.get('speed', 30),
                                 'primaryAttack': primary_attack,
+                                'ammunition': ammunition_info,
                                 'spellSlots': spellcasting.get('spellSlots', char_data.get('spellSlots', {})),
                                 'spells': spells_by_level,
                                 'conditions': char_data.get('conditions', []),

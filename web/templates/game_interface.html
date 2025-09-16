@@ -4490,7 +4490,19 @@
                 }
                 html += '</div>';
             }
-            
+
+            // Ammunition line (for NPCs with ranged weapons)
+            if (stats.ammunition && stats.ammunition.length > 0) {
+                html += '<div class="stats-tooltip-row" style="font-size: 11px; color: #FFB6C1;">';
+                html += '<span>Ammo: </span>';
+                const ammoList = stats.ammunition.map(ammo => {
+                    const name = ammo.name.charAt(0).toUpperCase() + ammo.name.slice(1);
+                    return `${name} (${ammo.quantity})`;
+                }).join(', ');
+                html += `<span>${ammoList}</span>`;
+                html += '</div>';
+            }
+
             // Spell slots if any (only show non-zero)
             if (stats.spellSlots && Object.keys(stats.spellSlots).length > 0) {
                 const slotInfo = [];
