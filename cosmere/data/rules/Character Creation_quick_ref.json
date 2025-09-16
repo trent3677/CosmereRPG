@@ -1,0 +1,61 @@
+{
+  "stats": {},
+  "mechanics": {
+    "dice_mechanics": [
+      {
+        "notation": "",
+        "page": 3
+      },
+      {
+        "notation": "",
+        "page": 4
+      },
+      {
+        "notation": "1",
+        "page": 5
+      },
+      {
+        "notation": "1",
+        "page": 5
+      }
+    ]
+  },
+  "investiture": {
+    "Surgebinding": [
+      {
+        "page": 3,
+        "context": "through Surgebinding."
+      }
+    ]
+  },
+  "tables": [
+    {
+      "title": "general",
+      "page": 5
+    },
+    {
+      "title": "general",
+      "page": 5
+    },
+    {
+      "title": "general",
+      "page": 5
+    },
+    {
+      "title": "general",
+      "page": 5
+    },
+    {
+      "title": "general",
+      "page": 5
+    },
+    {
+      "title": "general",
+      "page": 8
+    },
+    {
+      "title": "general",
+      "page": 8
+    }
+  ]
+}

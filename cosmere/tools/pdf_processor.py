@@ -5,6 +5,7 @@ Extracts and structures content from PDF files for game use
 """
 
 import os
+from datetime import datetime
 import re
 import json
 import logging
@@ -88,7 +89,7 @@ class CosmereRPGPDFProcessor:
                 'filename': pdf_path.name,
                 'file_hash': self._calculate_file_hash(pdf_path),
                 'pages': 0,
-                'processing_date': str(Path.ctime(pdf_path))
+                'processing_date': datetime.fromtimestamp(os.path.getctime(str(pdf_path))).isoformat()
             },
             'content': {
                 'chapters': [],

@@ -1,0 +1,551 @@
+{
+  "metadata": {
+    "filename": "Stormlight Handbook Basics.pdf",
+    "file_hash": "45c97a2e5b7dd5caad0a38ce15730554557f9ae7ebc57319303bb2aeff5eb0a2",
+    "pages": 9,
+    "processing_date": "2025-09-16T21:17:46.379071"
+  },
+  "content": {
+    "chapters": [],
+    "rules": [
+      {
+        "title": "Welcome to Roshar History of Roshar",
+        "content": "Wracked by an endless cycle of supernatural storms This section contains significant spoilers for the Stormlight\nand devastated by eons of conflict, Roshar is a harsh Archive novels.\nworld. Warlike kingdoms vie for superiority, attacking In times now lost to memory, long before humankind’s\nand oppressing any who dare challenge them, including arrival, indigenous cultures flourished across Roshar.\ntheir own people. Even the flora and fauna of this planet The singers (as they called themselves) were humanoids\nare rugged and resilient; many sport tough shells or can with striking marbled skin and protective carapace.\nretract into themselves to survive the highstorms that They could attune to the rhythms of Roshar, connect-\nsweep across the landscape. ing profoundly with the enigmatic spren and wielding\nBut amid this unyielding environment lies great magic to change the singers’ forms and powers.\nbeauty and power. The highstorms carry Stormlight, When human refugees arrived first on Roshar, the\na well of magic that empowers the world and those singers regarded them with a mix of suspicion and\nwho dwell on it. Elements and emotions spring to life hospitality, allowing humans to live in the muddy lands\nin the form of spren—ethereal beings who fade in and now called Shinovar. However, this uneasy peace was\nout of the physical world, affecting it in strange ways. unraveled by Odium, the god of hatred, who many of\nFlamespren dance around blazing hearths. Painspren the invading humans had worshipped on their world.\ngrasp at people suffering from wounds. Gloryspren Manipulated by Odium, humans and singers made\nshine around those who realize the magnitude of their war on one another.\naccomplishments. Even greater powers lurk in places Over millennia of escalating conflict, another deity\nless traveled; the heart of the storm and the depths called Honor opposed Odium’s designs. Both created\nof lonely valleys hold spren more powerful than most immortals—the Fused and the Heralds—to fight their\npeople could imagine. battles in a series of cataclysmic wars called Desolations.",
+        "page": 1,
+        "type": "section"
+      },
+      {
+        "title": "Era of Play",
+        "content": "The turning point came when humans learned to bond True Desolation\nwith sapient spren, swearing oaths to unlock the power\nThis section contains significant spoilers for the Stormlight\nof Stormlight. These champions of Honor were called\nArchive novels.\nthe Knights Radiant. Human legends tell of malevolent\nFor nearly five thousand years, humanity dominated\ngods and Voidbringers ravaging the continent, attempt-\nRoshar. Radiants, spren bonds, and Voidbringers were\ning to erase humankind—and every time, the Radiants\nnothing but a memory. Humans enslaved the singers,\novercame these foes.\ncalling them “parshmen,” and eventually lost all records\nBut then, for reasons lost to history, two disasters\nof conflict between the two peoples. Instead, the\nswept across Roshar. The Radiants gave up their oaths\nhuman nations fought among themselves, embroiled\nand forsook their powers. An act of terrible betrayal\nin generations of endless war.\nstruck nearly every singer in Roshar, severing their\nBut powers stir once again. The listeners—the last\nConnection to the pure tones of Roshar. Singers entered\nof the singers who still rule themselves—have been\na clouded mental state. Humanity was left to fend for\ndriven to a desolate wilderness known as the Shattered\nitself, bracing for the next Desolation—but it never\nPlains. Desperate, they connected with long-lost powers\ncame. Millennia passed, and Radiant powers were all\nand summoned a new storm to rival the highstorm.\nbut forgotten.\nThis Everstorm freed singers across Roshar, but it also\nbrought baleful powers from another world. A new\nDesolation now besieges humanity, led by the evil\ngod whose name people fear to speak: Odium.\nIn the face of this threat, new heroes rise across\nRoshar, human and singer alike. Enterprising leaders\ncoordinate the resistance. Clever artifabrians build\nwondrous technologies. Listeners seek a life free from\nthe influence of Odium’s forces or human oppression.\nAgents of mysterious factions work carefully behind\nthe scenes.\nAnd, most wondrous of all, Radiant spren have begun\nto appear once again. By forging new bonds with these\nspren, the powers of the surges can once again be used\nto defend Roshar. Those who prove themselves worthy\nearn the illustrious title of Knights Radiant.\nThe Stormlight setting spans millennia, and groups may\ndecide to set their campaign at any point in the history\nof Roshar. The Stormlight Handbook and Stormlight\nWorld Guide describe the world as it exists during the\nTrue Desolation era, specifically in the year of global war\nthat follows the events of Oathbringer. However, the\nStonewalkers adventure begins a few months earlier,\nparallel to the novel Words of Radiance. It’s up to your\ngroup where your campaign begins; you might explore\nanother point in the timeline of the novels, or you might\nfind yourselves thousands of years in the past, during\nthe original Desolations.",
+        "page": 2,
+        "type": "section"
+      },
+      {
+        "title": "What Is a",
+        "content": "Roleplaying Game?",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "A roleplaying game is a collaborative experience",
+        "content": "of storytelling and imagination. You and your friends\nwork together to tell the story of a group of char-\nacters, describing their environment, playing out their\nconversations, and narrating their actions. You roll\ndice to determine whether those actions succeed or\nfail, so nobody knows the outcome ahead of time. Each\nchar acter in the game has unique attributes and rules\nthat affect these die rolls in different ways. A character\ncan attempt anything in the game, but the rules mean\nsome things are more likely to succeed than others.",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "Players",
+        "content": "As detailed in chapter 1, each player—other than the\ngame master—creates a character to play throughout\nthe group’s adventure. Your character is known as a\nplayer character (or PC). They’re unique to you,\nand it’s up to you to decide what you want their origins,\nambitions, and decisions to be. Alongside the other\nplayer characters, you form a group—sometimes called\nan adventuring party—who’ll (hopefully) stick together\nthroughout your adventures exploring Roshar. Together,\nyou might form bonds with powerful spren, face the\nforces of Odium, or take on whatever other challenges\nyour story puts before you.\nDuring the game, you describe the actions your\ncharacter takes, roll the dice for their actions when\nprompted by the game master, and decide how and\nwhen to use your character’s abilities. How you describe\nyour character’s actions is up to you. Some players act\nout each word and action of their character, while others\nprefer to narrate their character’s actions as if they were\ntelling a story. Do whichever feels best to you.",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "Game Master",
+        "content": "GMs, Players, and You\nMost players create and control a single character.\nOne player, however, takes on the role of the game\nWhile the GM is certainly a player—after all, you’re\nmaster (or GM). They don’t play a single character,\nplaying a game together—this game’s rules use the word\nbut instead act as the guiding storyteller for your game\n“player” to specifically refer to participants other than the\nexperience.\nGM. Rules for players only apply to anyone who has an\nAs detailed in chapter 13, the GM is the lead\nindividual player character.\nstoryeller and referee of the game. They prepare\nSimilarly, when this game refers to “you,” it’s usually\nan adventure for your group to experience, narrate\ntalking specifically to the players. However, some sections\nthe action, and play the roles of each non-player\n(including the entirety of chapter 13) address the\ncharacter (NPC) that PCs encounter, whether friend\nGM directly.\nor foe. The GM is also responsible for adjudicating the\ngame’s rules as the story unfolds; as such, it’s important\nfor the GM to be familiar with all rules of the game,\neven those that only apply to player characters.",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "Flow of Play",
+        "content": "After a player decides what their character attempts What You Need to Play\nto do, the GM decides how those actions resolve. Players\nBesides this rulebook, the players need just a few things\nare free to make suggestions, but the GM has the final\nto play this game:\nsay on what ultimately happens in the story. The role of\nGM is infinitely flexible as they improvise in response Character Sheet. Each player needs a copy of the\nto unexpected player choices and dice rolls. character sheet to track their unique rules and record\nIn this game, the GM isn’t an adversary to the other what happens to their character during play. You’ll fill\nplayers; instead, the GM serves as guide and collab- out this sheet during character creation in chapter 1;\norator in creating a story together. It’s true the GM is you can find a blank sheet in the back of this book or\nresponsible for determining which dangers and enemies online at CosmereRPG.com/character-sheets.\nPCs face, but the GM’s ultimate goal is to facilitate a Dice. The group needs at least one set of polyhedral\nstory the whole group finds compelling and satisfying. dice (described in the next section). These dice can\nbe found at hobby stores or online. Additionally, this\ngame uses a unique plot die with special symbols to\nThe game itself is played out in a series of sessions trigger effects during gameplay. You can buy plot dice\nwhere your group gathers to play (either in person or online at CosmereRPG.com/shop, or you can designate\nonline). Many groups prefer sessions of two to four an ordinary six-sided die to use in its place (as\nhours, but they can be any length you wish. During described in the upcoming “Plot Die” section).\na session, gameplay follows this general pattern: Pencils and Paper. In addition to pencils for writing\non your character sheet, scratch paper can be helpful\nThe GM sets the scene. The GM tells you about your\nfor taking notes or drawing quick sketches to visualize\ncharacter’s surroundings. They describe the environ-\nareas during play.\nment and anything going on that’s easily noticeable.\nSafety Tools. Before you play, it’s important to\nDepending on the context, they may outline the stakes\nestablish expectations for your group. Tabletop RPGs\nof the current scene or describe some options you may\ncan include sensitive material, and safety tools help\nwant to pursue.\nplayers steer the narrative away from topics that make\nThe players decide what they do. You and the other\nthem feel uncomfortable or unwelcome. Chapter 13,\nplayers decide what actions your characters take\n“Gamemastering,” presents a safety guide to help\nbased on the information. You might investigate\nyour group navigate these areas.\nthe environment or quickly enact a plan of action.\nSometimes the entire group acts together (such as\n“we all head into the stormshelter”). However, your\ncharacters can also act individually, or even split up\nbetween different locations to tackle each aspect of\nthe situation.\nThe GM narrates the results. The GM describes the\nresults of the actions you decided to take. Sometimes\nthis is as simple as describing a new scene, but when\nyour attempted actions carry some risk or chance of\nfailure, the GM might have you roll dice to decide\nthe outcome. Then, based on those results, the\nGM narrates the outcomes, repeating the loop all\nover again.\nAs this cycle continues, the game feels like a casual\nconversation; you and the GM go back and forth,\noccasionally interjecting a dice roll to see how things\nresolve. These steps play out whether you’re negotiating\nwith a Thaylen merchant, exploring the eerie bottom of\na chasm, or fighting a pitched battle against a greatshell.\nTo help each situation feel unique, the game presents\nspecial rules for three scene types: combat, conver-\nsations, and endeavors (see chapter 9, “Adventuring”).\n6 Introduction",
+        "page": 4,
+        "type": "section"
+      },
+      {
+        "title": "Using Cosmere RPG Dice Adding Additional Dice",
+        "content": "Additionally, the GM might use some or all of the 2. Add your skill modifier. The number next to each\nfollowing resources to enhance the game experience: skill on your character sheet is your skill modifier,\nreflecting how good you are at that skill. Add it to\nStormlight World Guide. The Stormlight Archive\nyour d20 roll.\nnovels describe the rich and deep world of Roshar, but\n3. Add any bonuses or penalties. Some tests\nyou can play this game without them. The Stormlight\ngain bonuses or penalties in certain circumstances.\nWorld Guide (see “The Cosmere RPG” earlier in this\nAdd any of these to your d20 roll.\nintroduction) collects the essential information about\n4. Compare your total to the test’s difficulty.\nRoshar into a single reference book, complete with\nYou’re trying to reach a target number known as a\nrules and statistics for enemies you can encounter\ndifficulty class (or DC). Add up your d20 roll plus\nall over the world.\nskill modifiers, bonuses, and penalties; if that result\nAdventures. The GM can use the Stormlight World\nequals or exceeds the DC, you succeed at your task.\nGuide to design their own custom adventure for your\n5. Resolve the results. Resolve the results of the\ngroup to play through. Or if the GM prefers, they can\nsuccess or failure, as well as any side effects triggered\nuse official published adventures that provide all the\nby your abilities or the plot die (described in the\nresources they’ll need to tell the story.\n“Plot Die” section).\nMaps and Miniatures. The Cosmere RPG rules\nsupport “theater of the mind” play, but many players\nenjoy visual aids. Miniatures and grid maps can help\ntrack character placement during combat, as described\nin the “Variant: Using a Grid” section of chapter 10.\nMusic. A laptop or speaker with music queued up for\nthe right moments can add to the atmosphere of a\ngame table.\nSome skill tests require adding additional dice to your\nThis RPG uses a set of polyhedral dice. In these\nd20 roll, such as the following:\nsets, each die has a different number of sides: four, six,\neight, ten, twelve, and twenty. This RPG also uses one Plot Die. On especially important rolls, the GM might\nadditional six-sided die known as the plot die (described have you add the plot die to introduce Opportunities\nlater in this section). Your group needs at least one of or Complications to the story. See the next section.\neach of these dice to play the game, but most players Advantage or Disadvantage Die. When circumstances\nprefer to have their own set. make your test easier (or harder) than usual, you might\nThroughout the rules text, these dice are referred to roll an extra copy of one or more dice, then pick the\nby the letter “d” followed by the number of sides of the most (or least) beneficial result. See “Advantages and\ndie: d4, d6, d8, d10, d12, and d20. So when you’re told Disadvantages” in chapter 3.\nto roll a d20, find and roll the twenty-sided die. Damage Die. When you attack an adversary, you add\none or more damage dice to your test, which deter-",
+        "page": 5,
+        "type": "section"
+      },
+      {
+        "title": "Rolling a Skill Test",
+        "content": "mines how powerful your attack is. See “Attacking”\nWhenever the outcomes of your character’s actions in chapter 10.\nare uncertain, you make a skill test using a d20 to\nUnless otherwise instructed, roll any additional dice at\ndetermine whether you succeed or fail. Tests are the core\nthe same time as your d20.\nmechanic of this game, so you’ll roll them frequently!\nWhen an ability requires you to roll multiple dice of\nThe “Skills” section of chapter 3 further details how\nthe same kind, this is indicated by a number before the\nskill tests work, but at their most basic, tests follow\n“d” (such as “3d6”). Roll that number of dice and add\nthese steps:\ntogether their results—or if you don’t have that many\n1. Pick a skill and roll the dice. Determine which dice, you can roll the same die that many times in a row.\nskill on your character sheet best applies to the situ- For example, if an ability tells you to “roll 3d6,” you roll\nation, then roll one d20. (You might also need to roll three six-sided dice (or roll the same six-sided die three\nother dice at the same time as the d20, as described times) and add their results together.\nbelow in “Adding Additional Dice.”)",
+        "page": 5,
+        "type": "section"
+      },
+      {
+        "title": "Plot Die Plot Die",
+        "content": "In addition to normal polyhedral dice, this game uses a\n1 2 3 4 5 6\ncustom die called the plot die. You don’t automatically\nroll the plot die with every skill test—it’s only used\nto “raise the stakes” during tense moments and tests\ncritical to the plot. NPC tests don’t generally use O O\n2 4\nthe plot die.\nWhen you roll the plot die, the result might add a\nbonus to your test—but it can also result in unforeseen",
+        "page": 6,
+        "type": "section"
+      },
+      {
+        "title": "When your character is about to make an important",
+        "content": "actions, as described in the upcoming sections.\nskill test, the GM can emphasize this by raising the\nThe plot die has six sides, two of which are blank.\nstakes. When the stakes are raised, roll the plot die\nAnother two sides have an Opportunity symbol ( ),\nat the same time as you roll your d20 for the test.\nand the final two sides have a Complication symbol",
+        "page": 6,
+        "type": "section"
+      },
+      {
+        "title": "The GM might raise the stakes to emphasize",
+        "content": "( ). If you don’t own this game’s custom plot die, you\ntests like the following:\ncan instead use a normal d6 and convert the results\nusing the Plot Die diagram. Note that 1 and 2 are the ◆ Tests that directly contribute to the current mission.\n“worst” results, though they offset the Complication ◆ Tests that play directly to your character’s purpose,\nby granting a bonus to that test (see “Complication obstacle, or goals.\nBonus”). The bonus is equal to the number shown ◆ Other tests with high tension or dramatic import-\non the Complication symbol—which is double the ance, as determined by the GM.\nnumber rolled on a normal d6. The stakes can only be raised once per test, and they\ncan’t be raised after the d20 has already been rolled.\n8 Introduction",
+        "page": 6,
+        "type": "section"
+      },
+      {
+        "title": "Raising the Stakes Yourself",
+        "content": "Resolving a Plot Die Roll Influence the Narrative. Your actions result in a\nWhen you roll the plot die with your test, the effect positive narrative effect of your choice, which the\ndepends on whether you roll an Opportunity ( ), GM must approve. For example, you might be trying\na Complication ( ), or a blank. to rough up a Ghostblood agent; if you fail on your\nIf you roll a blank on the plot die, no positive or ultimate goal but roll an Opportunity on that test,\nnegative side effects apply to your test, and you resolve you and your GM might decide you managed to pick\nthe remainder of the test as normal. If you roll an or the agent’s pocket while you had your hands on them.\nsymbol, see “Opportunities and Complications.” The “Skills” section of chapter 3 suggests example\nOpportunities.\nSome abilities provide additional ways you can spend\nSome abilities give your character the ability to raise the\nan Opportunity. If an ability says you can spend an\nstakes yourself, though you can only do so if the GM\nOpportunity to trigger a special effect, but you don’t\nhasn’t already raised the stakes.\nroll an Opportunity on that ability’s test, you can’t use\nEven if you don’t have one of those abilities, you\nthat special effect.\nmight think a test is worthy of raising the stakes. You\ncan always ask the GM to raise the stakes and advocate Facing a Complication\nC\nfor why you think the test warrants it, but ultimately When you gain a Complication,\nit’s the GM’s call. (GMs, see “Using the Plot Die” in this applies a negative side effect\nchapter 13 for further guidance on when and how to to the outcome of your current test\nraise the stakes.) (regardless of whether the test succeeds\nor fails). The GM should “spend” this",
+        "page": 7,
+        "type": "section"
+      },
+      {
+        "title": "Complications",
+        "content": "following effects:\nWhen you make a test, Opportunities and Compli- Hinder an Ally. Your actions have unforeseen\ncations represent beneficial or detrimental side effects repercussions. The next test taken by a PC gains\nrelated to what happens during the test. These narrative a disadvantage (see “Using Skills” in chapter 3).\ntools add interesting wrinkles to the story as it unfolds. Become Distracted. You lose 1 focus (see “Focus”\nYour test can gain an Opportunity or Complication in chapter 3).\nwhen you roll the plot die, when an ability grants it, or Influence the Narrative. Your actions result in a\nwhen you roll a 20 or 1 on your d20 (see the upcoming narrative drawback of the GM’s choice. For example,\n“Opportunity and Complication Ranges” section). you might be trying to deceive a guard into thinking\nSpending an Opportunity you’re an important foreign emissary; if you succeed\non your ultimate goal but roll a Complication on that\nWhen you gain an Opportunity,\ntest, your GM might decide your deception worked\nthis applies a beneficial effect to the\nso well that the guard insists on escorting you to their\nout come of your current test (regardless\ncommander. The “Skills” section of chapter 3 suggests\nof whether the test succeeds or fails).\nexample Complications.\nYou can “spend” this Opportunity to\nchoose one of the following effects: Some rules provide additional ways the GM can spend\na Complication.\nAid an Ally. Thanks to your actions, the next test\nmade by an ally of your choice gains an advantage Complication Bonus\n(see “Using Skills” in chapter 3). True to its name, a Complication can complicate\nCollect Yourself. You recover 1 focus (see “Focus” a situation—but it can also help your test result!\nin chapter 3). When you gain a Complication from rolling the plot\nCritically Hit. You change a hit into a critical hit die, it also grants you a bonus to your current d20\n(see “Attacking” in chapter 10). You can only use roll. This bonus equals the number displayed inside\nthis effect on attack tests. the Complication symbol you rolled (either +2 or +4).\nIf you gain a Complication from another source, it\ntells you what bonus to add, if any.",
+        "page": 7,
+        "type": "section"
+      },
+      {
+        "title": "Opportunity and Stacking Range Expansions",
+        "content": "Complication Ranges Multiple expansions to Opportunity range, Compli-\ncation range, or both can be applied to the same test—\nIn addition to the plot die, you can also gain\nbut only if they come from effects with different names",
+        "page": 8,
+        "type": "section"
+      },
+      {
+        "title": "Opportunities and Complications from a very high",
+        "content": "(see “Stacking Talents and Effects” in chapter 4).\nor low d20 roll. When you make a test, you gain an\nFor example, if two different effects expand your\nOpportunity if your d20 rolls a number that falls within\nOpportunity range by 2 each, you add an Opportunity\nyour Opportunity range. By default, this range begins\nif the die shows a 17, 18, 19, or 20.\nand ends at 20, so you gain an Opportunity when you\nroll a natural 20—a roll where the die itself shows Actions and Reactions\nthe number 20, regardless of the test result after skill\nMany of your character’s abilities require you to use\nmodifiers, bonuses, and penalties.\nan action or reaction. This game’s rules often refer to\nSimilarly, you gain a Complication if your d20 rolls\nthese using special symbols instead of words. You’ll\na number that falls within your Complication range.\nlearn more about actions and reactions in chapter 10,\nBy default, this range begins and ends at 1, so you gain\n“Combat,” but here are the basics:\na Complication when you roll a natural 1—a roll where\nthe die itself shows the number 1. However, unlike plot Actions ( ). On your turn in combat, you typically\ndie Complications, this Complication doesn’t grant you can use either two or three actions. These can\na bonus to your test. allow you to do more than one thing on your turn\nYou can gain an Opportunity (or Complication) from (for example, moving toward a foe and then attacking\na natural 20 (or natural 1) even when you also rolled them), or you can combine multiple actions into a\nthe plot die—so sometimes you might face multiple single longer action (for example, using two actions to\nOpportunities or Complications on the same test. Recover lost health). If an ability requires one action,\nit’s labeled ; if it requires two actions, it’s labeled ;",
+        "page": 8,
+        "type": "section"
+      },
+      {
+        "title": "Ranges When Rolling",
+        "content": "and if it requires three actions, it’s labeled .\nMultiple D20s\nReactions ( ). You typically can’t act on other\nYou’ll sometimes roll more than one d20 for a test,\ncharacters’ turns—but if a specific trigger occurs,\nusually due to advantages or disadvantages (see “Using\nyou might use a reaction to immediately respond\nSkills” in chapter 3). When you do, a d20 only adds an\nin a special way. You typically can use one reaction\nOpportunity (or Complication) if you (or your GM)\nbetween each of your turns.\nchoose that d20 result to apply to your test.\nFree Actions ( ). Some activities don’t require an\nExpanding D20 Ranges action or reaction. For example, you can freely banter\nSome effects expand the range of numbers that add an during combat, even if you’ve used all your actions.\nOpportunity or Complication to your roll.\nIf an effect expands your Opportunity range, reduce Choosing Opportunities and Complications\nits beginning by the stated number. For example, if a",
+        "page": 8,
+        "type": "section"
+      },
+      {
+        "title": "When someone adds an Opportunity or a Complication",
+        "content": "talent expands your Opportunity range by 2 for Crafting\nto their test, everyone else at the table can suggest fun\ntests, that range becomes 18 through 20—so you now\nways to spend it (such as dramatic narrative outcomes in\nadd an Opportunity on Crafting rolls of a natural 18,\nyour current scene). However, the final choice is up to the\n19, or 20.\nplayer or GM who is spending it.\nIf an effect expands your Complication range,\nIf you spend an Opportunity and choose to influence\nincrease its end by the stated number. For example,\nthe narrative, the GM has the final say on if your proposed\nif a talent expands your Complication range by 3 for\nnarrative effect is possible. If the GM doesn’t approve, you\nCrafting tests, that range becomes 1 through 4—so you\ncan work together to pick a new narrative effect, or you\nnow add a Complication on Crafting rolls of a natural 1,\ncan choose a different effect.\n2, 3, or 4.\n10 Introduction",
+        "page": 8,
+        "type": "section"
+      },
+      {
+        "title": "Game Conventions Stacking Similar Effects",
+        "content": "These general guidelines apply to all rules of the game. Some effects seemingly overlap with others. In general,\nsimilar effects can stack on a target unless the effects",
+        "page": 9,
+        "type": "section"
+      },
+      {
+        "title": "GM Has the Final Say",
+        "content": "share the same name. See “Stacking Talents and\nIf there’s ever uncertainty or disagreement about how Effects” in chapter 4 for the full rules on which effects\nto apply the rules of the game, the GM decides. stack in this game.",
+        "page": 9,
+        "type": "section"
+      },
+      {
+        "title": "Specific Beats General Minimum of Zero",
+        "content": "The general rules of the game (such as how to roll dice, If an effect tells you to reduce a value, you can’t reduce\nuse skills in tests, and engage in combat) provide a it past 0 unless otherwise specified. For example, your\nfoundation for gameplay. However, many specific rules health can’t drop below 0, and you can’t reduce damage\ngranted by characters’ talents, powers, items, or other to a negative number.\nelements seemingly “break” the general rules—this",
+        "page": 9,
+        "type": "section"
+      },
+      {
+        "title": "Round Down",
+        "content": "is intentional and adds variety. If a more specific rule\ncontradicts a general rule, the specific rule wins. Whenever you need to divide a value, round down\nunless otherwise specified. For example, if your\nmovement rate is 25 feet and an ability allows you to\n“move up to half your movement rate,” you can move\nup to 12 feet.",
+        "page": 9,
+        "type": "section"
+      },
+      {
+        "title": "Adventuring",
+        "content": "and Advancement",
+        "page": 9,
+        "type": "section"
+      },
+      {
+        "title": "The stories you tell with the Cosmere RPG can vary",
+        "content": "in length and complexity. One group’s adventure might\nplay out in a single session; these games are often called\none-shots. Another group’s adventure could span\nmany sessions, forming a lengthy campaign where\nthe characters grow and advance over time. Some\ncampaigns might string together many smaller, loosely\nconnected adventures. Other campaigns could play a\nlong and elaborate adventure that spans characters’\nwhole careers.",
+        "page": 9,
+        "type": "section"
+      },
+      {
+        "title": "Levels and Goals",
+        "content": "For groups that play longer adventures, each player\ncharacter grows in two ways: through gaining levels\n(discussed in the “Character Advancement” section of\nchapter 1) and achieving goals (discussed in chapter 8).\nGaining levels represents your growth as you practice\nover time; each level allows you to improve your innate\nskills and unlock new abilities. Meanwhile, as you pur-\nsue and achieve goals unique to your personal narrative,\nyou gain access to powerful rewards (such as earning\nlegendary Shardblades or bonding with magical spren).\nAs your PCs grow in ability and power, your roles\nand experiences on Roshar advance and change. Over\ntime, you’ll progress through five tiers of play (see\n“Character Advancement” in chapter 1). These serve\nas general guides for what kinds of experiences the PCs\ncan expect and what kinds of stories the GM should be\ntrying to tell.",
+        "page": 9,
+        "type": "section"
+      }
+    ],
+    "tables": [],
+    "examples": [],
+    "glossary": {},
+    "index": {},
+    "dice_references": [
+      {
+        "notation": "",
+        "page": 5,
+        "context": "your d20 roll."
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "Add any of these to your d20 roll."
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "difficulty class (or DC). Add up your d20 roll plus"
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "d20 roll, such as the following:"
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "die: d4, d6, d8, d10, d12, and d20. So when you’re told Disadvantages” in chapter 3."
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "die: d4, d6, d8, d10, d12, and d20. So when you’re told Disadvantages” in chapter 3."
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "die: d4, d6, d8, d10, d12, and d20. So when you’re told Disadvantages” in chapter 3."
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "die: d4, d6, d8, d10, d12, and d20. So when you’re told Disadvantages” in chapter 3."
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "die: d4, d6, d8, d10, d12, and d20. So when you’re told Disadvantages” in chapter 3."
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "die: d4, d6, d8, d10, d12, and d20. So when you’re told Disadvantages” in chapter 3."
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "to roll a d20, find and roll the twenty-sided die. Damage Die. When you attack an adversary, you add"
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "are uncertain, you make a skill test using a d20 to"
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "the same time as your d20."
+      },
+      {
+        "notation": "3",
+        "page": 5,
+        "context": "“d” (such as “3d6”). Roll that number of dice and add"
+      },
+      {
+        "notation": "3",
+        "page": 5,
+        "context": "skill on your character sheet best applies to the situ- For example, if an ability tells you to “rol"
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "ation, then roll one d20. (You might also need to roll three six-sided dice (or roll the same six-si"
+      },
+      {
+        "notation": "",
+        "page": 5,
+        "context": "other dice at the same time as the d20, as described times) and add their results together."
+      },
+      {
+        "notation": "",
+        "page": 6,
+        "context": "at the same time as you roll your d20 for the test."
+      },
+      {
+        "notation": "",
+        "page": 6,
+        "context": "can instead use a normal d6 and convert the results"
+      },
+      {
+        "notation": "",
+        "page": 6,
+        "context": "number rolled on a normal d6. The stakes can only be raised once per test, and they"
+      },
+      {
+        "notation": "",
+        "page": 6,
+        "context": "can’t be raised after the d20 has already been rolled."
+      },
+      {
+        "notation": "",
+        "page": 7,
+        "context": "when you roll a 20 or 1 on your d20 (see the upcoming narrative drawback of the GM’s choice. For exa"
+      },
+      {
+        "notation": "",
+        "page": 7,
+        "context": "Critically Hit. You change a hit into a critical hit die, it also grants you a bonus to your current"
+      },
+      {
+        "notation": "",
+        "page": 8,
+        "context": "or low d20 roll. When you make a test, you gain an"
+      },
+      {
+        "notation": "",
+        "page": 8,
+        "context": "Opportunity if your d20 rolls a number that falls within"
+      },
+      {
+        "notation": "",
+        "page": 8,
+        "context": "Similarly, you gain a Complication if your d20 rolls"
+      },
+      {
+        "notation": "",
+        "page": 8,
+        "context": "You’ll sometimes roll more than one d20 for a test,"
+      },
+      {
+        "notation": "",
+        "page": 8,
+        "context": "Skills” in chapter 3). When you do, a d20 only adds an"
+      },
+      {
+        "notation": "",
+        "page": 8,
+        "context": "choose that d20 result to apply to your test."
+      }
+    ]
+  },
+  "search_index": [
+    {
+      "type": "rules",
+      "title": "Welcome to Roshar History of Roshar",
+      "content": "Wracked by an endless cycle of supernatural storms This section contains significant spoilers for the Stormlight\nand devastated by eons of conflict, Roshar is a harsh Archive novels.\nworld. Warlike kingdoms vie for superiority, attacking In times now lost to memory, long before humankind’s\nand oppressing any who dare challenge them, including arrival, indigenous cultures flourished across Roshar.\ntheir own people. Even the flora and fauna of this planet The singers (as they called themselves) were humanoids\nare rugged and resilient; many sport tough shells or can with striking marbled skin and protective carapace.\nretract into themselves to survive the highstorms that They could attune to the rhythms of Roshar, connect-\nsweep across the landscape. ing profoundly with the enigmatic spren and wielding\nBut amid this unyielding environment lies great magic to change the singers’ forms and powers.\nbeauty and power. The highstorms carry Stormlight, When human refugees arrived first on Roshar, the\na well of magic that empowers the world and those singers regarded them with a mix of suspicion and\nwho dwell on it. Elements and emotions spring to life hospitality, allowing humans to live in the muddy lands\nin the form of spren—ethereal beings who fade in and now called Shinovar. However, this uneasy peace was\nout of the physical world, affecting it in strange ways. unraveled by Odium, the god of hatred, who many of\nFlamespren dance around blazing hearths. Painspren the invading humans had worshipped on their world.\ngrasp at people suffering from wounds. Gloryspren Manipulated by Odium, humans and singers made\nshine around those who realize the magnitude of their war on one another.\naccomplishments. Even greater powers lurk in places Over millennia of escalating conflict, another deity\nless traveled; the heart of the storm and the depths called Honor opposed Odium’s designs. Both created\nof lonely valleys hold spren more powerful than most immortals—the Fused and the Heralds—to fight their\npeople could imagine. battles in a series of cataclysmic wars called Desolations.",
+      "page": 1,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Era of Play",
+      "content": "The turning point came when humans learned to bond True Desolation\nwith sapient spren, swearing oaths to unlock the power\nThis section contains significant spoilers for the Stormlight\nof Stormlight. These champions of Honor were called\nArchive novels.\nthe Knights Radiant. Human legends tell of malevolent\nFor nearly five thousand years, humanity dominated\ngods and Voidbringers ravaging the continent, attempt-\nRoshar. Radiants, spren bonds, and Voidbringers were\ning to erase humankind—and every time, the Radiants\nnothing but a memory. Humans enslaved the singers,\novercame these foes.\ncalling them “parshmen,” and eventually lost all records\nBut then, for reasons lost to history, two disasters\nof conflict between the two peoples. Instead, the\nswept across Roshar. The Radiants gave up their oaths\nhuman nations fought among themselves, embroiled\nand forsook their powers. An act of terrible betrayal\nin generations of endless war.\nstruck nearly every singer in Roshar, severing their\nBut powers stir once again. The listeners—the last\nConnection to the pure tones of Roshar. Singers entered\nof the singers who still rule themselves—have been\na clouded mental state. Humanity was left to fend for\ndriven to a desolate wilderness known as the Shattered\nitself, bracing for the next Desolation—but it never\nPlains. Desperate, they connected with long-lost powers\ncame. Millennia passed, and Radiant powers were all\nand summoned a new storm to rival the highstorm.\nbut forgotten.\nThis Everstorm freed singers across Roshar, but it also\nbrought baleful powers from another world. A new\nDesolation now besieges humanity, led by the evil\ngod whose name people fear to speak: Odium.\nIn the face of this threat, new heroes rise across\nRoshar, human and singer alike. Enterprising leaders\ncoordinate the resistance. Clever artifabrians build\nwondrous technologies. Listeners seek a life free from\nthe influence of Odium’s forces or human oppression.\nAgents of mysterious factions work carefully behind\nthe scenes.\nAnd, most wondrous of all, Radiant spren have begun\nto appear once again. By forging new bonds with these\nspren, the powers of the surges can once again be used\nto defend Roshar. Those who prove themselves worthy\nearn the illustrious title of Knights Radiant.\nThe Stormlight setting spans millennia, and groups may\ndecide to set their campaign at any point in the history\nof Roshar. The Stormlight Handbook and Stormlight\nWorld Guide describe the world as it exists during the\nTrue Desolation era, specifically in the year of global war\nthat follows the events of Oathbringer. However, the\nStonewalkers adventure begins a few months earlier,\nparallel to the novel Words of Radiance. It’s up to your\ngroup where your campaign begins; you might explore\nanother point in the timeline of the novels, or you might\nfind yourselves thousands of years in the past, during\nthe original Desolations.",
+      "page": 2,
+      "keywords": [
+        "Origin"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "What Is a",
+      "content": "Roleplaying Game?",
+      "page": 3,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "A roleplaying game is a collaborative experience",
+      "content": "of storytelling and imagination. You and your friends\nwork together to tell the story of a group of char-\nacters, describing their environment, playing out their\nconversations, and narrating their actions. You roll\ndice to determine whether those actions succeed or\nfail, so nobody knows the outcome ahead of time. Each\nchar acter in the game has unique attributes and rules\nthat affect these die rolls in different ways. A character\ncan attempt anything in the game, but the rules mean\nsome things are more likely to succeed than others.",
+      "page": 3,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Players",
+      "content": "As detailed in chapter 1, each player—other than the\ngame master—creates a character to play throughout\nthe group’s adventure. Your character is known as a\nplayer character (or PC). They’re unique to you,\nand it’s up to you to decide what you want their origins,\nambitions, and decisions to be. Alongside the other\nplayer characters, you form a group—sometimes called\nan adventuring party—who’ll (hopefully) stick together\nthroughout your adventures exploring Roshar. Together,\nyou might form bonds with powerful spren, face the\nforces of Odium, or take on whatever other challenges\nyour story puts before you.\nDuring the game, you describe the actions your\ncharacter takes, roll the dice for their actions when\nprompted by the game master, and decide how and\nwhen to use your character’s abilities. How you describe\nyour character’s actions is up to you. Some players act\nout each word and action of their character, while others\nprefer to narrate their character’s actions as if they were\ntelling a story. Do whichever feels best to you.",
+      "page": 3,
+      "keywords": [
+        "Origin"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Game Master",
+      "content": "GMs, Players, and You\nMost players create and control a single character.\nOne player, however, takes on the role of the game\nWhile the GM is certainly a player—after all, you’re\nmaster (or GM). They don’t play a single character,\nplaying a game together—this game’s rules use the word\nbut instead act as the guiding storyteller for your game\n“player” to specifically refer to participants other than the\nexperience.\nGM. Rules for players only apply to anyone who has an\nAs detailed in chapter 13, the GM is the lead\nindividual player character.\nstoryeller and referee of the game. They prepare\nSimilarly, when this game refers to “you,” it’s usually\nan adventure for your group to experience, narrate\ntalking specifically to the players. However, some sections\nthe action, and play the roles of each non-player\n(including the entirety of chapter 13) address the\ncharacter (NPC) that PCs encounter, whether friend\nGM directly.\nor foe. The GM is also responsible for adjudicating the\ngame’s rules as the story unfolds; as such, it’s important\nfor the GM to be familiar with all rules of the game,\neven those that only apply to player characters.",
+      "page": 3,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Flow of Play",
+      "content": "After a player decides what their character attempts What You Need to Play\nto do, the GM decides how those actions resolve. Players\nBesides this rulebook, the players need just a few things\nare free to make suggestions, but the GM has the final\nto play this game:\nsay on what ultimately happens in the story. The role of\nGM is infinitely flexible as they improvise in response Character Sheet. Each player needs a copy of the\nto unexpected player choices and dice rolls. character sheet to track their unique rules and record\nIn this game, the GM isn’t an adversary to the other what happens to their character during play. You’ll fill\nplayers; instead, the GM serves as guide and collab- out this sheet during character creation in chapter 1;\norator in creating a story together. It’s true the GM is you can find a blank sheet in the back of this book or\nresponsible for determining which dangers and enemies online at CosmereRPG.com/character-sheets.\nPCs face, but the GM’s ultimate goal is to facilitate a Dice. The group needs at least one set of polyhedral\nstory the whole group finds compelling and satisfying. dice (described in the next section). These dice can\nbe found at hobby stores or online. Additionally, this\ngame uses a unique plot die with special symbols to\nThe game itself is played out in a series of sessions trigger effects during gameplay. You can buy plot dice\nwhere your group gathers to play (either in person or online at CosmereRPG.com/shop, or you can designate\nonline). Many groups prefer sessions of two to four an ordinary six-sided die to use in its place (as\nhours, but they can be any length you wish. During described in the upcoming “Plot Die” section).\na session, gameplay follows this general pattern: Pencils and Paper. In addition to pencils for writing\non your character sheet, scratch paper can be helpful\nThe GM sets the scene. The GM tells you about your\nfor taking notes or drawing quick sketches to visualize\ncharacter’s surroundings. They describe the environ-\nareas during play.\nment and anything going on that’s easily noticeable.\nSafety Tools. Before you play, it’s important to\nDepending on the context, they may outline the stakes\nestablish expectations for your group. Tabletop RPGs\nof the current scene or describe some options you may\ncan include sensitive material, and safety tools help\nwant to pursue.\nplayers steer the narrative away from topics that make\nThe players decide what they do. You and the other\nthem feel uncomfortable or unwelcome. Chapter 13,\nplayers decide what actions your characters take\n“Gamemastering,” presents a safety guide to help\nbased on the information. You might investigate\nyour group navigate these areas.\nthe environment or quickly enact a plan of action.\nSometimes the entire group acts together (such as\n“we all head into the stormshelter”). However, your\ncharacters can also act individually, or even split up\nbetween different locations to tackle each aspect of\nthe situation.\nThe GM narrates the results. The GM describes the\nresults of the actions you decided to take. Sometimes\nthis is as simple as describing a new scene, but when\nyour attempted actions carry some risk or chance of\nfailure, the GM might have you roll dice to decide\nthe outcome. Then, based on those results, the\nGM narrates the outcomes, repeating the loop all\nover again.\nAs this cycle continues, the game feels like a casual\nconversation; you and the GM go back and forth,\noccasionally interjecting a dice roll to see how things\nresolve. These steps play out whether you’re negotiating\nwith a Thaylen merchant, exploring the eerie bottom of\na chasm, or fighting a pitched battle against a greatshell.\nTo help each situation feel unique, the game presents\nspecial rules for three scene types: combat, conver-\nsations, and endeavors (see chapter 9, “Adventuring”).\n6 Introduction",
+      "page": 4,
+      "keywords": [
+        "Plot Die"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Using Cosmere RPG Dice Adding Additional Dice",
+      "content": "Additionally, the GM might use some or all of the 2. Add your skill modifier. The number next to each\nfollowing resources to enhance the game experience: skill on your character sheet is your skill modifier,\nreflecting how good you are at that skill. Add it to\nStormlight World Guide. The Stormlight Archive\nyour d20 roll.\nnovels describe the rich and deep world of Roshar, but\n3. Add any bonuses or penalties. Some tests\nyou can play this game without them. The Stormlight\ngain bonuses or penalties in certain circumstances.\nWorld Guide (see “The Cosmere RPG” earlier in this\nAdd any of these to your d20 roll.\nintroduction) collects the essential information about\n4. Compare your total to the test’s difficulty.\nRoshar into a single reference book, complete with\nYou’re trying to reach a target number known as a\nrules and statistics for enemies you can encounter\ndifficulty class (or DC). Add up your d20 roll plus\nall over the world.\nskill modifiers, bonuses, and penalties; if that result\nAdventures. The GM can use the Stormlight World\nequals or exceeds the DC, you succeed at your task.\nGuide to design their own custom adventure for your\n5. Resolve the results. Resolve the results of the\ngroup to play through. Or if the GM prefers, they can\nsuccess or failure, as well as any side effects triggered\nuse official published adventures that provide all the\nby your abilities or the plot die (described in the\nresources they’ll need to tell the story.\n“Plot Die” section).\nMaps and Miniatures. The Cosmere RPG rules\nsupport “theater of the mind” play, but many players\nenjoy visual aids. Miniatures and grid maps can help\ntrack character placement during combat, as described\nin the “Variant: Using a Grid” section of chapter 10.\nMusic. A laptop or speaker with music queued up for\nthe right moments can add to the atmosphere of a\ngame table.\nSome skill tests require adding additional dice to your\nThis RPG uses a set of polyhedral dice. In these\nd20 roll, such as the following:\nsets, each die has a different number of sides: four, six,\neight, ten, twelve, and twenty. This RPG also uses one Plot Die. On especially important rolls, the GM might\nadditional six-sided die known as the plot die (described have you add the plot die to introduce Opportunities\nlater in this section). Your group needs at least one of or Complications to the story. See the next section.\neach of these dice to play the game, but most players Advantage or Disadvantage Die. When circumstances\nprefer to have their own set. make your test easier (or harder) than usual, you might\nThroughout the rules text, these dice are referred to roll an extra copy of one or more dice, then pick the\nby the letter “d” followed by the number of sides of the most (or least) beneficial result. See “Advantages and\ndie: d4, d6, d8, d10, d12, and d20. So when you’re told Disadvantages” in chapter 3.\nto roll a d20, find and roll the twenty-sided die. Damage Die. When you attack an adversary, you add\none or more damage dice to your test, which deter-",
+      "page": 5,
+      "keywords": [
+        "",
+        "Advantage",
+        "Complication",
+        "Plot Die",
+        "Disadvantage"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Rolling a Skill Test",
+      "content": "mines how powerful your attack is. See “Attacking”\nWhenever the outcomes of your character’s actions in chapter 10.\nare uncertain, you make a skill test using a d20 to\nUnless otherwise instructed, roll any additional dice at\ndetermine whether you succeed or fail. Tests are the core\nthe same time as your d20.\nmechanic of this game, so you’ll roll them frequently!\nWhen an ability requires you to roll multiple dice of\nThe “Skills” section of chapter 3 further details how\nthe same kind, this is indicated by a number before the\nskill tests work, but at their most basic, tests follow\n“d” (such as “3d6”). Roll that number of dice and add\nthese steps:\ntogether their results—or if you don’t have that many\n1. Pick a skill and roll the dice. Determine which dice, you can roll the same die that many times in a row.\nskill on your character sheet best applies to the situ- For example, if an ability tells you to “roll 3d6,” you roll\nation, then roll one d20. (You might also need to roll three six-sided dice (or roll the same six-sided die three\nother dice at the same time as the d20, as described times) and add their results together.\nbelow in “Adding Additional Dice.”)",
+      "page": 5,
+      "keywords": [
+        "",
+        "3"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Plot Die Plot Die",
+      "content": "In addition to normal polyhedral dice, this game uses a\n1 2 3 4 5 6\ncustom die called the plot die. You don’t automatically\nroll the plot die with every skill test—it’s only used\nto “raise the stakes” during tense moments and tests\ncritical to the plot. NPC tests don’t generally use O O\n2 4\nthe plot die.\nWhen you roll the plot die, the result might add a\nbonus to your test—but it can also result in unforeseen",
+      "page": 6,
+      "keywords": [
+        "Plot Die"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "When your character is about to make an important",
+      "content": "actions, as described in the upcoming sections.\nskill test, the GM can emphasize this by raising the\nThe plot die has six sides, two of which are blank.\nstakes. When the stakes are raised, roll the plot die\nAnother two sides have an Opportunity symbol ( ),\nat the same time as you roll your d20 for the test.\nand the final two sides have a Complication symbol",
+      "page": 6,
+      "keywords": [
+        "",
+        "Plot Die",
+        "Complication",
+        "Opportunity"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "The GM might raise the stakes to emphasize",
+      "content": "( ). If you don’t own this game’s custom plot die, you\ntests like the following:\ncan instead use a normal d6 and convert the results\nusing the Plot Die diagram. Note that 1 and 2 are the ◆ Tests that directly contribute to the current mission.\n“worst” results, though they offset the Complication ◆ Tests that play directly to your character’s purpose,\nby granting a bonus to that test (see “Complication obstacle, or goals.\nBonus”). The bonus is equal to the number shown ◆ Other tests with high tension or dramatic import-\non the Complication symbol—which is double the ance, as determined by the GM.\nnumber rolled on a normal d6. The stakes can only be raised once per test, and they\ncan’t be raised after the d20 has already been rolled.\n8 Introduction",
+      "page": 6,
+      "keywords": [
+        "",
+        "Plot Die",
+        "Complication"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Raising the Stakes Yourself",
+      "content": "Resolving a Plot Die Roll Influence the Narrative. Your actions result in a\nWhen you roll the plot die with your test, the effect positive narrative effect of your choice, which the\ndepends on whether you roll an Opportunity ( ), GM must approve. For example, you might be trying\na Complication ( ), or a blank. to rough up a Ghostblood agent; if you fail on your\nIf you roll a blank on the plot die, no positive or ultimate goal but roll an Opportunity on that test,\nnegative side effects apply to your test, and you resolve you and your GM might decide you managed to pick\nthe remainder of the test as normal. If you roll an or the agent’s pocket while you had your hands on them.\nsymbol, see “Opportunities and Complications.” The “Skills” section of chapter 3 suggests example\nOpportunities.\nSome abilities provide additional ways you can spend\nSome abilities give your character the ability to raise the\nan Opportunity. If an ability says you can spend an\nstakes yourself, though you can only do so if the GM\nOpportunity to trigger a special effect, but you don’t\nhasn’t already raised the stakes.\nroll an Opportunity on that ability’s test, you can’t use\nEven if you don’t have one of those abilities, you\nthat special effect.\nmight think a test is worthy of raising the stakes. You\ncan always ask the GM to raise the stakes and advocate Facing a Complication\nC\nfor why you think the test warrants it, but ultimately When you gain a Complication,\nit’s the GM’s call. (GMs, see “Using the Plot Die” in this applies a negative side effect\nchapter 13 for further guidance on when and how to to the outcome of your current test\nraise the stakes.) (regardless of whether the test succeeds\nor fails). The GM should “spend” this",
+      "page": 7,
+      "keywords": [
+        "Plot Die",
+        "Complication",
+        "Opportunity"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Complications",
+      "content": "following effects:\nWhen you make a test, Opportunities and Compli- Hinder an Ally. Your actions have unforeseen\ncations represent beneficial or detrimental side effects repercussions. The next test taken by a PC gains\nrelated to what happens during the test. These narrative a disadvantage (see “Using Skills” in chapter 3).\ntools add interesting wrinkles to the story as it unfolds. Become Distracted. You lose 1 focus (see “Focus”\nYour test can gain an Opportunity or Complication in chapter 3).\nwhen you roll the plot die, when an ability grants it, or Influence the Narrative. Your actions result in a\nwhen you roll a 20 or 1 on your d20 (see the upcoming narrative drawback of the GM’s choice. For example,\n“Opportunity and Complication Ranges” section). you might be trying to deceive a guard into thinking\nSpending an Opportunity you’re an important foreign emissary; if you succeed\non your ultimate goal but roll a Complication on that\nWhen you gain an Opportunity,\ntest, your GM might decide your deception worked\nthis applies a beneficial effect to the\nso well that the guard insists on escorting you to their\nout come of your current test (regardless\ncommander. The “Skills” section of chapter 3 suggests\nof whether the test succeeds or fails).\nexample Complications.\nYou can “spend” this Opportunity to\nchoose one of the following effects: Some rules provide additional ways the GM can spend\na Complication.\nAid an Ally. Thanks to your actions, the next test\nmade by an ally of your choice gains an advantage Complication Bonus\n(see “Using Skills” in chapter 3). True to its name, a Complication can complicate\nCollect Yourself. You recover 1 focus (see “Focus” a situation—but it can also help your test result!\nin chapter 3). When you gain a Complication from rolling the plot\nCritically Hit. You change a hit into a critical hit die, it also grants you a bonus to your current d20\n(see “Attacking” in chapter 10). You can only use roll. This bonus equals the number displayed inside\nthis effect on attack tests. the Complication symbol you rolled (either +2 or +4).\nIf you gain a Complication from another source, it\ntells you what bonus to add, if any.",
+      "page": 7,
+      "keywords": [
+        "",
+        "Advantage",
+        "Complication",
+        "Plot Die",
+        "Opportunity",
+        "Disadvantage"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Opportunity and Stacking Range Expansions",
+      "content": "Complication Ranges Multiple expansions to Opportunity range, Compli-\ncation range, or both can be applied to the same test—\nIn addition to the plot die, you can also gain\nbut only if they come from effects with different names",
+      "page": 8,
+      "keywords": [
+        "Plot Die",
+        "Complication",
+        "Opportunity"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Opportunities and Complications from a very high",
+      "content": "(see “Stacking Talents and Effects” in chapter 4).\nor low d20 roll. When you make a test, you gain an\nFor example, if two different effects expand your\nOpportunity if your d20 rolls a number that falls within\nOpportunity range by 2 each, you add an Opportunity\nyour Opportunity range. By default, this range begins\nif the die shows a 17, 18, 19, or 20.\nand ends at 20, so you gain an Opportunity when you\nroll a natural 20—a roll where the die itself shows Actions and Reactions\nthe number 20, regardless of the test result after skill\nMany of your character’s abilities require you to use\nmodifiers, bonuses, and penalties.\nan action or reaction. This game’s rules often refer to\nSimilarly, you gain a Complication if your d20 rolls\nthese using special symbols instead of words. You’ll\na number that falls within your Complication range.\nlearn more about actions and reactions in chapter 10,\nBy default, this range begins and ends at 1, so you gain\n“Combat,” but here are the basics:\na Complication when you roll a natural 1—a roll where\nthe die itself shows the number 1. However, unlike plot Actions ( ). On your turn in combat, you typically\ndie Complications, this Complication doesn’t grant you can use either two or three actions. These can\na bonus to your test. allow you to do more than one thing on your turn\nYou can gain an Opportunity (or Complication) from (for example, moving toward a foe and then attacking\na natural 20 (or natural 1) even when you also rolled them), or you can combine multiple actions into a\nthe plot die—so sometimes you might face multiple single longer action (for example, using two actions to\nOpportunities or Complications on the same test. Recover lost health). If an ability requires one action,\nit’s labeled ; if it requires two actions, it’s labeled ;",
+      "page": 8,
+      "keywords": [
+        "",
+        "Talents",
+        "Complication",
+        "Plot Die",
+        "Opportunity"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Ranges When Rolling",
+      "content": "and if it requires three actions, it’s labeled .\nMultiple D20s\nReactions ( ). You typically can’t act on other\nYou’ll sometimes roll more than one d20 for a test,\ncharacters’ turns—but if a specific trigger occurs,\nusually due to advantages or disadvantages (see “Using\nyou might use a reaction to immediately respond\nSkills” in chapter 3). When you do, a d20 only adds an\nin a special way. You typically can use one reaction\nOpportunity (or Complication) if you (or your GM)\nbetween each of your turns.\nchoose that d20 result to apply to your test.\nFree Actions ( ). Some activities don’t require an\nExpanding D20 Ranges action or reaction. For example, you can freely banter\nSome effects expand the range of numbers that add an during combat, even if you’ve used all your actions.\nOpportunity or Complication to your roll.\nIf an effect expands your Opportunity range, reduce Choosing Opportunities and Complications\nits beginning by the stated number. For example, if a",
+      "page": 8,
+      "keywords": [
+        "",
+        "Advantage",
+        "Complication",
+        "Opportunity",
+        "Disadvantage"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "When someone adds an Opportunity or a Complication",
+      "content": "talent expands your Opportunity range by 2 for Crafting\nto their test, everyone else at the table can suggest fun\ntests, that range becomes 18 through 20—so you now\nways to spend it (such as dramatic narrative outcomes in\nadd an Opportunity on Crafting rolls of a natural 18,\nyour current scene). However, the final choice is up to the\n19, or 20.\nplayer or GM who is spending it.\nIf an effect expands your Complication range,\nIf you spend an Opportunity and choose to influence\nincrease its end by the stated number. For example,\nthe narrative, the GM has the final say on if your proposed\nif a talent expands your Complication range by 3 for\nnarrative effect is possible. If the GM doesn’t approve, you\nCrafting tests, that range becomes 1 through 4—so you\ncan work together to pick a new narrative effect, or you\nnow add a Complication on Crafting rolls of a natural 1,\ncan choose a different effect.\n2, 3, or 4.\n10 Introduction",
+      "page": 8,
+      "keywords": [
+        "Complication",
+        "Opportunity"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Game Conventions Stacking Similar Effects",
+      "content": "These general guidelines apply to all rules of the game. Some effects seemingly overlap with others. In general,\nsimilar effects can stack on a target unless the effects",
+      "page": 9,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "GM Has the Final Say",
+      "content": "share the same name. See “Stacking Talents and\nIf there’s ever uncertainty or disagreement about how Effects” in chapter 4 for the full rules on which effects\nto apply the rules of the game, the GM decides. stack in this game.",
+      "page": 9,
+      "keywords": [
+        "Talents"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Specific Beats General Minimum of Zero",
+      "content": "The general rules of the game (such as how to roll dice, If an effect tells you to reduce a value, you can’t reduce\nuse skills in tests, and engage in combat) provide a it past 0 unless otherwise specified. For example, your\nfoundation for gameplay. However, many specific rules health can’t drop below 0, and you can’t reduce damage\ngranted by characters’ talents, powers, items, or other to a negative number.\nelements seemingly “break” the general rules—this",
+      "page": 9,
+      "keywords": [
+        "Talents"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Round Down",
+      "content": "is intentional and adds variety. If a more specific rule\ncontradicts a general rule, the specific rule wins. Whenever you need to divide a value, round down\nunless otherwise specified. For example, if your\nmovement rate is 25 feet and an ability allows you to\n“move up to half your movement rate,” you can move\nup to 12 feet.",
+      "page": 9,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Adventuring",
+      "content": "and Advancement",
+      "page": 9,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The stories you tell with the Cosmere RPG can vary",
+      "content": "in length and complexity. One group’s adventure might\nplay out in a single session; these games are often called\none-shots. Another group’s adventure could span\nmany sessions, forming a lengthy campaign where\nthe characters grow and advance over time. Some\ncampaigns might string together many smaller, loosely\nconnected adventures. Other campaigns could play a\nlong and elaborate adventure that spans characters’\nwhole careers.",
+      "page": 9,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Levels and Goals",
+      "content": "For groups that play longer adventures, each player\ncharacter grows in two ways: through gaining levels\n(discussed in the “Character Advancement” section of\nchapter 1) and achieving goals (discussed in chapter 8).\nGaining levels represents your growth as you practice\nover time; each level allows you to improve your innate\nskills and unlock new abilities. Meanwhile, as you pur-\nsue and achieve goals unique to your personal narrative,\nyou gain access to powerful rewards (such as earning\nlegendary Shardblades or bonding with magical spren).\nAs your PCs grow in ability and power, your roles\nand experiences on Roshar advance and change. Over\ntime, you’ll progress through five tiers of play (see\n“Character Advancement” in chapter 1). These serve\nas general guides for what kinds of experiences the PCs\ncan expect and what kinds of stories the GM should be\ntrying to tell.",
+      "page": 9,
+      "keywords": []
+    }
+  ]
+}

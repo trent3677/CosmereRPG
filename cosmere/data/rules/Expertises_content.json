@@ -1,0 +1,370 @@
+{
+  "metadata": {
+    "filename": "Expertises.pdf",
+    "file_hash": "ac3c9aaabccaefaf4ad444454d5f2df96aa83962c9bb1b4278ca407292bae292",
+    "pages": 4,
+    "processing_date": "2025-09-16T21:17:46.370555"
+  },
+  "content": {
+    "chapters": [
+      {
+        "title": "Character Statistics 53",
+        "content": "RO",
+        "page": 3,
+        "type": "chapter",
+        "number": "3"
+      }
+    ],
+    "rules": [
+      {
+        "title": "Establishing Connections Deflect",
+        "content": "Presence When a character makes a test against you, they’re\nusually testing against your defense from the same\nPresence is your charisma and bearing. It represents\ncategory as their skill (unless otherwise specified by the\nyour ability to influence others, build rapport, and reach\neffect that’s prompting the skill test). Your correspond-\nthe masses.\ning defense sets the DC for that test.\nEstablishing Connections In general, your Physical defense protects you\nWhen your adventures bring you to cities and other against physical tests, your Cognitive defense protects\ninhabited areas, you’ll often want to determine whether you against cognitive tests, and your Spiritual defense\nyour character knows someone in the area. Your protects you against spiritual tests. (To learn which cat-\nPresence score can help the GM decide whether you egory each skill falls into, see the “Physical, Cognitive,\npreviously spent enough time in that region to have and Spiritual” section at the beginning of this chapter.)\nan existing connection to call on. The Establishing Especially when making a test against another\nConnections table provides guidance on how long it character, be aware that defenses might not be the only\ntakes you to establish these connections, but this varies factors affecting your DC, as described in the “Skills”\nwith the situation and is up to the GM’s discretion. section later in this chapter.",
+        "page": 1,
+        "type": "section"
+      },
+      {
+        "title": "Presence Time to Establish Connections",
+        "content": "When an enemy succeeds on an attack test against you\n0 1 year\nor when you take damage from another source, this\n1–2 50 days generally reduces your health, as described later in this\n3–4 5 days chapter. However, armor (or other effects) can grant you\n5–6 1 day a deflect value that reduces impact, keen, and energy\n7–8 1 hour damage by that amount. For example, if your deflect\nvalue is 2 and you take 5 energy damage, you deflect\n9+ Your reputation precedes you. You have connections\nin places you haven’t even visited. 2 damage, then reduce your health by 3.\nYour deflect value also offers some protection from\nAffected Statistics serious injuries, as described in “Injuries” in chapter 9.\nYour Presence score affects several of your statistics. Expertises\nWhen your Presence changes, update the following\nEach character has unique areas of knowledge acquired\nsections of your character sheet:\nthrough their upbringing, training, interests, and other\n◆ Spiritual defense\nlife experience. When your character specializes in a\n◆ Investiture (unless you use Awareness)\nparticular area, you gain an expertise on that topic.\n◆ Established connections\nThis represents your unique knowledge and ability in a\n◆ Presence-based skill modifiers (Deception, Leader-\nparticular niche, which can’t be matched by characters\nship, Persuasion, Adhesion surge, Illumination surge)\nwho don’t have that expertise.",
+        "page": 1,
+        "type": "section"
+      },
+      {
+        "title": "Using Expertises",
+        "content": "Your attributes combine to form your defenses, which\nAs described in step 4 of character creation, your\nprotect you from unwanted effects. You have three\ncharacter starts with two cultural expertises from chap-\ndefense values: Physical defense (affected by Strength\nter 2, plus additional expertises equal to your Intellect\nand Speed), Cognitive defense (affected by Intellect\nattribute score. You gain an additional expertise each\nand Willpower), and Spiritual defense (affected by\ntime your Intellect score increases by 1. You might also\nAwareness and Presence).\ngain expertises from other character creation choices,\nDefenses and Difficulty Class talents, rewards, experiences in adventures, or training\nduring downtime (see “Training” in chapter 9).\nYour Physical, Cognitive, and Spiritual defense",
+        "page": 1,
+        "type": "section"
+      },
+      {
+        "title": "Most sources of expertise either specify the exact",
+        "content": "values equal:\nexpertise you gain or tell you to choose from a specific\n10 + both attributes in that category + category (see “Expertise Categories”). If unspecified,\nany bonuses or penalties you gain an armor, cultural, utility, or weapon expertise\nof your choice. (You can’t choose a specialist expertise\nunless your GM makes an exception.)",
+        "page": 1,
+        "type": "section"
+      },
+      {
+        "title": "Creative Uses of Expertises",
+        "content": "Unlike attributes, defenses, and skills, there isn’t a finite\nlist of expertises. Each expertise names a general area People’s knowledge of the cosmere is infinitely varied and\nof knowledge, but it’s up to you how your character complex, and areas of study constantly grow and change\ngained an expertise and what knowledge it confers. as new discoveries are made. As a result, it’s impossible to\nFor example, one character with the Military Life define all the knowledge and capabilities that an expertise\nexpertise could be a singer who served in Odium’s grants. Instead, your expertises merely guide you on which\nforces, while another could be a human who absorbed subjects your character specializes in. It’s up to you and\ntheir knowledge of warfare from being raised in the your GM to decide what you know based on where and\nAlethi culture. Though these two characters share the when in the cosmere you find yourself.\nsame expertise, their knowledge might be drastically If you believe one of your expertises should allow you to\ndifferent. make a test, to automatically know something, or to gain\nWhen choosing an expertise, consider what cultures, a situational benefit, ask your GM! Expertises are tools\nweapons, armor, and areas of study your character to help creatively tell your story—it’s okay to stretch and\nhas significant experience with; this can be from your come up with cool new uses for them.\nbackstory or influenced by current adventures. The\n“Expertise Categories” section provides examples of Expert Crafting\ncommon expertises, but with your GM’s permission, Some specialized items can’t be crafted without a\nyou can create a new expertise instead. specific expertise (see “Crafting” in chapter 7).\nThe more specific an expertise, the greater its Item Expert Traits\nnarrative impact. For example, if your character has\nMost weapons and armor, along with a few other items,\nthe Religion expertise, you have general knowledge of\nhave expert traits (see chapter 7). These traits grant\nall Rosharan religions, but you might need to test Lore\nadditional benefits to characters with the specified\nto recall obscure details about Stone Shamanism. By\nexpertise.\ncontrast, with your GM’s permission, you might choose",
+        "page": 2,
+        "type": "section"
+      },
+      {
+        "title": "Known Languages",
+        "content": "an expertise in Stone Shamanism; this expertise won’t\nhelp you with tests about Vorinism, but you’ll know If you have a cultural expertise for a specific nation or\nmuch more about Stone Shamanism without needing culture, you can communicate with those who share\nto test for it. its language or languages. It’s up to you how well you\nknow those languages—you might be fluent with no",
+        "page": 2,
+        "type": "section"
+      },
+      {
+        "title": "Expertise Benefits",
+        "content": "discernible accent, or you might only know enough\nAn expertise doesn’t directly add any abilities to your\nwords to conduct basic trade.\ncharacter sheet, but it can assist you during the game\nFor other expertises, you might know special\nin several ways.\njargon or codewords connected with that subject. For\nAssumed Knowledge example, the Underworld expertise could allow you to\nIt’s assumed you automatically know all basic facts communicate covertly with local thieves’ guilds, while\nabout your area of expertise. When another character the Engineering expertise could help you talk circles\nmight need to test Lore, Deduction, or Insight to learn around a mere layperson.\nanything about that topic, you don’t need a test to recall Regardless of what languages you know, it’s assumed\nbasic information. that all PCs can communicate well enough with each\nother to easily share information and create plans",
+        "page": 2,
+        "type": "section"
+      },
+      {
+        "title": "Advanced Thinking",
+        "content": "together (unless the GM wishes to highlight a language\nBeyond your automatic knowledge of the basics, your\nbarrier between two PCs as a specific plot point).\ndepth in a particular subject allows you to make tests\nthat would be impossible for other characters. For Expertise Categories\nexample, if your party wants to figure out how the\nAll expertises fall into one of five categories; armor,\nenemy’s intricate new fabrial works, only characters with\ncultural, utility, and weapon expertises are available\nthe Fabrial Crafting expertise can make a Deduction\nto all characters, while specialist expertises must\ntest to learn that information.\nbe obtained in special ways. These categories are\nWhen you make other tests related to your exper-\nprimarily descriptive, and you can have more than\ntise, a success might grant you more information\none expertise from the same category; however,\nthan an inexperienced character would learn with\nthe same result.\n52 Chapter 3: Character Statistics",
+        "page": 2,
+        "type": "section"
+      },
+      {
+        "title": "Armor Expertises",
+        "content": "Armor expertises pertain to maintaining and wearing\na specific type of non-Invested armor. (Some rare\ntypes of armor, such as Shardplate, require specialist\nexpertises rather than armor expertises.)\nIf you have an armor expertise, you’re well-versed\nin cleaning, maintaining, and even creating that kind\nof armor. You can use the expert traits of that armor\n(described in chapter 7), as you know how best to wear\nand use it in combat.",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "Cultural Expertises",
+        "content": "Cultural expertises pertain to regional, social, and\nlinguistic knowledge for a nation, culture, subculture,\nor other group of people.\nIf you have a cultural expertise, you’re deeply know-\nledgeable about that group’s traditions, customs, and\nsuperstitions. You also know their history and current\npolitics. You can communicate with others from that\ngroup through spoken language, signed language, other\nforms of communication, or all of the above.",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "Weapon Expertises",
+        "content": "a character from Herdaz probably has the Herdazian\nexpertise, while a noble character might have the High Weapon expertises pertain to the maintenance and\nSociety expertise. wielding of a specific type of weapon. (Some rare types\nof weapons, such as Shardblades, require specialist",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "Utility Expertises",
+        "content": "expertises rather than weapon expertises.)\nUtility expertises pertain to tools, trades, technical\nIf you have a weapon expertise, you’re adept in\nknowledge, and similar areas of study.\ncleaning, maintaining, and even creating that kind of\nIf you have a utility expertise, you’re practiced in an\nweapon. You can use the expert traits of that weapon\narea of technical knowledge, such as creating a certain\n(described in chapter 7), as you know how best to wield\ntype of equipment or specializing in a discipline like\nit in combat.\nmilitary planning and strategy. You’re skilled in specific",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "Specialist Expertises Focus",
+        "content": "Specialist expertises pertain to restricted spheres\nYour focus is a cognitive resource representing your\nof knowledge, such as wielding Shardblades and\nmental resolve and ability to resist influence and distrac-\nShardplate.\ntion, as well as to execute complex or precise maneuvers.\nIf you have a specialist expertise, you have significant",
+        "page": 4,
+        "type": "section"
+      },
+      {
+        "title": "Your maximum focus equals:",
+        "content": "knowledge about a subject that’s been lost to history or is\n2 + Willpower + any bonuses or penalties\notherwise inaccessible to the average person. On Roshar,\nthis primarily includes Shards, fabrials, the lost history Focus can be spent to fuel talents and other abilities,\nof the singers, and the lost history of the Radiants. or to withstand manipulation (see “Focus in Conversa-\nRestrictions. You can’t choose specialist expertises tions” in chapter 11).\nwhen gaining an expertise from your Intellect. These When you have no focus left, your attention might\ncan only be granted by a talent, reward, or permission waver, you might stare intently while working through a\nfrom your GM. problem, or you might be overcome with frustration or\nExamples. You might gain a specialist expertise in another emotion.\ntopics such as Half-Shards, Grandbows, Shardblades, You can partially recover focus during a short rest,\nShardplate, Warhammers, Fabrial Crafting, Singer and you recover all your focus after a long rest (see\nHistory, or the Knights Radiant. “Resting” in chapter 9).\nHealth, Focus, Investiture\nand Investiture Investiture is a spiritual resource representing your\nability to hold and channel Investiture—an energy that\nMany of your abilities are powered or affected by three\nsuffuses the cosmere. On Roshar, this represents your\nexpendable pools of resources: health, focus, and\nability to breathe in and hold Stormlight.\nInvestiture. These are primarily calculated using your\nNew characters don’t have Investiture, but if you later\nattributes, but they can also be affected by bonuses or\nchoose a Radiant path, you’ll gain an Investiture pool\npenalties from talents and other effects.\nthat works much like your focus does. When you do,",
+        "page": 4,
+        "type": "section"
+      },
+      {
+        "title": "Health your maximum Investiture equals:",
+        "content": "2 + either your Awareness or Presence\nYour health is a physical resource representing your\n(whichever is higher) + any bonuses or penalties\nstamina and resistance to minor wounds. When you\ncreate your character, your maximum health equals: See “Investiture and Stormlight” in chapter 5 for rules\non using your Investiture.\n10 + Strength + any bonuses or penalties\nWhen you level up, your maximum health increases Senses\nas indicated on the Character Advancement table in\nIn any scene, your senses and what you’re aware of\nchapter 1. If your Strength changes, refer to the same\nare key. This can be straightforward in an open field\ntable to recalculate your health.\non a sunny day, but senses are more complicated when\nWhen you lose health, you might breathe heavily,\ndarkness and fog get involved—or when Lightwoven\nstagger under the weight of a blow, notice blood on your\nillusions obscure the truth of the world.\nclothes from a minor wound, or cry out from exertion.\nYour senses encapsulate not just your vision, but your\nSee “Damage, Injury, and Death” in chapter 9 for more\nhearing, smell, touch, and even your intuition. Someone\ndetails on losing health.\nwith excellent hearing might navigate pitch darkness\nIf your health is reduced to 0, that represents suffer-\nby their practiced ear. This game doesn’t have separate\ning a severe blow that knocks you out of the fight. When\nrules for sight versus other senses; instead, it’s up to you\nreduced to 0 health, you suffer an injury and become\nand the GM to decide what primary sense you most\nUnconscious (see “Conditions” in chapter 9), and you\nheavily rely on to navigate the world.\nrun the risk of incurring more serious injuries.\nYou can partially recover health during a short rest, Senses Range\nand you recover all your health after a long rest (see\nUnder most conditions, it’s assumed all characters can\n“Resting” in chapter 9). Some talents and other effects\nsense things from a reasonable distance, at the GM’s\nprovide other ways to recover your health; for example,\ndiscretion. However, when your primary sense is entirely\na character with a rank in Medicine can tend to your\nobscured, this limits how far away you can detect\nwounds in combat (see “Medicine” later in this chapter).\n54 Chapter 3: Character Statistics",
+        "page": 4,
+        "type": "section"
+      }
+    ],
+    "tables": [
+      {
+        "headers": [
+          "Presence",
+          "Time to Establish Connections"
+        ],
+        "rows": [
+          [
+            "0",
+            "1 year"
+          ],
+          [
+            "1–2",
+            "50 days"
+          ],
+          [
+            "3–4",
+            "5 days"
+          ],
+          [
+            "5–6",
+            "1 day"
+          ],
+          [
+            "7–8",
+            "1 hour"
+          ],
+          [
+            "9+",
+            "Your reputation precedes you. You have connections\nin places you haven’t even visited."
+          ]
+        ],
+        "page": 1,
+        "type": "general"
+      }
+    ],
+    "examples": [
+      {
+        "title": "The following sections give examples of common",
+        "content": "some talents and other abilities apply only to expertises\nfrom certain categories.\nexpertises that qualify for each category, but you’re\nnot restricted to the specific examples in these lists.\nTalk to your GM if you’d like to have an expertise in\na different area.",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "Examples. You can choose an armor expertise in",
+        "content": "any non-special armor type listed in chapter 7—for\nexample, the Leather Armor expertise.",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "Examples. You can choose any cultural expertise",
+        "content": "from the “Culture” section of chapter 2—for example,",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "Examples. You can choose an expertise in any",
+        "content": "techniques, specialized equipment, and technical jargon\nnon-special weapon type listed in chapter 7—for\nrelated to your area of expertise.\nexample, the Shortbow expertise. You can also choose",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "Examples. You can choose a utility expertise in",
+        "content": "the Improvised Weapon expertise and the Unarmed\ntopics such as Animal Care, Armor Crafting, Engineer-\nAttacks expertise, despite them being special weapons.\ning, Equipment Crafting, History, Military Strategy,\nReligion, Riding Horses, or Weapon Crafting.",
+        "page": 3,
+        "type": "section"
+      }
+    ],
+    "glossary": {},
+    "index": {}
+  },
+  "search_index": [
+    {
+      "type": "chapters",
+      "title": "Character Statistics 53",
+      "content": "RO",
+      "page": 3,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Establishing Connections Deflect",
+      "content": "Presence When a character makes a test against you, they’re\nusually testing against your defense from the same\nPresence is your charisma and bearing. It represents\ncategory as their skill (unless otherwise specified by the\nyour ability to influence others, build rapport, and reach\neffect that’s prompting the skill test). Your correspond-\nthe masses.\ning defense sets the DC for that test.\nEstablishing Connections In general, your Physical defense protects you\nWhen your adventures bring you to cities and other against physical tests, your Cognitive defense protects\ninhabited areas, you’ll often want to determine whether you against cognitive tests, and your Spiritual defense\nyour character knows someone in the area. Your protects you against spiritual tests. (To learn which cat-\nPresence score can help the GM decide whether you egory each skill falls into, see the “Physical, Cognitive,\npreviously spent enough time in that region to have and Spiritual” section at the beginning of this chapter.)\nan existing connection to call on. The Establishing Especially when making a test against another\nConnections table provides guidance on how long it character, be aware that defenses might not be the only\ntakes you to establish these connections, but this varies factors affecting your DC, as described in the “Skills”\nwith the situation and is up to the GM’s discretion. section later in this chapter.",
+      "page": 1,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Presence Time to Establish Connections",
+      "content": "When an enemy succeeds on an attack test against you\n0 1 year\nor when you take damage from another source, this\n1–2 50 days generally reduces your health, as described later in this\n3–4 5 days chapter. However, armor (or other effects) can grant you\n5–6 1 day a deflect value that reduces impact, keen, and energy\n7–8 1 hour damage by that amount. For example, if your deflect\nvalue is 2 and you take 5 energy damage, you deflect\n9+ Your reputation precedes you. You have connections\nin places you haven’t even visited. 2 damage, then reduce your health by 3.\nYour deflect value also offers some protection from\nAffected Statistics serious injuries, as described in “Injuries” in chapter 9.\nYour Presence score affects several of your statistics. Expertises\nWhen your Presence changes, update the following\nEach character has unique areas of knowledge acquired\nsections of your character sheet:\nthrough their upbringing, training, interests, and other\n◆ Spiritual defense\nlife experience. When your character specializes in a\n◆ Investiture (unless you use Awareness)\nparticular area, you gain an expertise on that topic.\n◆ Established connections\nThis represents your unique knowledge and ability in a\n◆ Presence-based skill modifiers (Deception, Leader-\nparticular niche, which can’t be matched by characters\nship, Persuasion, Adhesion surge, Illumination surge)\nwho don’t have that expertise.",
+      "page": 1,
+      "keywords": [
+        "Deflect",
+        "Awareness",
+        "Persuasion",
+        "Armor"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Using Expertises",
+      "content": "Your attributes combine to form your defenses, which\nAs described in step 4 of character creation, your\nprotect you from unwanted effects. You have three\ncharacter starts with two cultural expertises from chap-\ndefense values: Physical defense (affected by Strength\nter 2, plus additional expertises equal to your Intellect\nand Speed), Cognitive defense (affected by Intellect\nattribute score. You gain an additional expertise each\nand Willpower), and Spiritual defense (affected by\ntime your Intellect score increases by 1. You might also\nAwareness and Presence).\ngain expertises from other character creation choices,\nDefenses and Difficulty Class talents, rewards, experiences in adventures, or training\nduring downtime (see “Training” in chapter 9).\nYour Physical, Cognitive, and Spiritual defense",
+      "page": 1,
+      "keywords": [
+        "Awareness",
+        "Talents",
+        "Willpower",
+        "Strength",
+        "Intellect",
+        "Speed"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Most sources of expertise either specify the exact",
+      "content": "values equal:\nexpertise you gain or tell you to choose from a specific\n10 + both attributes in that category + category (see “Expertise Categories”). If unspecified,\nany bonuses or penalties you gain an armor, cultural, utility, or weapon expertise\nof your choice. (You can’t choose a specialist expertise\nunless your GM makes an exception.)",
+      "page": 1,
+      "keywords": [
+        "Armor"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Creative Uses of Expertises",
+      "content": "Unlike attributes, defenses, and skills, there isn’t a finite\nlist of expertises. Each expertise names a general area People’s knowledge of the cosmere is infinitely varied and\nof knowledge, but it’s up to you how your character complex, and areas of study constantly grow and change\ngained an expertise and what knowledge it confers. as new discoveries are made. As a result, it’s impossible to\nFor example, one character with the Military Life define all the knowledge and capabilities that an expertise\nexpertise could be a singer who served in Odium’s grants. Instead, your expertises merely guide you on which\nforces, while another could be a human who absorbed subjects your character specializes in. It’s up to you and\ntheir knowledge of warfare from being raised in the your GM to decide what you know based on where and\nAlethi culture. Though these two characters share the when in the cosmere you find yourself.\nsame expertise, their knowledge might be drastically If you believe one of your expertises should allow you to\ndifferent. make a test, to automatically know something, or to gain\nWhen choosing an expertise, consider what cultures, a situational benefit, ask your GM! Expertises are tools\nweapons, armor, and areas of study your character to help creatively tell your story—it’s okay to stretch and\nhas significant experience with; this can be from your come up with cool new uses for them.\nbackstory or influenced by current adventures. The\n“Expertise Categories” section provides examples of Expert Crafting\ncommon expertises, but with your GM’s permission, Some specialized items can’t be crafted without a\nyou can create a new expertise instead. specific expertise (see “Crafting” in chapter 7).\nThe more specific an expertise, the greater its Item Expert Traits\nnarrative impact. For example, if your character has\nMost weapons and armor, along with a few other items,\nthe Religion expertise, you have general knowledge of\nhave expert traits (see chapter 7). These traits grant\nall Rosharan religions, but you might need to test Lore\nadditional benefits to characters with the specified\nto recall obscure details about Stone Shamanism. By\nexpertise.\ncontrast, with your GM’s permission, you might choose",
+      "page": 2,
+      "keywords": [
+        "Armor"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Known Languages",
+      "content": "an expertise in Stone Shamanism; this expertise won’t\nhelp you with tests about Vorinism, but you’ll know If you have a cultural expertise for a specific nation or\nmuch more about Stone Shamanism without needing culture, you can communicate with those who share\nto test for it. its language or languages. It’s up to you how well you\nknow those languages—you might be fluent with no",
+      "page": 2,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Expertise Benefits",
+      "content": "discernible accent, or you might only know enough\nAn expertise doesn’t directly add any abilities to your\nwords to conduct basic trade.\ncharacter sheet, but it can assist you during the game\nFor other expertises, you might know special\nin several ways.\njargon or codewords connected with that subject. For\nAssumed Knowledge example, the Underworld expertise could allow you to\nIt’s assumed you automatically know all basic facts communicate covertly with local thieves’ guilds, while\nabout your area of expertise. When another character the Engineering expertise could help you talk circles\nmight need to test Lore, Deduction, or Insight to learn around a mere layperson.\nanything about that topic, you don’t need a test to recall Regardless of what languages you know, it’s assumed\nbasic information. that all PCs can communicate well enough with each\nother to easily share information and create plans",
+      "page": 2,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Advanced Thinking",
+      "content": "together (unless the GM wishes to highlight a language\nBeyond your automatic knowledge of the basics, your\nbarrier between two PCs as a specific plot point).\ndepth in a particular subject allows you to make tests\nthat would be impossible for other characters. For Expertise Categories\nexample, if your party wants to figure out how the\nAll expertises fall into one of five categories; armor,\nenemy’s intricate new fabrial works, only characters with\ncultural, utility, and weapon expertises are available\nthe Fabrial Crafting expertise can make a Deduction\nto all characters, while specialist expertises must\ntest to learn that information.\nbe obtained in special ways. These categories are\nWhen you make other tests related to your exper-\nprimarily descriptive, and you can have more than\ntise, a success might grant you more information\none expertise from the same category; however,\nthan an inexperienced character would learn with\nthe same result.\n52 Chapter 3: Character Statistics",
+      "page": 2,
+      "keywords": [
+        "Armor"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Armor Expertises",
+      "content": "Armor expertises pertain to maintaining and wearing\na specific type of non-Invested armor. (Some rare\ntypes of armor, such as Shardplate, require specialist\nexpertises rather than armor expertises.)\nIf you have an armor expertise, you’re well-versed\nin cleaning, maintaining, and even creating that kind\nof armor. You can use the expert traits of that armor\n(described in chapter 7), as you know how best to wear\nand use it in combat.",
+      "page": 3,
+      "keywords": [
+        "Armor"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Cultural Expertises",
+      "content": "Cultural expertises pertain to regional, social, and\nlinguistic knowledge for a nation, culture, subculture,\nor other group of people.\nIf you have a cultural expertise, you’re deeply know-\nledgeable about that group’s traditions, customs, and\nsuperstitions. You also know their history and current\npolitics. You can communicate with others from that\ngroup through spoken language, signed language, other\nforms of communication, or all of the above.",
+      "page": 3,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Weapon Expertises",
+      "content": "a character from Herdaz probably has the Herdazian\nexpertise, while a noble character might have the High Weapon expertises pertain to the maintenance and\nSociety expertise. wielding of a specific type of weapon. (Some rare types\nof weapons, such as Shardblades, require specialist",
+      "page": 3,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Utility Expertises",
+      "content": "expertises rather than weapon expertises.)\nUtility expertises pertain to tools, trades, technical\nIf you have a weapon expertise, you’re adept in\nknowledge, and similar areas of study.\ncleaning, maintaining, and even creating that kind of\nIf you have a utility expertise, you’re practiced in an\nweapon. You can use the expert traits of that weapon\narea of technical knowledge, such as creating a certain\n(described in chapter 7), as you know how best to wield\ntype of equipment or specializing in a discipline like\nit in combat.\nmilitary planning and strategy. You’re skilled in specific",
+      "page": 3,
+      "keywords": [
+        "Equipment"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Specialist Expertises Focus",
+      "content": "Specialist expertises pertain to restricted spheres\nYour focus is a cognitive resource representing your\nof knowledge, such as wielding Shardblades and\nmental resolve and ability to resist influence and distrac-\nShardplate.\ntion, as well as to execute complex or precise maneuvers.\nIf you have a specialist expertise, you have significant",
+      "page": 4,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Your maximum focus equals:",
+      "content": "knowledge about a subject that’s been lost to history or is\n2 + Willpower + any bonuses or penalties\notherwise inaccessible to the average person. On Roshar,\nthis primarily includes Shards, fabrials, the lost history Focus can be spent to fuel talents and other abilities,\nof the singers, and the lost history of the Radiants. or to withstand manipulation (see “Focus in Conversa-\nRestrictions. You can’t choose specialist expertises tions” in chapter 11).\nwhen gaining an expertise from your Intellect. These When you have no focus left, your attention might\ncan only be granted by a talent, reward, or permission waver, you might stare intently while working through a\nfrom your GM. problem, or you might be overcome with frustration or\nExamples. You might gain a specialist expertise in another emotion.\ntopics such as Half-Shards, Grandbows, Shardblades, You can partially recover focus during a short rest,\nShardplate, Warhammers, Fabrial Crafting, Singer and you recover all your focus after a long rest (see\nHistory, or the Knights Radiant. “Resting” in chapter 9).\nHealth, Focus, Investiture\nand Investiture Investiture is a spiritual resource representing your\nability to hold and channel Investiture—an energy that\nMany of your abilities are powered or affected by three\nsuffuses the cosmere. On Roshar, this represents your\nexpendable pools of resources: health, focus, and\nability to breathe in and hold Stormlight.\nInvestiture. These are primarily calculated using your\nNew characters don’t have Investiture, but if you later\nattributes, but they can also be affected by bonuses or\nchoose a Radiant path, you’ll gain an Investiture pool\npenalties from talents and other effects.\nthat works much like your focus does. When you do,",
+      "page": 4,
+      "keywords": [
+        "Intellect",
+        "Willpower",
+        "Path",
+        "Talents"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Health your maximum Investiture equals:",
+      "content": "2 + either your Awareness or Presence\nYour health is a physical resource representing your\n(whichever is higher) + any bonuses or penalties\nstamina and resistance to minor wounds. When you\ncreate your character, your maximum health equals: See “Investiture and Stormlight” in chapter 5 for rules\non using your Investiture.\n10 + Strength + any bonuses or penalties\nWhen you level up, your maximum health increases Senses\nas indicated on the Character Advancement table in\nIn any scene, your senses and what you’re aware of\nchapter 1. If your Strength changes, refer to the same\nare key. This can be straightforward in an open field\ntable to recalculate your health.\non a sunny day, but senses are more complicated when\nWhen you lose health, you might breathe heavily,\ndarkness and fog get involved—or when Lightwoven\nstagger under the weight of a blow, notice blood on your\nillusions obscure the truth of the world.\nclothes from a minor wound, or cry out from exertion.\nYour senses encapsulate not just your vision, but your\nSee “Damage, Injury, and Death” in chapter 9 for more\nhearing, smell, touch, and even your intuition. Someone\ndetails on losing health.\nwith excellent hearing might navigate pitch darkness\nIf your health is reduced to 0, that represents suffer-\nby their practiced ear. This game doesn’t have separate\ning a severe blow that knocks you out of the fight. When\nrules for sight versus other senses; instead, it’s up to you\nreduced to 0 health, you suffer an injury and become\nand the GM to decide what primary sense you most\nUnconscious (see “Conditions” in chapter 9), and you\nheavily rely on to navigate the world.\nrun the risk of incurring more serious injuries.\nYou can partially recover health during a short rest, Senses Range\nand you recover all your health after a long rest (see\nUnder most conditions, it’s assumed all characters can\n“Resting” in chapter 9). Some talents and other effects\nsense things from a reasonable distance, at the GM’s\nprovide other ways to recover your health; for example,\ndiscretion. However, when your primary sense is entirely\na character with a rank in Medicine can tend to your\nobscured, this limits how far away you can detect\nwounds in combat (see “Medicine” later in this chapter).\n54 Chapter 3: Character Statistics",
+      "page": 4,
+      "keywords": [
+        "Awareness",
+        "Talents",
+        "Strength"
+      ]
+    },
+    {
+      "type": "examples",
+      "title": "The following sections give examples of common",
+      "content": "some talents and other abilities apply only to expertises\nfrom certain categories.\nexpertises that qualify for each category, but you’re\nnot restricted to the specific examples in these lists.\nTalk to your GM if you’d like to have an expertise in\na different area.",
+      "page": 3,
+      "keywords": [
+        "Talents"
+      ]
+    },
+    {
+      "type": "examples",
+      "title": "Examples. You can choose an armor expertise in",
+      "content": "any non-special armor type listed in chapter 7—for\nexample, the Leather Armor expertise.",
+      "page": 3,
+      "keywords": [
+        "Armor"
+      ]
+    },
+    {
+      "type": "examples",
+      "title": "Examples. You can choose any cultural expertise",
+      "content": "from the “Culture” section of chapter 2—for example,",
+      "page": 3,
+      "keywords": []
+    },
+    {
+      "type": "examples",
+      "title": "Examples. You can choose an expertise in any",
+      "content": "techniques, specialized equipment, and technical jargon\nnon-special weapon type listed in chapter 7—for\nrelated to your area of expertise.\nexample, the Shortbow expertise. You can also choose",
+      "page": 3,
+      "keywords": [
+        "Equipment"
+      ]
+    },
+    {
+      "type": "examples",
+      "title": "Examples. You can choose a utility expertise in",
+      "content": "the Improvised Weapon expertise and the Unarmed\ntopics such as Animal Care, Armor Crafting, Engineer-\nAttacks expertise, despite them being special weapons.\ning, Equipment Crafting, History, Military Strategy,\nReligion, Riding Horses, or Weapon Crafting.",
+      "page": 3,
+      "keywords": [
+        "Armor",
+        "Equipment"
+      ]
+    }
+  ]
+}
