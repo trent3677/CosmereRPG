@@ -1,0 +1,3 @@
+"""Cosmere RPG package initialization."""
+
+
