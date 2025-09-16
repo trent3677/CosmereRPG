@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmere RPG Digital Companion</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>Cosmere RPG Digital Companion</h1>
+        <p>Welcome to your journey through the Cosmere!</p>
+        
+        <div id="character-section">
+            <h2>Characters</h2>
+            <button onclick="createNewCharacter()">Create New Character</button>
+            <div id="character-list"></div>
+        </div>
+        
+        <div id="dice-section">
+            <h2>Dice Roller</h2>
+            <button onclick="rollSkillCheck()">Roll Skill Check</button>
+            <button onclick="rollDamage()">Roll Damage</button>
+            <div id="dice-results"></div>
+        </div>
+
+        <div id="rules-section">
+            <h2>Rules Search</h2>
+            <input id="rule-query" type="text" placeholder="Search rules (e.g., Plot Die)">
+            <button onclick="searchRules()">Search</button>
+            <div id="rule-results"></div>
+        </div>
+    </div>
+    
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
+

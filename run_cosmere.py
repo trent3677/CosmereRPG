@@ -18,6 +18,7 @@ import logging
 # Import Cosmere modules
 from cosmere.core.character_manager import CosmereCharacterManager
 from cosmere.core.dice_roller import DiceRoller
+from cosmere.tools.rule_search import CosmereRuleSearch
 
 # Initialize Flask app
 app = Flask(__name__, 
@@ -29,6 +30,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Initialize managers
 character_manager = CosmereCharacterManager()
 dice_roller = DiceRoller()
+rule_search = CosmereRuleSearch(rules_dir="cosmere/data/rules")
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -123,6 +125,18 @@ def handle_dice_roll():
         socketio.emit('dice_rolled', result)
         
         return jsonify({"success": True, "result": result})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route('/api/rules/search', methods=['GET'])
+def handle_rule_search():
+    """Search Cosmere rules extracted from PDFs"""
+    try:
+        query = request.args.get('q', '').strip()
+        if not query:
+            return jsonify({"success": False, "error": "Missing query"}), 400
+        results = rule_search.search(query)
+        return jsonify({"success": True, "results": results})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
 
