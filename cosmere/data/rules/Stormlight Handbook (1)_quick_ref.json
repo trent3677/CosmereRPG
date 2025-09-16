@@ -1,0 +1,2123 @@
+{
+  "stats": {},
+  "mechanics": {
+    "dice_mechanics": [
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "3",
+        "page": 11
+      },
+      {
+        "notation": "3",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 11
+      },
+      {
+        "notation": "",
+        "page": 12
+      },
+      {
+        "notation": "",
+        "page": 12
+      },
+      {
+        "notation": "",
+        "page": 12
+      },
+      {
+        "notation": "",
+        "page": 12
+      },
+      {
+        "notation": "",
+        "page": 13
+      },
+      {
+        "notation": "",
+        "page": 13
+      },
+      {
+        "notation": "",
+        "page": 14
+      },
+      {
+        "notation": "",
+        "page": 14
+      },
+      {
+        "notation": "",
+        "page": 14
+      },
+      {
+        "notation": "",
+        "page": 14
+      },
+      {
+        "notation": "",
+        "page": 14
+      },
+      {
+        "notation": "",
+        "page": 14
+      },
+      {
+        "notation": "",
+        "page": 16
+      },
+      {
+        "notation": "",
+        "page": 17
+      },
+      {
+        "notation": "",
+        "page": 17
+      },
+      {
+        "notation": "",
+        "page": 17
+      },
+      {
+        "notation": "",
+        "page": 21
+      },
+      {
+        "notation": "",
+        "page": 22
+      },
+      {
+        "notation": "1",
+        "page": 23
+      },
+      {
+        "notation": "1",
+        "page": 23
+      },
+      {
+        "notation": "2",
+        "page": 36
+      },
+      {
+        "notation": "",
+        "page": 36
+      },
+      {
+        "notation": "2",
+        "page": 39
+      },
+      {
+        "notation": "2",
+        "page": 39
+      },
+      {
+        "notation": "2",
+        "page": 39
+      },
+      {
+        "notation": "2",
+        "page": 39
+      },
+      {
+        "notation": "",
+        "page": 41
+      },
+      {
+        "notation": "",
+        "page": 41
+      },
+      {
+        "notation": "1",
+        "page": 54
+      },
+      {
+        "notation": "1",
+        "page": 54
+      },
+      {
+        "notation": "1",
+        "page": 54
+      },
+      {
+        "notation": "1",
+        "page": 54
+      },
+      {
+        "notation": "1",
+        "page": 54
+      },
+      {
+        "notation": "1",
+        "page": 54
+      },
+      {
+        "notation": "",
+        "page": 60
+      },
+      {
+        "notation": "",
+        "page": 62
+      },
+      {
+        "notation": "",
+        "page": 62
+      },
+      {
+        "notation": "1",
+        "page": 63
+      },
+      {
+        "notation": "1",
+        "page": 63
+      },
+      {
+        "notation": "1",
+        "page": 63
+      },
+      {
+        "notation": "1",
+        "page": 63
+      },
+      {
+        "notation": "1",
+        "page": 63
+      },
+      {
+        "notation": "1",
+        "page": 67
+      },
+      {
+        "notation": "1",
+        "page": 70
+      },
+      {
+        "notation": "1",
+        "page": 70
+      },
+      {
+        "notation": "1",
+        "page": 71
+      },
+      {
+        "notation": "1",
+        "page": 71
+      },
+      {
+        "notation": "2",
+        "page": 97
+      },
+      {
+        "notation": "2",
+        "page": 97
+      },
+      {
+        "notation": "4",
+        "page": 97
+      },
+      {
+        "notation": "2",
+        "page": 97
+      },
+      {
+        "notation": "2",
+        "page": 97
+      },
+      {
+        "notation": "4",
+        "page": 99
+      },
+      {
+        "notation": "1",
+        "page": 99
+      },
+      {
+        "notation": "4",
+        "page": 99
+      },
+      {
+        "notation": "",
+        "page": 99
+      },
+      {
+        "notation": "",
+        "page": 99
+      },
+      {
+        "notation": "6",
+        "page": 99
+      },
+      {
+        "notation": "4",
+        "page": 99
+      },
+      {
+        "notation": "8",
+        "page": 99
+      },
+      {
+        "notation": "10",
+        "page": 99
+      },
+      {
+        "notation": "2",
+        "page": 100
+      },
+      {
+        "notation": "2",
+        "page": 100
+      },
+      {
+        "notation": "2",
+        "page": 101
+      },
+      {
+        "notation": "2",
+        "page": 101
+      },
+      {
+        "notation": "2",
+        "page": 101
+      },
+      {
+        "notation": "2",
+        "page": 101
+      },
+      {
+        "notation": "",
+        "page": 103
+      },
+      {
+        "notation": "",
+        "page": 104
+      },
+      {
+        "notation": "",
+        "page": 104
+      },
+      {
+        "notation": "",
+        "page": 105
+      },
+      {
+        "notation": "",
+        "page": 105
+      },
+      {
+        "notation": "",
+        "page": 106
+      },
+      {
+        "notation": "",
+        "page": 106
+      },
+      {
+        "notation": "",
+        "page": 106
+      },
+      {
+        "notation": "",
+        "page": 107
+      },
+      {
+        "notation": "",
+        "page": 107
+      },
+      {
+        "notation": "",
+        "page": 107
+      },
+      {
+        "notation": "",
+        "page": 109
+      },
+      {
+        "notation": "",
+        "page": 109
+      },
+      {
+        "notation": "",
+        "page": 109
+      },
+      {
+        "notation": "1",
+        "page": 120
+      },
+      {
+        "notation": "4",
+        "page": 120
+      },
+      {
+        "notation": "2",
+        "page": 121
+      },
+      {
+        "notation": "1",
+        "page": 123
+      },
+      {
+        "notation": "4",
+        "page": 123
+      },
+      {
+        "notation": "6",
+        "page": 123
+      },
+      {
+        "notation": "4",
+        "page": 123
+      },
+      {
+        "notation": "8",
+        "page": 123
+      },
+      {
+        "notation": "10",
+        "page": 123
+      },
+      {
+        "notation": "1",
+        "page": 124
+      },
+      {
+        "notation": "2",
+        "page": 125
+      },
+      {
+        "notation": "3",
+        "page": 125
+      },
+      {
+        "notation": "2",
+        "page": 125
+      },
+      {
+        "notation": "4",
+        "page": 125
+      },
+      {
+        "notation": "5",
+        "page": 125
+      },
+      {
+        "notation": "1",
+        "page": 129
+      },
+      {
+        "notation": "1",
+        "page": 129
+      },
+      {
+        "notation": "2",
+        "page": 149
+      },
+      {
+        "notation": "1",
+        "page": 149
+      },
+      {
+        "notation": "3",
+        "page": 157
+      },
+      {
+        "notation": "2",
+        "page": 157
+      },
+      {
+        "notation": "3",
+        "page": 165
+      },
+      {
+        "notation": "2",
+        "page": 165
+      },
+      {
+        "notation": "2",
+        "page": 166
+      },
+      {
+        "notation": "2",
+        "page": 166
+      },
+      {
+        "notation": "1",
+        "page": 173
+      },
+      {
+        "notation": "2",
+        "page": 173
+      },
+      {
+        "notation": "2",
+        "page": 181
+      },
+      {
+        "notation": "",
+        "page": 181
+      },
+      {
+        "notation": "2",
+        "page": 189
+      },
+      {
+        "notation": "1",
+        "page": 189
+      },
+      {
+        "notation": "",
+        "page": 192
+      },
+      {
+        "notation": "",
+        "page": 192
+      },
+      {
+        "notation": "",
+        "page": 193
+      },
+      {
+        "notation": "2",
+        "page": 199
+      },
+      {
+        "notation": "1",
+        "page": 207
+      },
+      {
+        "notation": "2",
+        "page": 207
+      },
+      {
+        "notation": "",
+        "page": 214
+      },
+      {
+        "notation": "",
+        "page": 214
+      },
+      {
+        "notation": "",
+        "page": 214
+      },
+      {
+        "notation": "",
+        "page": 214
+      },
+      {
+        "notation": "",
+        "page": 214
+      },
+      {
+        "notation": "1",
+        "page": 218
+      },
+      {
+        "notation": "1",
+        "page": 218
+      },
+      {
+        "notation": "1",
+        "page": 218
+      },
+      {
+        "notation": "2",
+        "page": 222
+      },
+      {
+        "notation": "2",
+        "page": 223
+      },
+      {
+        "notation": "2",
+        "page": 223
+      },
+      {
+        "notation": "2",
+        "page": 223
+      },
+      {
+        "notation": "3",
+        "page": 224
+      },
+      {
+        "notation": "3",
+        "page": 224
+      },
+      {
+        "notation": "3",
+        "page": 224
+      },
+      {
+        "notation": "3",
+        "page": 226
+      },
+      {
+        "notation": "3",
+        "page": 226
+      },
+      {
+        "notation": "3",
+        "page": 226
+      },
+      {
+        "notation": "1",
+        "page": 228
+      },
+      {
+        "notation": "2",
+        "page": 228
+      },
+      {
+        "notation": "1",
+        "page": 228
+      },
+      {
+        "notation": "2",
+        "page": 229
+      },
+      {
+        "notation": "1",
+        "page": 229
+      },
+      {
+        "notation": "1",
+        "page": 229
+      },
+      {
+        "notation": "2",
+        "page": 229
+      },
+      {
+        "notation": "2",
+        "page": 229
+      },
+      {
+        "notation": "2",
+        "page": 229
+      },
+      {
+        "notation": "",
+        "page": 230
+      },
+      {
+        "notation": "2",
+        "page": 233
+      },
+      {
+        "notation": "1",
+        "page": 233
+      },
+      {
+        "notation": "1",
+        "page": 233
+      },
+      {
+        "notation": "1",
+        "page": 233
+      },
+      {
+        "notation": "1",
+        "page": 233
+      },
+      {
+        "notation": "2",
+        "page": 234
+      },
+      {
+        "notation": "2",
+        "page": 234
+      },
+      {
+        "notation": "2",
+        "page": 234
+      },
+      {
+        "notation": "2",
+        "page": 234
+      },
+      {
+        "notation": "2",
+        "page": 234
+      },
+      {
+        "notation": "2",
+        "page": 234
+      },
+      {
+        "notation": "1",
+        "page": 234
+      },
+      {
+        "notation": "1",
+        "page": 234
+      },
+      {
+        "notation": "1",
+        "page": 234
+      },
+      {
+        "notation": "",
+        "page": 236
+      },
+      {
+        "notation": "",
+        "page": 236
+      },
+      {
+        "notation": "1",
+        "page": 236
+      },
+      {
+        "notation": "1",
+        "page": 236
+      },
+      {
+        "notation": "",
+        "page": 236
+      },
+      {
+        "notation": "",
+        "page": 236
+      },
+      {
+        "notation": "2",
+        "page": 237
+      },
+      {
+        "notation": "2",
+        "page": 237
+      },
+      {
+        "notation": "2",
+        "page": 237
+      },
+      {
+        "notation": "3",
+        "page": 239
+      },
+      {
+        "notation": "2",
+        "page": 239
+      },
+      {
+        "notation": "2",
+        "page": 240
+      },
+      {
+        "notation": "2",
+        "page": 240
+      },
+      {
+        "notation": "2",
+        "page": 240
+      },
+      {
+        "notation": "3",
+        "page": 240
+      },
+      {
+        "notation": "3",
+        "page": 240
+      },
+      {
+        "notation": "3",
+        "page": 240
+      },
+      {
+        "notation": "3",
+        "page": 247
+      },
+      {
+        "notation": "1",
+        "page": 247
+      },
+      {
+        "notation": "4",
+        "page": 247
+      },
+      {
+        "notation": "2",
+        "page": 247
+      },
+      {
+        "notation": "4",
+        "page": 247
+      },
+      {
+        "notation": "1",
+        "page": 250
+      },
+      {
+        "notation": "1",
+        "page": 250
+      },
+      {
+        "notation": "1",
+        "page": 250
+      },
+      {
+        "notation": "1",
+        "page": 250
+      },
+      {
+        "notation": "1",
+        "page": 250
+      },
+      {
+        "notation": "1",
+        "page": 250
+      },
+      {
+        "notation": "1",
+        "page": 250
+      },
+      {
+        "notation": "1",
+        "page": 250
+      },
+      {
+        "notation": "1",
+        "page": 250
+      },
+      {
+        "notation": "1",
+        "page": 251
+      },
+      {
+        "notation": "1",
+        "page": 251
+      },
+      {
+        "notation": "1",
+        "page": 251
+      },
+      {
+        "notation": "1",
+        "page": 251
+      },
+      {
+        "notation": "1",
+        "page": 251
+      },
+      {
+        "notation": "1",
+        "page": 251
+      },
+      {
+        "notation": "1",
+        "page": 251
+      },
+      {
+        "notation": "1",
+        "page": 251
+      },
+      {
+        "notation": "1",
+        "page": 251
+      },
+      {
+        "notation": "2",
+        "page": 252
+      },
+      {
+        "notation": "2",
+        "page": 252
+      },
+      {
+        "notation": "2",
+        "page": 252
+      },
+      {
+        "notation": "2",
+        "page": 252
+      },
+      {
+        "notation": "1",
+        "page": 252
+      },
+      {
+        "notation": "1",
+        "page": 252
+      },
+      {
+        "notation": "2",
+        "page": 252
+      },
+      {
+        "notation": "2",
+        "page": 252
+      },
+      {
+        "notation": "2",
+        "page": 255
+      },
+      {
+        "notation": "1",
+        "page": 255
+      },
+      {
+        "notation": "2",
+        "page": 256
+      },
+      {
+        "notation": "1",
+        "page": 260
+      },
+      {
+        "notation": "2",
+        "page": 260
+      },
+      {
+        "notation": "1",
+        "page": 262
+      },
+      {
+        "notation": "1",
+        "page": 263
+      },
+      {
+        "notation": "2",
+        "page": 263
+      },
+      {
+        "notation": "3",
+        "page": 263
+      },
+      {
+        "notation": "1",
+        "page": 267
+      },
+      {
+        "notation": "1",
+        "page": 267
+      },
+      {
+        "notation": "1",
+        "page": 267
+      },
+      {
+        "notation": "",
+        "page": 270
+      },
+      {
+        "notation": "",
+        "page": 270
+      },
+      {
+        "notation": "",
+        "page": 273
+      },
+      {
+        "notation": "",
+        "page": 273
+      },
+      {
+        "notation": "1",
+        "page": 273
+      },
+      {
+        "notation": "1",
+        "page": 273
+      },
+      {
+        "notation": "",
+        "page": 273
+      },
+      {
+        "notation": "",
+        "page": 273
+      },
+      {
+        "notation": "",
+        "page": 273
+      },
+      {
+        "notation": "",
+        "page": 273
+      },
+      {
+        "notation": "1",
+        "page": 276
+      },
+      {
+        "notation": "1",
+        "page": 276
+      },
+      {
+        "notation": "2",
+        "page": 276
+      },
+      {
+        "notation": "1",
+        "page": 277
+      },
+      {
+        "notation": "1",
+        "page": 277
+      },
+      {
+        "notation": "1",
+        "page": 277
+      },
+      {
+        "notation": "1",
+        "page": 277
+      },
+      {
+        "notation": "1",
+        "page": 297
+      },
+      {
+        "notation": "1",
+        "page": 297
+      },
+      {
+        "notation": "",
+        "page": 300
+      },
+      {
+        "notation": "6",
+        "page": 300
+      },
+      {
+        "notation": "1",
+        "page": 300
+      },
+      {
+        "notation": "",
+        "page": 300
+      },
+      {
+        "notation": "",
+        "page": 300
+      },
+      {
+        "notation": "",
+        "page": 305
+      },
+      {
+        "notation": "1",
+        "page": 315
+      },
+      {
+        "notation": "1",
+        "page": 315
+      },
+      {
+        "notation": "1",
+        "page": 315
+      },
+      {
+        "notation": "1",
+        "page": 315
+      },
+      {
+        "notation": "1",
+        "page": 324
+      },
+      {
+        "notation": "",
+        "page": 325
+      },
+      {
+        "notation": "",
+        "page": 325
+      },
+      {
+        "notation": "",
+        "page": 325
+      },
+      {
+        "notation": "",
+        "page": 325
+      },
+      {
+        "notation": "",
+        "page": 325
+      },
+      {
+        "notation": "",
+        "page": 325
+      },
+      {
+        "notation": "2",
+        "page": 334
+      },
+      {
+        "notation": "",
+        "page": 339
+      },
+      {
+        "notation": "",
+        "page": 339
+      },
+      {
+        "notation": "",
+        "page": 339
+      },
+      {
+        "notation": "",
+        "page": 339
+      },
+      {
+        "notation": "",
+        "page": 339
+      },
+      {
+        "notation": "",
+        "page": 339
+      },
+      {
+        "notation": "",
+        "page": 339
+      },
+      {
+        "notation": "",
+        "page": 339
+      },
+      {
+        "notation": "1",
+        "page": 347
+      },
+      {
+        "notation": "1",
+        "page": 347
+      },
+      {
+        "notation": "1",
+        "page": 347
+      },
+      {
+        "notation": "",
+        "page": 350
+      },
+      {
+        "notation": "1",
+        "page": 350
+      },
+      {
+        "notation": "",
+        "page": 350
+      },
+      {
+        "notation": "",
+        "page": 370
+      },
+      {
+        "notation": "1",
+        "page": 372
+      },
+      {
+        "notation": "1",
+        "page": 372
+      },
+      {
+        "notation": "1",
+        "page": 373
+      },
+      {
+        "notation": "1",
+        "page": 373
+      },
+      {
+        "notation": "1",
+        "page": 373
+      },
+      {
+        "notation": "1",
+        "page": 373
+      },
+      {
+        "notation": "1",
+        "page": 374
+      },
+      {
+        "notation": "1",
+        "page": 374
+      },
+      {
+        "notation": "1",
+        "page": 374
+      },
+      {
+        "notation": "1",
+        "page": 374
+      },
+      {
+        "notation": "1",
+        "page": 374
+      },
+      {
+        "notation": "1",
+        "page": 374
+      },
+      {
+        "notation": "2",
+        "page": 374
+      },
+      {
+        "notation": "",
+        "page": 375
+      },
+      {
+        "notation": "",
+        "page": 375
+      },
+      {
+        "notation": "1",
+        "page": 375
+      },
+      {
+        "notation": "1",
+        "page": 376
+      },
+      {
+        "notation": "1",
+        "page": 376
+      },
+      {
+        "notation": "1",
+        "page": 377
+      },
+      {
+        "notation": "1",
+        "page": 377
+      },
+      {
+        "notation": "1",
+        "page": 377
+      },
+      {
+        "notation": "1",
+        "page": 377
+      },
+      {
+        "notation": "1",
+        "page": 377
+      },
+      {
+        "notation": "1",
+        "page": 377
+      },
+      {
+        "notation": "1",
+        "page": 377
+      },
+      {
+        "notation": "1",
+        "page": 377
+      },
+      {
+        "notation": "1",
+        "page": 377
+      },
+      {
+        "notation": "2",
+        "page": 377
+      },
+      {
+        "notation": "2",
+        "page": 377
+      },
+      {
+        "notation": "1",
+        "page": 377
+      },
+      {
+        "notation": "",
+        "page": 378
+      },
+      {
+        "notation": "",
+        "page": 378
+      },
+      {
+        "notation": "",
+        "page": 379
+      },
+      {
+        "notation": "",
+        "page": 382
+      },
+      {
+        "notation": "",
+        "page": 383
+      },
+      {
+        "notation": "",
+        "page": 386
+      }
+    ]
+  },
+  "investiture": {
+    "Surgebinding": [
+      {
+        "page": 21,
+        "context": "through Surgebinding."
+      },
+      {
+        "page": 129,
+        "context": "Surgebinding and the ability to breathe in Stormlight."
+      },
+      {
+        "page": 134,
+        "context": "of Surgebinding was lost, and only legends remained"
+      },
+      {
+        "page": 136,
+        "context": "to do the same with your destructive Surgebinding"
+      },
+      {
+        "page": 137,
+        "context": "understand not only the Surgebinding powers you wield,"
+      },
+      {
+        "page": 137,
+        "context": "Surgebinding, what types of power do you"
+      },
+      {
+        "page": 141,
+        "context": "Slippery Target Distant Surgebinding Gout of Flame Inescapable Spark"
+      },
+      {
+        "page": 157,
+        "context": "Surgebinding You gain “Flame” as a sixth Shared Elsecalling"
+      },
+      {
+        "page": 165,
+        "context": "and Focused. illusions, up to your ranks Surgebinding You gain “Flame” as a sixth"
+      },
+      {
+        "page": 168,
+        "context": "mistreatment of captives. The Skybreaker notes each from abusing influence or Surgebinding power. To this"
+      },
+      {
+        "page": 170,
+        "context": "Surgebinding. This caused frequent conflicts with other doesn’t move with the spren; instead, their movement"
+      },
+      {
+        "page": 186,
+        "context": "nature and limits of Surgebinding, fabrials, and other"
+      },
+      {
+        "page": 211,
+        "context": "restrictions on Surgebinding; he believed it necessary"
+      },
+      {
+        "page": 213,
+        "context": "Invested abilities known as Surgebinding. skill (for example, making an Abrasion test like"
+      },
+      {
+        "page": 215,
+        "context": "test. Improvising creative Surgebinding techniques can"
+      },
+      {
+        "page": 217,
+        "context": "by your Abrasion. If they succeed, they stay on their feet Slippery Target D istant Surgebinding"
+      },
+      {
+        "page": 218,
+        "context": "Prerequisite: Distant Surgebinding talent or"
+      },
+      {
+        "page": 220,
+        "context": "Surgebinding You can use Binding Strike no objects, and instead only infuse a portion of one"
+      },
+      {
+        "page": 221,
+        "context": "Prerequisite: Distant Surgebinding talent"
+      },
+      {
+        "page": 239,
+        "context": "Surgebinding You gain “Flame” as a sixth"
+      },
+      {
+        "page": 362,
+        "context": "light, and Surgebinding are fundamental to the setting"
+      },
+      {
+        "page": 370,
+        "context": "under standing of this beloved fantasy world. Others Shardplate and Surgebinding."
+      },
+      {
+        "page": 385,
+        "context": "sphere: A gemstone encased in a glass gained during character creation Surgebinding: See surge."
+      }
+    ],
+    "surgebinding": [
+      {
+        "page": 277,
+        "context": "It is a melee weapon that uses the Light Weaponry skill Radiant surgebinding. When you craft this fabrial,"
+      }
+    ]
+  },
+  "tables": [
+    {
+      "title": "general",
+      "page": 23
+    },
+    {
+      "title": "general",
+      "page": 23
+    },
+    {
+      "title": "general",
+      "page": 23
+    },
+    {
+      "title": "general",
+      "page": 23
+    },
+    {
+      "title": "general",
+      "page": 23
+    },
+    {
+      "title": "general",
+      "page": 26
+    },
+    {
+      "title": "general",
+      "page": 26
+    },
+    {
+      "title": "general",
+      "page": 52
+    },
+    {
+      "title": "general",
+      "page": 53
+    },
+    {
+      "title": "general",
+      "page": 54
+    },
+    {
+      "title": "general",
+      "page": 55
+    },
+    {
+      "title": "general",
+      "page": 60
+    },
+    {
+      "title": "general",
+      "page": 70
+    },
+    {
+      "title": "general",
+      "page": 71
+    },
+    {
+      "title": "general",
+      "page": 80
+    },
+    {
+      "title": "general",
+      "page": 80
+    },
+    {
+      "title": "general",
+      "page": 80
+    },
+    {
+      "title": "general",
+      "page": 81
+    },
+    {
+      "title": "general",
+      "page": 81
+    },
+    {
+      "title": "general",
+      "page": 81
+    },
+    {
+      "title": "general",
+      "page": 88
+    },
+    {
+      "title": "general",
+      "page": 89
+    },
+    {
+      "title": "general",
+      "page": 89
+    },
+    {
+      "title": "general",
+      "page": 89
+    },
+    {
+      "title": "general",
+      "page": 89
+    },
+    {
+      "title": "general",
+      "page": 89
+    },
+    {
+      "title": "general",
+      "page": 96
+    },
+    {
+      "title": "general",
+      "page": 96
+    },
+    {
+      "title": "general",
+      "page": 97
+    },
+    {
+      "title": "general",
+      "page": 97
+    },
+    {
+      "title": "general",
+      "page": 97
+    },
+    {
+      "title": "general",
+      "page": 97
+    },
+    {
+      "title": "general",
+      "page": 97
+    },
+    {
+      "title": "general",
+      "page": 97
+    },
+    {
+      "title": "general",
+      "page": 104
+    },
+    {
+      "title": "general",
+      "page": 105
+    },
+    {
+      "title": "general",
+      "page": 105
+    },
+    {
+      "title": "general",
+      "page": 105
+    },
+    {
+      "title": "general",
+      "page": 105
+    },
+    {
+      "title": "general",
+      "page": 105
+    },
+    {
+      "title": "general",
+      "page": 114
+    },
+    {
+      "title": "general",
+      "page": 114
+    },
+    {
+      "title": "general",
+      "page": 114
+    },
+    {
+      "title": "general",
+      "page": 114
+    },
+    {
+      "title": "general",
+      "page": 115
+    },
+    {
+      "title": "general",
+      "page": 115
+    },
+    {
+      "title": "general",
+      "page": 115
+    },
+    {
+      "title": "general",
+      "page": 115
+    },
+    {
+      "title": "general",
+      "page": 120
+    },
+    {
+      "title": "general",
+      "page": 121
+    },
+    {
+      "title": "general",
+      "page": 121
+    },
+    {
+      "title": "general",
+      "page": 121
+    },
+    {
+      "title": "general",
+      "page": 121
+    },
+    {
+      "title": "general",
+      "page": 121
+    },
+    {
+      "title": "general",
+      "page": 121
+    },
+    {
+      "title": "general",
+      "page": 121
+    },
+    {
+      "title": "general",
+      "page": 141
+    },
+    {
+      "title": "general",
+      "page": 141
+    },
+    {
+      "title": "general",
+      "page": 149
+    },
+    {
+      "title": "general",
+      "page": 149
+    },
+    {
+      "title": "general",
+      "page": 157
+    },
+    {
+      "title": "general",
+      "page": 157
+    },
+    {
+      "title": "general",
+      "page": 157
+    },
+    {
+      "title": "general",
+      "page": 157
+    },
+    {
+      "title": "general",
+      "page": 165
+    },
+    {
+      "title": "general",
+      "page": 165
+    },
+    {
+      "title": "general",
+      "page": 165
+    },
+    {
+      "title": "general",
+      "page": 165
+    },
+    {
+      "title": "general",
+      "page": 173
+    },
+    {
+      "title": "general",
+      "page": 173
+    },
+    {
+      "title": "general",
+      "page": 181
+    },
+    {
+      "title": "general",
+      "page": 181
+    },
+    {
+      "title": "general",
+      "page": 181
+    },
+    {
+      "title": "general",
+      "page": 189
+    },
+    {
+      "title": "general",
+      "page": 189
+    },
+    {
+      "title": "general",
+      "page": 189
+    },
+    {
+      "title": "general",
+      "page": 189
+    },
+    {
+      "title": "general",
+      "page": 193
+    },
+    {
+      "title": "general",
+      "page": 193
+    },
+    {
+      "title": "general",
+      "page": 193
+    },
+    {
+      "title": "general",
+      "page": 199
+    },
+    {
+      "title": "general",
+      "page": 199
+    },
+    {
+      "title": "general",
+      "page": 199
+    },
+    {
+      "title": "general",
+      "page": 199
+    },
+    {
+      "title": "general",
+      "page": 199
+    },
+    {
+      "title": "general",
+      "page": 207
+    },
+    {
+      "title": "general",
+      "page": 207
+    },
+    {
+      "title": "general",
+      "page": 214
+    },
+    {
+      "title": "general",
+      "page": 216
+    },
+    {
+      "title": "general",
+      "page": 217
+    },
+    {
+      "title": "general",
+      "page": 219
+    },
+    {
+      "title": "general",
+      "page": 220
+    },
+    {
+      "title": "general",
+      "page": 221
+    },
+    {
+      "title": "general",
+      "page": 222
+    },
+    {
+      "title": "general",
+      "page": 224
+    },
+    {
+      "title": "general",
+      "page": 224
+    },
+    {
+      "title": "general",
+      "page": 225
+    },
+    {
+      "title": "general",
+      "page": 225
+    },
+    {
+      "title": "general",
+      "page": 227
+    },
+    {
+      "title": "general",
+      "page": 228
+    },
+    {
+      "title": "general",
+      "page": 230
+    },
+    {
+      "title": "general",
+      "page": 231
+    },
+    {
+      "title": "general",
+      "page": 233
+    },
+    {
+      "title": "general",
+      "page": 233
+    },
+    {
+      "title": "general",
+      "page": 235
+    },
+    {
+      "title": "general",
+      "page": 236
+    },
+    {
+      "title": "general",
+      "page": 238
+    },
+    {
+      "title": "general",
+      "page": 238
+    },
+    {
+      "title": "general",
+      "page": 239
+    },
+    {
+      "title": "general",
+      "page": 239
+    },
+    {
+      "title": "general",
+      "page": 241
+    },
+    {
+      "title": "general",
+      "page": 241
+    },
+    {
+      "title": "general",
+      "page": 246
+    },
+    {
+      "title": "general",
+      "page": 252
+    },
+    {
+      "title": "general",
+      "page": 254
+    },
+    {
+      "title": "general",
+      "page": 260
+    },
+    {
+      "title": "general",
+      "page": 265
+    },
+    {
+      "title": "general",
+      "page": 265
+    },
+    {
+      "title": "general",
+      "page": 270
+    },
+    {
+      "title": "general",
+      "page": 270
+    },
+    {
+      "title": "general",
+      "page": 273
+    },
+    {
+      "title": "general",
+      "page": 274
+    },
+    {
+      "title": "general",
+      "page": 274
+    },
+    {
+      "title": "stats",
+      "page": 285
+    },
+    {
+      "title": "general",
+      "page": 286
+    },
+    {
+      "title": "general",
+      "page": 287
+    },
+    {
+      "title": "general",
+      "page": 287
+    },
+    {
+      "title": "stats",
+      "page": 287
+    },
+    {
+      "title": "general",
+      "page": 288
+    },
+    {
+      "title": "general",
+      "page": 289
+    },
+    {
+      "title": "general",
+      "page": 294
+    },
+    {
+      "title": "general",
+      "page": 300
+    },
+    {
+      "title": "general",
+      "page": 300
+    },
+    {
+      "title": "general",
+      "page": 314
+    },
+    {
+      "title": "general",
+      "page": 315
+    },
+    {
+      "title": "general",
+      "page": 315
+    },
+    {
+      "title": "general",
+      "page": 317
+    },
+    {
+      "title": "general",
+      "page": 321
+    },
+    {
+      "title": "general",
+      "page": 322
+    },
+    {
+      "title": "general",
+      "page": 323
+    },
+    {
+      "title": "general",
+      "page": 324
+    },
+    {
+      "title": "general",
+      "page": 324
+    },
+    {
+      "title": "general",
+      "page": 329
+    },
+    {
+      "title": "general",
+      "page": 331
+    },
+    {
+      "title": "general",
+      "page": 331
+    },
+    {
+      "title": "general",
+      "page": 332
+    },
+    {
+      "title": "general",
+      "page": 332
+    },
+    {
+      "title": "general",
+      "page": 332
+    },
+    {
+      "title": "general",
+      "page": 332
+    },
+    {
+      "title": "general",
+      "page": 332
+    },
+    {
+      "title": "general",
+      "page": 332
+    },
+    {
+      "title": "general",
+      "page": 332
+    },
+    {
+      "title": "general",
+      "page": 334
+    },
+    {
+      "title": "general",
+      "page": 334
+    },
+    {
+      "title": "general",
+      "page": 334
+    },
+    {
+      "title": "general",
+      "page": 335
+    },
+    {
+      "title": "general",
+      "page": 335
+    },
+    {
+      "title": "general",
+      "page": 337
+    },
+    {
+      "title": "general",
+      "page": 337
+    },
+    {
+      "title": "general",
+      "page": 337
+    },
+    {
+      "title": "general",
+      "page": 347
+    },
+    {
+      "title": "general",
+      "page": 352
+    },
+    {
+      "title": "general",
+      "page": 357
+    },
+    {
+      "title": "general",
+      "page": 357
+    },
+    {
+      "title": "general",
+      "page": 361
+    },
+    {
+      "title": "general",
+      "page": 361
+    },
+    {
+      "title": "general",
+      "page": 363
+    },
+    {
+      "title": "general",
+      "page": 372
+    },
+    {
+      "title": "general",
+      "page": 373
+    },
+    {
+      "title": "general",
+      "page": 373
+    },
+    {
+      "title": "general",
+      "page": 374
+    },
+    {
+      "title": "general",
+      "page": 374
+    },
+    {
+      "title": "general",
+      "page": 377
+    },
+    {
+      "title": "general",
+      "page": 377
+    },
+    {
+      "title": "general",
+      "page": 390
+    },
+    {
+      "title": "general",
+      "page": 390
+    },
+    {
+      "title": "general",
+      "page": 391
+    },
+    {
+      "title": "general",
+      "page": 391
+    }
+  ]
+}

@@ -693,8 +693,8 @@
       "content": "that defines their place on Roshar.\nBefore Character Creation This section guides you through the eight steps of\ncharacter creation:\nBefore you create your character, imagine who they are.\n1. Choose your origins.\nWhat sort of person do you want to play? If you’re a\n2. Choose your starting path.\nlongtime fan of the Stormlight Archive and Roshar, this\n3. Choose your attributes.\nmight be an incredibly specific idea like “a listener who\n4. Choose your skills and expertises.\nserves as keeper of songs.” If you haven’t even touched\n5. Choose your talents.\nthe novels, maybe it’s as simple as “a tough-as-nails\n6. Equip yourself.\nmercenary.” There’s no wrong way to approach this\n7. Tell your story.\nprocess! You can come up with this concept on your\n8. Calculate your final statistics.\nown, or the group can collaborate on everyone’s",
       "page": 1,
       "keywords": [
-        "Path",
         "Origin",
+        "Path",
         "Talents"
       ]
     },
@@ -790,8 +790,8 @@
       "content": "Path Theme Specialties Starting Skill Summary of Key Talent\nAgent A talented operative who solves problems Investigator Insight Opportunist: Reroll the plot die once\nwith a keen mind or deft hand. Spy per round.",
       "page": 3,
       "keywords": [
-        "Path",
-        "Plot Die"
+        "Plot Die",
+        "Path"
       ]
     },
     {
@@ -841,13 +841,13 @@
       "content": "Step 3: Attributes Next, refer to the Movement Rate table in\nthe “Speed” section of chapter 3, and record the\nYour character’s innate characteristics are represented\nindicated movement rate on the front of your sheet.\nby six attributes: Strength, Speed, Intellect, Willpower,\nFor example, if your Speed is 3, your movement rate\nAwareness, and Presence. These form the foundation\nis 30 feet per action.\nfor your skills, physical and mental limits, and more,\nNext, refer to the Recovery Die table in the\nas detailed in chapter 3.\n“Willpower” section of chapter 3, and record the\nChoose Your Attributes indicated die size on the front of your sheet. For\nConsider which attributes best represent your strengths. example, if your Willpower is 2, your recovery\nMost humans and singers have attribute scores die is a d6.\nranging from 0 to 5—the higher your score, the more Finally, refer to the Senses Range table in\nexceptional you are in that area. When you gain levels, the “Aware ness” section of chapter 3, and record\nyou can increase your attribute scores even further. the indicated range on the front of your sheet.\nOn Your Character Sheet. Distribute 12 points For example, if your Awareness is 3, you can easily\nacross the six attributes in any order. You don’t have sense up to 20 feet even when your primary sense\nto put points in every attribute—0 is a valid attribute is obscured.\nscore—and you can’t put more than 3 points into\nStep 4: Skills and Expertises\nany attribute during this step of character creation.\nFor example, you might choose a distribution of The next step is to consider what skills and expertises\n0, 3, 2, 3, 3, and 1. your character has honed, regardless of their innate\nRecord each chosen attribute score on the front of attributes.\nyour character sheet. For now, ignore the nearby boxes\nfor your defenses, health, focus, and Investiture; you’ll\nThe starting path you chose in step 2 grants an\ncalculate these statistics in step 7.\nassociated starting skill, which is considered central\nRecord Related Statistics to characters who start on that path.\nYour attribute scores determine how good you are On Your Character Sheet. Gain a free rank in\nin related areas, including (but not limited to) the your path’s starting skill (listed on the earlier Heroic\nfollowing: Paths at a Glance table, and also in the path’s “Key\nTalent” section in chapter 4). On the front of your\n◆ Your Strength determines your lifting capacity,\nsheet, mark a checkbox next to this skill.\nrepresenting the heaviest weight you can lift.\n◆ Your Speed determines your movement rate, Choose Your Skills\nrepresenting how fast and far you can move As you play the game, you’ll frequently use skills\nunder pressure. (detailed in chapter 3) to attempt various tasks. You\n◆ Your Willpower determines your recovery die, might sneak past enemy lines with a Stealth test, or\nrepresenting how efficiently you recover health you might forage in the wilderness with a Survival test.\nand focus. You could’ve gained these skills through your education,\n◆ Your Awareness determines your senses range. line of work, or personal experience. You might even\nWhen your primary sense is overwhelmed (such attribute some to supernatural events.\nas in a thunderous highstorm or a lightless room), The more ranks you have in a skill, the better you\nyour senses range determines how far away you can are at tests and abilities that use that skill. Each skill is\nperceive using other faculties (such as smell, touch, also enhanced by the attribute listed next to it on your\nor intuition). character sheet. This combination of skill ranks plus\nWhile your Intellect and Presence are just as import- attribute score determines your skill modifier, which\nant as the above attributes, you don’t need to record you add to your test result; this reflects how effectively\nanything about them on your character sheet right now. you can perform various skill tests. For example, you’re\nOn Your Character Sheet. First, refer to the more likely to succeed on Insight tests if you also have\nLifting and Carrying Capacity table in the “Strength” high Awareness.\nsection of chapter 3, and record the indicated lifting On Your Character Sheet. Distribute 4 more\ncapacity on the front of your sheet. For example, if your ranks among the eighteen skills listed on the front of\nStrength is 2, your lifting capacity is 200 pounds. your character sheet, marking a checkbox for each\nrank. You can’t increase any skill above 2 ranks during\n18 Chapter 1: Character Creation",
       "page": 4,
       "keywords": [
-        "Awareness",
         "",
-        "Speed",
-        "Willpower",
+        "Awareness",
+        "Strength",
         "Path",
         "Intellect",
-        "Strength"
+        "Willpower",
+        "Speed"
       ]
     },
     {
@@ -866,10 +866,10 @@
       "page": 5,
       "keywords": [
         "Awareness",
-        "Speed",
-        "Willpower",
+        "Strength",
         "Intellect",
-        "Strength"
+        "Willpower",
+        "Speed"
       ]
     },
     {
@@ -878,9 +878,9 @@
       "content": "maXimUm 1 maXimUm maXimUm\n0\n10 5 0\ndefleCt\n1 aGilitY (spd) 2 CraftinG (int) 4 deCeption (pre)\n0 atHletiCs (str) 3 dedUCtion (int) 5 insiGHt (awa)\n0 HeaVY weaponrY (str) 3 disCipline (wil) 3 leadersHip (pre)\n1 liGHt weaponrY (spd) 3 intimidation (wil) 3 perCeption (awa)\n2 stealtH (spd) 2 lore (int) 3 persUasion (pre)\n1 tHieVerY (spd) 2 mediCine (int) 3 sUrViVal (awa)\n_____________ ( ___ ) _____________ ( ___ ) _____________ ( ___ )\nliftinG CapaCitY moVement reCoVerY die senses ranGe\n100 lbs. 25 ft. 1d8 20 ft. when obscured\nConditions & inJUries eXpertises",
       "page": 5,
       "keywords": [
-        "1",
         "Deflect",
-        "Persuasion"
+        "Persuasion",
+        "1"
       ]
     },
     {
@@ -890,8 +890,8 @@
       "page": 5,
       "keywords": [
         "1",
-        "Talents",
-        "Plot Die"
+        "Plot Die",
+        "Talents"
       ]
     },
     {
@@ -910,9 +910,9 @@
       "content": "your number of ranks in that skill + your score for that\nIn step 2, you chose a starting path, which determines\nskill’s attribute + any bonuses or penalties\nyour first talent. This key talent is an important ability\nRecord each skill modifier in the box to the left of that\nthat other talents in the path may further improve on.\nskill. For example, if you have 2 ranks in Insight and\nOn Your Character Sheet. You gain the first talent\nyour Awareness is 3, your Insight modifier is +5.\nin your starting path, as detailed at the top of that path’s\ntalent tree. Record this talent on the front of your sheet.",
       "page": 6,
       "keywords": [
-        "Awareness",
+        "Talents",
         "Path",
-        "Talents"
+        "Awareness"
       ]
     },
     {
@@ -931,9 +931,9 @@
       "content": "chapter 2). You can choose another talent within your\nBeyond concrete skills, your character has several areas existing path or choose the first talent of another path.\nof expertise—very specialized knowledge from personal On Your Character Sheet. Following the rules in\nexperience. You might have intricate knowledge of one the “Ancestry” section of chapter 2, choose your bonus\nkind of weapon, years of learning about an academic talent(s) and record them on the front of your sheet. If a\nsubject, or deep familiarity with a given culture. talent affects your other statistics, also record those in\nEach expertise is a simple word or phrase repre- the appropriate fields.\nsenting a subject you specialize in. If your character\nStep 6: Equipment\nis combat-focused, you’ll likely want to choose your\nfavorite weapon or armor as an expertise. If you’re To reflect your character’s background and interests,\ninterested in crafting, consider expertises on creating you gain a starting kit with equipment, currency, and\nfantastical items such as fabrials. If you’re a scholar, other resources. Some kits also have intangible benefits\nconsider cultural expertises that reflect your expanded like granting you a bond with a patron (discussed in\nknowledge about the world. chapter 8) or jump-starting your journey to becoming\nAs detailed in chapter 3, your expertise grants you a Radiant (discussed in chapter 5).\nvarious benefits; for example, if you have an expertise",
       "page": 6,
       "keywords": [
+        "Equipment",
         "Armor",
-        "Path",
-        "Equipment"
+        "Path"
       ]
     },
     {
@@ -942,8 +942,8 @@
       "content": "in Engineering, you might automatically know if it’s safe\nEach character begins with a starting kit from chapter 7.\nto cross a rickety bridge, while another character would\nYour story isn’t bound by the names of each kit, so pick\nhave to test Deduction to come to the same conclusion.\nany kit you wish, then decide how you came to possess\nOn Your Character Sheet. You already gained\nthese items and resources. For example, if you pick the\ntwo expertises when you picked your culture in step 1 of\nCourtier kit, perhaps you inherited these items from\ncharacter creation. If your Intellect score is 1 or higher,\nyour noble Alethi family—or perhaps you illicitly gained\nyou can now choose additional expertises equal to that\nthem from your criminal career in Thaylen City.\nscore, recording them on the front of your sheet.\nOn Your Character Sheet. Choose a starting\nThe “Expertises” section of chapter 3 suggests\nkit from chapter 7, then record its contents in the\npotential subjects, but you can choose an expertise\ncorresponding fields of your sheet (such as “Weapons”\non nearly any subject you can imagine.\nor “Armor & Equipment”).\n20 Chapter 1: Character Creation",
       "page": 6,
       "keywords": [
-        "Intellect",
         "Armor",
+        "Intellect",
         "Equipment"
       ]
     },
@@ -963,8 +963,8 @@
       "content": "Some armor reduces the effect of impact, keen, and\nenergy damage (see “Deflect” in chapter 3). Your\ndeflect value determines how much of that damage\nyou can ignore.\nOn Your Character Sheet. If you gained armor\nduring this step, record its deflect value on the front of\nyour sheet. Otherwise, your deflect is probably 0.\nStep 7: Story\nYou now know your abilities, and you have an idea of\nwhat experiences shaped you. Now it’s time to solidify\nwho you were leading up to this moment, and even\nmore importantly, who you are today.",
       "page": 7,
       "keywords": [
-        "Armor",
-        "Deflect"
+        "Deflect",
+        "Armor"
       ]
     },
     {
@@ -997,12 +997,12 @@
       "page": 8,
       "keywords": [
         "Awareness",
-        "Speed",
-        "Willpower",
+        "Strength",
+        "Armor",
         "Equipment",
         "Intellect",
-        "Armor",
-        "Strength"
+        "Willpower",
+        "Speed"
       ]
     },
     {
@@ -1055,8 +1055,8 @@
       "content": "___________________________\nFlint & steel\nOil lantern & oil ___________________________\ntalents, ContinUed\n5 day s street food ___________________________\n___________________________\n___________________________\nmarKs 20\n___________________________\nnotes ConneCtions\nVeil is a hard-edged Alethi woman with Ty n (Ghostblood mentor, deceased)\na mysterious past. She considers herself\na skilled con artist, but she’s not as worldyl\nas she appears. She has a weakness for\nstrong drinks and rugged bridgemen.\nCosmere rpG CHaraCter sHeet | © 2025 BrotHerwise Games\nThe back of your compleTed characTer sheeT shows equipmenT, goals, and backsTory.\n22 Chapter 1: Character Creation",
       "page": 8,
       "keywords": [
-        "Talents",
-        "Equipment"
+        "Equipment",
+        "Talents"
       ]
     },
     {
@@ -1065,9 +1065,9 @@
       "content": "Tell Your Story Step 8: Final Calculations\nBy now, you probably have a good idea of not only what\nCongratulations, you’ve made all the big decisions!\nyour character is, but who they are. Feel free to add\nAs the final step of character creation, use the\ndetails to your story, referring back to “Considering\ninstructions in this section to calculate and record\nYour Origins” at the beginning of chapter 2. Consider\nyour remaining statistics. Chapter 3 details how your\ndetails such as the following:\nattributes affect these and other aspects of the game.\nOccupation. What do you do for a living? Is it leading As you do so, be sure to apply any bonuses from\nyou into your adventures or distracting you from them? your talents, equipment, and other effects. For example,\nRelationships. Who are the most important—or the Collected talent increases both your Cognitive\ntroublesome—people in your life? What factions defense and Spiritual defense by 2.\nare you allied with or at odds with? If you have few\nconnections, is there a reason you prefer to work alone?\nDuring your adventures, you draw from three resource\nAnd importantly, how do you know the other player\npools, each of which has a maximum value that you’ll\ncharacters, if at all? (Work with your GM and the\nregularly deplete and recover during play (see “Health,\nother players to create connections to them.)\nFocus, and Investiture” in chapter 3).\nLoyalties. Has your loyalty to your friends or factions",
       "page": 9,
       "keywords": [
-        "Talents",
+        "Origin",
         "Equipment",
-        "Origin"
+        "Talents"
       ]
     },
     {
@@ -1087,8 +1087,8 @@
       "page": 9,
       "keywords": [
         "Willpower",
-        "Talents",
-        "Opportunity"
+        "Opportunity",
+        "Talents"
       ]
     },
     {
@@ -1106,8 +1106,8 @@
       "content": "Your three defenses represent your resilience against\nDuring this game, your character will face adventure\nattacks, coercion, and other unwanted effects. The\nand adversity, making friends and foes alike. As you\nhigher your defenses, the harder it is for opponents to\ndo, you’ll advance in two meaningful ways. First, you’ll\nsucceed on skill tests against you (see the “Defenses”\nearn rewards for completing personal goals; these can\nsection of chapter 3). Record your three defenses on\ngrant you powerful items, allies, and abilities, as detailed\nthe front of your sheet:\nin chapter 8. Second, as your campaign progresses,\nPhysical Defense. Your Physical defense equals your GM will indicate that your collaborative story has\n10 + your Strength attribute + your Speed attribute + reached certain milestones. When this happens, each\nany bonuses or penalties. For example, if your Strength character gains a level, representing that each of you has\nis 2 and your Speed is 3, and you have no relevant reached a significant milestone in skill and experience.\ntalents or other effects, your Physical defense is 15.",
       "page": 10,
       "keywords": [
-        "Speed",
         "Talents",
+        "Speed",
         "Strength"
       ]
     },
@@ -1118,10 +1118,10 @@
       "page": 10,
       "keywords": [
         "Awareness",
-        "Talents",
-        "Willpower",
         "Path",
-        "Intellect"
+        "Intellect",
+        "Willpower",
+        "Talents"
       ]
     },
     {
@@ -1165,9 +1165,9 @@
       "content": "Beyond the above limitations, you can distribute\n1. Increase your character level by 1. these new skill ranks among any skills you wish,\n2. If indicated for this level, increase an attribute including surge skills gained from Radiant paths.\nand its related statistics. On your character sheet, for each skill rank\n3. Increase your health. you gain, mark one checkbox next to that skill\n4. Gain skill ranks. and increase its modifier by 1.\n5. Gain a new talent.\nStep 5: Gain a Talent\nStep 1: Increase Your Level Each time you gain a level (through level 20), you gain\nYour character starts the game at level 1, and you one talent. From level 21 onward, you gain your choice\ngain a level when your adventure reaches a milestone of either a skill rank (see step 4) or a talent, not both,\nas indicated by your GM. as indicated on the Character Advancement table.\nAdditionally, your ancestry grants you a bonus talent\nStep 2: Increase an Attribute\nat the beginning of each tier (levels 1, 6, 11, 16, and 21);\nAt levels 3, 6, 9, 12, 15, and 18, increase one attribute\nthe “Ancestry” section of chapter 2 details which bonus\nof your choice by 1, as indicated on the Character\ntalents are available to your ancestry.\nAdvancement table. (No other levels grant an attribute\nWhenever you choose a talent, you must meet its\nincrease.) You can’t increase any attribute above 5 in\nprerequisites (as described in the next section).\nthis way, but some talents may temporarily boost your\nattributes, which doesn’t count toward this limit. Prerequisites\nOn your character sheet, be sure to update skill\nSome abilities—usually talents—have prerequisites\nmodifiers and other statistics affected by this attribute;\nyou must meet before selecting or benefiting from them.\nthe “Attributes” section of chapter 3 tells you what to\nFor example, you might need to swear an Ideal or gain\nrecalculate for each attribute.\nmore ranks in a skill before you’re allowed to choose a\nStep 3: Increase Your Health particular talent. Additionally, each talent (other than\nIncrease both your maximum and current health by a key talent) requires you to have the talent preceding it\nthe amount specified for your level on the Character in the talent tree, as described in “Advancing Through\nAdvancement table. a Path” in chapter 3.\nSome effects permanently increase your statistics,\nStep 4: Gain Skill Ranks\nand these count toward such prerequisites. However,\nEach time you gain a level (through level 20), you\nif you gain a temporary bonus from talents, fabrials,\ngain 2 skill ranks of your choice. From level 21 onward,\nand similar effects, this doesn’t count toward prereq-\nyou gain your choice of either a skill rank or a talent\nuisites. For example, if you’re a singer in artform,\n(see step 5), not both, as indicated on the Character\nyour Awareness temporarily increases—but because\nAdvancement table.\nthat bonus ends when you change forms, it doesn’t\ncount toward prerequisites that require a certain\nAwareness score.\n26 Chapter 1: Character Creation",
       "page": 12,
       "keywords": [
-        "Awareness",
+        "Talents",
         "Path",
-        "Talents"
+        "Awareness"
       ]
     },
     {

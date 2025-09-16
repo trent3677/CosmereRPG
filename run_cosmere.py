@@ -18,6 +18,7 @@ import logging
 # Import Cosmere modules
 from cosmere.core.character_manager import CosmereCharacterManager
 from cosmere.core.dice_roller import DiceRoller
+from cosmere.core.investiture_manager import InvestitureManager
 from cosmere.tools.rule_search import CosmereRuleSearch
 
 # Initialize Flask app
@@ -31,6 +32,19 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 character_manager = CosmereCharacterManager()
 dice_roller = DiceRoller()
 rule_search = CosmereRuleSearch(rules_dir="cosmere/data/rules")
+investiture_manager = InvestitureManager()
+
+# Seed basic powers (can be replaced by data-driven loading later)
+_seed_powers = [
+    {"name": "Steelpush", "cost": 1, "description": "Push metal objects; Allomancy."},
+    {"name": "Ironpull", "cost": 1, "description": "Pull metal objects; Allomancy."},
+    {"name": "Lash", "cost": 2, "description": "Change direction of gravity; Surgebinding."},
+]
+for p in _seed_powers:
+    try:
+        investiture_manager.register_power(p)
+    except Exception:
+        pass
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -137,6 +151,49 @@ def handle_rule_search():
             return jsonify({"success": False, "error": "Missing query"}), 400
         results = rule_search.search(query)
         return jsonify({"success": True, "results": results})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route('/api/investiture/powers', methods=['GET', 'POST'])
+def handle_investiture_powers():
+    """List or register Investiture powers."""
+    try:
+        if request.method == 'GET':
+            return jsonify({"success": True, "powers": investiture_manager.list_powers()})
+        else:
+            power = request.json or {}
+            investiture_manager.register_power(power)
+            return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route('/api/characters/<character_id>/investiture', methods=['PUT'])
+def update_character_investiture(character_id):
+    """Update a character's Investiture pool or type."""
+    try:
+        character = character_manager.load_character(character_id)
+        if not character:
+            return jsonify({"success": False, "error": "Character not found"}), 404
+        data = request.json or {}
+        updated = character_manager.update_investiture(character_id, data)
+        return jsonify({"success": True, "character": updated})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route('/api/characters/<character_id>/investiture/apply', methods=['POST'])
+def apply_investiture_power(character_id):
+    """Apply a power's cost to a character's Investiture points."""
+    try:
+        character = character_manager.load_character(character_id)
+        if not character:
+            return jsonify({"success": False, "error": "Character not found"}), 404
+        data = request.json or {}
+        power_name = data.get('power') or data.get('power_name')
+        if not power_name:
+            return jsonify({"success": False, "error": "Missing power name"}), 400
+        updated = investiture_manager.apply_power_cost(character, power_name)
+        character_manager.save_character(updated)
+        return jsonify({"success": True, "character": updated})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
 

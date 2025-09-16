@@ -20,9 +20,9 @@
     "page": 1,
     "keywords": [
       "Deflect",
-      "Awareness",
+      "Armor",
       "Persuasion",
-      "Armor"
+      "Awareness"
     ]
   },
   {
@@ -32,11 +32,11 @@
     "page": 1,
     "keywords": [
       "Awareness",
-      "Talents",
-      "Willpower",
       "Strength",
       "Intellect",
-      "Speed"
+      "Willpower",
+      "Speed",
+      "Talents"
     ]
   },
   {
@@ -125,8 +125,8 @@
     "content": "knowledge about a subject that’s been lost to history or is\n2 + Willpower + any bonuses or penalties\notherwise inaccessible to the average person. On Roshar,\nthis primarily includes Shards, fabrials, the lost history Focus can be spent to fuel talents and other abilities,\nof the singers, and the lost history of the Radiants. or to withstand manipulation (see “Focus in Conversa-\nRestrictions. You can’t choose specialist expertises tions” in chapter 11).\nwhen gaining an expertise from your Intellect. These When you have no focus left, your attention might\ncan only be granted by a talent, reward, or permission waver, you might stare intently while working through a\nfrom your GM. problem, or you might be overcome with frustration or\nExamples. You might gain a specialist expertise in another emotion.\ntopics such as Half-Shards, Grandbows, Shardblades, You can partially recover focus during a short rest,\nShardplate, Warhammers, Fabrial Crafting, Singer and you recover all your focus after a long rest (see\nHistory, or the Knights Radiant. “Resting” in chapter 9).\nHealth, Focus, Investiture\nand Investiture Investiture is a spiritual resource representing your\nability to hold and channel Investiture—an energy that\nMany of your abilities are powered or affected by three\nsuffuses the cosmere. On Roshar, this represents your\nexpendable pools of resources: health, focus, and\nability to breathe in and hold Stormlight.\nInvestiture. These are primarily calculated using your\nNew characters don’t have Investiture, but if you later\nattributes, but they can also be affected by bonuses or\nchoose a Radiant path, you’ll gain an Investiture pool\npenalties from talents and other effects.\nthat works much like your focus does. When you do,",
     "page": 4,
     "keywords": [
-      "Intellect",
       "Willpower",
+      "Intellect",
       "Path",
       "Talents"
     ]

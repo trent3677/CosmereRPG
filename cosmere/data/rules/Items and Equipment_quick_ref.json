@@ -1,0 +1,301 @@
+{
+  "stats": {},
+  "mechanics": {
+    "dice_mechanics": [
+      {
+        "notation": "3",
+        "page": 3
+      },
+      {
+        "notation": "1",
+        "page": 3
+      },
+      {
+        "notation": "4",
+        "page": 3
+      },
+      {
+        "notation": "2",
+        "page": 3
+      },
+      {
+        "notation": "4",
+        "page": 3
+      },
+      {
+        "notation": "1",
+        "page": 6
+      },
+      {
+        "notation": "1",
+        "page": 6
+      },
+      {
+        "notation": "1",
+        "page": 6
+      },
+      {
+        "notation": "1",
+        "page": 6
+      },
+      {
+        "notation": "1",
+        "page": 6
+      },
+      {
+        "notation": "1",
+        "page": 6
+      },
+      {
+        "notation": "1",
+        "page": 6
+      },
+      {
+        "notation": "1",
+        "page": 6
+      },
+      {
+        "notation": "1",
+        "page": 6
+      },
+      {
+        "notation": "1",
+        "page": 7
+      },
+      {
+        "notation": "1",
+        "page": 7
+      },
+      {
+        "notation": "1",
+        "page": 7
+      },
+      {
+        "notation": "1",
+        "page": 7
+      },
+      {
+        "notation": "1",
+        "page": 7
+      },
+      {
+        "notation": "1",
+        "page": 7
+      },
+      {
+        "notation": "1",
+        "page": 7
+      },
+      {
+        "notation": "1",
+        "page": 7
+      },
+      {
+        "notation": "1",
+        "page": 7
+      },
+      {
+        "notation": "2",
+        "page": 8
+      },
+      {
+        "notation": "2",
+        "page": 8
+      },
+      {
+        "notation": "2",
+        "page": 8
+      },
+      {
+        "notation": "2",
+        "page": 8
+      },
+      {
+        "notation": "1",
+        "page": 8
+      },
+      {
+        "notation": "1",
+        "page": 8
+      },
+      {
+        "notation": "2",
+        "page": 8
+      },
+      {
+        "notation": "2",
+        "page": 8
+      },
+      {
+        "notation": "2",
+        "page": 11
+      },
+      {
+        "notation": "1",
+        "page": 11
+      },
+      {
+        "notation": "2",
+        "page": 12
+      },
+      {
+        "notation": "1",
+        "page": 16
+      },
+      {
+        "notation": "2",
+        "page": 16
+      },
+      {
+        "notation": "1",
+        "page": 18
+      },
+      {
+        "notation": "1",
+        "page": 19
+      },
+      {
+        "notation": "2",
+        "page": 19
+      },
+      {
+        "notation": "3",
+        "page": 19
+      },
+      {
+        "notation": "1",
+        "page": 23
+      },
+      {
+        "notation": "1",
+        "page": 23
+      },
+      {
+        "notation": "1",
+        "page": 23
+      },
+      {
+        "notation": "",
+        "page": 26
+      },
+      {
+        "notation": "",
+        "page": 26
+      },
+      {
+        "notation": "",
+        "page": 29
+      },
+      {
+        "notation": "",
+        "page": 29
+      },
+      {
+        "notation": "1",
+        "page": 29
+      },
+      {
+        "notation": "1",
+        "page": 29
+      },
+      {
+        "notation": "",
+        "page": 29
+      },
+      {
+        "notation": "",
+        "page": 29
+      },
+      {
+        "notation": "",
+        "page": 29
+      },
+      {
+        "notation": "",
+        "page": 29
+      },
+      {
+        "notation": "1",
+        "page": 32
+      },
+      {
+        "notation": "1",
+        "page": 32
+      },
+      {
+        "notation": "2",
+        "page": 32
+      },
+      {
+        "notation": "1",
+        "page": 33
+      },
+      {
+        "notation": "1",
+        "page": 33
+      },
+      {
+        "notation": "1",
+        "page": 33
+      },
+      {
+        "notation": "1",
+        "page": 33
+      }
+    ]
+  },
+  "investiture": {
+    "surgebinding": [
+      {
+        "page": 33,
+        "context": "It is a melee weapon that uses the Light Weaponry skill Radiant surgebinding. When you craft this fabrial,"
+      }
+    ]
+  },
+  "tables": [
+    {
+      "title": "general",
+      "page": 2
+    },
+    {
+      "title": "general",
+      "page": 8
+    },
+    {
+      "title": "general",
+      "page": 10
+    },
+    {
+      "title": "general",
+      "page": 16
+    },
+    {
+      "title": "general",
+      "page": 21
+    },
+    {
+      "title": "general",
+      "page": 21
+    },
+    {
+      "title": "general",
+      "page": 26
+    },
+    {
+      "title": "general",
+      "page": 26
+    },
+    {
+      "title": "general",
+      "page": 29
+    },
+    {
+      "title": "general",
+      "page": 30
+    },
+    {
+      "title": "general",
+      "page": 30
+    }
+  ]
+}

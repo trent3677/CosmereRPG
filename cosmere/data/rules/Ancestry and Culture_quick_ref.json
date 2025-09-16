@@ -1,0 +1,41 @@
+{
+  "stats": {},
+  "mechanics": {
+    "dice_mechanics": [
+      {
+        "notation": "2",
+        "page": 4
+      },
+      {
+        "notation": "",
+        "page": 4
+      },
+      {
+        "notation": "2",
+        "page": 7
+      },
+      {
+        "notation": "2",
+        "page": 7
+      },
+      {
+        "notation": "2",
+        "page": 7
+      },
+      {
+        "notation": "2",
+        "page": 7
+      },
+      {
+        "notation": "",
+        "page": 9
+      },
+      {
+        "notation": "",
+        "page": 9
+      }
+    ]
+  },
+  "investiture": {},
+  "tables": []
+}

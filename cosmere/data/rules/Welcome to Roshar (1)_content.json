@@ -1,0 +1,2016 @@
+{
+  "metadata": {
+    "filename": "Welcome to Roshar (1).pdf",
+    "file_hash": "3c9c263155c30f60e83174f5fcd2cc45d9cec622ec87349163ad463aa694b13a",
+    "pages": 28,
+    "processing_date": "2025-09-16T21:17:38.282758"
+  },
+  "content": {
+    "chapters": [],
+    "rules": [
+      {
+        "title": "Cosmere RPG Lead Team",
+        "content": "co s m e r e\nroleplaying game\nThe Cosmere® RPG was created by Brotherwise Games and Dragonsteel Entertainment.\nExecutive Producer: Brandon Sanderson\nProducers: Isaac Stewart and Dan Wells\nCreative Director: Johnny O’Neal\nDesigner: Johnny O’Neal Art Director: Katie Payne\nAdditional Design: Welden Bringhurst Graphic Designer: Gordon McAlpin\nBook Editor: Sebastian Yūe Concept Artist: Marie Seeberger\nCover Illustrator: Amirul Hhf\nContinuity Editor: Karen Ahlstrom\nInterior Illustrators: Dallin Bifano, Logan Feliciano,\nWorldsingers: David Behrens, Joshua Harkey, Eric Lake,\nAmirul Hhf, Vladimir Ishelin, Adam J. Marin, Eduardo\nBen Marrow, Ian McNatt, and Evgeni “Argent” Kirilov\nNonato Cavalcante, Kevin O’Neill, Katie Payne, Steve\nSensitivity Consultants: Basil Wright\nPrescott, Sami Rytkönen, Steven Shan, Florian Stitz,\nAccessibility Consultant: Chris Hopper\nand Svetlin Velinov\nProofreader: Laura Hirsbrunner\nDragonsteel Art Team: Ben McSweeney, Shawn Boyles,\nBrand and Marketing: Adam Horne, Matt Molandes,\nJennifer Neal, Rachael Lynn Buchanan, Anna Earley,\nand Jillian Schumacher\nHayley Lazo, and Priscilla Spencer\nLead Designer: Andrew Fischer\nLead Writer: Lydia Suen\nLead Editor: Laura Hirsbrunner\nProject Lead: Lyla McBeath Fujiwara\n©\n2025 by Brotherwise Games, LLC. Based on The Stormlight Archive®\n©\nnovels by Brandon Sanderson, copyright 2010, 2014, 2017, 2020,\n2024 by Dragonsteel Entertainment, LLC, and used with the express\npermission of Dragonsteel Entertainment, LLC.\n©\nPlotweaver™ Game System 2025 Brotherwise Games, LLC.",
+        "page": 2,
+        "type": "section"
+      },
+      {
+        "title": "ISBN: 978-1-966528-03-6",
+        "content": "First Printing (v1.01)",
+        "page": 2,
+        "type": "section"
+      },
+      {
+        "title": "Church",
+        "content": "Brandon Sanderson’s novel series, the Stormlight CONTENTS\nArchive, is epic in every sense of the word. The\nsweeping scope of Brandon’s narrative is enough to\nfill five substantial novels, with another five to come. 4 A World of\nThe gripping story and unparalleled world-building Storms and War\nhave inspired a legion of fans to read and reread not\n6 Ecology\nonly these stories, but the entire Cosmere universe\nof fantasy fiction. 10 Spren\nWhat you hold in your hands is not a weighty tome.\n12 Map of Roshar\nIt’s a sampler and teaser, designed specifically for\npeople who haven’t read the Stormlight novels. 14 Nations and\nThis booklet introduces Roshar, a world of conflict, Cultures\nstorms, and Investiture. Divine forces shaped this\nplanet, some leading to subjugation and cruelty, 16 The Vorin\nothers cultivating ideals of growth and honor. It’s a\nworld where flawed heroes gain incredible powers by\n17 Heralds of the\nforging bonds and seeking redemption.",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "Almighty",
+        "content": "If you’re playing the Cosmere RPG and beginning\n18 Western Roshar\nan adventure in the Stormlight campaign setting,\nthis guide illustrates Roshar’s unique world-building 20 Eastern Roshar\nand tells you what a typical citizen of Eastern Roshar\nwould know about the world without revealing any 22 The Alethi\ncharacter or plot spoilers for The Way of Kings.\n24 The Listeners\nWelcome to a universe unlike any other, and a\nfantasy setting as captivating as it is alien. Welcome 26 A Changing\nto Roshar! We hope this is just the first step of World\nyour journey.\n27 Begin Your\n— Johnny O’Neal Journey",
+        "page": 3,
+        "type": "section"
+      },
+      {
+        "title": "A bridgeman looks east toward",
+        "content": "an approaching highstorm.",
+        "page": 4,
+        "type": "section"
+      },
+      {
+        "title": "Highstorms",
+        "content": "No force has shaped Roshar’s ecology and culture more\ncompletely than highstorms: hurricane-force storms of\nincredible power that sweep across the continent about once per\nfive-day week, always traveling from east to west. Heralded by\na powerful stormwall with enough strength to hurl boulders,\nhighstorms can be incredibly destructive. However, the highstorm\nalso infuses Roshar with incredible energy called Stormlight.",
+        "page": 4,
+        "type": "section"
+      },
+      {
+        "title": "Spheres",
+        "content": "Throughout Roshar, spheres are the\nmost commonly accepted currency.\nSmall gemstones embedded in glass,\ntheir denominations are based on the\nsize and type of gems inside. Well-cut\ngemstones glow for several days when\ninfused with Stormlight, so merchants\ndistrust dun spheres. Infused spheres\nglow brightly enough to be a helpful\nlight source, especially when multiple\nspheres are placed in a lantern, and\nmost people carry at least one sphere\nfor good luck.\n4",
+        "page": 4,
+        "type": "section"
+      },
+      {
+        "title": "Roshar is the name of the planet and its single",
+        "content": "blue Nomon, green Mishim,\ncontinent. The majority of the continent’s terrain is\nand violet Salas.\nstone, and its storm-swept lands are harsh. However,\nthis world is far from barren. Every type of biome can\nbe found on Roshar, from snow-capped mountains to\nlush jungles.",
+        "page": 5,
+        "type": "section"
+      },
+      {
+        "title": "Visor appears",
+        "content": "entirely transparent",
+        "page": 5,
+        "type": "section"
+      },
+      {
+        "title": "Infused gemstone",
+        "content": "from bearer’s\nallows bearer to\nperspective\nbond Blade",
+        "page": 5,
+        "type": "section"
+      },
+      {
+        "title": "Shardbearers",
+        "content": "Across Roshar, two relics are prized above all other\nmaterial possessions: Shardblades and Shardplate.\nShardblades slice effortlessly through any unliving\nmatter, and kill foes with a single strike, leaving no\nwounds except burning eyes. Fueled by Stormlight,",
+        "page": 5,
+        "type": "section"
+      },
+      {
+        "title": "Shardplate is the only armor that can deflect",
+        "content": "a Shardblade, and each suit endows its bearer Cracked\nwith superhuman speed and strength. A single vambrace leaks\nShardbearer can turn the tide of an entire battle, Stormlight\nand wars have been fought to claim a single Blade\nor suit of Plate.",
+        "page": 5,
+        "type": "section"
+      },
+      {
+        "title": "Gilded enamel",
+        "content": "adorns slate-gray",
+        "page": 5,
+        "type": "section"
+      },
+      {
+        "title": "Plate material",
+        "content": "Despite massive size, Blade\nis lighter than a longsword\n5",
+        "page": 5,
+        "type": "section"
+      },
+      {
+        "title": "Ecology",
+        "content": "In the Alethi countryside, axehinds\ngraze for vinebuds amid a landscape\nof shalebark, scalespray, and frillblooms.",
+        "page": 6,
+        "type": "section"
+      },
+      {
+        "title": "Vegetation",
+        "content": "Plants on Roshar have evolved to survive the regular Jella tree\nonslaught of highstorms, resembling aquatic life on\nother worlds. When a highstorm approaches, plants",
+        "page": 6,
+        "type": "section"
+      },
+      {
+        "title": "Valaplume",
+        "content": "retract their vines and leaves, only to unfurl them\nwhen the storm passes. They react the same\nway to animals, shrinking away from\npassing travelers or foraging beasts.",
+        "page": 6,
+        "type": "section"
+      },
+      {
+        "title": "Rosharan plants employ a",
+        "content": "range of adaptations to protect\nthemselves from highstorms.",
+        "page": 6,
+        "type": "section"
+      },
+      {
+        "title": "Many plants wrap and withdraw",
+        "content": "their leaves and tendrils. Jella\ntrees and prickletacs absorb\ncrem and form stone-like trunks.",
+        "page": 6,
+        "type": "section"
+      },
+      {
+        "title": "Thaylen deadfall trees lie flat",
+        "content": "during storms. In eastern Roshar,\nmany plants grow only on the\nleeward side of cliffsides, taking\nshelter in protected laits.",
+        "page": 6,
+        "type": "section"
+      },
+      {
+        "title": "Eyes of Ishi",
+        "content": "6",
+        "page": 6,
+        "type": "section"
+      },
+      {
+        "title": "Stone and Crem",
+        "content": "On most of Roshar, soil would be quickly\nwashed away by the strength of highstorms.\nInstead, plants cling directly to the stony\nterrain with strong roots. Soil and mud are\nalien to most Rosharans, but when a highstorm\npasses, it leaves behind a coating of mineral-\nrich crem that acts as fertilizer for Rosharan\nflora. Crem is clay-like when wet, and can be\nshaped into pottery, but hardens quickly and\nmust be chipped away before it covers every\nIn the sheltered mountain nation of Shinovar, highstorms pass\nsurface exposed to the elements.\nas gentle rainfall. Plants grow in soil and do not retreat when trod\nupon. Shinovar is home to strange animals seen nowhere else,\nincluding chickens in all shapes, sizes, and colors. It is the only\nnation in the world where wild horses thrive, and Shin horses are",
+        "page": 7,
+        "type": "section"
+      },
+      {
+        "title": "Vinebud opening",
+        "content": "prized throughout Roshar.\nafter a highstorm",
+        "page": 7,
+        "type": "section"
+      },
+      {
+        "title": "Rockbuds",
+        "content": "Rockbuds are a family of hard-shelled plants found across\nRoshar, especially in the east. Like other Rosharan flora,\nrockbuds can contract during highstorms and bloom\nafterward. The seeds of lavis polyps, a variety of rockbud,\ncan be dried and served as grain. Lavis grain is a staple\nfood for people around the world, served with curry,\nsteamed in leaf wraps, or ground into flour.",
+        "page": 7,
+        "type": "section"
+      },
+      {
+        "title": "Overgrown garden on an estate",
+        "content": "ruined during the Veden civil war",
+        "page": 7,
+        "type": "section"
+      },
+      {
+        "title": "Markel tree",
+        "content": "Emberblooms Prickleshell (dwarf variety)\n7",
+        "page": 7,
+        "type": "section"
+      },
+      {
+        "title": "Animals",
+        "content": "Rosharan fauna has adapted to the harsh environment\nof a storm-torn world. Most animals on Roshar possess\nhardened exoskeletons or leathery hide to protect their\nbodies from severe weather and other beasts. Aside\nfrom domesticated hogs and minks, mammals are rare.\nMollusks, amphibians, and crustaceans are better suited\nto survive the relentless onslaught of highstorms.\nCrystal-like spines Whitespine\nA horse-sized pack hunter\nwith razor-sharp tusks",
+        "page": 8,
+        "type": "section"
+      },
+      {
+        "title": "Cremlings",
+        "content": "and fearsome claws, the\nDiminutive crustaceans called whitespine is one of Roshar’s\ncremlings are Roshar’s ever- deadliest predators.\npresent scavengers, found in\ncountless varieties, colors,\nand ecological niches.",
+        "page": 8,
+        "type": "section"
+      },
+      {
+        "title": "Tusks regrow subdermal cartilage",
+        "content": "rapidly if broken",
+        "page": 8,
+        "type": "section"
+      },
+      {
+        "title": "Anterior sickle claws",
+        "content": "grasping claws",
+        "page": 8,
+        "type": "section"
+      },
+      {
+        "title": "Chasmfiend Marine Greatshells",
+        "content": "No creature on Roshar is more feared than the chasmfiend, a massive The largest animals in the world hide\ngreatshell that roams the Shattered Plains. Forty feet high and eighty feet beneath the waves. From the drifting\nlong, the chasmfiend is an apex predator with nearly impenetrable carapace. santhid to the fearsome yu-nerig, these\nOnly an army, or a highly skilled Shardbearer, can reliably bring one down. aquatic greatshells can grow to titanic sizes.\n8",
+        "page": 8,
+        "type": "section"
+      },
+      {
+        "title": "Chull",
+        "content": "The chull, which retreats into its\nshell during highstorms, is slow but\npowerful. Chulls can grow to nearly\ntwice the size shown here, and\nmake reliable beasts of burden.",
+        "page": 9,
+        "type": "section"
+      },
+      {
+        "title": "Aerial predators called skyeels",
+        "content": "are a familiar sight in the\nskies of port cities, gliding\non updrafts until they dive\nfor prey with startling speed.",
+        "page": 9,
+        "type": "section"
+      },
+      {
+        "title": "Bladders inflate",
+        "content": "before ascent",
+        "page": 9,
+        "type": "section"
+      },
+      {
+        "title": "Sensitive",
+        "content": "antennae",
+        "page": 9,
+        "type": "section"
+      },
+      {
+        "title": "The axehound is a carnivorous",
+        "content": "crustacean common in the wild,\nbut domesticated axehounds have",
+        "page": 9,
+        "type": "section"
+      },
+      {
+        "title": "Powerful",
+        "content": "been bred for hunting, fighting,\njaws\nsecurity, and companionship.",
+        "page": 9,
+        "type": "section"
+      },
+      {
+        "title": "Horses and Ryshadium",
+        "content": "Horses are rare and precious animals, and even a Shin\nThoroughbred can easily cost a thousand spheres.\nRyshadium, however, are priceless. Majestic beasts\nwho stand several hands taller than ordinary horses,\nTail for they have stone hooves and the strength to carry a\nbalance Shardbearer in full Plate.\n9",
+        "page": 9,
+        "type": "section"
+      },
+      {
+        "title": "Luckspren",
+        "content": "Massive greatshells, like this\nyu-nerig, attract arrow-shaped\nThe manifestations called spren spren. These so-called\nare one of Roshar’s most unique luckspren also follow much\nsmaller flying creatures, such\nfeatures. Called spirits by the\nas skyeels.\nShin and gods by the Unkalaki,\nspren are a ubiquitous part of\neveryday life for people around\nthe world. They typically appear\nas luminous shapes in the air or\nupon the ground, and manifest in\nresponse to specific phenomena.",
+        "page": 10,
+        "type": "section"
+      },
+      {
+        "title": "Windspren",
+        "content": "Windspren are wisps of blue-white light that\nzip through the air. They most often ride\nthe winds, but are also drawn to people and\nanimals moving at high speeds. Folktales\ndescribe them as mischievous spirits who\nenjoy causing people to trip or stumble.",
+        "page": 10,
+        "type": "section"
+      },
+      {
+        "title": "Many spren appear as reactions to natural",
+        "content": "phenomena. Rotspren have ghostly mite-like forms\nthat crawl over decaying bodies or infected wounds.",
+        "page": 10,
+        "type": "section"
+      },
+      {
+        "title": "Rotspren",
+        "content": "healthy plants, and sometimes in densely populated\nhuman settlements.",
+        "page": 10,
+        "type": "section"
+      },
+      {
+        "title": "Lifespren",
+        "content": "10",
+        "page": 10,
+        "type": "section"
+      },
+      {
+        "title": "Emotion Spren",
+        "content": "On Roshar, when people feel strong emotions, they can attract\na seemingly endless variety of emotion spren. Red angerspren\npool like blood at the feet of enraged soldiers, yellow shockspren\nmight shatter in the air around a scandalized noble, and leaf-\nshaped joyspren swirl around reuniting friends. While they are\nvivid, spren have no physical substance. Ordinary people consider\nemotion spren an unremarkable fact of life. Only scholars and\nphilosophers question their existence and purpose.",
+        "page": 11,
+        "type": "section"
+      },
+      {
+        "title": "Gloryspren manifest around",
+        "content": "a father as he meets his child.",
+        "page": 11,
+        "type": "section"
+      },
+      {
+        "title": "Angstspren Fearspren",
+        "content": "11",
+        "page": 11,
+        "type": "section"
+      },
+      {
+        "title": "Aimia fell during an event known",
+        "content": "One Land, Many Nations\nThousands of years ago, during the age of Desolations,\nRoshar was united into ten Silver Kingdoms. Today,\nthe continent is divided into many warring kingdoms\nand city-states. Some trace their legacy back to the\nHeraldic Epochs, while others are relatively new. All\nhave grown and changed over time, resulting in a rich\ntapestry of cultures, ethnicities, and religions.\nMillennia ago, the island nation of\nas the scouring. Today it is a barren,\nabandoned wasteland.\nRoshar’s supercontinent occupies the planet’s\nsouthern hemisphere, so it is hottest in the northern\nlands, while its southern waters are nearly ice-cold.",
+        "page": 12,
+        "type": "section"
+      },
+      {
+        "title": "A continental shelf extends",
+        "content": "beneath the shallow Reshi Sea.",
+        "page": 13,
+        "type": "section"
+      },
+      {
+        "title": "Highstorms arrive from the",
+        "content": "east. Many tales exist of sailors\nseeking the Origin of Storms,\nbut no ship has ever returned\nsafely from such a journey.\nMountains on the continent’s\neastern edge provide some\nprotection from the westward\nprocession of highstorms.",
+        "page": 13,
+        "type": "section"
+      },
+      {
+        "title": "Alethi Azish Herdazian",
+        "content": "The militaristic kingdom of Alethkar The sprawling Azish Empire is known Herdaz is a coastal nation of prolific\nglorifies conquest, hierarchy, and for bureaucracy, logistics, and intricate agriculturalists who value family and\ncompetition. codes of law. community.",
+        "page": 14,
+        "type": "section"
+      },
+      {
+        "title": "Natan Reshi Shin",
+        "content": "The remnant of a once-mighty Every island in the Reshi Isles has its The isolationist nation of Shinovar\ncivilization, New Natanan is a bleak own independent culture, ranging is a mystery to the people of\nhinterland shaped by highstorms. from warlike to relaxed. eastern Roshar.\n14",
+        "page": 14,
+        "type": "section"
+      },
+      {
+        "title": "Iriali Kharbranthian Listener",
+        "content": "Most people in Roshar spend their lives in one village or princedom, and only learn of other nations from\nstories. Those who journey to other lands have the chance to experience an array of cultures and traditions.\nThe golden-skinned people of Iri Kharbranth is a sheltered city-state Called Parshendi by their enemies,\nbelieve their ancestors were travelers home to the world’s greatest library these tribal families live in the\nfrom other worlds. and hospitals. Shattered Plains.",
+        "page": 15,
+        "type": "section"
+      },
+      {
+        "title": "Thaylen Unkalaki Veden",
+        "content": "Thaylenah is a maritime kingdom In the Horneater Peaks, clans of Jah Keved is a kingdom where\nknown for merchants, sailors, and people live near hot springs nestled tradition and religion shape modern\nwondrous fabrials. within alpine craters. political intrigue.\n15",
+        "page": 15,
+        "type": "section"
+      },
+      {
+        "title": "The Vorin Church",
+        "content": "The world’s most influential religion is Vorinism, practiced\nthroughout eastern Roshar. The priests of the Vorin church, called\nardents, serve as counselors for commoners and servants for the\nwealthy. Vorins worship a monotheistic god they call the Almighty,\na creator god said to reside in the hearts of all people. Vorinism\npreaches the value of oaths, honor, law, and obedience to rigid social\nhierarchy. Vorinism imposes a caste system that divides darkeyed\ncommon folk from lighteyed nobles. It also enforces traditional\ngender roles, prohibiting men from reading and women from fighting.\nVorinism also condones slavery, including human conscription and\nenslavement of the silent, marble-skinned people called parshmen.\nAn ardent of the Vorin church.",
+        "page": 16,
+        "type": "section"
+      },
+      {
+        "title": "Vorin men do not learn",
+        "content": "to read or write, but\ncan recognize glyphs.",
+        "page": 16,
+        "type": "section"
+      },
+      {
+        "title": "The faithful often carry",
+        "content": "glyphwards painted\nwith simple prayers.",
+        "page": 16,
+        "type": "section"
+      },
+      {
+        "title": "The Devotary of Sincerity features several motifs",
+        "content": "common to Vorin temples: a central mound, sculptures\nof the Ten Heralds, and the Double Eye of the Almighty.",
+        "page": 16,
+        "type": "section"
+      },
+      {
+        "title": "The Lost Radiants",
+        "content": "Vorinism teaches that the Almighty chose ten Heralds to fight\nagainst the Voidbringers during the time of Desolations. These\nVoidbringers were servants of evil who sought to drive humans\ninto Damnation, just as they had once cast humanity out of\nthe Tranquiline Halls. A group of knights, now called the Lost\nRadiants, fought beside the Heralds. While they were once regarded\nas heroes, they failed catastrophically. On a day called the Recreance,\nthey betrayed their oaths. The Vorin church rarely speaks of the\nfallen knights, and only then as archetypal pretenders and traitors.\n16",
+        "page": 16,
+        "type": "section"
+      },
+      {
+        "title": "The ten Heralds were human beings who",
+        "content": "exemplified divine traits. Across Roshar, theologians\nand historians agree on their importance, and they\nare key figures in most religions. In the Azish Empire,\nthey are individually worshipped as gods. In the Vorin\nKingdoms, people regard the Heralds as immortal\nservants of the Almighty who eternally fight the\nVoidbringers in the Tranquiline Halls. Though stories\nvary, each Herald is associated with certain qualities\nand a particular domain. The wisdom of the Heralds\nstill guides religious leaders and scholars today,\nthough their lives have passed into legend.",
+        "page": 17,
+        "type": "section"
+      },
+      {
+        "title": "Herald of Kings Herald of Justice",
+        "content": "Protecting • Leading Just • Confident",
+        "page": 17,
+        "type": "section"
+      },
+      {
+        "title": "Chana Vedel Pailiah Shalash",
+        "content": "Herald of Bravery Herald of Life Herald of Knowledge Herald of Beauty\nBrave • Obedient Loving • Healing Learned • Giving Creative • Honest",
+        "page": 17,
+        "type": "section"
+      },
+      {
+        "title": "Battar Kalak Taln Ishar",
+        "content": "Herald of Wisdom Herald of Will Herald of War Herald of Mysteries\nWise • Careful Resolute • Builder Dependable • Resourceful Pious • Guiding\n17",
+        "page": 17,
+        "type": "section"
+      },
+      {
+        "title": "Fine Liaforan",
+        "content": "across southwestern Roshar. Patterns indicate tailoring\nIts ten member states have mid-ranked Azish\nunique cultures and govern- civil servant\nments, but all pay homage\nto the Prime Aqasix, who\nrules from the Bronze Palace\nin Azimir. Azish people\nare renowned as experts in\nbureaucracy, logistics, and",
+        "page": 18,
+        "type": "section"
+      },
+      {
+        "title": "Traditional",
+        "content": "complex legal codes.\nknife worn\nas a fashion\nstatement",
+        "page": 18,
+        "type": "section"
+      },
+      {
+        "title": "Nations in western Roshar do not practice",
+        "content": "Vorinism. Each Azish nation worships\nShinovar is a mountain enclave In the vast but shallow Purelake, one Herald as its god. Purelakers openly\nwhere soil covers the ground and peaceful people live in villages\npraise a jealous god called Vun Makak\nplants do not retreat when trod built upon the water. Purelakers\nwhile secretly revering his virtuous\nupon. Its people raise horses, believe their fish have curative\nbrother, Nu Ralik. In Shinovar, people\nrevere stone, and abhor violence. properties and bring good fortune.\nare said to believe that stone is sacred.\n18",
+        "page": 18,
+        "type": "section"
+      },
+      {
+        "title": "Climate",
+        "content": "In the Iriali city of Rall Elorim, residents live in hanging stalactites\nand buildings carved from the mountainside. After highstorms,\nwaterfalls pour into cisterns that collect in the city’s huge reservoir.",
+        "page": 19,
+        "type": "section"
+      },
+      {
+        "title": "Western Roshar stretches from",
+        "content": "from carapace\nthe tropical Reshi Isles to the\nof Relu-na island\nfrigid badlands of Tukar, but\nevery nation in the west has\nmilder weather than the east,\nbecause their lands are more\nsheltered from highstorms.",
+        "page": 19,
+        "type": "section"
+      },
+      {
+        "title": "Reshi textiles",
+        "content": "incorporate",
+        "page": 19,
+        "type": "section"
+      },
+      {
+        "title": "Sphere",
+        "content": "woven grass\npouch",
+        "page": 19,
+        "type": "section"
+      },
+      {
+        "title": "Decorative",
+        "content": "mother-of-pearl\nmedallion",
+        "page": 19,
+        "type": "section"
+      },
+      {
+        "title": "The archipelago of the Reshi Isles is home",
+        "content": "to a host of tribes and monarchies, some of Carapace\nwhich sit upon the backs of colossal great- machete\nshells called the Tai-na. Entire jungles, hill-\nsides, and villages can thrive upon a Tai-na.\n19",
+        "page": 19,
+        "type": "section"
+      },
+      {
+        "title": "Eastern Roshar",
+        "content": "In Kholinar, the Alethi capital,\nrooftops face east to bear the\nbrunt of passing highstorms.\nThe nations of eastern Roshar comprise the Vorin kingdoms:\nAlethkar, Jah Keved, Kharbranth, New Natanatan, and\nThaylenah. The northern coastal nation of Herdaz also\npractices Vorinism, though Herdazians take a more relaxed\nview of certain strictures.\nIn spite of their common religion, these nations are frequently\nat war. Alethkar is the most common aggressor, but Jah\nKeved is nearly as warlike. Only the Unkalaki and Natans,\ngeographically isolated from their neighbors, manage to avoid\nborder disputes.\nA Veden couple in traditional clothes.\nThe man wears a hogshide vest over a vakama.\nThe woman wears a havah, a dress distinguished\nby a long sleeve covering her left hand. It is taboo\nfor Vorin women to expose their left hand, called\na safehand, in public. In less formal settings or\nHerdazians build farm estates with sturdy lower social castes, women cover their safehand\nwindbreaks to shelter crops from storms. with a glove instead of a sleeve.",
+        "page": 20,
+        "type": "section"
+      },
+      {
+        "title": "Technology",
+        "content": "Ruled by the elderly King Taravangian, The hardy Unkalaki people live in the frozen Horneater Peaks, home to vast crater\nthe sheltered city-state of Kharbranth lakes that they call oceans. These emerald pools provide life-giving warmth to\nis home to the world’s greatest library, Horneater clans, creating tropical micro-climates that allow for farming. The burly,\nthe Palanaeum. It is also renowned for red-haired Horneaters mostly keep to themselves, but they sometimes intermarry\nits world-class hospitals and surgeons. with people in the neighboring nation of Jah Keved.",
+        "page": 21,
+        "type": "section"
+      },
+      {
+        "title": "Thaylen",
+        "content": "In recent generations, Rosharans\neyebrows\nhave made remarkable advance-\nments in fabrial technology.",
+        "page": 21,
+        "type": "section"
+      },
+      {
+        "title": "Fabrials are devices consisting of",
+        "content": "spren contained in gemstones\nand powered by Stormlight.",
+        "page": 21,
+        "type": "section"
+      },
+      {
+        "title": "Artifabrians are the scientists",
+        "content": "who invent new fabrials.",
+        "page": 21,
+        "type": "section"
+      },
+      {
+        "title": "Many are concentrated in the",
+        "content": "fabrial\nmaritime nation of Thaylenah,\na hub for merchants and\ntraveling scholars.",
+        "page": 21,
+        "type": "section"
+      },
+      {
+        "title": "Painrial",
+        "content": "prototype\nBlacksmith’s\napron",
+        "page": 21,
+        "type": "section"
+      },
+      {
+        "title": "Windspren in",
+        "content": "sapphire and\nIn eastern Roshar, men pursue the art\nbrass enclosure\nof war while women find their callings\nin scholarship. Men can have books\nread to them, or join the ardentia if they\nwish to become scholars. Otherwise,\nbooks are written in women’s script and\ncontain undertext commentary that is\nonly read by female scholars.\n21",
+        "page": 21,
+        "type": "section"
+      },
+      {
+        "title": "The Alethi",
+        "content": "Lighteyed nobles, wearing the\nlatest fashions, gossip and scheme\nin the Kholinar Palace ballroom.",
+        "page": 22,
+        "type": "section"
+      },
+      {
+        "title": "The nation of Alethkar is the largest on",
+        "content": "Captain’s\nRoshar, and its military is unparalleled. knot Soulcast",
+        "page": 22,
+        "type": "section"
+      },
+      {
+        "title": "More than one hundred thousand breastplate",
+        "content": "soldiers are supported by Shardbearers,",
+        "page": 22,
+        "type": "section"
+      },
+      {
+        "title": "Blue Kholin",
+        "content": "Soulcasters, and a robust civilian corps. uniform\nWithin the past generation, the nation\nhas risen to prominence under the rule\nof King Gavilar Kholin. He and his\nbrother Dalinar conquered the warring\nhighprinces to form a unified nation.",
+        "page": 22,
+        "type": "section"
+      },
+      {
+        "title": "Competition and War",
+        "content": "A spirit of brutal competition and Spear and shield for",
+        "page": 22,
+        "type": "section"
+      },
+      {
+        "title": "Embroidered",
+        "content": "rigid social hierarchy underpins glyphward formation fighting\nAlethi society. Even after unification,\nthe highprinces still pit their soldiers",
+        "page": 22,
+        "type": "section"
+      },
+      {
+        "title": "Alethi Infantry",
+        "content": "against one another in deadly border\ndisputes, and lighteyes regularly face Rank-and-file soldiers wield spears,\neach other in duels. Alethi warriors as only lighteyes are allowed to\ncarry swords. Squadleader is the\nfrequently experience the Thrill,\nhighest rank a darkeyed officer\na berserker rage that removes a\ncan hope to achieve, but every\nwarrior’s inhibitions.\nspearman dreams of defeating an\nenemy Shardbearer and leaping up\nthe ranks of Alethi social hierarchy.\n22",
+        "page": 22,
+        "type": "section"
+      },
+      {
+        "title": "Lighteyes Darkeyes Slaves",
+        "content": "Social hierarchy is directly linked to Darkeyed people, the majority of Slavery is legal in Alethkar, and\nbloodline, marked by eye shade. Only Alethi, range from peasants to skilled is especially prevalent in times of\nlighteyed people own land and hold professionals. Their eyes come in a war. Prisoners of war, debtors, and\npolitical power. Whether their eyes range of colors in dark shades. They accused criminals are pressed into\nare tan or green, violet or blue, the often endure cruel treatment at the back-breaking servitude or placed on\ncolors are strikingly pale. hands of privileged lighteyes. the front lines of bloody battles.",
+        "page": 23,
+        "type": "section"
+      },
+      {
+        "title": "Strategic Resources",
+        "content": "While most nations are lucky to field a handful of Shard-\nbearers, Alethkar commands more than thirty. Soulcasters\nare just as vital. Using Stormlight, these holy artifacts can\ntransform stone to grain, or clay into steel, allowing Alethi\narmies to fight without reliance on long supply lines.",
+        "page": 23,
+        "type": "section"
+      },
+      {
+        "title": "An ardent uses a Soulcaster to",
+        "content": "transmute crystal into wood.\nElhokar Kholin’s golden Shardplate\nand his legendary Shardblade, Sunraiser.",
+        "page": 23,
+        "type": "section"
+      },
+      {
+        "title": "The Listeners",
+        "content": "Humans are not the only sapient species on Roshar.",
+        "page": 24,
+        "type": "section"
+      },
+      {
+        "title": "The listeners are a people who make their homes",
+        "content": "in the Shattered Plains. Among humans they are\nknown by their Alethi name, Parshendi, meaning\n“parshmen who can think.” They appear to be closely\nrelated to parshmen, with skin in stark shades of red,\nblack, and white resembling marbled stone. But where\nparshmen rarely speak, and demonstrate little in the\nway of free will, the Parshendi are an independent\nculture consisting of several nations, called families.\nThe listeners fiercely protect the lands they call home.",
+        "page": 24,
+        "type": "section"
+      },
+      {
+        "title": "Their warriors are more than a match for Alethi",
+        "content": "soldiers, protected by chitinous armor and possessing\nimpressive strength.\nParshendi warriors surround an Alethi Shardbearer.",
+        "page": 24,
+        "type": "section"
+      },
+      {
+        "title": "Listener warriors work",
+        "content": "in pairs, humming or\nsinging as they fight in",
+        "page": 24,
+        "type": "section"
+      },
+      {
+        "title": "Painted",
+        "content": "perfect unison.\nscragglebark\nListeners’ skin patterns\nfletching",
+        "page": 24,
+        "type": "section"
+      },
+      {
+        "title": "Gemstones woven into are as individual as",
+        "content": "clothing and beards fingerprints",
+        "page": 24,
+        "type": "section"
+      },
+      {
+        "title": "Carapace armor is",
+        "content": "lighter than steel and\nnearly as strong",
+        "page": 24,
+        "type": "section"
+      },
+      {
+        "title": "Axeblade matches",
+        "content": "style of ancient",
+        "page": 24,
+        "type": "section"
+      },
+      {
+        "title": "Natan weaponry",
+        "content": "resembles designs\ndating back to the",
+        "page": 24,
+        "type": "section"
+      },
+      {
+        "title": "Silver Kingdoms",
+        "content": "24",
+        "page": 24,
+        "type": "section"
+      },
+      {
+        "title": "Physiology",
+        "content": "Alethi soldiers have been shocked to realize that listener armies\ninclude both malen and femalen warriors, distinguished only\nby facial hair. Most combatants bear distinctive red carapace\narmor, which does not seem to impede their movement, or\ntheir ability to leap across chasms. Listener scouts and civilians\nare almost indistinguishable from parshmen, but typically have\nhairstrands that resemble thick strands of grass. Listener children exploring together.\nTo the highprinces’ surprise, the Parshendi have their own\nShardbearers. They avoid risking their Shards in pitched\nbattles, always supporting them with elite warriors.",
+        "page": 25,
+        "type": "section"
+      },
+      {
+        "title": "A Changing World",
+        "content": "The modern age, the Era of Solitude,\nhas been defined by humankind\nforging its own path. For millennia, no\nDesolations have devastated the world.",
+        "page": 26,
+        "type": "section"
+      },
+      {
+        "title": "Neither Heralds nor Voidbringers have",
+        "content": "appeared to guide people toward virtue\nor vice. However, the winds are shifting.",
+        "page": 26,
+        "type": "section"
+      },
+      {
+        "title": "Dying people whisper words of prophecy:",
+        "content": "a new age is on the horizon.",
+        "page": 26,
+        "type": "section"
+      },
+      {
+        "title": "Parshendi envoys visiting the Alethi",
+        "content": "capital city, King Gavilar Kholin was\nassassinated by a man wearing white\nrobes and wielding a Shardblade. This\nman, Szeth son-son-Vallano, possessed\nuncanny abilities like those described in\nfolktales of the Lost Radiants. Gavilar is\nnot the last monarch he will kill.\nThe Assassin in White weeps as he kills.",
+        "page": 26,
+        "type": "section"
+      },
+      {
+        "title": "The War of Reckoning",
+        "content": "After the death of the Alethi king, the Parshendi\nemissaries declared responsibility. Shocked and\nenraged, the Alethi highprinces swore the Vengeance\nPact, marching their armies to the Shattered Plains\nwith the goal of wiping out the Parshendi.",
+        "page": 26,
+        "type": "section"
+      },
+      {
+        "title": "What began with an act of vengeful unity has",
+        "content": "descended into infighting between the highprinces.",
+        "page": 26,
+        "type": "section"
+      },
+      {
+        "title": "The Alethi discovered that the chasmfiends native",
+        "content": "to the Shattered Plains contain massive emerald\ngemhearts, each worth tens of thousands of spheres.",
+        "page": 26,
+        "type": "section"
+      },
+      {
+        "title": "The gemhearts could be harvested from pupating",
+        "content": "chasmfiends, prompting a race between the Alethi\nhighprinces whenever one is sighted. The Parshendi\nalso vie for the gemhearts, leading to relentless battles\nthat never escalate into a full-blown war of conquest.",
+        "page": 26,
+        "type": "section"
+      },
+      {
+        "title": "The warcamps have become the new center of",
+        "content": "Alethi power, where soldiers die in droves while\nthe highprinces jockey for power. Armed with Blade and Plate, two Shardbearers face a chasmfiend.\n26",
+        "page": 26,
+        "type": "section"
+      },
+      {
+        "title": "Begin Your Journey",
+        "content": "Now that you’ve read this guide to Roshar, you’re ready to take\nthe next step! The Cosmere RPG is a chance to tell your own\nstories in the Stormlight campaign setting. Join a bridge crew,\nbecome an artifabrian, or explore the mysteries of the Lost\nRadiants… there’s no limit to the stories you can tell in Roshar,\na planet defined by conflict and infused with magic. You’ll begin\nby choosing your ancestry, up to two cultural expertises\nfrom the cultures introduced in this guide, and one of six\nheroic paths that define your initial training and capabilities\n(as summarized on the Heroic Paths table).",
+        "page": 27,
+        "type": "section"
+      },
+      {
+        "title": "Path Theme Specialties",
+        "content": "Agent A talented operative who solves problems Investigator\nwith a keen mind or deft hand. Spy",
+        "page": 27,
+        "type": "section"
+      },
+      {
+        "title": "Thief",
+        "content": "Envoy An insightful negotiator who adeptly Diplomat\ninfluences others. Faithful",
+        "page": 27,
+        "type": "section"
+      },
+      {
+        "title": "Mentor",
+        "content": "Hunter A skilled sharpshooter and outdoorsperson Archer\nwho seeks and eliminates problems. Assassin",
+        "page": 27,
+        "type": "section"
+      },
+      {
+        "title": "Leader A poised commander who directs and Champion",
+        "content": "guides others to be their best. Officer",
+        "page": 27,
+        "type": "section"
+      },
+      {
+        "title": "Politico",
+        "content": "Scholar An adroit thinker who excels at planning Artifabrian\nand building. Strategist",
+        "page": 27,
+        "type": "section"
+      },
+      {
+        "title": "Surgeon",
+        "content": "Warrior A fighter who relies on their skill, brute Duelist\nstrength, or indominable will. Shardbearer",
+        "page": 27,
+        "type": "section"
+      },
+      {
+        "title": "Soldier",
+        "content": "You’ll invest points in six attributes: Strength,\nSpeed, Intellect, Willpower, Awareness, and Presence.\nThese determine your baseline skills, which you can\nalso customize. You’ll complete your character by\ndefining their fundamental purpose, their ingrained\nobstacle, and their short-term goals.\nTo build your character and learn the game rules,\nyou will need a copy of the Stormlight Handbook.\nTo run a campaign as the Game Master (GM) or if\nyou simply want to learn more about the world, pick\nup the Stormlight World Guide. Reading Brandon\nSanderson’s acclaimed novels, beginning with The\nWay of Kings, is optional but highly recommended!\nVisit CosmereRPG.com for more information,\nincluding free rules and resources.\n27",
+        "page": 27,
+        "type": "section"
+      }
+    ],
+    "tables": [
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Chasmfiend"
+          ]
+        ],
+        "page": 8,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Marine Greatshells"
+          ]
+        ],
+        "page": 8,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Horses and Ryshadium"
+          ]
+        ],
+        "page": 9,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Alethi"
+          ]
+        ],
+        "page": 14,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Azish"
+          ]
+        ],
+        "page": 14,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Herdazian"
+          ]
+        ],
+        "page": 14,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Natan"
+          ]
+        ],
+        "page": 14,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Reshi"
+          ]
+        ],
+        "page": 14,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Shin"
+          ]
+        ],
+        "page": 14,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Iriali"
+          ]
+        ],
+        "page": 15,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Kharbranthian"
+          ]
+        ],
+        "page": 15,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Listener"
+          ]
+        ],
+        "page": 15,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Thaylen"
+          ]
+        ],
+        "page": 15,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Unkalaki"
+          ]
+        ],
+        "page": 15,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Veden"
+          ]
+        ],
+        "page": 15,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Jezrien"
+          ]
+        ],
+        "page": 17,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Nale"
+          ]
+        ],
+        "page": 17,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Chana"
+          ]
+        ],
+        "page": 17,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Vedel"
+          ]
+        ],
+        "page": 17,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Pailiah"
+          ]
+        ],
+        "page": 17,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Shalash"
+          ]
+        ],
+        "page": 17,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Battar"
+          ]
+        ],
+        "page": 17,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Kalak"
+          ]
+        ],
+        "page": 17,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Taln"
+          ]
+        ],
+        "page": 17,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Ishar"
+          ]
+        ],
+        "page": 17,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            ""
+          ]
+        ],
+        "page": 18,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Lighteyes"
+          ]
+        ],
+        "page": 23,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Darkeyes"
+          ]
+        ],
+        "page": 23,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Slaves"
+          ]
+        ],
+        "page": 23,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Elhokar Kholin’s golden Shardplate"
+          ],
+          [
+            "and his legendary Shardblade, Sunraiser."
+          ]
+        ],
+        "page": 23,
+        "type": "general"
+      },
+      {
+        "headers": [
+          ""
+        ],
+        "rows": [
+          [
+            "Armed with Blade and Plate, two Shardbearers face a chasmfiend."
+          ]
+        ],
+        "page": 26,
+        "type": "general"
+      },
+      {
+        "headers": [
+          "Path",
+          "Theme",
+          "Specialties"
+        ],
+        "rows": [
+          [
+            "Agent",
+            "A talented operative who solves problems\nwith a keen mind or deft hand.",
+            "Investigator\nSpy\nThief"
+          ],
+          [
+            "Envoy",
+            "An insightful negotiator who adeptly\ninfluences others.",
+            "Diplomat\nFaithful\nMentor"
+          ],
+          [
+            "Hunter",
+            "A skilled sharpshooter and outdoorsperson\nwho seeks and eliminates problems.",
+            "Archer\nAssassin\nTracker"
+          ],
+          [
+            "Leader",
+            "A poised commander who directs and\nguides others to be their best.",
+            "Champion\nOfficer\nPolitico"
+          ],
+          [
+            "Scholar",
+            "An adroit thinker who excels at planning\nand building.",
+            "Artifabrian\nStrategist\nSurgeon"
+          ],
+          [
+            "Warrior",
+            "A fighter who relies on their skill, brute\nstrength, or indominable will.",
+            "Duelist\nShardbearer\nSoldier"
+          ]
+        ],
+        "page": 27,
+        "type": "general"
+      }
+    ],
+    "examples": [],
+    "glossary": {},
+    "index": {},
+    "powers": [
+      {
+        "name": null,
+        "description": "An ardent uses a Soulcaster to\ntransmute crystal into wood.",
+        "cost": "",
+        "page": 23
+      },
+      {
+        "name": null,
+        "description": "The Assassin in White weeps as he kills.",
+        "cost": "",
+        "page": 26
+      }
+    ]
+  },
+  "search_index": [
+    {
+      "type": "rules",
+      "title": "Cosmere RPG Lead Team",
+      "content": "co s m e r e\nroleplaying game\nThe Cosmere® RPG was created by Brotherwise Games and Dragonsteel Entertainment.\nExecutive Producer: Brandon Sanderson\nProducers: Isaac Stewart and Dan Wells\nCreative Director: Johnny O’Neal\nDesigner: Johnny O’Neal Art Director: Katie Payne\nAdditional Design: Welden Bringhurst Graphic Designer: Gordon McAlpin\nBook Editor: Sebastian Yūe Concept Artist: Marie Seeberger\nCover Illustrator: Amirul Hhf\nContinuity Editor: Karen Ahlstrom\nInterior Illustrators: Dallin Bifano, Logan Feliciano,\nWorldsingers: David Behrens, Joshua Harkey, Eric Lake,\nAmirul Hhf, Vladimir Ishelin, Adam J. Marin, Eduardo\nBen Marrow, Ian McNatt, and Evgeni “Argent” Kirilov\nNonato Cavalcante, Kevin O’Neill, Katie Payne, Steve\nSensitivity Consultants: Basil Wright\nPrescott, Sami Rytkönen, Steven Shan, Florian Stitz,\nAccessibility Consultant: Chris Hopper\nand Svetlin Velinov\nProofreader: Laura Hirsbrunner\nDragonsteel Art Team: Ben McSweeney, Shawn Boyles,\nBrand and Marketing: Adam Horne, Matt Molandes,\nJennifer Neal, Rachael Lynn Buchanan, Anna Earley,\nand Jillian Schumacher\nHayley Lazo, and Priscilla Spencer\nLead Designer: Andrew Fischer\nLead Writer: Lydia Suen\nLead Editor: Laura Hirsbrunner\nProject Lead: Lyla McBeath Fujiwara\n©\n2025 by Brotherwise Games, LLC. Based on The Stormlight Archive®\n©\nnovels by Brandon Sanderson, copyright 2010, 2014, 2017, 2020,\n2024 by Dragonsteel Entertainment, LLC, and used with the express\npermission of Dragonsteel Entertainment, LLC.\n©\nPlotweaver™ Game System 2025 Brotherwise Games, LLC.",
+      "page": 2,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "ISBN: 978-1-966528-03-6",
+      "content": "First Printing (v1.01)",
+      "page": 2,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Church",
+      "content": "Brandon Sanderson’s novel series, the Stormlight CONTENTS\nArchive, is epic in every sense of the word. The\nsweeping scope of Brandon’s narrative is enough to\nfill five substantial novels, with another five to come. 4 A World of\nThe gripping story and unparalleled world-building Storms and War\nhave inspired a legion of fans to read and reread not\n6 Ecology\nonly these stories, but the entire Cosmere universe\nof fantasy fiction. 10 Spren\nWhat you hold in your hands is not a weighty tome.\n12 Map of Roshar\nIt’s a sampler and teaser, designed specifically for\npeople who haven’t read the Stormlight novels. 14 Nations and\nThis booklet introduces Roshar, a world of conflict, Cultures\nstorms, and Investiture. Divine forces shaped this\nplanet, some leading to subjugation and cruelty, 16 The Vorin\nothers cultivating ideals of growth and honor. It’s a\nworld where flawed heroes gain incredible powers by\n17 Heralds of the\nforging bonds and seeking redemption.",
+      "page": 3,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Almighty",
+      "content": "If you’re playing the Cosmere RPG and beginning\n18 Western Roshar\nan adventure in the Stormlight campaign setting,\nthis guide illustrates Roshar’s unique world-building 20 Eastern Roshar\nand tells you what a typical citizen of Eastern Roshar\nwould know about the world without revealing any 22 The Alethi\ncharacter or plot spoilers for The Way of Kings.\n24 The Listeners\nWelcome to a universe unlike any other, and a\nfantasy setting as captivating as it is alien. Welcome 26 A Changing\nto Roshar! We hope this is just the first step of World\nyour journey.\n27 Begin Your\n— Johnny O’Neal Journey",
+      "page": 3,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "A bridgeman looks east toward",
+      "content": "an approaching highstorm.",
+      "page": 4,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Highstorms",
+      "content": "No force has shaped Roshar’s ecology and culture more\ncompletely than highstorms: hurricane-force storms of\nincredible power that sweep across the continent about once per\nfive-day week, always traveling from east to west. Heralded by\na powerful stormwall with enough strength to hurl boulders,\nhighstorms can be incredibly destructive. However, the highstorm\nalso infuses Roshar with incredible energy called Stormlight.",
+      "page": 4,
+      "keywords": [
+        "Strength"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Spheres",
+      "content": "Throughout Roshar, spheres are the\nmost commonly accepted currency.\nSmall gemstones embedded in glass,\ntheir denominations are based on the\nsize and type of gems inside. Well-cut\ngemstones glow for several days when\ninfused with Stormlight, so merchants\ndistrust dun spheres. Infused spheres\nglow brightly enough to be a helpful\nlight source, especially when multiple\nspheres are placed in a lantern, and\nmost people carry at least one sphere\nfor good luck.\n4",
+      "page": 4,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Roshar is the name of the planet and its single",
+      "content": "blue Nomon, green Mishim,\ncontinent. The majority of the continent’s terrain is\nand violet Salas.\nstone, and its storm-swept lands are harsh. However,\nthis world is far from barren. Every type of biome can\nbe found on Roshar, from snow-capped mountains to\nlush jungles.",
+      "page": 5,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Visor appears",
+      "content": "entirely transparent",
+      "page": 5,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Infused gemstone",
+      "content": "from bearer’s\nallows bearer to\nperspective\nbond Blade",
+      "page": 5,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Shardbearers",
+      "content": "Across Roshar, two relics are prized above all other\nmaterial possessions: Shardblades and Shardplate.\nShardblades slice effortlessly through any unliving\nmatter, and kill foes with a single strike, leaving no\nwounds except burning eyes. Fueled by Stormlight,",
+      "page": 5,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Shardplate is the only armor that can deflect",
+      "content": "a Shardblade, and each suit endows its bearer Cracked\nwith superhuman speed and strength. A single vambrace leaks\nShardbearer can turn the tide of an entire battle, Stormlight\nand wars have been fought to claim a single Blade\nor suit of Plate.",
+      "page": 5,
+      "keywords": [
+        "Speed",
+        "Strength"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Gilded enamel",
+      "content": "adorns slate-gray",
+      "page": 5,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Plate material",
+      "content": "Despite massive size, Blade\nis lighter than a longsword\n5",
+      "page": 5,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Ecology",
+      "content": "In the Alethi countryside, axehinds\ngraze for vinebuds amid a landscape\nof shalebark, scalespray, and frillblooms.",
+      "page": 6,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Vegetation",
+      "content": "Plants on Roshar have evolved to survive the regular Jella tree\nonslaught of highstorms, resembling aquatic life on\nother worlds. When a highstorm approaches, plants",
+      "page": 6,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Valaplume",
+      "content": "retract their vines and leaves, only to unfurl them\nwhen the storm passes. They react the same\nway to animals, shrinking away from\npassing travelers or foraging beasts.",
+      "page": 6,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Rosharan plants employ a",
+      "content": "range of adaptations to protect\nthemselves from highstorms.",
+      "page": 6,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Many plants wrap and withdraw",
+      "content": "their leaves and tendrils. Jella\ntrees and prickletacs absorb\ncrem and form stone-like trunks.",
+      "page": 6,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Thaylen deadfall trees lie flat",
+      "content": "during storms. In eastern Roshar,\nmany plants grow only on the\nleeward side of cliffsides, taking\nshelter in protected laits.",
+      "page": 6,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Eyes of Ishi",
+      "content": "6",
+      "page": 6,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Stone and Crem",
+      "content": "On most of Roshar, soil would be quickly\nwashed away by the strength of highstorms.\nInstead, plants cling directly to the stony\nterrain with strong roots. Soil and mud are\nalien to most Rosharans, but when a highstorm\npasses, it leaves behind a coating of mineral-\nrich crem that acts as fertilizer for Rosharan\nflora. Crem is clay-like when wet, and can be\nshaped into pottery, but hardens quickly and\nmust be chipped away before it covers every\nIn the sheltered mountain nation of Shinovar, highstorms pass\nsurface exposed to the elements.\nas gentle rainfall. Plants grow in soil and do not retreat when trod\nupon. Shinovar is home to strange animals seen nowhere else,\nincluding chickens in all shapes, sizes, and colors. It is the only\nnation in the world where wild horses thrive, and Shin horses are",
+      "page": 7,
+      "keywords": [
+        "Strength"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Vinebud opening",
+      "content": "prized throughout Roshar.\nafter a highstorm",
+      "page": 7,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Rockbuds",
+      "content": "Rockbuds are a family of hard-shelled plants found across\nRoshar, especially in the east. Like other Rosharan flora,\nrockbuds can contract during highstorms and bloom\nafterward. The seeds of lavis polyps, a variety of rockbud,\ncan be dried and served as grain. Lavis grain is a staple\nfood for people around the world, served with curry,\nsteamed in leaf wraps, or ground into flour.",
+      "page": 7,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Overgrown garden on an estate",
+      "content": "ruined during the Veden civil war",
+      "page": 7,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Markel tree",
+      "content": "Emberblooms Prickleshell (dwarf variety)\n7",
+      "page": 7,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Animals",
+      "content": "Rosharan fauna has adapted to the harsh environment\nof a storm-torn world. Most animals on Roshar possess\nhardened exoskeletons or leathery hide to protect their\nbodies from severe weather and other beasts. Aside\nfrom domesticated hogs and minks, mammals are rare.\nMollusks, amphibians, and crustaceans are better suited\nto survive the relentless onslaught of highstorms.\nCrystal-like spines Whitespine\nA horse-sized pack hunter\nwith razor-sharp tusks",
+      "page": 8,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Cremlings",
+      "content": "and fearsome claws, the\nDiminutive crustaceans called whitespine is one of Roshar’s\ncremlings are Roshar’s ever- deadliest predators.\npresent scavengers, found in\ncountless varieties, colors,\nand ecological niches.",
+      "page": 8,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Tusks regrow subdermal cartilage",
+      "content": "rapidly if broken",
+      "page": 8,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Anterior sickle claws",
+      "content": "grasping claws",
+      "page": 8,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Chasmfiend Marine Greatshells",
+      "content": "No creature on Roshar is more feared than the chasmfiend, a massive The largest animals in the world hide\ngreatshell that roams the Shattered Plains. Forty feet high and eighty feet beneath the waves. From the drifting\nlong, the chasmfiend is an apex predator with nearly impenetrable carapace. santhid to the fearsome yu-nerig, these\nOnly an army, or a highly skilled Shardbearer, can reliably bring one down. aquatic greatshells can grow to titanic sizes.\n8",
+      "page": 8,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Chull",
+      "content": "The chull, which retreats into its\nshell during highstorms, is slow but\npowerful. Chulls can grow to nearly\ntwice the size shown here, and\nmake reliable beasts of burden.",
+      "page": 9,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Aerial predators called skyeels",
+      "content": "are a familiar sight in the\nskies of port cities, gliding\non updrafts until they dive\nfor prey with startling speed.",
+      "page": 9,
+      "keywords": [
+        "Speed"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Bladders inflate",
+      "content": "before ascent",
+      "page": 9,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Sensitive",
+      "content": "antennae",
+      "page": 9,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The axehound is a carnivorous",
+      "content": "crustacean common in the wild,\nbut domesticated axehounds have",
+      "page": 9,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Powerful",
+      "content": "been bred for hunting, fighting,\njaws\nsecurity, and companionship.",
+      "page": 9,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Horses and Ryshadium",
+      "content": "Horses are rare and precious animals, and even a Shin\nThoroughbred can easily cost a thousand spheres.\nRyshadium, however, are priceless. Majestic beasts\nwho stand several hands taller than ordinary horses,\nTail for they have stone hooves and the strength to carry a\nbalance Shardbearer in full Plate.\n9",
+      "page": 9,
+      "keywords": [
+        "Strength"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Luckspren",
+      "content": "Massive greatshells, like this\nyu-nerig, attract arrow-shaped\nThe manifestations called spren spren. These so-called\nare one of Roshar’s most unique luckspren also follow much\nsmaller flying creatures, such\nfeatures. Called spirits by the\nas skyeels.\nShin and gods by the Unkalaki,\nspren are a ubiquitous part of\neveryday life for people around\nthe world. They typically appear\nas luminous shapes in the air or\nupon the ground, and manifest in\nresponse to specific phenomena.",
+      "page": 10,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Windspren",
+      "content": "Windspren are wisps of blue-white light that\nzip through the air. They most often ride\nthe winds, but are also drawn to people and\nanimals moving at high speeds. Folktales\ndescribe them as mischievous spirits who\nenjoy causing people to trip or stumble.",
+      "page": 10,
+      "keywords": [
+        "Speed"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Many spren appear as reactions to natural",
+      "content": "phenomena. Rotspren have ghostly mite-like forms\nthat crawl over decaying bodies or infected wounds.",
+      "page": 10,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Rotspren",
+      "content": "healthy plants, and sometimes in densely populated\nhuman settlements.",
+      "page": 10,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Lifespren",
+      "content": "10",
+      "page": 10,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Emotion Spren",
+      "content": "On Roshar, when people feel strong emotions, they can attract\na seemingly endless variety of emotion spren. Red angerspren\npool like blood at the feet of enraged soldiers, yellow shockspren\nmight shatter in the air around a scandalized noble, and leaf-\nshaped joyspren swirl around reuniting friends. While they are\nvivid, spren have no physical substance. Ordinary people consider\nemotion spren an unremarkable fact of life. Only scholars and\nphilosophers question their existence and purpose.",
+      "page": 11,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Gloryspren manifest around",
+      "content": "a father as he meets his child.",
+      "page": 11,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Angstspren Fearspren",
+      "content": "11",
+      "page": 11,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Aimia fell during an event known",
+      "content": "One Land, Many Nations\nThousands of years ago, during the age of Desolations,\nRoshar was united into ten Silver Kingdoms. Today,\nthe continent is divided into many warring kingdoms\nand city-states. Some trace their legacy back to the\nHeraldic Epochs, while others are relatively new. All\nhave grown and changed over time, resulting in a rich\ntapestry of cultures, ethnicities, and religions.\nMillennia ago, the island nation of\nas the scouring. Today it is a barren,\nabandoned wasteland.\nRoshar’s supercontinent occupies the planet’s\nsouthern hemisphere, so it is hottest in the northern\nlands, while its southern waters are nearly ice-cold.",
+      "page": 12,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "A continental shelf extends",
+      "content": "beneath the shallow Reshi Sea.",
+      "page": 13,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Highstorms arrive from the",
+      "content": "east. Many tales exist of sailors\nseeking the Origin of Storms,\nbut no ship has ever returned\nsafely from such a journey.\nMountains on the continent’s\neastern edge provide some\nprotection from the westward\nprocession of highstorms.",
+      "page": 13,
+      "keywords": [
+        "Origin"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Alethi Azish Herdazian",
+      "content": "The militaristic kingdom of Alethkar The sprawling Azish Empire is known Herdaz is a coastal nation of prolific\nglorifies conquest, hierarchy, and for bureaucracy, logistics, and intricate agriculturalists who value family and\ncompetition. codes of law. community.",
+      "page": 14,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Natan Reshi Shin",
+      "content": "The remnant of a once-mighty Every island in the Reshi Isles has its The isolationist nation of Shinovar\ncivilization, New Natanan is a bleak own independent culture, ranging is a mystery to the people of\nhinterland shaped by highstorms. from warlike to relaxed. eastern Roshar.\n14",
+      "page": 14,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Iriali Kharbranthian Listener",
+      "content": "Most people in Roshar spend their lives in one village or princedom, and only learn of other nations from\nstories. Those who journey to other lands have the chance to experience an array of cultures and traditions.\nThe golden-skinned people of Iri Kharbranth is a sheltered city-state Called Parshendi by their enemies,\nbelieve their ancestors were travelers home to the world’s greatest library these tribal families live in the\nfrom other worlds. and hospitals. Shattered Plains.",
+      "page": 15,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Thaylen Unkalaki Veden",
+      "content": "Thaylenah is a maritime kingdom In the Horneater Peaks, clans of Jah Keved is a kingdom where\nknown for merchants, sailors, and people live near hot springs nestled tradition and religion shape modern\nwondrous fabrials. within alpine craters. political intrigue.\n15",
+      "page": 15,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The Vorin Church",
+      "content": "The world’s most influential religion is Vorinism, practiced\nthroughout eastern Roshar. The priests of the Vorin church, called\nardents, serve as counselors for commoners and servants for the\nwealthy. Vorins worship a monotheistic god they call the Almighty,\na creator god said to reside in the hearts of all people. Vorinism\npreaches the value of oaths, honor, law, and obedience to rigid social\nhierarchy. Vorinism imposes a caste system that divides darkeyed\ncommon folk from lighteyed nobles. It also enforces traditional\ngender roles, prohibiting men from reading and women from fighting.\nVorinism also condones slavery, including human conscription and\nenslavement of the silent, marble-skinned people called parshmen.\nAn ardent of the Vorin church.",
+      "page": 16,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Vorin men do not learn",
+      "content": "to read or write, but\ncan recognize glyphs.",
+      "page": 16,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The faithful often carry",
+      "content": "glyphwards painted\nwith simple prayers.",
+      "page": 16,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The Devotary of Sincerity features several motifs",
+      "content": "common to Vorin temples: a central mound, sculptures\nof the Ten Heralds, and the Double Eye of the Almighty.",
+      "page": 16,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The Lost Radiants",
+      "content": "Vorinism teaches that the Almighty chose ten Heralds to fight\nagainst the Voidbringers during the time of Desolations. These\nVoidbringers were servants of evil who sought to drive humans\ninto Damnation, just as they had once cast humanity out of\nthe Tranquiline Halls. A group of knights, now called the Lost\nRadiants, fought beside the Heralds. While they were once regarded\nas heroes, they failed catastrophically. On a day called the Recreance,\nthey betrayed their oaths. The Vorin church rarely speaks of the\nfallen knights, and only then as archetypal pretenders and traitors.\n16",
+      "page": 16,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The ten Heralds were human beings who",
+      "content": "exemplified divine traits. Across Roshar, theologians\nand historians agree on their importance, and they\nare key figures in most religions. In the Azish Empire,\nthey are individually worshipped as gods. In the Vorin\nKingdoms, people regard the Heralds as immortal\nservants of the Almighty who eternally fight the\nVoidbringers in the Tranquiline Halls. Though stories\nvary, each Herald is associated with certain qualities\nand a particular domain. The wisdom of the Heralds\nstill guides religious leaders and scholars today,\nthough their lives have passed into legend.",
+      "page": 17,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Herald of Kings Herald of Justice",
+      "content": "Protecting • Leading Just • Confident",
+      "page": 17,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Chana Vedel Pailiah Shalash",
+      "content": "Herald of Bravery Herald of Life Herald of Knowledge Herald of Beauty\nBrave • Obedient Loving • Healing Learned • Giving Creative • Honest",
+      "page": 17,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Battar Kalak Taln Ishar",
+      "content": "Herald of Wisdom Herald of Will Herald of War Herald of Mysteries\nWise • Careful Resolute • Builder Dependable • Resourceful Pious • Guiding\n17",
+      "page": 17,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Fine Liaforan",
+      "content": "across southwestern Roshar. Patterns indicate tailoring\nIts ten member states have mid-ranked Azish\nunique cultures and govern- civil servant\nments, but all pay homage\nto the Prime Aqasix, who\nrules from the Bronze Palace\nin Azimir. Azish people\nare renowned as experts in\nbureaucracy, logistics, and",
+      "page": 18,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Traditional",
+      "content": "complex legal codes.\nknife worn\nas a fashion\nstatement",
+      "page": 18,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Nations in western Roshar do not practice",
+      "content": "Vorinism. Each Azish nation worships\nShinovar is a mountain enclave In the vast but shallow Purelake, one Herald as its god. Purelakers openly\nwhere soil covers the ground and peaceful people live in villages\npraise a jealous god called Vun Makak\nplants do not retreat when trod built upon the water. Purelakers\nwhile secretly revering his virtuous\nupon. Its people raise horses, believe their fish have curative\nbrother, Nu Ralik. In Shinovar, people\nrevere stone, and abhor violence. properties and bring good fortune.\nare said to believe that stone is sacred.\n18",
+      "page": 18,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Climate",
+      "content": "In the Iriali city of Rall Elorim, residents live in hanging stalactites\nand buildings carved from the mountainside. After highstorms,\nwaterfalls pour into cisterns that collect in the city’s huge reservoir.",
+      "page": 19,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Western Roshar stretches from",
+      "content": "from carapace\nthe tropical Reshi Isles to the\nof Relu-na island\nfrigid badlands of Tukar, but\nevery nation in the west has\nmilder weather than the east,\nbecause their lands are more\nsheltered from highstorms.",
+      "page": 19,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Reshi textiles",
+      "content": "incorporate",
+      "page": 19,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Sphere",
+      "content": "woven grass\npouch",
+      "page": 19,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Decorative",
+      "content": "mother-of-pearl\nmedallion",
+      "page": 19,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The archipelago of the Reshi Isles is home",
+      "content": "to a host of tribes and monarchies, some of Carapace\nwhich sit upon the backs of colossal great- machete\nshells called the Tai-na. Entire jungles, hill-\nsides, and villages can thrive upon a Tai-na.\n19",
+      "page": 19,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Eastern Roshar",
+      "content": "In Kholinar, the Alethi capital,\nrooftops face east to bear the\nbrunt of passing highstorms.\nThe nations of eastern Roshar comprise the Vorin kingdoms:\nAlethkar, Jah Keved, Kharbranth, New Natanatan, and\nThaylenah. The northern coastal nation of Herdaz also\npractices Vorinism, though Herdazians take a more relaxed\nview of certain strictures.\nIn spite of their common religion, these nations are frequently\nat war. Alethkar is the most common aggressor, but Jah\nKeved is nearly as warlike. Only the Unkalaki and Natans,\ngeographically isolated from their neighbors, manage to avoid\nborder disputes.\nA Veden couple in traditional clothes.\nThe man wears a hogshide vest over a vakama.\nThe woman wears a havah, a dress distinguished\nby a long sleeve covering her left hand. It is taboo\nfor Vorin women to expose their left hand, called\na safehand, in public. In less formal settings or\nHerdazians build farm estates with sturdy lower social castes, women cover their safehand\nwindbreaks to shelter crops from storms. with a glove instead of a sleeve.",
+      "page": 20,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Technology",
+      "content": "Ruled by the elderly King Taravangian, The hardy Unkalaki people live in the frozen Horneater Peaks, home to vast crater\nthe sheltered city-state of Kharbranth lakes that they call oceans. These emerald pools provide life-giving warmth to\nis home to the world’s greatest library, Horneater clans, creating tropical micro-climates that allow for farming. The burly,\nthe Palanaeum. It is also renowned for red-haired Horneaters mostly keep to themselves, but they sometimes intermarry\nits world-class hospitals and surgeons. with people in the neighboring nation of Jah Keved.",
+      "page": 21,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Thaylen",
+      "content": "In recent generations, Rosharans\neyebrows\nhave made remarkable advance-\nments in fabrial technology.",
+      "page": 21,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Fabrials are devices consisting of",
+      "content": "spren contained in gemstones\nand powered by Stormlight.",
+      "page": 21,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Artifabrians are the scientists",
+      "content": "who invent new fabrials.",
+      "page": 21,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Many are concentrated in the",
+      "content": "fabrial\nmaritime nation of Thaylenah,\na hub for merchants and\ntraveling scholars.",
+      "page": 21,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Painrial",
+      "content": "prototype\nBlacksmith’s\napron",
+      "page": 21,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Windspren in",
+      "content": "sapphire and\nIn eastern Roshar, men pursue the art\nbrass enclosure\nof war while women find their callings\nin scholarship. Men can have books\nread to them, or join the ardentia if they\nwish to become scholars. Otherwise,\nbooks are written in women’s script and\ncontain undertext commentary that is\nonly read by female scholars.\n21",
+      "page": 21,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The Alethi",
+      "content": "Lighteyed nobles, wearing the\nlatest fashions, gossip and scheme\nin the Kholinar Palace ballroom.",
+      "page": 22,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The nation of Alethkar is the largest on",
+      "content": "Captain’s\nRoshar, and its military is unparalleled. knot Soulcast",
+      "page": 22,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "More than one hundred thousand breastplate",
+      "content": "soldiers are supported by Shardbearers,",
+      "page": 22,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Blue Kholin",
+      "content": "Soulcasters, and a robust civilian corps. uniform\nWithin the past generation, the nation\nhas risen to prominence under the rule\nof King Gavilar Kholin. He and his\nbrother Dalinar conquered the warring\nhighprinces to form a unified nation.",
+      "page": 22,
+      "keywords": [
+        "HP"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Competition and War",
+      "content": "A spirit of brutal competition and Spear and shield for",
+      "page": 22,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Embroidered",
+      "content": "rigid social hierarchy underpins glyphward formation fighting\nAlethi society. Even after unification,\nthe highprinces still pit their soldiers",
+      "page": 22,
+      "keywords": [
+        "HP"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Alethi Infantry",
+      "content": "against one another in deadly border\ndisputes, and lighteyes regularly face Rank-and-file soldiers wield spears,\neach other in duels. Alethi warriors as only lighteyes are allowed to\ncarry swords. Squadleader is the\nfrequently experience the Thrill,\nhighest rank a darkeyed officer\na berserker rage that removes a\ncan hope to achieve, but every\nwarrior’s inhibitions.\nspearman dreams of defeating an\nenemy Shardbearer and leaping up\nthe ranks of Alethi social hierarchy.\n22",
+      "page": 22,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Lighteyes Darkeyes Slaves",
+      "content": "Social hierarchy is directly linked to Darkeyed people, the majority of Slavery is legal in Alethkar, and\nbloodline, marked by eye shade. Only Alethi, range from peasants to skilled is especially prevalent in times of\nlighteyed people own land and hold professionals. Their eyes come in a war. Prisoners of war, debtors, and\npolitical power. Whether their eyes range of colors in dark shades. They accused criminals are pressed into\nare tan or green, violet or blue, the often endure cruel treatment at the back-breaking servitude or placed on\ncolors are strikingly pale. hands of privileged lighteyes. the front lines of bloody battles.",
+      "page": 23,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Strategic Resources",
+      "content": "While most nations are lucky to field a handful of Shard-\nbearers, Alethkar commands more than thirty. Soulcasters\nare just as vital. Using Stormlight, these holy artifacts can\ntransform stone to grain, or clay into steel, allowing Alethi\narmies to fight without reliance on long supply lines.",
+      "page": 23,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "An ardent uses a Soulcaster to",
+      "content": "transmute crystal into wood.\nElhokar Kholin’s golden Shardplate\nand his legendary Shardblade, Sunraiser.",
+      "page": 23,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The Listeners",
+      "content": "Humans are not the only sapient species on Roshar.",
+      "page": 24,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The listeners are a people who make their homes",
+      "content": "in the Shattered Plains. Among humans they are\nknown by their Alethi name, Parshendi, meaning\n“parshmen who can think.” They appear to be closely\nrelated to parshmen, with skin in stark shades of red,\nblack, and white resembling marbled stone. But where\nparshmen rarely speak, and demonstrate little in the\nway of free will, the Parshendi are an independent\nculture consisting of several nations, called families.\nThe listeners fiercely protect the lands they call home.",
+      "page": 24,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Their warriors are more than a match for Alethi",
+      "content": "soldiers, protected by chitinous armor and possessing\nimpressive strength.\nParshendi warriors surround an Alethi Shardbearer.",
+      "page": 24,
+      "keywords": [
+        "Armor",
+        "Strength"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Listener warriors work",
+      "content": "in pairs, humming or\nsinging as they fight in",
+      "page": 24,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Painted",
+      "content": "perfect unison.\nscragglebark\nListeners’ skin patterns\nfletching",
+      "page": 24,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Gemstones woven into are as individual as",
+      "content": "clothing and beards fingerprints",
+      "page": 24,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Carapace armor is",
+      "content": "lighter than steel and\nnearly as strong",
+      "page": 24,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Axeblade matches",
+      "content": "style of ancient",
+      "page": 24,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Natan weaponry",
+      "content": "resembles designs\ndating back to the",
+      "page": 24,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Silver Kingdoms",
+      "content": "24",
+      "page": 24,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Physiology",
+      "content": "Alethi soldiers have been shocked to realize that listener armies\ninclude both malen and femalen warriors, distinguished only\nby facial hair. Most combatants bear distinctive red carapace\narmor, which does not seem to impede their movement, or\ntheir ability to leap across chasms. Listener scouts and civilians\nare almost indistinguishable from parshmen, but typically have\nhairstrands that resemble thick strands of grass. Listener children exploring together.\nTo the highprinces’ surprise, the Parshendi have their own\nShardbearers. They avoid risking their Shards in pitched\nbattles, always supporting them with elite warriors.",
+      "page": 25,
+      "keywords": [
+        "Armor",
+        "HP"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "A Changing World",
+      "content": "The modern age, the Era of Solitude,\nhas been defined by humankind\nforging its own path. For millennia, no\nDesolations have devastated the world.",
+      "page": 26,
+      "keywords": [
+        "Path"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Neither Heralds nor Voidbringers have",
+      "content": "appeared to guide people toward virtue\nor vice. However, the winds are shifting.",
+      "page": 26,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Dying people whisper words of prophecy:",
+      "content": "a new age is on the horizon.",
+      "page": 26,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Parshendi envoys visiting the Alethi",
+      "content": "capital city, King Gavilar Kholin was\nassassinated by a man wearing white\nrobes and wielding a Shardblade. This\nman, Szeth son-son-Vallano, possessed\nuncanny abilities like those described in\nfolktales of the Lost Radiants. Gavilar is\nnot the last monarch he will kill.\nThe Assassin in White weeps as he kills.",
+      "page": 26,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The War of Reckoning",
+      "content": "After the death of the Alethi king, the Parshendi\nemissaries declared responsibility. Shocked and\nenraged, the Alethi highprinces swore the Vengeance\nPact, marching their armies to the Shattered Plains\nwith the goal of wiping out the Parshendi.",
+      "page": 26,
+      "keywords": [
+        "HP"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "What began with an act of vengeful unity has",
+      "content": "descended into infighting between the highprinces.",
+      "page": 26,
+      "keywords": [
+        "HP"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "The Alethi discovered that the chasmfiends native",
+      "content": "to the Shattered Plains contain massive emerald\ngemhearts, each worth tens of thousands of spheres.",
+      "page": 26,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "The gemhearts could be harvested from pupating",
+      "content": "chasmfiends, prompting a race between the Alethi\nhighprinces whenever one is sighted. The Parshendi\nalso vie for the gemhearts, leading to relentless battles\nthat never escalate into a full-blown war of conquest.",
+      "page": 26,
+      "keywords": [
+        "HP"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "The warcamps have become the new center of",
+      "content": "Alethi power, where soldiers die in droves while\nthe highprinces jockey for power. Armed with Blade and Plate, two Shardbearers face a chasmfiend.\n26",
+      "page": 26,
+      "keywords": [
+        "HP"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Begin Your Journey",
+      "content": "Now that you’ve read this guide to Roshar, you’re ready to take\nthe next step! The Cosmere RPG is a chance to tell your own\nstories in the Stormlight campaign setting. Join a bridge crew,\nbecome an artifabrian, or explore the mysteries of the Lost\nRadiants… there’s no limit to the stories you can tell in Roshar,\na planet defined by conflict and infused with magic. You’ll begin\nby choosing your ancestry, up to two cultural expertises\nfrom the cultures introduced in this guide, and one of six\nheroic paths that define your initial training and capabilities\n(as summarized on the Heroic Paths table).",
+      "page": 27,
+      "keywords": [
+        "Path"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Path Theme Specialties",
+      "content": "Agent A talented operative who solves problems Investigator\nwith a keen mind or deft hand. Spy",
+      "page": 27,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Thief",
+      "content": "Envoy An insightful negotiator who adeptly Diplomat\ninfluences others. Faithful",
+      "page": 27,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Mentor",
+      "content": "Hunter A skilled sharpshooter and outdoorsperson Archer\nwho seeks and eliminates problems. Assassin",
+      "page": 27,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Leader A poised commander who directs and Champion",
+      "content": "guides others to be their best. Officer",
+      "page": 27,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Politico",
+      "content": "Scholar An adroit thinker who excels at planning Artifabrian\nand building. Strategist",
+      "page": 27,
+      "keywords": []
+    },
+    {
+      "type": "rules",
+      "title": "Surgeon",
+      "content": "Warrior A fighter who relies on their skill, brute Duelist\nstrength, or indominable will. Shardbearer",
+      "page": 27,
+      "keywords": [
+        "Strength"
+      ]
+    },
+    {
+      "type": "rules",
+      "title": "Soldier",
+      "content": "You’ll invest points in six attributes: Strength,\nSpeed, Intellect, Willpower, Awareness, and Presence.\nThese determine your baseline skills, which you can\nalso customize. You’ll complete your character by\ndefining their fundamental purpose, their ingrained\nobstacle, and their short-term goals.\nTo build your character and learn the game rules,\nyou will need a copy of the Stormlight Handbook.\nTo run a campaign as the Game Master (GM) or if\nyou simply want to learn more about the world, pick\nup the Stormlight World Guide. Reading Brandon\nSanderson’s acclaimed novels, beginning with The\nWay of Kings, is optional but highly recommended!\nVisit CosmereRPG.com for more information,\nincluding free rules and resources.\n27",
+      "page": 27,
+      "keywords": [
+        "Awareness",
+        "Strength",
+        "Intellect",
+        "Willpower",
+        "Speed"
+      ]
+    }
+  ]
+}

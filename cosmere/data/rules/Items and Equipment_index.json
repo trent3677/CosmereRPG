@@ -1,0 +1,824 @@
+[
+  {
+    "type": "chapters",
+    "title": "Items 247",
+    "content": "Weapons: Heavy Weaponry\nType Damage Range Traits Expert Traits Weight Price\nAxe 1d6 keen Melee Thrown [20/60] Offhand 2 lb. 20 mk\nGreatsword 1d10 keen Melee Two-Handed Deadly 7 lb. 200 mk\nHammer 1d10 impact Melee Two-Handed Momentum 8 lb. 40 mk\nLongspear 1d8 keen Melee [+5] Two-Handed Defensive 9 lb. 15 mk\nLongsword 1d8 keen Melee Quickdraw, Two-Handed Unique: loses Two-Handed trait 3 lb. 60 mk\nPoleaxe 1d10 keen Melee Two-Handed Unique: Melee [+5] 5 lb. 40 mk\nShield 1d4 impact Melee Defensive Offhand 2 lb. 10 mk\nCrossbow 1d8 keen Ranged Loaded [1], Two-Handed Deadly 7 lb. 200 mk\n[100/400]\nLongbow 1d6 keen Ranged Two-Handed Indirect 3 lb. 100 mk\n[150/600]\nhammer\ncrossbow\naaxxee\nlongbow\nlongsword\ngreaTsword lloonnggssppeeaarr poleaxe",
+    "page": 7,
+    "keywords": [
+      "1"
+    ]
+  },
+  {
+    "type": "chapters",
+    "title": "Items 259",
+    "content": "Food (fine). Fine food can be found in high-class Net (hunting). This net of thick rope can ensnare\nrestaurants and on the tables of nobles’ feasts. animals or enemies. While holding this net, you can\nGrappling Hook. A grappling hook is typically use to make an Athletics test against the Physical\nattached to the end of a rope to aid in scaling or defense of a Large or smaller character within 15 feet of\ndescending from walls and cliffs. A securely anchored you. On a hit, the character is Restrained and knocked\ngrappling hook grants an advantage on Acrobatics and Prone. That character or another within reach can\nAthletics tests made to climb using its attached rope. use the Interact action to make a DC 15 Athletics test,\nYou can use an Interact action to attach the grappling freeing the trapped character on a success. If a character\nhook to an anchor within reach without making a test. is Restrained by multiple nets, they must be freed from\nAlternatively, you can throw and attach it to a suitable each separately.\nanchor within 20 feet of you by succeeding on an Net (fishing). This net of fine mesh is used to\nAthletics or Agility test (DC set by the GM). ensnare fish. You can use this net to gain an advantage\nLantern (oil). While lit, this lantern sheds light in a on physical tests related to fishing.\n30-foot radius. It burns for up to 6 hours per pint of oil. Oil. Oil generally comes in a 1-pint flask made of\nLantern (sphere). This lantern includes a locked dried crem. Oil is flammable and can be used to fuel oil\ncage, usually just under 1 foot in diameter, into which lanterns, to create dangerous terrain in a space, or as\ninfused spheres can be placed to shed light. Depending an improvised weapon (sling). When you hit or graze a\non how full the lantern is, it sheds a different radius of target with this improvised weapon, you coat the target\nlight: 60 feet when entirely filled with spheres, 30 feet in oil in addition to the normal damage. Following the\nwhen half full, 15 feet when quarter-filled, and 5 feet attack, regardless of the result, the crem flask breaks and\nwhen at least 1 mark or broam is within it. The lock can any unused oil is lost.\nbe opened with its included key or a successful DC 15 Poison. Often manufactured using Roshar’s deadly\nThievery test. blackbane plant, poison comes in single-dose glass vials.\nLock and Key. This sturdy lock can be opened with As , you can pour it into food, liquid, or a container,\nits included key or a successful DC 20 Thievery test. or you can apply the poison to a melee weapon or a\nAt the GM’s discretion, locks that require higher DCs piece of ammunition you’re holding. When you do, the\nmay be available at higher prices. GM may require you to make a Stealth test to avoid\nLockpick. You can use a lockpick to gain an discovery. When a character ingests the poison or is hit\nadvantage on Thievery tests made to pick a lock. After by an attack using the poisoned weapon or ammunition,\nthis test is resolved, the GM can spend C to cause the the poison is expended, and the character suffers the\nlockpick to break. following effects:\nMagnifying Lens. You can use a magnifying lens\nWeak Poison. The target must succeed on a DC 12\nto gain an advantage on skill tests made to appraise or\nAthletics test or take 1d6 vital damage.\ninspect a small or highly detailed item.\nEffectual Poison. The target must succeed on a DC 14\nManacles. These metal restraints, which come with\nAthletics test or take 2d8 vital damage and be Stunned\na key, can bind the wrists or ankles of a Large or smaller\nfor 1 hour.\ncharacter. They can be escaped with a successful DC 25\nPotent Poison. The target must succeed on a DC 16\nAgility test, broken by succeeding on a DC 25 Athletics\nAthletics test or take 3d10 vital damage and be\ntest or by dealing 15 damage to them, or lockpicked\nStunned for 1 hour. While Stunned in this way,\nby succeeding on a DC 20 Thievery test. At the GM’s\nthe target is Immobilized.\ndiscretion, manacles that require higher DCs may be\navailable at higher prices.\nMusical Instrument. Every culture of Roshar\nhas its preferred instruments and musical stylings.\nInstruments are often used for enjoyment, passing time,\nor busking for chips. When playing an instrument,\nyou can determine the quality of your performance\nby making a skill test using a related skill (such as\nAgility for a stringed instrument, Athletics for drums,\nor Discipline for an instrument with many keys). If\nyou have an expertise in that instrument, you gain\nmanacles\nan advantage on the test.",
+    "page": 19,
+    "keywords": [
+      "2",
+      "Advantage",
+      "3",
+      "1"
+    ]
+  },
+  {
+    "type": "chapters",
+    "title": "Items 263",
+    "content": "can’t try again for 1 minute. Once this fabrial is fully The heatrial expends charges based on what\ncharged, it can be emptied by using a tuning fork, by temperature it is set to. For comfortable ambient\na Radiant drawing in its Investiture (and regaining heat, it expends 1 charge for each day it is active. For\nan equal amount of Investiture), or by allowing the temperatures high enough for activities like cooking\nInvestiture to fade over the course of 5 days. or blacksmithing, it expends 1 charge for each hour it\nEmotion Bracelet (3 charges). Emotion bracelets is active.\nblink or change color in the presence of different Painrial (amplifying; 3 charges). The amplifying\nemotions. The bracelet’s wearer can spend 1 charge painrial increases a target’s sense of pain. It is a melee\nas to gain an advantage on an Insight test against weapon that uses the Light Weaponry skill and deals 1d6\na character within 10 feet of them. vital damage. On a hit, you can spend 1 charge to add\nFreechair (unlimited charges). Freechairs are your skill modifier to the damage one additional time.\nmobility devices that levitate and move by engaging Painrial (numbing; 3 charges). The numbing\nfabrial components. While freechairs are available painrial decreases the wearer’s sense of pain. Before you\nfor purchase, disabled characters can obtain one for take damage while wearing the painrial, you can use\nfree and don’t have to track charges. The operator and spend 1 charge to reduce the damage by 1d4.\nof a freechair has the same movement rate as other Repeller (5 charges). Each repeller is attuned to a\nchar acters (see “Speed” in chapter 3), and it doesn’t particular Essence or material—such as water, smoke,\nrequire an action to activate. or another Essence. While activated, the fabrial weakly\nHeatrial (5 charges). Commonly known as warm- pushes away the attuned material within a specific\ners, heatrials generate heat. You can use an Interact radius. Both the material it repels and the radius are\naction to activate the heatrial or to adjust the radius determined when the repeller is created. If the repeller\nand intensity of the heat, allowing uses such as gently is heavier, it pushes the attuned material away from\nwarming its surroundings or cooking food. If a character it at a rate of 1 foot per round, until the material is\ntouches the gemstone while the heatrial is active, they outside the repeller’s radius. If the material is heavier,\ntake 1d6 energy damage. the repeller instead pushes itself away from the\nheaTrial\nalerTer\nclock\nfabrial\nemoTion\nbraceleT",
+    "page": 23,
+    "keywords": [
+      "Advantage",
+      "Speed",
+      "1"
+    ]
+  },
+  {
+    "type": "chapters",
+    "title": "Items 267",
+    "content": "Crafting Standard Fabrials combine existing effects in innovative ways, while\nothers even replicate the effects of Surgebinders. An\nWhile the methods of creating certain fabrials have\nenterprising character can attempt to create such a\nbeen lost to time (see the “Dead Spren” sidebar),\ndevice, but inventing these unique fabrials follows\nmost modern-day fabrials can be created by crafters\nspecial rules beyond crafting basic items.\nwith sufficient research and finesse. The process\nIn general, unique fabrials are only available\nrequires much more specialized knowledge and precise\nto characters selecting talents from the Scholar\nhandiwork than crafting a mundane item, but otherwise\n(Artifabrian) path, or to characters who earn special\nfollows similar steps.\ngemstones as rewards (see “Fabrials and High-Quality\nEach fabrial requires a gemstone specifically cut for\nGems” in chapter 8).\nthat purpose, surrounded by a delicate latticework of\nUse the following steps to craft your chosen fabrial:\nmetal and other materials to tune the device’s function.\nBut even more important is what’s housed within that 1. Choose your desired effect.\ngemstone. Part of the process of crafting a fabrial 2. Acquire the necessary materials.\ninvolves luring a spren of a specific type and trapping 3. Trap a spren.\nit within the gem. This spren provides the fabrial with 4. Make a Crafting test.\nits functionality, and it must be lured with something 5. Apply any upgrades or drawbacks.\nthat appeals to its unique nature. Step 1: Choose Your Effect\nFabrial Crafting Steps To invent a unique fabrial, first you must decide what\nYou can craft any standard fabrial with a price listed you want it to accomplish. You can choose a fabrial\non the Standard Fabrials table earlier in this chapter. effect from those listed on the Unique Fabrial Effects\nDoing so follows the standard crafting rules in the table later in this section (provided your chosen effect\nprevious “Crafting Mundane Items” section, but you is of an equal or lower tier than the gemstone you’ll use\nmust have an expertise in Fabrial Crafting or in the to craft it). Each effect lists the total number of charges\nspecific fabrial you’re creating. that fabrial will have, along with its tier that affects the\nThough standard fabrials require gems, these are expense and difficulty of crafting the device.\neasily acquired as part of the materials you purchase in Enterprising players may instead suggest new effects\nstep 1 of the crafting process. Similarly, the process for of their own creation, and adventurous GMs are\nattracting a spren and crafting a standard fabrial is well encouraged to work with them to find something that\ndocumented, so you don’t need to make an additional feels balanced.\ntest to trap the spren. (However, as described in the next Any unique fabrials you craft follow the standard\nsection, crafting unique fabrials does require special fabrial rules (see “Fabrials” earlier in this chapter).\nmaterials and an additional test.) Step 2: Acquire Materials\nFabrial Upgrades Much like crafting other items, it’s assumed you can\nAs with crafting other items, if your fabrial’s acquire most of the raw materials you need for the fab-\nCrafting test yields two upgrades, you can use rial. The cost of these materials depends on the tier of\nthose to choose one advanced feature. When you effect you chose from the Unique Fabrial Effects table:\ndo, you can either choose from the earlier “Advanced ◆ Tier 1: 100 marks\nItem Features” section, or you can choose from the ◆ Tier 2: 200 marks\nupcoming “Advanced Fabrial Features” subsection ◆ Tier 3: 400 marks\nof “Inventing Unique Fabrials.” ◆ Tier 4: 800 marks\nInventing Unique Fabrials This material cost includes any rare metals, but it\ndoesn’t include one key component: the gemstone.\nCutting-edge artifabrians often devote their efforts\nto experimenting with fabrials that are unheard of\nor that only exist in cloistered laboratories as proto-\ntypes. Some of these experimental technologies",
+    "page": 27,
+    "keywords": [
+      "Path",
+      "Talents"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Items",
+    "content": "CORE RULEBOOK VERSION N O I S R E V K O O B E L U R E R O C\nchapter\n7\nAA",
+    "page": 1,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Activating Items With Charges",
+    "content": "dventuring through the storm- and\nwar-torn world of Roshar can be a perilous Some items with charges must be activated in a special\nendeavor, and you’ll need gear to survive and way (such as by using the Interact action). If not\nthrive. In addition to spheres—Roshar’s currency— specified, you can expend a charge without spending\nyou’ll use adventuring kits, weapons, armor, and an action. When you expend a charge, you trigger that\nequipment to meet your basic needs while journeying item’s effect, then the charge is lost until you recharge\nthroughout the continent. However, for exceedingly that item in the specified manner.\nlong or distant expeditions, you may also want to know Recharging Items\nabout travel costs, including lodging, mounts, and\nAn item with charges can be partially or fully recharged\nvehicles. You might even purchase the Stormlight-\nduring a short rest by draining the Stormlight from\npowered marvels of engineering known as fabrials.\nunencased gemstones (see “Equipment”) or by drawing\nAnd if a character wants bespoke gear or a completely\nfrom a Radiant’s current Investiture. The item regains\nunique fabrial of their own design, they can engage\n1 charge for each unencased gem or point of Invest-\nin some crafting.\niture infused into it.\nUsing Items Alternatively, an item can be fully recharged by being\nleft out in a highstorm (as with spheres).\nMost rules for using items are presented in their specific",
+    "page": 1,
+    "keywords": [
+      "Armor",
+      "Equipment"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Invested Items",
+    "content": "sections, but here are a few general rules that apply to\nmultiple kinds of items. Much like infused spheres, some items can hold a charge\nof raging Stormlight or are otherwise connected to the",
+    "page": 1,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Expert Traits",
+    "content": "Cognitive or Spiritual Realm. These items are Invested\nUnless otherwise specified, you can use the items in and can be more difficult to affect with surges and\nthis chapter without any special expertise. However, other effects.\nsome weapons and armor have expert traits, giving All Shardblades are Invested, along with any items\nbenefits that only apply if you have an expertise in that charged with Stormlight.\nweapon or armor. If an effect works differently on Invested items, this\nis specified in the effect’s rules.",
+    "page": 1,
+    "keywords": [
+      "Armor"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Items With Statistics",
+    "content": "Some items (such as fabrials) have one or more charges\nthat power certain effects; the number of charges is In this handbook, the names of items are usually listed\ndetermined when that item is created. Charges typically without special formatting. However, when it might\nrepresent the Investiture that can be stored in the gem be helpful to know that a mentioned item has specific\nat that item’s core. rules or statistics, the item name appears in bold italics.\nIndividual items may contain more information on For example, a written adventure might state that\nhow to use their charges, but the following rules apply “the characters find a lockpick”; this lets you know\nto all of them, unless otherwise specified. that this isn’t just a narrative item, but that you should\ncheck this chapter to find out how it works in the rules.",
+    "page": 1,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Navani works late into",
+    "content": "the night designing\nnew fabrials.",
+    "page": 1,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Spheres Sphere Values in Diamond Marks",
+    "content": "Most nations on Roshar use spheres as their primary Gemstone Chip Mark Broam\ncurrency. Each sphere is a gemstone encased in a Diamond 0.2 1 4\nglass bead, slightly flattened on one side to keep it from Garnet, heliodor, topaz 1 5 20\nrolling away. The glass beads are always the same size, Ruby, smokestone, zircon 2 10 40\nbut the size and type of gemstone inside determines the\nAmethyst, sapphire 5 25 100\nsphere’s value. From smallest to largest, the three sizes\nEmerald 10 50 200\nof gem are:\nChip. Chips only contain a small sliver of a gem; these Using Spheres\nare worth one-fifth of a mark.\nIn addition to serving as currency, spheres serve two\nMark. Marks contain a half-carat gem and are worth\npractical purposes in this game.\n5 chips (or one-fourth of a broam).\nSpheres can be infused with Stormlight, holding the\nBroam. Broams contain a sizable two-carat gem and\nenergy and maintaining it for roughly five days before it\nare worth 4 marks (or 20 chips).\nleaks away. Spheres with Stormlight are called infused,\nFor simplicity, this game tracks money using only\nwhile spheres with no Stormlight are called dun.\none denomination, “marks” (sometimes abbreviated\nThough chips can’t hold much Stormlight, infused\n“mk”)—this always refers to a diamond mark.\nmarks and broams are valued in part because they’re\nHowever, on Roshar, spheres aren’t only counted in\nbright enough to shed light in dark places. The\nchips, marks, and broams, but each is worth a different\n“Equipment” section later in this chapter presents\namount depending on which type of gem it is. Spheres\na lantern you can fill with infused spheres.\ncan be made of diamond, garnet, heliodor, topaz, ruby,\nEven more importantly, Radiants can draw\nsmokestone, zircon, amethyst, sapphire or emerald.\nStormlight out of the gems to fuel Radiant abilities.",
+    "page": 2,
+    "keywords": [
+      "Equipment"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "These gems values depend on how useful they are in",
+    "content": "The “Stormlight Actions” section of chapter 5 details\nSoulcasting—diamonds are the cheapest, whereas\nhow to calculate how much Stormlight you can draw\nemeralds are used to Soulcast food, making them\nfrom your spheres.\nimmensely valuable. You can find these conversions\non the Sphere Values in Diamond Marks table, but you\ndon’t need to remember these gems; if you ever receive\nspheres in other denominations, the GM will simply tell\nyou their value in diamond marks.",
+    "page": 2,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "IMAS",
+    "content": "“Those spheres are luck,\nyou hear me? Keep them\nwith you and always keep\nthem infused.”\n242",
+    "page": 2,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Starting Kits Prisoner Kit",
+    "content": "Weapons, Armor, and Spheres: None\nDuring step 6 of character creation, you choose one\nEquipment: Manacles, ragged clothing\nof the following sets of equipment. Each starting kit\nConnection: You’ve attracted a Radiant spren, and\ngrants items such as spheres (roll the dice indicated to\nthrough your trials, you’ve begun to connect with\ndetermine how many marks you start with), weapons or\nthem. Speak with your GM and choose a spren\narmor (see the Weapons table and Armor table later in\ntype appropriate for your character, then record\nthis chapter), other equipment (see the Equipment table\ntheir information on the back of your character\nlater in this chapter), and more.\nsheet in “Connections.” If you later choose the",
+    "page": 3,
+    "keywords": [
+      "Armor",
+      "Equipment"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Academic Kit",
+    "content": "key talent from this spren’s corresponding Radiant\nWeapons: One knife, sling, or staff path, immediately check two boxes for that talent’s\nArmor: Uniform “Speak the First Ideal” goal.\nEquipment: Backpack with common clothing,",
+    "page": 3,
+    "keywords": [
+      "Equipment",
+      "Armor",
+      "Path"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Underworld Kit",
+    "content": "an ink pen, a bottle of ink, 10 sheets of paper,\nWeapons: Two light weapons\n3 empty vials, a block of wax, a reference book on\nArmor: Leather armor\na topic of your choice (approved by the GM), and\nEquipment: Backpack with common clothing, alcohol\n1 dose of weak poison\n(bottle of Horneater white), a crowbar, a lockpick,\nSpheres: A pouch containing 3d12 marks\n50 feet of rope, a flint and steel, an oil lantern, a flask\nAdditional Expertise: You gain the Literature\nof oil, and 5 days of street food\nexpertise. If you already have this expertise, you\nSpheres: A pouch containing 1d20 marks\ninstead gain one cultural or utility expertise of your\nchoice. This expertise doesn’t count against your Weapons\nexpertises chosen at character creation.\nSince the arrival of the Everstorm, it’s dangerous to",
+    "page": 3,
+    "keywords": [
+      "Armor",
+      "Equipment",
+      "3",
+      "1"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Artisan Kit",
+    "content": "travel unarmed, and even the most peaceful characters\nWeapons: One hammer or light weapon (your choice)\noften take up weapons for self-defense.\nArmor: Leather armor",
+    "page": 3,
+    "keywords": [
+      "Armor"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "This section outlines the most common weapons",
+    "content": "Equipment: Chest with common clothing, surgical\nfound on Roshar. The Weapons table includes the\nsupplies, 5 doses of weak antiseptic, an ink pen,\nfollowing columns:\na bottle of ink, 5 sheets of parchment, 5 candles,\nType. The general type of weapon—but feel free to\na flint and steel, 3 empty glass bottles, a tuning fork,\ncreatively describe your own, as long as it uses the\na musical instrument of your choice, and a scale\nsame statistics.\nSpheres: A pouch containing 4d8 marks\nSkill. The skill you test when attacking with this weapon.",
+    "page": 3,
+    "keywords": [
+      "Equipment",
+      "4"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Military Kit",
+    "content": "Damage. How much damage the weapon deals when it\nWeapons: Two non-special weapons hits or grazes.\nArmor: Uniform and chain armor Range. How far away the weapon can attack (see the\nEquipment: Backpack with common clothing, upcoming “Weapon Range” section).\na waterskin, a flint and steel, a whetstone, a blanket, Traits. Special rules that apply to that weapon (see the\nand 10 days of food rations upcoming “Weapon Traits” section).\nSpheres: A pouch containing 2d6 marks Expert Traits. Special rules that apply only if you have\nCourtier Kit an expertise in that weapon. Some weapons remove\nan undesirable trait if you have expertise, rather than\nWeapons: One sidesword, greatsword, longsword,\nadding a desirable trait; for example, if you have an\nor longbow\nexpertise in Longswords, your longsword loses its\nArmor: None\nTwo-Handed trait so you can wield it with one hand.\nEquipment: Alcohol (bottle of violet wine),\nWeight. The weapon’s weight.\nfine clothing\nPrice. The weapon’s standard price.\nSpheres: A pouch containing 4d20 marks\nConnection: You’re supported by a patron of your See the “Attacking” section of chapter 10 for the\nnoble house (see the “Patrons” section of chapter 8). full rules about attacking using these weapons.",
+    "page": 3,
+    "keywords": [
+      "Armor",
+      "2",
+      "Equipment",
+      "4"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "This affords you accommodations and a certain",
+    "content": "standard of living.",
+    "page": 3,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "GM to decide whether you could reasonably use that",
+    "content": "Wielding Weapons Some characters might wield their weapons using\nmethods other than hands. You can do this if you’re only\nEach weapon requires one hand to wield unless other-\nwielding weapons that another character could with two\nwise specified in its traits. While wielding a weapon,\nhands. When you do, pick which weapon is considered\nyou can use it to attack or use other abilities. Rules that\nyour “main hand” and “offhand” (regardless of how\napply to “your weapon” only apply if you’re wielding\nyou hold them), and otherwise follow the weapon rules.\nthat weapon.\nUnless your GM decides otherwise, you can’t wield more\nIf you aren’t wielding a weapon (or holding an object)\nthan two weapons (or one Two-Handed weapon) at a\nin a hand, you have that hand free for other abilities\ntime, regardless of whether you use your hands to do so.\nthat require it. If both of your hands are full but an\nability doesn’t state you need a hand free, it’s up to the Ammunition\nIf your weapon has the Loaded or Ranged trait, you\nability in the narrative.\ndon’t need to purchase its ammunition or track it on\nDrawing Weapons your character sheet (unless the weapon uses special\nYou can use the Interact action to draw a weapon in ammunition). However, the Loaded trait does limit\nyour possession and grasp it in your hand. After you do, how many shots you can make with a weapon before\nyou’re wielding that weapon and can use it for attacks reloading. It’s assumed you can always obtain or\nand other effects. improvise standard ammunition for your weapons,\nYou can use the Drop free action to release a weapon unless the GM decides you’re in an unusual situation\nyou’re holding (for example, right before you Interact where ammunition is unavailable.\nto draw a different weapon). When a scene begins and\nyou’re not Surprised, it’s assumed you can instinctively Weapons in Polite Company\ndraw your weapons before the first round (without using\nDespite the constant presence of war on Roshar—or\nthe Interact action). If you’re Surprised when a scene\nmaybe because of it—weapons aren’t welcome in most\nbegins, you can’t instinctively draw your weapons.\n“polite” parts of society throughout the world. Openly",
+    "page": 4,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Offhand Weapons",
+    "content": "carrying a weapon in settings such as a market or at a\nWhile wielding more than one weapon, you must choose party often draws attention, hostility, or the authorities.\nwhich one is in your main hand. Attacks with that If you want to carry a weapon in such context, you usually\nweapon are made as usual. have to conceal it (such as with a Stealth test).\nWhen you wield a weapon that’s not in your main Light weapons are much more common off the\nhand, it’s in your offhand. Before you use the Strike battlefield than are heavy weapons. While their presence\naction using a weapon in your offhand, you must spend may still be unwelcome in some situations, they don’t have\n2 focus. (Attacks other than the Strike action don’t the same chilling effect on friendly conversations between\nrequire spending that focus.) strangers, and they’re wielded by people from all walks\nof life. Weapons with the Discreet trait are even more\nacceptable (or easier to hide) in most contexts.",
+    "page": 4,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "TNECNIV",
+    "content": "mosT rosharan\narrows are fleTched\nwiTh grass blades or\nscragglebark\n244 Chapter 7: Items",
+    "page": 4,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Each weapon is classified as either a melee weapon",
+    "content": "Weapon Range Discreet. This weapon is less obtrusive than others,\nand thus less likely to be confiscated in secure settings.\nWeapons can only attack targets within a certain range.\nIn non-combat scenes, you gain an advantage on\nany test you make to disguise this weapon, to hide\nor a ranged weapon. See “Targeting and Range” in\nit on your person, or to convince others not to take\nchapter 10 for more information on range and reach.\nit from you.\nMelee Weapons Fragile. When you attack with this weapon, the GM\nYou can use a melee weapon that you’re wielding can spend C to cause it to break after the attack\nto attack a target within your reach (see “Reach” in is resolved.\nchapter 10). Indirect. This ranged weapon can arc shots over cover\nWhen wielded, some melee weapons increase your and obscuring terrain. If a target isn’t in your line of\nreach for attacks made with that weapon. On the effect but you can sense them, you can still attack them\nWeapons table, if a melee weapon’s range lists a number with this weapon if there’s a reasonably open path for\nin brackets, increase your reach by that many feet. For your projectile to indirectly arc to them. Your target\nexample, if you usually have a 5-foot reach, a Melee [+5] can’t benefit from the Brace action against attacks\nweapon extends your reach to 10 feet. made with this weapon.\nLoaded [X]. This weapon stores ammunition equal to",
+    "page": 5,
+    "keywords": [
+      "Advantage",
+      "Path"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Ranged Weapons",
+    "content": "the number indicated in brackets. To make a ranged",
+    "page": 5,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "You can fire ammunition from a ranged weapon",
+    "content": "attack with this weapon, you must spend 1 stored\nthat you’re wielding, attacking a target either within\nammunition. As , you can reload this weapon to full\nor beyond your reach. The weapon’s range lists two\nammunition. The GM can spend C from an attack\nnumbers in brackets, such as Ranged [80/320]; the first\nwith this weapon to reduce your stored ammunition;\nnumber is the weapon’s short range in feet, and the\nafter they do, the weapon only has only one shot\nsecond is the weapon’s long range in feet. As described\nremaining.\nin “Targeting and Range” in chapter 10, ranged attacks\nMomentum. When you attack using this weapon, if you\noutside short range gain a disadvantage.\nalready moved at least 10 feet in a straight line toward\nAdditionally, as described in “Attacking” in chapter\nyour target on this turn, you gain an advantage on\n10, you gain a disadvantage on ranged attacks while\nthe attack.\nwithin an enemy’s reach. If you attack a target within\nOffhand. While wielding this weapon in your offhand,\n5 feet of your ally, raise the stakes; a Complication risks\nit only costs you 1 focus (instead of 2) to Strike with it.\ngrazing your ally.\nPierce. This weapon’s damage can’t be reduced by the\nWeapon Traits target’s deflect value.\nQuickdraw. You can use the Interact action as to draw\nThese rules apply to any weapon with that trait listed\nthis weapon.\nin its entry on the Weapons table.\nThrown [X/Y]. You can throw this weapon at a target,\nCumbersome [X]. To wield this weapon easily, your making a ranged attack when you do (see “Ranged\nStrength score must be equal to or greater than the Attacks” in chapter 10). The two numbers in brackets\nnumber indicated in brackets. If your Strength is express the weapon’s short and long range; as with\nlower than that number, you gain a disadvantage on ranged weapons, you gain a disadvantage when\nall attacks using this weapon and are Slowed while attacking a target outside short range. Once the\nwielding it. weapon is thrown, it is lost until you recover it from\nDangerous. The GM can spend C from an attack with your target.\nthis weapon to cause you to also accidentally graze an Two-Handed. You must wield this weapon in two\nally within the weapon’s reach or range. This deals the hands, not just one. When you attack with it, it uses\nusual damage for a graze. both hands.\nDeadly. When you hit a target with this weapon, you Unique. This weapon has unique rules. These are\ncan spend to cause the target to immediately suffer detailed either in the weapon description or\nan injury. immediately following the word “Unique” in the\nDefensive. While wielding this weapon, you can use the Weapons table (for example, “Unique: loses Two-\nBrace action without cover nearby. Handed trait”).",
+    "page": 5,
+    "keywords": [
+      "Deflect",
+      "Complication",
+      "Strength",
+      "Disadvantage",
+      "Advantage"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "TIARTUD",
+    "content": "Weapons: Light Weaponry\nType Damage Range Traits Expert Traits Weight Price\nJavelin 1d6 keen Melee Thrown [30/120] Indirect 2 lb. 20 mk\nKnife 1d4 keen Melee Discreet Offhand, Thrown (20/60) 1 lb. 8 mk\nMace 1d6 impact Melee — Momentum 3 lb. 20 mk\nRapier 1d6 keen Melee Quickdraw Defensive 2 lb. 100 mk\nShortspear 1d8 keen Melee Two-Handed Unique: loses Two-Handed trait 3 lb. 10 mk\nSidesword 1d6 keen Melee Quickdraw Offhand 2 lb. 40 mk\nStaff 1d6 impact Melee Discreet, Two-Handed Defensive 4 lb. 1 mk\nShortbow 1d6 keen Ranged Two-Handed Quickdraw 2 lb. 80 mk\n[80/320]\nSling 1d4 impact Ranged Discreet Indirect 1 lb. 2 mk\n[30/120]\nknife\nsTaff\nsshhoorrTTssppeeaarr\nshorTbow\njaVelin\nsling\nmace sidesword\n246 Chapter 7: Items",
+    "page": 6,
+    "keywords": [
+      "1"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Weapon similar similar",
+    "content": "Weapons: Special Weapons\nType Skill Damage Range Traits Expert Traits Weight Price\nImprovised Same as Same as Melee Fragile Unique — —\nweapon weapon\nUnarmed Athletics Unique Melee Unique Momentum, Weightless —",
+    "page": 8,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Attack Offhand",
+    "content": "Half-Shard Heavy 2d4 impact Melee Defensive, Two-Handed, Momentum 10 lb. 2,000 mk",
+    "page": 8,
+    "keywords": [
+      "2"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Weaponry Unique",
+    "content": "Shardblade Heavy 2d8 spirit Melee Dangerous, Deadly, Unique: loses 4 lb. Reward only",
+    "page": 8,
+    "keywords": [
+      "2"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Weaponry Unique Dangerous trait",
+    "content": "Shardblade * 2d* spirit Melee Deadly, Unique — Weightless Talent only\n(Radiant)\nWarhammer Heavy 2d10 impact Melee Cumbersome [5], Unique 150 lb. 400 mk\nWeaponry Two-Handed\nGrandbow Heavy 2d6 keen Ranged Cumbersome [5], Pierce 20 lb. 1,000 mk\nWeaponry [200/800] Two-Handed\n*See the “Shardblades and Radiant Shardblades” section.",
+    "page": 8,
+    "keywords": [
+      "2"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Improvised Weapons Unarmed Attacks",
+    "content": "In the heat of the moment, you might wish to attack Punches, kicks, thrown elbows, headbutts, and bites\nwith an object that isn’t a traditional weapon (such are examples of unarmed attacks. You can make an\nas hitting someone with a pot) or use a weapon in an unarmed attack using Athletics.\nunconventional way (such as swinging a shortbow at Expertise. Unlike other entries on the Special\nsomeone like a staff). If you can pick an object up in one Weapons table, you can choose Unarmed Attacks as\nor both hands, you can use it as an improvised weapon! a weapon expertise.\nExpertise. Unlike other entries on the Special Unique Traits. Unarmed attacks add the following\nWeapons table, you can choose Improvised Weapons as unique traits:\na weapon expertise. If you do, your improvised weapon\nAlways Available. Unarmed attacks don’t count as\nattacks benefit from the expert traits of the weapon most\nweapon attacks, but they are melee attacks intrinsic to\nsimilar to it, even if you don’t have expertise in that\neach character. You don’t have to be holding a weapon\nsimilar weapon.\nto make an unarmed attack, and you can’t be disarmed\nUsing an Improvised Weapon. When you attack\nof your unarmed attacks. You can make an unarmed\nwith an improvised weapon, the GM decides which\nattack even if each of your hands is holding something,\nnon-special light or heavy weapon it is most similar to.\nbut if your second Strike on a turn is an unarmed\nMake the attack as though with that weapon, but add\nattack, it follows the rules for an offhand attack.\nthe Fragile trait (see “Weapon Traits”).\nStrength Training. When you make an unarmed attack,\nits damage die is based on your Strength score, as",
+    "page": 8,
+    "keywords": [
+      "Strength"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Specialist Expertises",
+    "content": "shown on the Unarmed Damage table.\nThe expert traits of each weapon and armor require a Unarmed Damage\nspecific expertise (see “Expertises” in chapter 3). For",
+    "page": 8,
+    "keywords": [
+      "Armor"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Strength Unarmed Damage",
+    "content": "most weapons and armor, you can choose that expertise\n0–2 1 impact (no die roll)\nwhen creating or leveling up your character. However,\nsome items from this chapter require specialist expertises 3–4 1d4 impact\nto benefit from expert traits. The following specialist 5–6 1d8 impact\nexpertises can only be obtained through either talents, 7–8 2d6 impact\nrewards, or training (see “Downtime” in chapter 9): 9+ 2d10 impact\nGrandbow, Half-Shard, Shardblade, Shardplate, and\nWarhammer.\n248 Chapter 7: Items",
+    "page": 8,
+    "keywords": [
+      "1",
+      "Armor",
+      "2",
+      "Talents"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Shardblades and",
+    "content": "Half-Shards\nHalf-shards are diamond-shaped, two-handed kite\nshields with a special augmenter fabrial on the back,\nallowing them to resist the blows of Shardblades. Like\nnormal shields, half-shards are designed primarily for\ndefense, but they can also be wielded as weapons.\nUnique Traits. Half-shards have the following\nunique traits:\nCharges (1 charge). A half-shard reinforces itself using\nStormlight from its fabrial’s gems. A normal half-shard\nhas 1 charge (though some might have more); while\nit has at least 1 charge, it is Invested. Before you take\ndamage while wielding a half-shard, you can expend\na charge (no action required) to increase your deflect\nvalue by 10 against that attack, then until the attack is\nresolved, your deflect value applies to all damage types.\n(When it fits the story, your GM might decide you\naren’t protected from some sources of damage, such\nas extreme cold.)\nRecharging. Half-shards can be recharged in the usual\nmanner (see “Using Items” at the beginning of this\nchapter), either via unencased gems or a Radiant.\nHowever, half-shard charges require significantly more\nInvestiture than most fabrials, requiring 5 Investiture\nor 5 gems (instead of 1) to restore a single charge.",
+    "page": 9,
+    "keywords": [
+      "Deflect"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Shardblades are among the most priceless items on",
+    "content": "Roshar. These weapons are five to six feet long, at least\na handspan wide, gleamingly ornate, and shockingly\nlight. They can cut through nearly anything like a hot\nknife through chull lard, and their bonded owner can\nsummon them from thin air.\nShardblades are composed of an unknown metal,\nwith a gemstone fitted within their hilt or guard.\nUnlike non-Invested weaponry, Shardblades can\ncut cleanly through almost any non-living material—\nincluding non-Invested stone and metal—with the ease\nof slicing through water. In addition, these Blades pass\nthrough living organisms without the usual mark or\ninjury, slicing through soul rather than flesh and bone.\nWhen the core of a limb is “severed” by a Shardblade,\neverything beyond that cut becomes Blade-dead—\ngray and lifeless. If this happens to a character’s spine\nor head, their eyes burn out and they instantly die.\nshardblade",
+    "page": 9,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Shardblade Injury Duration",
+    "content": "Unique Traits. Shardblades add the following\nunique traits:\nSummoning/Dismissing. Once bonded (see “Bonding\na Shardblade”), a Shardblade takes ten heartbeats to\nsummon. When you use the Interact action to draw\nyour Shardblade, it doesn’t materialize in your hand\nuntil the start of your next turn. You can dismiss your\nShardblade with a mere thought (no action required),\nthen it disappears into mist until you need it again.\nSpiritual Injury. Shardblades are an Invested weapon\nthat can sever a person’s spirit. When a Shardblade\ncauses a target to make an injury roll (such as by\nreducing them to 0 health or triggering the weapon’s\nDeadly trait), determine the injury by rolling on the\nShardblade Injury Duration table without adding the\ntarget’s deflect value (instead of rolling on the Injury\nDuration table in chapter 9).",
+    "page": 10,
+    "keywords": [
+      "Deflect"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Injury Roll Injury",
+    "content": "16+ Flesh Wound . The character suffers a temporary\ninjury for the remainder of the day.\n1–15 Spiritual Injury . The target suffers a permanent\ninjury. Any severed flesh turns gray and lifeless.\nNon-Invested healing can’t heal this injury.\n0 or lower Death . The character dies (see “Death”).",
+    "page": 10,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Bonding a Shardblade",
+    "content": "You can use a Shardblade’s attached gem to bond to\nthat blade. This process usually takes about 5 days,\nthough you can choose to break this bond with only\na few moments of concentration. Once you bond to a\nShardblade, you can summon it anywhere by willing\nit to happen—ten heartbeats later, it coalesces from\nmist into your hand. If your bonded Shardblade leaves\nyour hand, it instantly dissipates again unless you will\nit not to.\nYou can have multiple Shardblades bound at a time,\nbut each Shardblade can be bound to only one character\nat a time. You can only bond another character’s Shard-\nblade if they are dead or willingly broke their bond.",
+    "page": 10,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Radiant Shardblades",
+    "content": "Thousands of years ago, the people of Roshar lost the\nknowledge of what Shardblades are made from and\nhow to create them. However, certain characters—\nincluding ancient beings, higher-Ideal Radiants, and\npeople associated with them—know what Shardblades\ntruly are: the corpses of Radiant spren, killed when\nshardblade their bonded knights forswore their oaths during\nthe Recreance.\n250 Chapter 7: Items",
+    "page": 10,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Radiants of the Third Ideal or higher can wield",
+    "content": "Radiants Wielding Non-Radiant Shardblades\n“living” Shardblades, their bonded spren physically\nmanifested in the form of a weapon. Such a Blade can Radiants who try to wield a non-Radiant Shardblade\nbe summoned whenever its spren is ready (instead hear incessant, agonized screaming. If you have a First\nof requiring ten heartbeats as those of dead-spren Ideal key talent, you become Disoriented and gain a\nShardblades do). Unlike other Shardblades, glyphs and disadvantage on all tests while you’re touching or holding\nsymbols usually glow on the blade, though you can cause such a Shardblade. At the start of your turn, you can spend\nyours to look like a “dead” Blade whenever you wish. 3 focus to temporarily ignore this effect until the start of\nWhile you wield your Radiant Shardblade, you can your next turn.\ntelepathically communicate with your spren. However,\nwhile in Blade form, the spren can’t use abilities that Warhammers\nrequire them to move independently.\nRosharan warhammers have hafts as thick as a warrior’s\nUnique Traits. Radiant Shardblades add the\nwrist and a metal head nearly the size of a warrior’s\nfollowing unique traits:\ntorso. Due to their enormous weight, warhammers\nFaster Summoning. When you use the Interact action usually can usually only be wielded by people in\nto draw your Radiant Shardblade, it immediately Shardplate. Consequently, warhammers are commonly\nmaterializes in your hand. You can dismiss your called Shardhammers, despite being made of mundane\nRadiant Shardblade with a mere thought (no action materials.\nrequired), and it disappears into mist until you Unique Traits. If you have the Warhammer special-\nneed it again. ist expertise, add the following special expert trait:\nMalleable Form. You can use to change the shape\nCrushing Weight. When you hit a character of your\nof your Radiant Shardblade, choosing any non-special\nsize or smaller with an attack using this weapon, you\nmelee weapon on the Weapons table. Your Blade uses\ncan also push them horizontally up to 10 feet. When\nthat weapon’s skill and gains that weapon’s traits for\nyou do, you can also spend to choose any number\nas long as it’s in that shape; if you have an expertise\nof other characters of your size or smaller within your\nin the chosen weapon, it gains those expert traits as\nreach, pushing them the same direction and distance.\nwell. You roll double the normal damage dice for that\nweapon (for example, a Shard longspear rolls 2d8\ndamage instead of 1d8), and it deals spirit damage\ninstead of that weapon’s normal type.\nRadiant Shardblade. Your Radiant Shardblade\nhas Faster Summoning instead of the Summoning/\nDismissing trait, and it doesn’t have the Dangerous\ntrait of other Shardblades. Otherwise, it follows the\nrules for ordinary Shardblades.\nAn Edgedancer’s living",
+    "page": 11,
+    "keywords": [
+      "2",
+      "1",
+      "Disadvantage",
+      "Path",
+      "Advantage"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Shardblade glows with",
+    "content": "diamond light.",
+    "page": 11,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Armor",
+    "content": "Type Deflect Value Traits Expert Traits Weight Price\nUniform 0 Presentable — 5 lb. 40 mk\nLeather 1 — Presentable 10 lb. 60 mk\nChain 2 Cumbersome [3] Unique: loses Cumbersome trait 25 lb. 80 mk\nBreastplate 2 Cumbersome [3] Presentable 30 lb. 120 mk\nHalf Plate 3 Cumbersome [4] Unique: Cumbersome [3] 40 lb. 400 mk\ninstead of Cumbersome [4]\nFull Plate 4 Cumbersome [5] — 55 lb. 1,600 mk\nShardplate 5 Dangerous, Unique Unique: loses Dangerous trait 1400 lb. Reward only\nShardplate (Radiant) 5 Unique — Weightless Talent only",
+    "page": 12,
+    "keywords": [
+      "Deflect"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Armor Armor Traits",
+    "content": "With war raging across Roshar, armor is a very These rules apply to any armor with that trait listed in\ncommon sight, though it’s often still frowned on in its entry on the Armor table.\npolite society. While wearing armor, you stand out Cumbersome [X]. To wear this armor easily, your\nin polite society. This might result in standing out Strength score must be equal to or greater than the\nlike a sore thumb, getting turned away from certain number indicated in brackets. If your Strength is lower\nlocations, or gaining a disadvantage on tests made to than that number, you’re Slowed while wearing this\ninfluence civilians in most non-military contexts, such armor and you gain a disadvantage on all tests that\nas banquets, markets, or churches. use your Speed attribute.\nThis section outlines the most common types of Dangerous. The GM can spend C that you gain while\narmor found on Roshar. You can only benefit from one wearing this armor to cause your uncontrolled motion\ntype of armor at once, and you can’t put on armor or to injure an ally with 5 feet of you, dealing 2d6\ntake it off while in combat or in situations where it’s impact damage.\nhard to move. The Armor table includes the follow- Presentable. This unobtrusive armor is presentable to\ning columns: wear in public in a non-military context. You don’t\nType. The general type of armor—but feel free to suffer undue attention for wearing this armor or gain a\ncreatively describe your own, as long as it uses the disadvantage on tests for doing so in conversations.\nsame statistics. Unique. This armor has unique rules detailed immed-\nDeflect Value. Reduce all incoming impact, keen, and iately following the word “Unique” in the Armor table\nenergy damage by the deflect value of the armor you’re (for example, “Unique: loses Cumbersome trait”).\nwearing (see “Deflect” in chapter 3).\nTraits. Special rules that apply to that armor (see the\nupcoming “Armor Traits” section).\nExpert Traits. Special rules that apply only if you have\nan expertise in that armor. Some armors remove\nan undesirable trait if you have expertise, rather\nthan adding a desirable trait; for example, if you\nhave an expertise in Chain Armor, your chain loses\nits Cumbersome trait so you can wear it with any\nStrength score.\nWeight. The armor’s weight.\nPrice. The armor’s standard price.\nuniform\n252 Chapter 7: Items",
+    "page": 12,
+    "keywords": [
+      "Deflect",
+      "2",
+      "Strength",
+      "Disadvantage",
+      "Armor",
+      "Advantage",
+      "Speed"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Forged armor cannot",
+    "content": "leaTher\nbreasTplaTe\nchain\nfull plaTe\nhalf plaTe\nhelp but fall short of\nShardplate’s majesty.",
+    "page": 13,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Radiant Shardplate",
+    "content": "Shardplate is just as highly sought-after as Shardblades.\nEach set provides full-body armor that enhances the\nphysical capabilities and durability of its wielder, blocks\nstrikes from Shardblades, and protects its wearer from\nall but the most powerful Invested abilities.",
+    "page": 14,
+    "keywords": [
+      "Armor"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Shardplate is made from thick interlocking plates",
+    "content": "of an unknown, monumentally heavy metal. On the\ninterior of each set’s breastplate, an apparatus of gems\ncharges the Plate with Stormlight and allows the use of\nits Invested properties. When the Plate’s wearer closes\ntheir helmet’s mask, it becomes partially translucent,\nallowing for a much greater range of vision than in\nmundane helmets.\nA person wearing infused Shardplate isn’t hampered\nby its weight; instead, it greatly increases their strength\nand agility. Perhaps even more importantly, the\narmor has a remarkable ability to repel the strikes\nof Shardblades.\nDespite these qualities, Shardplate can be difficult\nto use effectively. It requires gems infused with Storm -\nlight to function, and donning or doffing it with any\nspeed requires a team of trained professionals.\nWithout Stormlight, Plate is little more than dead\nweight, and it can cease functioning when it takes\nsignificant damage. However, unlike other armor,\nPlate’s damaged pieces can regenerate; given enough\ntime and Storm light, you can use the breastplate’s gem\napparatus to regrow the missing pieces of a set of Plate,\nalmost like a living organism.",
+    "page": 14,
+    "keywords": [
+      "Armor",
+      "Speed",
+      "Strength"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Transporting Shardplate can also be difficult due",
+    "content": "to its weight, usually requiring a chull-drawn cart\n(described in “Travel” later in this chapter). This\nparticularly matters when tracking your carrying\ncapacity (see “Strength” in chapter 3).\nUnique Traits. Shardplate adds the following\nunique traits:\nCharges (4 charges). Shardplate reinforces itself using\nStormlight from its gems. An average set of Shardplate\nhas 4 charges (though special sets might have more).\nBefore you take damage while wearing Shardplate,\nMost Shardbearers cover you can expend a charge to increase your deflect value\nagainst that damage by 10. While the armor has at\ntheir slate-gray Plate\nleast 1 charge, it is Invested. When the armor runs\nout of charges, it no longer functions correctly; until\nin colorful enamel.\nrecharged, it gains the Cumbersome [6] trait, and it\nloses the Enhanced Attributes and Invested Ability\nProtection traits.\n254 Chapter 7: Items",
+    "page": 14,
+    "keywords": [
+      "Deflect",
+      "Armor",
+      "Strength"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Radiant Shardplate",
+    "content": "Breakable. Lucky hits against Shardplate can shatter within reach of them succeeds on an Athletics test\nplates of the armor, causing Stormlight to leak out. against the wearer’s Physical defense (via the Use a\nAfter you’re hit by an attack while wearing Shardplate, Skill action).\nyour opponent can spend from that attack to cause Natural Recovery. Radiant Shardplate naturally\nyour Shardplate to lose 1 charge. restores its charges over time, though if you wish, you\nRecharging. Shardplate can be recharged in the usual can recharge it quickly using the normal rules. After a\nmanner (see “Using Items” at the beginning of this long rest, your Shardplate regains all its charges.\nchapter), either via unencased gems or a Radiant. Radiant Shardplate. Your Radiant Shardplate doesn’t\nHowever, Shardplate charges require significantly more have the Dangerous trait of other Shardplate, and it\nInvestiture than most fabrials, requiring 5 Investiture doesn’t add a disadvantage to your Invested tests.\nor 5 gems (instead of 1) to restore a single charge. It otherwise follows the rules for ordinary Shardplate.\nEnhanced Attributes. While wearing the armor, you\nbecome Enhanced [+2 Strength] and Enhanced GM Tip: Rewarding Items\n[+2 Speed].\nSome things on Roshar are so precious and powerful that\nInvested Ability Protection. While wearing this armor,\nthey can’t be purchased: Ryshadium steeds, Shardblades,\nyour Invested ability tests gain a disadvantage, Invested\nShardplate, Soulcasters, and the gems required to create\nability tests against you gain a disadvantage, and your\nunique fabrials. Players can only acquire these items\ndeflect value applies to all damage types. (When it fits\nthrough rewards (see chapter 8), whether for completing\nthe story, your GM might decide you aren’t protected\na goal or through narrative means.\nfrom some sources of damage, such as extreme cold.)",
+    "page": 15,
+    "keywords": [
+      "Deflect",
+      "Strength",
+      "Disadvantage",
+      "Armor",
+      "Advantage",
+      "Speed"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Radiants of the Fourth Ideal or higher can wield",
+    "content": "“living” Shardplate, which usually glows with a\nluminescent light. The armor is composed of common\nspren; these spren usually follow the Radiant unseen,\nbut they can be called on to manifest into armor.",
+    "page": 15,
+    "keywords": [
+      "Armor"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "You can also choose for your Radiant Shardplate",
+    "content": "to look like “dead” Plate, which doesn’t glow.\nUnique Traits. Radiant Shardplate has the follow-\ning unique traits:\nLiving Armor. You can use to summon or dismiss\nany number of your armor pieces on your body (for\nexample, to remove your helmet). Dismissing a few\npieces doesn’t change your armor’s function unless\nyou wish it to. Your armor maintains its count of\ncharges when dismissed.\nRestraining Armor. You can summon the armor\naround a character you can sense within 20 feet of you\nwho is willing, unaware of your presence or location,\nor Surprised. When you try to summon it around an\nunwilling character, you must succeed on a Discipline\ntest against their Physical defense. While the armor is\naround a character other than you, they gain all the\nbenefits of wearing Shardplate, but they also become\nRestrained. Whenever this character takes damage,\nthey automatically expend one of the armor’s charges\nto increase their deflect value by 10 against that\ndamage. The Restrained condition ends and the armor\nis dismissed when you choose to dismiss it, when it\ndrops to 0 charges, or when the character or an ally",
+    "page": 15,
+    "keywords": [
+      "Deflect",
+      "Armor"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "This section presents everyday Rosharan tools and",
+    "content": "This chapter provides statistics for common objects\nresources that are commonly applicable to your\nthat interact with the game rules. However, this isn’t a\nadventures. The Equipment table lists each item’s\ncomprehensive list of everything that exists on Roshar!\nname, weight, and price, then the text that follows\nFeel free to carry other personal items that have meaning\ndescribes each item’s benefits.\nto your character, add flavor to your actions, or similarly\nSome items in this section have variable prices,\ndeepen the narrative. Just remember that such personal\nas many variations on that item can be found across\nitems can’t provide you mechanical advantages in the\nRoshar. For example, Vorin wines range dramatically\ngame—you can’t suddenly declare you have a perfect\nin value, and some reference books are much rarer than\ninfused gem in your pocket that didn’t exist before. But\nothers. The GM chooses how much an individual item\notherwise, be creative.\ncosts within its range, and they might grant tangential\nFor example, you might decide your character has a\nbenefits to the higher-priced varieties. For example,\nsweet tooth and constantly snacks on sweets. Sweets\nspending extra money on a blue wine, rather than a\naren’t on the item list, but you can still use it to add\nred, might lower your DC on a test made to influence\ninteresting details to the story. When you’re in a solemn\na connoisseur.\naudience with royalty, you might describe how you pull a\nAlcohol. Every culture of Roshar has its own\nsweet from your sock, pop it in your mouth, and crunch it\nintoxicating traditions, such as beers, mudbeers, ciders,\nloudly—no need to establish where you bought the sweet\nhonu, shiki, juices, and lagers.\nfrom or how much it cost! Just remember that you can’t\nIn Vorin society, almost all forms of alcohol are\nuse these narratively conjured sweets to bribe guards,\nreferred to as “wine” regardless of their ingredients.\nto nourish yourself when rations run out, or to barter for\nSuch wines are known by their distinct colors, which are\nitems on the equipment list—all of those uses have a\ninfused into each beverage so they can be distinguished\nmechanical impact on the game.\nat a glance. From least intoxicating to most, the types\nof wine are:",
+    "page": 16,
+    "keywords": [
+      "Equipment",
+      "Advantage"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Color Effect",
+    "content": "Pink Noted as being floral and aiding alertness. crem boTTle of\nLess intoxicating than milk. auburn wine\nOrange A non-intoxicating wine that tastes of fruit with\nnotes of ginger. Most popular with members of the\nclergy.\nYellow Offers a bold and deep flavor “without guilt.”\nMinimally intoxicating.\nAuburn Spicy with an earthy aroma. Brewed with\nfermented fruit.\nRed Flavorful wine with a pleasant burn.\nSapphire Nutty with notes of honey, made with fermented\nlavis grain.\nBlue Carries complex notes of berry and lemon.\nViolet Potent liquor with an aroma of spiced sandalwood.\nConsidered the most flavorful of the wines.\nAnesthetic. Usually made from fathom bark or\nwinterwort, you can apply a dose of anesthetic ointment\nglass boTTle of\nto an injury after a short or long rest to reduce its sapphire wine\nrecovery time by 1d4 days. Each injury can be treated\nwith anesthetic only once per day.\nAntiseptic (potent). Knobweed milk, fourleaf\nsap, and lister’s oil can all be used to make a strong\nantiseptic. A dose can be applied to a character after\na short rest to restore 2d6 health.\n256 Chapter 7: Items",
+    "page": 16,
+    "keywords": [
+      "2",
+      "1"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Name Weight Price Name Weight Price",
+    "content": "Alcohol (1 serving) 0.2 lb. 0.5–50 mk Lantern (sphere) 2 lb. 20 mk\nAlcohol (bottle) 2–4 lb. 1–300 mk Lock and key 1 lb. 50 mk\nAnesthetic (5 doses) 1.5 lb. 75 mk Lockpick 0.5 lb. 5 mk\nAntiseptic (potent, 5 doses) 1 lb. 50 mk Magnifying lens 0.2 lb. 400 mk\nAntiseptic (weak, 5 doses) 1 lb. 25 mk Manacles 6 lb. 10 mk\nBackpack* 5 lb. 8 mk Mirror (handheld)* 2 lb. 25 mk\nBarrel* 70 lb. 15 mk Musical instrument 0.5–20 lb. 1–50 mk\nBlanket* 2 lb. 2 mk Net (hunting) 5 lb. 4 mk\nBook (reference) 1–5 lb. 10–500 mk Net (fishing) 15 lb. 10 mk\nBottle (crem)* 3 lb. 0.5 mk Oil (1 flask) 1 lb. 1 mk\nBottle (glass)* 2 lb. 1 mk Paper or parchment (1 sheet)* 0.1 lb. 0.5 mk\nBucket* 2 lb. 1 mk Perfume (1 vial)* 0.5 lb. 20 mk\nCandle 0.2 lb. 0.2 mk Pick (mining)* 10 lb. 10 mk\nCase (leather) 1 lb. 4 mk Poison (weak, 1 dose) 0.2 lb. 20 mk\nChain (thick, 10 feet) 10 lb. 20 mk Poison (effectual, 1 dose) 0.2 lb. 50 mk\nChain (thin, 1 foot) 0.5 lb. 20 mk Poison (potent, 1 dose) 0.2 lb. 120 mk\nChest* 25 lb. 30 mk Pot (iron)* 10 lb. 8 mk\nClothing (common) 3 lb. 2 mk Pouch* 1 lb. 1 mk\nClothing (fine) 6 lb. 50–200 mk Pulley system 12 lb. 100 mk\nClothing (ragged) 1.5 lb. 0.5 mk Rope (50 feet) 5 lb. 30 mk\nCrowbar 3 lb. 10 mk Sack* 0.5 lb. 0.2 mk\nEar trumpet 1 lb. 50 mk Scale 3 lb. 20 mk\nFlask or tankard 1 lb. 1 mk Shovel* 5 lb. 8 mk\nFlint and steel 1.5 lb. 4 mk Soap* 0.1 lb. 1 mk\nFood (ration, 1 day) 0.5 lb. 0.2 mk Spyglass 1 lb. 500 mk\nFood (street, 1 day) 1.5 lb. 3 mk Surgical supplies 3 lb. 20 mk\nFood (fine, 1 day) 0.5 lb. 25 mk Tent (two-person)* 20 lb. 10 mk\nGrappling hook 4 lb. 10 mk Treatment (medical, 1 dose) 0.2 lb. 10 mk\nHammer (handheld)* 3 lb. 4 mk Tuning fork 0.5 lb. 50 mk\nInk (1-ounce bottle)* 0.2 lb. 40 mk Unencased gem (infused) 0.01 lb. 2 mk\nInk pen* 0.1 lb. 0.1 mk Vial (glass)* 0.2 lb. 4 mk\nJug or pitcher* 4 lb. 2 mk Waterskin* 1 lb. (empty) 1 mk\nLadder (10-foot)* 20 lb. 5 mk Wax (1 block)* 0.5 lb. 2 mk\nLantern (oil) 2 lb. 20 mk Whetstone* 1 lb. 0.2 mk\n*This item is listed for roleplaying purposes and doesn’t have specific statistics or rules.",
+    "page": 17,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "TIARTUD",
+    "content": "Antiseptic (weak). A dose of weak antiseptic, such\nas that made from larmic mucus, can be applied to a\ncharacter after a short rest to restore 1d6 health.\nBook (reference). Each reference book contains\ninformation on a particular topic, such as a historical\nera, engineering, biology, architecture, or crafting\na particular type of fabrial. When you have time to book\n(reference)\nreference a book while making a related test using\nyour Intellect attribute, you’re considered to have\nan expertise in the topic (see “Expertise Benefits”\nin chapter 3).\nCandle. While lit, the candle sheds light in a\n15-foot radius. It burns for up to 6 hours before\nbecoming unusable.\nCase (leather). A sealable, cylindrical case that can\nstore up to ten pages of paper or parchment and protect\nthem from the weather.\nChain (thick). This sturdy chain can be used in\nsecuring cargo, shackling prisoners, and other situations\nwhere strength is essential. This chain can be broken\nby succeeding on a DC 30 Athletics test or by dealing\nflinT and sTeel\n15 damage to it. (sparkflicker)\nChain (thin). This thin chain is often used in\njewelry and Soulcasters, usually made of precious metals\nin fine links. This chain can be broken by succeeding on\na DC 20 Athletics test or by dealing 5 damage to it.\nClothing (common). Plain clothes are made of\naffordable materials and are generally undyed, helping\nyou fit in among the commonfolk. While wearing these\nclothes, you gain an advantage on spiritual tests made\nto convince others you’re from the lower class.\nClothing (fine). Fine clothes are made of silks or\nother high-quality materials, colored using expensive\ndyes, and often stitched with fine embroidery. Wearing\nfine clothes helps you to blend into high society, such\nsTreeT food\nas noble banquets, without arousing suspicion. While (laVis grain wraps)\nwearing these clothes, you gain an advantage on\nspiritual tests made to convince others you’re from\nthe upper class. Flint and Steel. A flint and steel can be used as to\nClothing (ragged). This clothing may have once light abundant fuel within reach. Starting a fire under\nbeen of fine or common make, but it’s now barely more challenging circumstances can take 1 minute or\nholding together. While wearing these clothes, you gain more. Herdazians often wear a tool called a sparkflicker\nan advantage on spiritual tests made to convince others as jewelry or other ornamentation; they can use this\nyou’re destitute. like flint and steel by quickly running their crystalline\nCrowbar. You can use a crowbar to gain an fingernails along it.\nadvantage on Athletics tests where the crowbar’s Food (ration). Rations are foods created for\nleverage can be applied. extended travel, such as jerky and hard-baked lavis\nEar Trumpet. Distant sounds heard through an cakes. They generally lack flavor, but if kept dry,\near trumpet can be perceived as though at half the they remain edible indefinitely.\ndistance. At the GM’s discretion, more powerful ear Food (street). Every culture of Roshar has its own\ntrumpets may be available at higher prices. street confections, ranging from loaves of bread to more\nspecific cultural foods like Herdazian chouta.\n258 Chapter 7: Items",
+    "page": 18,
+    "keywords": [
+      "1",
+      "Intellect",
+      "Advantage",
+      "Strength"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "TIARTUD",
+    "content": "Pulley System. Most commonly used by engineers\nand artifabrians, this system includes four pulley wheels,\n30 feet of rope, and a hook. When you have time to set\nup a pulley apparatus before lifting an object, you treat\nthe object as being a quarter of its normal weight.\nRope. Rope is usually made of seasilk (or less com-\nmonly, lavis grain or rockbud fibers) and sold in 50-foot\nlengths that can be cut and tied to change its length as\nrope needed. It can be cut by dealing 2 damage to it, or it can\nbe ripped apart with a successful DC 20 Athletics test.\nScale. Most commonly used by scholars, ardents,\nappraisers, and gem cutters, a scale can accurately\ndetermine the weight of an object (to a maximum\nof 2 pounds).\nSpyglass. Distant objects viewed through a spyglass\ncan be perceived as though at half the distance. At the\nGM’s discretion, spyglasses that allow distant objects to\nappear even closer may be available at higher prices.\nSurgical Supplies. This satchel contains enough\nbandages, salves, splints, and other medical supplies\nto be used 10 times. When you make a Medicine test\nto treat a wounded character (or to similarly use these\nmedical supplies), you can expend one of these uses to\ngain an advantage on the test.\nTreatment (medical). Rosharan surgeons treat\nailments with a variety of treatments, generally made\nfrom bitterleaf or bloodivy. During a short rest, you can\nuse a dose of such a treatment to cure a character of one\nsurgical\nsupplies of the following conditions, given that its source isn’t a\npermanent injury: Disoriented, Exhausted (reduces the\npenalty by 1), or Stunned.\nTuning Fork. A tuning fork can transfer Stormlight\nfrom one sphere or gemstone to another. While using\na tuning fork, you can use spheres to recharge fabrials,\nShardplate, and half-shards as if the spheres were\nunencased gemstones.\nUnencased Gem (infused). Unlike spheres with\ngemstones encased in glass, unencased gems leak Storm-\nlight quickly, going dun within several days depending\non their cut. This permeability allows unencased gems\nto recharge fabrials and Shardplate. Radiants can also\nbreathe in Stormlight from unencased gems as if they\nwere spheres, gaining the same benefit.\nchesT\n260 Chapter 7: Items",
+    "page": 20,
+    "keywords": [
+      "Advantage"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Travel Chull",
+    "content": "Chulls are large, docile land crustaceans that resemble\nWhether your adventuring party is a task force charged\nenormous hermit crabs with stone-like shells. A full-\nwith missions by the Coalition of Monarchs, a band of\ngrown chull’s shell is over twice the height of most\nmercenaries that sell your capabilities around Roshar,\nadults. Despite their slow speed, chulls have been\nan expeditionary group seeking lost knowledge, or\ndomesticated since before memory. Their endurance,\nsomething else entirely, you’re likely to trek far and wide\nstrength, and ability to withstand highstorms make\nacross Roshar. This section contains information about\nthem the most popular mount for extended journeys.\nlodging, mounts, and vehicles that may be helpful when\nyou’re far from home. Horse\nHorses are extremely uncommon on Roshar, and",
+    "page": 21,
+    "keywords": [
+      "Speed",
+      "Strength"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Lodging",
+    "content": "are generally owned by nobles and other high-class,\nWhile traveling, you may find yourself wanting a prosperous individuals.\nroom, especially during a highstorm. From public",
+    "page": 21,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Ryshadium",
+    "content": "stormshelters to the finest of accommodations, the\nSometimes referred to as “the third Shard” alongside\nLodging table lists how much it generally costs to stay\nShardblades and Plate, Ryshadium are an exceedingly\nper night. You can usually purchase food at or near\nrare breed of horse. They stand an average of two hands\nthese lodgings, using the prices on the Equipment\ntaller than horses of other breeds, have stone-like hooves\ntable in the previous section.\nthat don’t require horseshoes, and can carry a warrior",
+    "page": 21,
+    "keywords": [
+      "Equipment"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Lodging",
+    "content": "wearing Shardplate into battle—a feat which would\nLodging Price per Person per Night injure or kill other horses.\nIn addition, Ryshadium seem to have a symbiotic\nStormshelter Free to the public (if there’s room)\nbond with musicspren, and their eyes brim with\nModest 2 mk\nintelligence and sapience. A Ryshadium chooses\nComfortable 4 mk\ntheir rider, refusing others who attempt to ride them.\nWealthy 8 mk",
+    "page": 21,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Vehicles",
+    "content": "Aristocratic 20 mk\nVehicles enable travel over water or allow quicker or",
+    "page": 21,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Mounts",
+    "content": "safer travel over land. Almost all vehicles on Roshar\nChulls are the most common mounts on Roshar, but a are designed to weather passing highstorms.\nprivileged few people use horses or Ryshadium instead. The Vehicles table lists common forms of trans-\nThe Mounts table lists each mount’s travel speed and portation, including the type of vehicle, average travel\ncarrying capacity (representing the pace and weight speed, and cost to rent or purchase one. The rental rate\nthe mount could comfortably maintain during a long grants you temporary use of the vehicle and provides you\nexpedition). the animals or people needed to operate it. If you’d like\nWhen attached to a cart, carriage, or other vehicle, to purchase a vehicle, you’ll need to staff it yourself.\na mount can move five times its carrying capacity Vehicles\n(including the weight of the vehicle). If multiple mounts",
+    "page": 21,
+    "keywords": [
+      "Speed"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Rental Price Purchase",
+    "content": "are pulling the same vehicle, combine their carrying",
+    "page": 21,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Vehicle Type Travel Speed per Day Price",
+    "content": "capacities.\nChull cart Land 2 mph 5 mk 500 mk\nMounts Rowboat Water 3 mph 3 mk 250 mk\ndownstream,",
+    "page": 21,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Carrying Purchase",
+    "content": "Mount Travel Speed Capacity Price 1 mph upstream\nChull 2 mph 1,500 lb. 200 mk Merchant Water 5 mph 50 mk 10,000 mk\nvessel\nHorse 4 mph 500 lb. 4,000 mk\nWarship Water 8 mph 250 mk 100,000 mk\nRyshadium 6 mph 1,000 lb. Reward only",
+    "page": 21,
+    "keywords": [
+      "Speed"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Fabrials Standard Fabrials",
+    "content": "Fabrials fill many roles in Rosharan societies, whether Name Charges Weight Purchase Price\nin the form of modern conveniences like spanreeds, Alerter 5 0.5–10 lb. 500 mk\nancient relics like Soulcasters, or technological break- Attractor 5 8 lb. 750 mk\nthroughs like half-shards. In some regions, fabrials are Clock fabrial 3 2 lb. 200 mk\nquite common, while in other parts of the world, they\nDrainer 2 0.5 lb. 1,000 mk\nare especially rare.\nEmotion bracelet 3 0.2 lb. 200 mk\nThese marvelous Stormlight-powered devices\nFreechair — 12 lb. Free or 800 mk\nperform a variety of functions. A simple fabrial might\nHeatrial 5 1–10 lb. 50–500 mk\nmerely heat a home, while others are priceless artifacts\nPainrial 3 1 lb. 750 marks\nthat transform materials into other materials.\n(amplifying)\nA fabrial is constructed by trapping a spren within\na gemstone; the type of spren determines the fabrial’s Painrial (numbing) 3 1 lb. 750 marks\nbasic function, then the gemstone is surrounded by Repeller 5 8 lb. 1,500 marks\ncomplex metal latticeworks to fine-tune its effects. Soulcaster 5 5 lb. Reward only\nMore complex fabrials contain multiple gems (and Spanreed (1 pair) 3 1 lb. each 100 marks\nspren trapped within them).\nSuppressor 2 1 lb. Reward only",
+    "page": 22,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Activating Fabrials",
+    "content": "Alerter (5 charges). While active, an alerter detects\nThe gem or gems at the core of a fabrial are usually the presence of approaching people or objects, blinking\ncharged with Investiture in the form of Stormlight, if they’re within a certain radius. When an alerter is\nwhich powers the fabrial’s effects. Each fabrial can crafted, the creator sets its radius and can tune it to\nhold a certain number of charges (see “Using Items” detect certain people, certain materials, the use of\nat the beginning of this chapter), determined when that certain surges, and similar alerts. An alerter expends\nfabrial is crafted. While the fabrial has at least 1 charge, 1 charge for each day it’s active.\nit is Invested. Like spheres, the fabrial’s gems must be Attractor (5 charges). Each attractor is attuned\nrecharged after their Investiture is expended. to a particular Essence or material, such as water,\nUnless otherwise specified, you can use the Interact smoke, or another Essence. While activated, the fabrial\naction to activate a fabrial you’re touching. An activated weakly attracts the attuned material within a specific\nfabrial expends 1 charge to produce that fabrial’s effect, radius. Both the material it attracts and the radius are\nwhich lasts for the duration specified. The fabrial determined when the attractor is created. The attractor\ncontinues to spend more charges until you touch it as pulls its attuned material toward it at a rate of 1 foot\nto deactivate it, or until it runs out of charges. per round, but this has no effect on anything worn or\ncarried by a character. An attractor expends 1 charge",
+    "page": 22,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Unique Fabrials",
+    "content": "for each hour it’s active.\nBeyond the common fabrials in the following section, Clock Fabrial (3 charges). Larger clock fabrials\nmany cutting-edge fabrials push the limits of this can announce the hour when mounted on a building,\ntechnology. Such experimental devices produce effects while smaller versions can be worn as jewelry to allow\nthat people never dreamed possible through technology. their wearer to know the exact time. Both types spend\nSome mimic the capabilities of Radiant surges, while 1 charge for every 5 days they’re active.\nothers miniaturize larger fabrials. You can only acquire Drainer (2 charges). Drainer fabrials can\na unique fabrial by finding or being gifted one—or in partially drain Stormlight from infused gems to alter\nthe case of inventive characters, by crafting your own the strength of their glow; this is primarily done for\n(see “Inventing Unique Fabrials” later in this chapter). aesthetic purposes. You can use an Interact action to\ntouch this fabrial to an Invested or infused object or",
+    "page": 22,
+    "keywords": [
+      "Strength"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Standard Fabrials",
+    "content": "character. If the fabrial isn’t fully charged, the target\nThe fabrials on the Standard Fabrials table are regularly loses 1 Investiture or charge, and this fabrial gains\nproduced or used throughout Roshar. Some are consid- 1 charge. If the target is an unwilling character (or an\nered commonplace and even mundane (though they’re object being worn or held by one), you must succeed\noften still expensive). These fabrials can be purchased on an Agility test against that character’s Physical\nand used much like the other items in this chapter. defense; on a failure, you don’t drain the target and\n262 Chapter 7: Items",
+    "page": 22,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Soulcasters contain three gemstones that they need",
+    "content": "material. This fabrial can’t affect anything being worn the Soulcaster to cause one gem to break. A broken\nor carried by a character. A repeller expends 1 charge for gem must be replaced before the Soulcaster can be used\neach hour it is active. again; doing so requires several hours of work from\nSoulcaster (5 charges). Soulcasters mimic the someone with the Fabrial Crafting specialist expertise.\nRadiant surge of Transformation, more commonly Spanreed (3 charges). Spanreeds come in pairs,\ncalled Soulcasting. However, unlike Radiants, the vast with each reed conjoined to the other, allowing for the\nmajority of fabrial Soulcasters can only turn materials bearers of each to communicate over long distances.\ninto one Essence. For example, a stone Soulcaster can Each spanreed is a writing utensil with an infused ruby\nturn water, wood, or even air into stone, but it can’t do at the top. When one bearer twists the ruby to activate\nthe reverse. it, their spanreed causes the paired spanreed’s ruby\nWhen you touch the Soulcaster to an object you want to blink, signaling that communication is requested.\nto transform, then tap one of the three gemstones on the When the other spanreed bearer is ready, they twist\nfabrial, you can activate the Transformation surge (see their spanreed’s ruby, and the two reeds begin to move\nchapter 6) using the surge’s normal rules and activation in parallel. By taking turns writing, the bearers can\ntime, with the following changes: conduct written conversations. Both spanreeds must\nbe stationary for them to work, preventing their use\n◆ You can spend charges from the Soulcaster in place\non boats, in carriages, and in similar situations. A pair\nof Investiture for the surge.\nof spanreeds expend 1 charge for every 5 days they\n◆ You don’t need a free hand, but you must hold the\nare active.\nSoulcaster in your hand.\nSuppressor (2 charges). Suppressors are special-\n◆ The Soulcaster can only transform material into the\nized replications of a much grander construction at the\none Essence to which it is linked.\nheart of Urithiru, tower-city of the Knights Radiant.\n◆ If you have no ranks in Transformation, your\nWhen activated, this fabrial suppresses the use of surges\nmaximum surge size is Small (2.5 feet).\nin a radius of 30 feet. The suppressor can be charged\n◆ When making a Transformation test, you can use\nwith different types of Light, each one affect ing different\neither your Transformation modifier (if you have that\nSurgebinders: When infused with Stormlight, it stops\nskill) or your Willpower attribute score (without any\nusers of Voidlight, and when infused with Voidlight,\nranks in a skill).\nit stops users of Stormlight. Affected characters in its\nIf a non-Radiant character practices with a Soulcaster\nradius can’t use surges or summon Radiant Shardblades\nlong enough, the GM might allow them to invest skill\nor Shardplate. Radiants of the Fourth Ideal or\nranks into Transformation when they gain a level, but\nhigher can attempt to push through this suppression,\nthey still need the Soulcaster to use the surge.\nmaking a DC 20 test at the start of each round using\nthe appropriate surge skill (no action required); on a\nto function. The vast amounts of Investiture used can\nsuccess, they can use one action from that surge during\ncause them to crack. The GM can spend from using\nthat round. A suppressor expends 1 charge for each\nhour it is active.\nspanreed\nsoulcasTer\n264 Chapter 7: Items",
+    "page": 24,
+    "keywords": [
+      "Willpower"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Consult the Item Crafting Test table to determine",
+    "content": "Crafting Step 2: Make a Crafting Test\nOnce you have all needed materials, it’s time to actually\nExperienced craftspeople can craft non-Invested\ncraft the item during downtime (see “Downtime” in\nitems for themselves, including weapons, armor,\nchapter 9).\nequipment, and even grander creations like buildings\nTime Spent. When crafting, you can usually\nor works of art.\nproduce 100 marks worth of work in one workday.\nCrafting Prerequisites For example, a greatsword worth 200 marks requires\n2 workdays to complete, while a lockpick worth 5 marks\nYou can only craft an item if you have an expertise\nrequires only a fraction of a workday. However, this time\nrelevant to the item you want to craft. For example, to\ncan be modified by Opportunities or Complications\ncraft a sidesword, you need either the Weapon Crafting\nduring the crafting process: each Opportunity you roll\nexpertise or the Sidesword expertise.\nduring your Crafting test reduces the time to create the\nIf you only have a broad expertise (like Weapon\nitem by 25 percent, while each Complication increases\nCrafting), you can craft relevant items with it, but the\nit by 25 percent.\nitem’s user can’t benefit from the expert traits of those\nCrafting Test. When you’re ready to begin crafting,\nitems in combat.\nroll a Crafting test and raise the stakes. At the GM’s\nCrafting Mundane Items discretion, you might gain an advantage on this test if\nyou have exceptional tools or facilities available, or you\nIf you have the necessary expertise, choose a non-\nmight gain a disadvantage if your tools or facilities are\nInvested item with a price from the Weapons table,\nexceptionally poor.\nArmor table, or Equipment table. At the GM’s\ndiscretion, you can craft a different non-Invested\nhow your test result affects your crafting. And if you roll\nitem instead. Use the following steps to craft your\nan Opportunity or Complication, don’t forget to modify\nchosen item:\nyour crafting time as described in “Time Spent.”\n1. Acquire the necessary materials.",
+    "page": 25,
+    "keywords": [
+      "Complication",
+      "Disadvantage",
+      "Armor",
+      "Equipment",
+      "Advantage",
+      "Opportunity"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Item Crafting Test",
+    "content": "2. Make a Crafting test.\n3. Apply any upgrades or drawbacks. Test Result Item Quality\n1–5 Utter Failure . Despite all your time and effort, you fail\nStep 1: Acquire Materials\nto produce anything usable. You must start over from\nFor non-Invested items, it’s assumed you can easily find scratch. Nothing remains of your initial attempt or\nthe metal, leather, shalebark, or other raw materials to materials—it was all consumed in your experiment.\ncraft the item, provided you have access to a common 6–10 Shoddy Creation . Creating this item proves\ntrade network or other market. unusually challenging. You create the item, but it has\nMaterial Cost. The cost to acquire the raw no upgrades and one drawback.\nmaterials equals half the normal value of the item 11–20 Typical Creation . The crafting goes exactly as\nyou’re crafting. expected. You create the item with one upgrade and\nTools and Facilities. Additionally, you need access one drawback.\nto the proper tools and facilities to craft the item. This 21–25 Quality Creation . Things go swimmingly! You craft\nis up to the GM’s discretion based on the specifics of the item with two upgrades and one drawback.\nthe item you’re making. You might be able to fashion a 26+ Exceptional Creation! You make a breakthrough\nquick lockpick with just your hands, but a sharp sword while creating this item. You craft the item with three\nrequires access to a forge and anvil. If your tools and upgrades and no drawbacks.\nfacilities are poor, you might gain a disadvantage on\nyour Crafting test in step 2.",
+    "page": 25,
+    "keywords": [
+      "Advantage",
+      "Disadvantage"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Advanced Item Features",
+    "content": "Step 3: Apply Upgrades Advanced Item Features\nand Drawbacks In exceptional circumstances, craftspeople can generate\nFor each upgrade you earned as part of your Crafting up to three upgrades during the crafting process. When\ntest, choose an upgrade from the Item Upgrades and this happens, you can choose to spend two upgrades\nDrawbacks table. You’re free to suggest your own to apply one feature of your choice from the Advanced\ncreative ideas if the GM approves. If you earned two Item Features table, instead of choosing from the Item\nor more upgrades, you can (if you wish) instead choose Upgrades and Drawbacks results table.\nfrom the next section, “Advanced Item Features.”\nFor each drawback earned, roll a d6 on the same",
+    "page": 26,
+    "keywords": [
+      ""
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Feature Name Effect",
+    "content": "table to randomly determine a drawback. The GM\nmay also decide to assign you a creative drawback Adorned If the item is armor, it gains Presentable\nas an expert trait thanks to the artistic\nin certain situations.\nflourishes you add.",
+    "page": 26,
+    "keywords": [
+      "Armor"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Hidden The item has a storage compartment",
+    "content": "d6 Upgrade Drawback Compartment that can contain another object up to\none-quarter of the item’s volume.\n1 You salvage enough The process requires\nmaterials from the scraps to far more materials than Lethal Design If the item is a weapon, when a character\nmake something else. The expected. The item costs makes an injury roll due to this weapon,\nitem you just crafted has no twice as much to create. subtract 3 from the result.\nmaterial cost. Perfect Balance If the item has the Cumbersome\n2 If made or sold publicly, You accidentally damage trait, reduce the value of that trait by\nthe item’s superior crafts- your tools or facilities. 1. Additionally, if the item is a weapon,\nmanship earns you acclaim Depending on whose it gains Defensive as an expert trait.\namong discerning crafters facilities you’re using, this Unconventional If the item is a weapon, it gains Discreet\nand buyers. may cost you marks or hurt Weapon as an expert trait. If this item isn’t a weapon\nyour reputation. or armor, it can be used as an improvised\n3 Your item is far lighter than Your item is far bulkier than weapon without the Fragile trait.\nnormal. Halve its weight. normal. Double its weight.\n4 The item is sturdy. It ignores The item is delicate. A",
+    "page": 26,
+    "keywords": [
+      "",
+      "Armor"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Complication effects Complication on any test",
+    "content": "that might cause it to be using the item causes it\ndamaged or break. to break.\n5 The item is incredibly The item is an absolute\nbeautiful and impresses eyesore.\neveryone who sees it.\n6 Your item has gained you Your item has made\nrecognition among scholars some scholars or ardents\nor ardents; you attract the professionally jealous; this\nattention of a potential will impact you in the future.\npatron (see “Rewards” in\nchapter 9).",
+    "page": 26,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Truly skilled armorers",
+    "content": "consider Soulcasting\na lazy shortcut.\n266 Chapter 7: Items",
+    "page": 26,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Fabrial Metals",
+    "content": "The gemstone required for these cutting-edge fabrials\nis far more specialized than the ones needed for a When crafting fabrials, you don’t need to worry about\nspanreed. This is no common gem from a mark or the details of which metals you use and how you craft\nbroam, but a large gem specially cut for this purpose. them. However, you might like to enhance the stories\nThese gems are incredibly rare items that can’t simply you tell about your fabrials and how they function (or\nbe bought at a market. Instead, acquiring a gem capable malfunction). If so, it’s good to know that each metal\nof making a unique fabrial is a task worthy of one of has a different effect on spren and fabrial functionality,\nyour character’s goals (see chapter 8). Through your as follows:\nadventures, you may be able to acquire such a gem from ◆ Aluminum can block the connection between spren,\na wealthy patron. You might even cut your own after affecting how conjoined spren interact or how spren\npulling it from the heart of a chasmfiend, but you can’t react to sentient thoughts.\nobtain it from your local merchant. ◆ Brass can dim the intensity of a spren’s manifestation.\nYour gem can only be used to craft a fabrial of that ◆ Bronze can improve a spren’s ability to detect rhythms\ngem’s tier or lower (as shown on the Unique Fabrial or receive thoughts.\nEffects table). Most gems earned as rewards are of the ◆ Copper can allow a fabrial to conduct energy or\nsame tier as your current character, though this is at transmit thoughts.\nthe GM’s discretion. ◆ Iron can attract certain substances or adjust a\nEach gem can be used to create a single unique fabrial’s polarity.\nfabrial. Once used, the gem can’t be repurposed. ◆ Pewter can cause the fabrial to augment an attribute\nStep 3: Trap a Spren or energy source.\n◆ Steel can repel certain substances or adjust a\nBefore you can build the device around the gemstone,\nfabrial’s polarity.\nyour fabrial requires one other delicate step: luring and\n◆ Tin can cause the fabrial to diminish an attribute or\ntrapping the spren. This can be a tricky process that\nenergy source.\nrequires multiple attempts. Each attempt at luring a\n◆ Zinc can increase the intensity of a spren’s\nspren requires 1 day of downtime activity (see “Down-\nmanifestation.\ntime” in chapter 9).\nTo trap a spren, you need the gem that can trap it,\nspecific knowledge of the spren you’re seeking, and Dead Spren\nknowledge of what attracts that spren and enraptures\nSome of the most powerful items throughout Roshar—\nit long enough for you to capture it. When you have\nsuch as Soulcasters, Shardplate, and Shardblades—were\nthese things and are ready to trap a spren, make a Lore\ncreated not by technology, but by the sacrifice of ancient\ntest, with a DC determined by the tier of the effect you\nspren. Though these items are presented alongside the\nchose from the Unique Fabrial Effects table:\nother weapons or fabrials in their corresponding sections,\n◆ Tier 1: DC 15\nthey are far more exceptional, and their methods of\n◆ Tier 2: DC 20\ncrafting have been lost to time. Such legendary items can’t\n◆ Tier 3: DC 25\nsimply be purchased or crafted; instead, characters must\n◆ Tier 4: DC 30\nearn them as rewards (see chapter 8).\nIf you succeed, you capture the spren and proceed to\nthe next step. If you fail, you must reattempt capturing\nthe spren on another day, continuing until you succeed\nor give up.\na cusTom fabrial\n268 Chapter 7: Items",
+    "page": 28,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Test Result Item Quality",
+    "content": "Step 4: Make a Crafting Test to randomly determine a drawback (rerolling if the listed\nOnce you capture the spren, you can make and resolve requirement doesn’t match your fabrial). The GM may\na crafting test. This takes one day of downtime per tier also decide to assign you a creative drawback or\nof fabrial you’re trying to create. However, this time can come up with another creative idea for one of your\nbe modified by Opportunities or Complications during Complications.\nthe crafting process: each Opportunity you roll during Fabrial Crafting Test\nyour Crafting test reduces the time to create the item\nby 25 percent, while each Complication increases it by\n1–5 Utter Failure . Despite all your time and effort, you\n25 percent.\nfail to produce a working fabrial. You must start\nMake a Crafting test and raise the stakes. Consult the\nover from scratch. The fabrial’s core gemstone is\nFabrial Crafting Test table to determine how your test\nstill intact, but you lose any other materials and the\nresult affects your crafting.\nspren you captured.\nStep 5: Apply Upgrades 6–10 Shoddy Creation . Crafting this fabrial takes an\nand Drawbacks additional day, and you find the process unusually\nchallenging. You create the fabrial with one effect,\nFor each upgrade you earned as part of your Crafting\nno upgrades, and one drawback.\ntest, choose an upgrade listed next to your chosen fabrial\neffect (from the “Unique Fabrial Effects” section) or 11–20 Typical Creation . The crafting goes exactly as\nexpected. You create the fabrial with one effect,\nany qualifying upgrade from the Fabrial Upgrades and\none upgrade, and one drawback.\nDrawbacks table. If you earned two upgrades, you can\n21–25 Quality Creation . Things go swimmingly. You craft\ninstead choose (if you wish) from the “Advanced Fabrial\nthe fabrial with one effect, two upgrades, and one\nFeatures” section.\ndrawback.\nFor each drawback you earned, you can choose the\n26+ Exceptional Creation! You make a breakthrough\ndrawback listed next to your chosen fabrial, or you can\nwhile creating this fabrial. You craft the fabrial with\nroll a d8 on the Fabrial Upgrades and Drawbacks table\none effect, three upgrades, and no drawbacks.",
+    "page": 29,
+    "keywords": [
+      "",
+      "Complication",
+      "Opportunity"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Fabrial Upgrades and Drawbacks",
+    "content": "d8 General Drawbacks General Upgrades Requirements\n1 Diminished . Attacks made with this fabrial Amplified . Attacks made with this fabrial gain Can only be applied to fabrials\ngain a disadvantage. an advantage. that have an attack.\n2 Delicate . The GM can spend to deactivate Reliable . When making tests with this fabrial, Can only be applied to fabrials\nthe fabrial until it is repaired with a success- ignore the first you roll with it each scene. that require attack tests or other\nful DC 15 Crafting test. When you do, you gain no bonus from it. skill tests.\n3 Dangerous . The GM can spend to make Fine-Tuned . You can spend to recover Can only be applied to fabrials\nthe fabrial deal 1d6 energy damage to you 1d4 focus. that require attack tests or other\nand each character within 5 feet of you. skill tests.\n4 Inefficient . When you roll while within Efficient . When you roll while within 5 feet of Can only be applied to fabrials\n5 feet of the activated fabrial, the GM can the activated fabrial, you can spend it to make that expend charges.\nspend it to expend an additional charge. the fabrial regain a charge.\n5 Lower Capacity . Decrease the fabrial’s Higher Capacity . Increase the fabrial’s maximum Can only be applied to fabrials\nmaximum charges by 1. charges by 1. that expend charges.\n6 Short Ranged . The fabrial’s range is halved. Long Ranged . The fabrial’s range is doubled. Can only be applied to fabrials\nthat have a range or a radius.\n7 Slower . Decrease the movement rate of the Faster . Increase the movement rate of the effect Can only be applied to fabrials\neffect by 50 percent. by 50 percent. that grant you a movement rate\nor cause you to move.\n8 Lesser Damage . Decrease the damage Greater Damage . Increase the damage dealt Can only be applied to fabrials\ndealt or healed by one die size (such as by or healed by one die size (such as by increasing that deal or heal damage.\nreducing d20 to d12). d4 to d6).",
+    "page": 29,
+    "keywords": [
+      "",
+      "Advantage",
+      "1",
+      "Disadvantage"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Advanced Fabrial Features Unique Fabrial Effects",
+    "content": "In exceptional circumstances, artifabrians can generate This section presents the effects you can select for your\ntwo upgrades during the crafting process. unique fabrial. The Unique Fabrial Effects table lists\nWhen this happens, you can choose to spend both them by tier, then the text that follows describes the\nupgrades to apply one feature of your choice from the effects in alphabetical order.\nAdvanced Fabrial Features table.",
+    "page": 30,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Tier Type Charges",
+    "content": "Feature Name Effect 1 Bindrial (area) 3\nExpanded If the fabrial has charges, increase its maximum 1 Bindrial (self) 5\nCapacity charges by 3.\n1 Compressor 3\nWide Area If the fabrial has an attack or other effect that\n1 Cremrial 5\napplies to one target, you can spend 2 focus\n1 Cultivator 3\nto have it affect each enemy, each ally, or each\ncharacter within 5 feet of your target instead. 2 Accelerator 3\nIf you’re in range, you can choose to affect 2 Armor Augmenter 2\nyourself along with your allies. 2 Ascender 5\nSecurity Lock The fabrial can be used only by characters 2 Drainer 5\nwho know the security mechanism (such as a\n2 Liferial 3\nhidden button that must be pressed or a secret\n2 Lightrial 3\nlever that must be flipped). You decide this\nmechanism when you create the fabrial. 2 Painrial (Amplifying/Numbing) 3\nQuick Activation Once per scene, the user of the fabrial can 2 Projectile 5\nspend 1 focus to reduce the action cost to 3 Disruptor 4\nactivate it by (or if it is already , it becomes 4 Surge Fabrial 4\n).\nTimed By using the Ready action with the fabrial, Accelerator\nActivation you can set an internal timing mechanism for\nTier 2 Unique Fabrial Effect\nan interval of your choice (such as 1 round,\nThis fabrial reduces your body’s friction. As , spend\n1 minute, or 1 hour). After this interval elapses,\n1 charge to move up to your movement rate in a\nthe fabrial activates (or deactivates if it was\nalready active). straight line.\nExtra Effect Add an additional unique fabrial effect to the Charges. This fabrial has 3 charges.\n(unique fabrials fabrial. You must expend an additional gemstone Drawback. You must make a DC 15 Agility test each\nonly) of the effect’s tier to add this effect to the fabrial. time you use this fabrial. On a failure, fall Prone at the\nBoth effects track their charges separately. end of your movement.\nUpgrade. You don’t have to move in a straight line when\nusing this fabrial.",
+    "page": 30,
+    "keywords": [
+      "Armor"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Armor Augmenter",
+    "content": "The glove locked into place.\nTier 2 Unique Fabrial Effect",
+    "page": 30,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "She released one of the distant",
+    "content": "This fabrial enhances the strength of one non-Invested\nweights, then carefully relaxed her\npiece of armor that it is permanently attached to when\nfist, and the distant weight slowly\ncreated. As , spend 1 charge to increase the armor’s\nmoved down. Navani went up. deflect value by 2 until the end of the scene.\nCharges. This fabrial has 2 charges.\nDrawback. The armor gains the Cumbersome [3] trait\nwhile this fabrial is active.\nUpgrade. You can spend an additional charge to also\nincrease your Physical defense by 1 until the end of\nthe scene.\n270 Chapter 7: Items",
+    "page": 30,
+    "keywords": [
+      "Deflect",
+      "Armor",
+      "Strength"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "IMAS",
+    "content": "&",
+    "page": 30,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Compressor",
+    "content": "Ascender Bindrial (Self)\nTier 2 Unique Fabrial Effect Tier 1 Unique Fabrial Effect\nThis fabrial pulls you through the air. As , spend 1 This fabrial allows you to stick your feet or hands to\ncharge to activate it and gain a flying rate of 30 feet until surfaces, climbing nearly anything with ease. As ,\nthe end of your next turn. If the fabrial still has charges spend 1 charge to activate it, granting yourself the ability\nafter your flying rate ends, you can use (without to climb on any surface for 1 round. You aren't Slowed\nspending charges) to hover in place or lower yourself to while climbing in this way, and you can stay in place\nthe ground. If the fabrial drops to 0 charges while you’re after that round without spending an additional charge.\naloft, you fall and take damage as usual. If the fabrial ever drops to 0 charges, you fall from the\nsurface and take damage from the fall as usual.\nCharges. This fabrial has 5 charges.\nDrawback. To finish crafting this fabrial, you Charges. This fabrial has 5 charges.\nmust spend an additional 1,000 marks to build a Drawback. You are Slowed while climbing in this way.\ncomplex system of counterweights conjoined to the Upgrade. As , make an Agility test against the Physical\nascender. Once per day of use, those counterweights defense of a target within your reach.On a hit, spend\nmust be reset for the ascender to be used on the 1 charge to make the target Immobilized for 1 round.\nfollowing day.\nUpgrade. This fabrial can also affect others. As , make\nTier 1 Unique Fabrial Effect\nan Agility test against the Physical defense of a target\nThis fabrial can cause flexible objects it touches to\nwithin your reach. On a hit, spend 1 charge to push the\nbecome rigid. As , make an Agility test against the\ntarget up to 30 feet away from you in a straight line.\nPhysical defense of a target within your reach. On a\nBindrial (Area)\nsuccess, you can spend 1 or more charges to cause the\nTier 1 Unique Fabrial Effect target to become Slowed and to gain a disadvantage\nThis fabrial causes everything nearby to stick to the on all physical tests for that many rounds.\nground. As , spend 1 charge to activate it, making all\nCharges. This fabrial has 3 charges.\nobjects and characters (other than you) within 5 feet of\nDrawback. While Slowed in this way, the target’s\nit become Immobilized. Until deactivated, the fabrial\nPhysical defense increases by 2.\nexpends 1 charge at the start of each of your turns.\nUpgrade. The target becomes Immobilized instead\nCharges. This fabrial has 3 charges. of Slowed.\nDrawback. You’re Immobilized by the fabrial as well.\nUpgrade. The fabrial affects everything within 10 feet.",
+    "page": 31,
+    "keywords": [
+      "Advantage",
+      "Disadvantage"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Cremrial Drainer",
+    "content": "Tier 1 Unique Fabrial Effect Tier 2 Unique Fabrial Effect\nThis fabrial can cause stone to become as soft as crem. This fabrial drains the Stormlight from spheres, other\nAs , spend 1 charge and choose a Medium (5-foot) area fabrials, and even Radiants. As , touch this fabrial\nof stone within reach, turning it into soft clay. At the end to an Invested or infused object or character. If the\nof your turn, the area turns back to stone, and enemies fabrial isn’t fully charged, the target loses 1 Investiture\nin the area must successfully Avoid Danger or become or charge, and this fabrial gains 1 charge. Once fully\nImmobilized (DC 15 Athletics test to escape). charged, this fabrial can be emptied with a tuning fork,\nby a Radiant regaining 1 Investiture per charge, or by\nCharges. This fabrial has 5 charges.\nallowing the Investiture to fade over 5 days.\nDrawback. Until the end of your next turn, when\nyou roll a Complication while within 5 feet of the Charges. This fabrial has 5 charges.\narea affected by this fabrial, the GM can spend it to Drawback. While carrying this fabrial, when you roll a\nmake you also sink into the stone, and you become Complication on any test involving another Invested\nImmobilized until the end of your next turn. object or character, the GM can spend to drain\nUpgrade. This fabrial affects a Large (10-foot) area 1 Investiture from that object or character.\ninstead of Medium. Upgrade. This fabrial drains 2 Investiture instead of 1.",
+    "page": 32,
+    "keywords": [
+      "Complication"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Cultivator Liferial",
+    "content": "Tier 1 Unique Fabrial Effect Tier 2 Unique Fabrial Effect\nThis fabrial can cause plants to grow rapidly. As , This fabrial heals wounds. As , spend 1 charge to\nspend 1 charge to cause any plants it is touching to grow heal yourself or a target within your reach. The target\nup to Medium (5-foot) size. These plants can be used recovers 1d6 health.\nto block line of effect, create barriers or cover, or create\nCharges. This fabrial has 3 charges.\nsomething to climb.\nDrawback. Using this fabrial takes instead of .\nCharges. This fabrial has 3 charges. Upgrade. You can spend 1 charge to remove an injury\nDrawback. When you roll while within 5 feet of a from the target (either in addition to or instead of\nplant affected by this fabrial, the GM can spend it spending 1 charge to heal).\nto cause the plant to grow around you. You become",
+    "page": 32,
+    "keywords": [
+      "1"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Lightrial",
+    "content": "Restrained until the plant is broken with a successful\nTier 2 Unique Fabrial Effect\nDC 12 Athletics test.\nThis fabrial produces a dazzling burst of light or sound.\nUpgrade. You can grow the plants up to Large\nAs , make a Deception test against the Cognitive\n(10-foot) size.\ndefense of a target within 30 feet of you. On a success,",
+    "page": 32,
+    "keywords": []
+  },
+  {
+    "type": "rules",
+    "title": "Disruptor",
+    "content": "you can spend 1 charge to cause the target to lose\nTier 3 Unique Fabrial Effect 3 focus. On a failure, you can spend 1 charge to cause\nThis fabrial disintegrates objects with a touch. As , them to lose 1 focus. If this fabrial reduces the target\nspend 1 charge to touch this fabrial to a Small (2.5-foot) to 0 focus, they become Disoriented until the end of\nobject. If that object is unattended, you destroy it. If it’s your next turn.\nbeing held or carried by a character, you must make an\nCharges. This fabrial has 3 charges.\nAgility test against that character’s Physical defense,\nDrawback. The GM can spend from using this\ndestroying the object on a success. You can’t use this\nfabrial to make you Disoriented until the end of your\nfabrial on Invested or infused objects.\nnext turn.\nCharges. This fabrial has 4 charges. Upgrade. You can spend from using this fabrial to\nDrawback. You can only target unattended objects. also deal 1d6 vital damage to the target.\nUpgrade. You can also use this fabrial against characters.\nAs , spend 2 charges to make a Discipline attack\nagainst the Spiritual defense of a target in reach.\nRoll 2d6 spirit damage.\n272 Chapter 7: Items",
+    "page": 32,
+    "keywords": [
+      "2",
+      "1"
+    ]
+  },
+  {
+    "type": "rules",
+    "title": "Projectile",
+    "content": "Painrial (Amplifying/Numbing) Surge Fabrial\nTier 2 Unique Fabrial Effect Tier 4 Unique Fabrial Effect\nThis fabrial stores up pain then unleashes it on a target. You’ve discovered how to create a fabrial that can mimic\nIt is a melee weapon that uses the Light Weaponry skill Radiant surgebinding. When you craft this fabrial,\nand deals 1d6 vital damage. On a hit, you can spend choose one Radiant surge. You can use this fabrial to\n1 charge to add your skill modifier to the damage one activate that surge, using the surge’s normal rules and\nadditional time. activation time, with the following changes:\nCharges. This fabrial has 3 charges. ◆ You can spend charges from this fabrial in place of\nDrawback. The GM can spend from this attack Investiture for the surge.\nto cause this fabrial to lose 1 charge and deal you ◆ If you have no ranks in the corresponding surge skill,\n1d6 vital damage. consider yourself to have 1 rank for the purpose of\nUpgrade. Before you take damage from an enemy, if this determining effects.\nfabrial isn’t fully charged, you can use to reduce that ◆ When making a test, you can use the corresponding\ndamage by 1d6 and regain 1 charge. surge skill (if you have that skill) or your Willpower\nattribute score (without any ranks in a skill).\nTier 2 Unique Fabrial Effect If your non-Radiant character practices with this fabrial\nlong enough, the GM might allow you to invest skill\nThis experimental device uses a novel combination of\nranks into the corresponding skill when you gain a level,\nfabrial elements to launch a projectile at incredibly high\nbut you can’t use that skill without this fabrial.\nspeed. Spend 1 charge to use it as a ranged [30/120]\nweapon that uses the Light Weaponry skill, has the Charges. This fabrial has 4 charges.\nOffhand trait, and deals 1d10 impact damage. Drawback. Only you can use this fabrial.\nUpgrade. If you practice with this fabrial, you can\nCharges. This fabrial has 5 charges.\nchoose talents from the corresponding surge’s talent\nDrawback. This fabrial has the Loaded [1] trait.\ntree when you gain a level. You can’t use those talents\nUpgrade. You can spend an additional charge to attack\nwithout this fabrial, but can replace them using\ntwo targets instead of one.\nthe Self-Reflection downtime activity described\nin chapter 9.\npainrials",
+    "page": 33,
+    "keywords": [
+      "1",
+      "Surgebinding",
+      "Willpower",
+      "Speed",
+      "Talents"
+    ]
+  }
+]

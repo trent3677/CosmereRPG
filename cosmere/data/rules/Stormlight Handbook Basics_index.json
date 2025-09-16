@@ -61,10 +61,10 @@
     "page": 5,
     "keywords": [
       "",
-      "Advantage",
       "Complication",
+      "Disadvantage",
       "Plot Die",
-      "Disadvantage"
+      "Advantage"
     ]
   },
   {
@@ -93,9 +93,9 @@
     "page": 6,
     "keywords": [
       "",
-      "Plot Die",
       "Complication",
-      "Opportunity"
+      "Opportunity",
+      "Plot Die"
     ]
   },
   {
@@ -105,8 +105,8 @@
     "page": 6,
     "keywords": [
       "",
-      "Plot Die",
-      "Complication"
+      "Complication",
+      "Plot Die"
     ]
   },
   {
@@ -115,9 +115,9 @@
     "content": "Resolving a Plot Die Roll Influence the Narrative. Your actions result in a\nWhen you roll the plot die with your test, the effect positive narrative effect of your choice, which the\ndepends on whether you roll an Opportunity ( ), GM must approve. For example, you might be trying\na Complication ( ), or a blank. to rough up a Ghostblood agent; if you fail on your\nIf you roll a blank on the plot die, no positive or ultimate goal but roll an Opportunity on that test,\nnegative side effects apply to your test, and you resolve you and your GM might decide you managed to pick\nthe remainder of the test as normal. If you roll an or the agent’s pocket while you had your hands on them.\nsymbol, see “Opportunities and Complications.” The “Skills” section of chapter 3 suggests example\nOpportunities.\nSome abilities provide additional ways you can spend\nSome abilities give your character the ability to raise the\nan Opportunity. If an ability says you can spend an\nstakes yourself, though you can only do so if the GM\nOpportunity to trigger a special effect, but you don’t\nhasn’t already raised the stakes.\nroll an Opportunity on that ability’s test, you can’t use\nEven if you don’t have one of those abilities, you\nthat special effect.\nmight think a test is worthy of raising the stakes. You\ncan always ask the GM to raise the stakes and advocate Facing a Complication\nC\nfor why you think the test warrants it, but ultimately When you gain a Complication,\nit’s the GM’s call. (GMs, see “Using the Plot Die” in this applies a negative side effect\nchapter 13 for further guidance on when and how to to the outcome of your current test\nraise the stakes.) (regardless of whether the test succeeds\nor fails). The GM should “spend” this",
     "page": 7,
     "keywords": [
-      "Plot Die",
       "Complication",
-      "Opportunity"
+      "Opportunity",
+      "Plot Die"
     ]
   },
   {
@@ -127,11 +127,11 @@
     "page": 7,
     "keywords": [
       "",
-      "Advantage",
       "Complication",
+      "Disadvantage",
       "Plot Die",
-      "Opportunity",
-      "Disadvantage"
+      "Advantage",
+      "Opportunity"
     ]
   },
   {
@@ -140,9 +140,9 @@
     "content": "Complication Ranges Multiple expansions to Opportunity range, Compli-\ncation range, or both can be applied to the same test—\nIn addition to the plot die, you can also gain\nbut only if they come from effects with different names",
     "page": 8,
     "keywords": [
-      "Plot Die",
       "Complication",
-      "Opportunity"
+      "Opportunity",
+      "Plot Die"
     ]
   },
   {
@@ -152,10 +152,10 @@
     "page": 8,
     "keywords": [
       "",
-      "Talents",
       "Complication",
       "Plot Die",
-      "Opportunity"
+      "Opportunity",
+      "Talents"
     ]
   },
   {
@@ -165,10 +165,10 @@
     "page": 8,
     "keywords": [
       "",
-      "Advantage",
       "Complication",
-      "Opportunity",
-      "Disadvantage"
+      "Disadvantage",
+      "Advantage",
+      "Opportunity"
     ]
   },
   {

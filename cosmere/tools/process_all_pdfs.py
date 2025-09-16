@@ -17,6 +17,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
 
+# Ensure repo root is on sys.path so `cosmere` package resolves when executed directly
+CURRENT_FILE = Path(__file__).resolve()
+REPO_ROOT = CURRENT_FILE.parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 # Local imports
 from cosmere.tools.pdf_processor import CosmereRPGPDFProcessor
 
