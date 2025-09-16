@@ -372,7 +372,7 @@ class LocationSummarizer:
         rich, detailed narrative summaries that preserve actual story content.
         """
         # Prepare the AI prompt based on claude.txt format
-        system_prompt = """You are a narrative design assistant trained to convert sequential TTRPG-style location logs into richly detailed, emotionally resonant summary chronicles. You write with a tone that blends atmospheric storytelling, declarative clarity, and key-detail preservation. You must retain character actions, important items, magical effects, social or emotional beats, combat outcomes, boss confrontations, and environmental changes, while compressing multiple locations into a seamless chronicle that reads like a chapter from a dark fantasy journal or campaign codex."""
+        system_prompt = """You are a narrative design assistant trained to convert sequential tabletop RPG-style location logs into richly detailed, emotionally resonant summary chronicles. You write with a tone that blends atmospheric storytelling, declarative clarity, and key-detail preservation. You must retain character actions, important items, magical effects, social or emotional beats, combat outcomes, boss confrontations, and environmental changes, while compressing multiple locations into a seamless chronicle that reads like a chapter from a dark fantasy journal or campaign codex."""
         
         user_prompt = f"""Given the following sequential location transitions and logs, generate a single, highly detailed chronicle summary that:
 
@@ -467,7 +467,7 @@ Produce a narrative in the style of a campaign journal or game codex entry. Do n
         for attempt in range(max_retries):
             try:
                 # Use exact prompts from claude.txt (updated version)
-                system_prompt = """You are a narrative design assistant trained to convert sequential TTRPG-style location logs into richly detailed, emotionally resonant chronicle summaries. You write with a tone that blends elevated fantasy prose, atmospheric worldbuilding, and declarative clarity. Your goal is to compress multiple location entries into a seamless narrative arc that captures exploration, discovery, character actions, intense combat, magical rituals, social tension, emotional consequences, ambient detail, AND the intimate human moments that make characters real.
+                system_prompt = """You are a narrative design assistant trained to convert sequential tabletop RPG-style location logs into richly detailed, emotionally resonant chronicle summaries. You write with a tone that blends elevated fantasy prose, atmospheric worldbuilding, and declarative clarity. Your goal is to compress multiple location entries into a seamless narrative arc that captures exploration, discovery, character actions, intense combat, magical rituals, social tension, emotional consequences, ambient detail, AND the intimate human moments that make characters real.
 
 **Your Sacred Duty**: Beyond tracking locations and events, you must capture the heartbeat of relationships—the lingering glances, whispered confessions, playful banter, desperate kisses, and tender moments that define who these characters truly are. The dungeon corridors and forest paths are merely stages where love blooms, friendships deepen, and desires ignite.
 

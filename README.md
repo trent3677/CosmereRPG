@@ -1,3 +1,24 @@
+# Cosmere RPG Digital Companion (Fork)
+
+This fork adapts the original NeverEndingQuest project into a Cosmere RPG digital companion with:
+- Plot Die mechanics and Investiture systems
+- Character creation using Heritage, Path, and Origin
+- PDF rules extraction and searchable database from local PDFs in `cosmere/pdfs`
+- Web UI at `run_cosmere.py` with Cosmere-focused endpoints
+
+Quick Start (Cosmere):
+1) Install Python 3.12 and dependencies
+   - Install: `pip install -r requirements_cosmere.txt` (or install PyPDF2 and pdfplumber)
+2) Add PDFs (local only)
+   - Place Cosmere PDFs into `cosmere/pdfs/` (they are gitignored)
+   - Optional: process all PDFs into JSON: `python cosmere/tools/process_all_pdfs.py`
+3) Launch the Cosmere app
+   - `python run_cosmere.py` → http://localhost:8357
+
+See `cosmere/README.md` for Cosmere features and structure.
+
+---
+
 # NeverEndingQuest
 
 **Version 0.3.0 (Alpha)**
