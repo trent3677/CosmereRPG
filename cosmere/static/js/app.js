@@ -242,9 +242,23 @@ function renderCombatState(state) {
     div.dataset.turnId = state.turn_character_id || '';
     let html = '';
     html += `<div><strong>Round:</strong> ${state.round || '-'} | <strong>Turn Index:</strong> ${state.turn_index || 0}</div>`;
-    html += '<div><strong>Order:</strong><ul>' + (state.order||[]).map(o => `<li>${o.name} (${o.initiative})</li>`).join('') + '</ul></div>';
+    // Add a target selector for convenience
+    html += '<div><label>Target<select id="combat-target">' + (state.order||[]).map(o => `<option value="${o.id}">${o.name}</option>`).join('') + '</select></label></div>';
+    html += '<div><strong>Order:</strong><ul>' + (state.order||[]).map(o => `<li>${o.name} (${o.initiative}) ${o.conditions && o.conditions.length ? '['+o.conditions.join(', ')+']' : ''}</li>`).join('') + '</ul></div>';
     html += '<div><strong>Log:</strong><ul>' + (state.log||[]).map(e => `<li>${e.event}</li>`).join('') + '</ul></div>';
     div.innerHTML = html;
+}
+
+// Attack (damage) using current power dice selector from Investiture section
+function combatActAttack() {
+    const state = document.getElementById('combat-state').dataset;
+    const actor = state.turnId; if (!actor) return;
+    const tgtSel = document.getElementById('combat-target');
+    const target_id = tgtSel ? tgtSel.value : '';
+    if (!target_id) return;
+    // Use 2d6 as a default example; could be refined via UI controls
+    fetch('/api/combat/act', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ actor_id: actor, action: 'attack', payload: { target_id, dice: 2, bonus: 0 } }) })
+        .then(r => r.json()).then(data => { if (data.success) renderCombatState(data.state); });
 }
 
 function updateInvestiture() {

@@ -114,6 +114,51 @@ class CosmereCombatManager:
             self.character_manager.save_character(updated)
             self._log_event("use_power", {"actor": actor_id, "power": power_name, "remaining": updated["investiture"]["investiture_points"]})
 
+        elif action == "attack":
+            # Simple physical attack damage resolution: roll damage and reduce by target armor
+            target_id = payload.get("target_id")
+            if not target_id:
+                raise ValueError("Missing target_id")
+            damage_dice = int(payload.get("dice", 1))
+            bonus = int(payload.get("bonus", 0))
+            dmg_result = self.dice_roller.roll_damage(damage_dice=damage_dice, bonus_damage=bonus)
+            # Load target and compute mitigation
+            target_char = self.character_manager.load_character(target_id)
+            if not target_char:
+                raise ValueError("Target not found")
+            armor = int(target_char.get("derived_stats", {}).get("armor", 0))
+            mitigated = max(0, int(dmg_result.get("total", 0)) - armor)
+            # Apply HP change
+            updated_target = self.character_manager.modify_hp(target_id, -mitigated)
+            # Add downed condition if at 0
+            if int(updated_target.get("derived_stats", {}).get("hp", 0)) <= 0:
+                self._add_condition_to_participant(target_id, "downed")
+            self._log_event("attack", {
+                "actor": actor_id,
+                "target": target_id,
+                "rolls": dmg_result.get("rolls", []),
+                "bonus": bonus,
+                "armor": armor,
+                "damage": mitigated,
+                "target_hp": updated_target.get("derived_stats", {}).get("hp", 0)
+            })
+
+        elif action == "add_condition":
+            target_id = payload.get("target_id")
+            cond = str(payload.get("condition", "")).strip()
+            if not target_id or not cond:
+                raise ValueError("Missing target_id or condition")
+            self._add_condition_to_participant(target_id, cond)
+            self._log_event("condition_added", {"target": target_id, "condition": cond})
+
+        elif action == "remove_condition":
+            target_id = payload.get("target_id")
+            cond = str(payload.get("condition", "")).strip()
+            if not target_id or not cond:
+                raise ValueError("Missing target_id or condition")
+            self._remove_condition_from_participant(target_id, cond)
+            self._log_event("condition_removed", {"target": target_id, "condition": cond})
+
         elif action == "note":
             self._log_event("note", {"actor": actor_id, "text": str(payload.get("text", ""))})
 
@@ -144,5 +189,21 @@ class CosmereCombatManager:
 
     def _log_event(self, kind: str, data: Dict[str, Any]) -> None:
         self.log.append({"event": kind, **data})
+
+    def _find_participant(self, character_id: str) -> Optional[Participant]:
+        for p in self.participants:
+            if p.character_id == character_id:
+                return p
+        return None
+
+    def _add_condition_to_participant(self, character_id: str, condition: str) -> None:
+        part = self._find_participant(character_id)
+        if part and condition not in part.conditions:
+            part.conditions.append(condition)
+
+    def _remove_condition_from_participant(self, character_id: str, condition: str) -> None:
+        part = self._find_participant(character_id)
+        if part and condition in part.conditions:
+            part.conditions.remove(condition)
 
 
