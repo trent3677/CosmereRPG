@@ -1,0 +1,26 @@
+{
+  "talents": [
+    {
+      "name": "Windrunner Oath 1",
+      "category": "Path",
+      "path": "Windrunner",
+      "description": "First oath toward protection strengthens resolve.",
+      "effects": { "stats": { "willpower": 1 }, "max_investiture": 1 }
+    },
+    {
+      "name": "Lashing Adept",
+      "category": "Technique",
+      "path": "Windrunner",
+      "description": "Refined control of basic Lashing.",
+      "effects": { "stats": { "awareness": 1 } }
+    },
+    {
+      "name": "Coinshot Focus",
+      "category": "Allomancy",
+      "path": "Coinshot",
+      "description": "Training with Steelpush improves control.",
+      "effects": { "max_investiture": 1 }
+    }
+  ]
+}
+

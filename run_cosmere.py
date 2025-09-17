@@ -20,6 +20,7 @@ from cosmere.core.character_manager import CosmereCharacterManager
 from cosmere.core.dice_roller import DiceRoller
 from cosmere.core.investiture_manager import InvestitureManager
 from cosmere.core.combat_manager import CosmereCombatManager
+from cosmere.core.talent_manager import TalentManager
 from cosmere.tools.rule_search import CosmereRuleSearch
 
 # Initialize Flask app
@@ -37,6 +38,11 @@ investiture_manager = InvestitureManager()
 combat_manager = CosmereCombatManager(dice_roller=dice_roller,
                                       investiture_manager=investiture_manager,
                                       character_manager=character_manager)
+talent_manager = TalentManager(character_manager)
+try:
+    talent_manager.load_from_file('cosmere/data/talents.json')
+except Exception:
+    pass
 
 # Load powers from JSON if available; seed a few if none are loaded
 loaded_count = 0
@@ -303,6 +309,27 @@ def combat_finish():
     try:
         state = combat_manager.finish()
         return jsonify({"success": True, "state": state})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+# Talent endpoints
+@app.route('/api/talents', methods=['GET'])
+def list_talents():
+    try:
+        path_filter = request.args.get('path')
+        return jsonify({"success": True, "talents": talent_manager.list_talents(path_filter)})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route('/api/characters/<character_id>/talents', methods=['POST'])
+def apply_talent(character_id):
+    try:
+        data = request.json or {}
+        name = data.get('name')
+        if not name:
+            return jsonify({"success": False, "error": "Missing talent name"}), 400
+        character = talent_manager.apply_talent(character_id, name)
+        return jsonify({"success": True, "character": character})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
 
