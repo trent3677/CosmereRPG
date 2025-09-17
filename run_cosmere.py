@@ -19,6 +19,7 @@ import logging
 from cosmere.core.character_manager import CosmereCharacterManager
 from cosmere.core.dice_roller import DiceRoller
 from cosmere.core.investiture_manager import InvestitureManager
+from cosmere.core.combat_manager import CosmereCombatManager
 from cosmere.tools.rule_search import CosmereRuleSearch
 
 # Initialize Flask app
@@ -33,6 +34,9 @@ character_manager = CosmereCharacterManager()
 dice_roller = DiceRoller()
 rule_search = CosmereRuleSearch(rules_dir="cosmere/data/rules")
 investiture_manager = InvestitureManager()
+combat_manager = CosmereCombatManager(dice_roller=dice_roller,
+                                      investiture_manager=investiture_manager,
+                                      character_manager=character_manager)
 
 # Load powers from JSON if available; seed a few if none are loaded
 loaded_count = 0
@@ -261,6 +265,44 @@ def handle_session():
         else:  # DELETE
             session.pop('username', None)
             return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+# Combat endpoints
+@app.route('/api/combat/start', methods=['POST'])
+def combat_start():
+    try:
+        data = request.json or {}
+        ids = data.get('character_ids') or []
+        state = combat_manager.start(ids)
+        return jsonify({"success": True, "state": state})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route('/api/combat/state', methods=['GET'])
+def combat_state():
+    try:
+        return jsonify({"success": True, "state": combat_manager.state()})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route('/api/combat/act', methods=['POST'])
+def combat_act():
+    try:
+        data = request.json or {}
+        actor = data.get('actor_id')
+        action = data.get('action')
+        payload = data.get('payload') or {}
+        state = combat_manager.act(actor, action, payload)
+        return jsonify({"success": True, "state": state})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route('/api/combat/finish', methods=['POST'])
+def combat_finish():
+    try:
+        state = combat_manager.finish()
+        return jsonify({"success": True, "state": state})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
 
