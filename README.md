@@ -8,12 +8,22 @@ This fork adapts the original NeverEndingQuest project into a Cosmere RPG digita
 
 Quick Start (Cosmere):
 1) Install Python 3.12 and dependencies
-   - Install: `pip install -r requirements_cosmere.txt` (or install PyPDF2 and pdfplumber)
+   - `pip install -r requirements_cosmere.txt`
+   - or minimal: `pip install PyPDF2 pdfplumber`
 2) Add PDFs (local only)
    - Place Cosmere PDFs into `cosmere/pdfs/` (they are gitignored)
    - Optional: process all PDFs into JSON: `python cosmere/tools/process_all_pdfs.py`
 3) Launch the Cosmere app
    - `python run_cosmere.py` → http://localhost:8357
+
+Handy Commands:
+- Process a single PDF: `python cosmere/tools/pdf_processor.py "cosmere/pdfs/<file>.pdf" --output-dir cosmere/data/rules`
+- Process all PDFs + build index: `python cosmere/tools/process_all_pdfs.py`
+- Search rules (UI): use the Rules Search box on the homepage
+
+Notes:
+- PDFs remain local and are ignored by Git.
+- A few example Investiture powers are seeded; add more via `/api/investiture/powers`.
 
 See `cosmere/README.md` for Cosmere features and structure.
 
