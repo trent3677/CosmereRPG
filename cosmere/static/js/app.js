@@ -213,7 +213,8 @@ function getCombatState() {
 function combatActSkill() {
     const state = document.getElementById('combat-state').dataset;
     const actor = state.turnId; if (!actor) return;
-    fetch('/api/combat/act', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ actor_id: actor, action: 'skill_check', payload: { modifier: 0 } }) })
+    const targetTier = prompt('Target (trivial/simple/standard/hard/epic) or number:', 'standard') || 'standard';
+    fetch('/api/combat/act', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ actor_id: actor, action: 'skill_check', payload: { modifier: 0, target: targetTier } }) })
         .then(r => r.json()).then(data => { if (data.success) renderCombatState(data.state); });
 }
 
@@ -256,8 +257,9 @@ function combatActAttack() {
     const tgtSel = document.getElementById('combat-target');
     const target_id = tgtSel ? tgtSel.value : '';
     if (!target_id) return;
-    // Use 2d6 as a default example; could be refined via UI controls
-    fetch('/api/combat/act', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ actor_id: actor, action: 'attack', payload: { target_id, dice: 2, bonus: 0 } }) })
+    // Use 2d6 as default; ask for damage type
+    const dtype = prompt('Damage type (physical/mental):', 'physical') || 'physical';
+    fetch('/api/combat/act', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ actor_id: actor, action: 'attack', payload: { target_id, dice: 2, bonus: 0, damage_type: dtype } }) })
         .then(r => r.json()).then(data => { if (data.success) renderCombatState(data.state); });
 }
 

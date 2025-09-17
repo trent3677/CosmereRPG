@@ -100,7 +100,17 @@ class CosmereCombatManager:
                 advantage=advantage,
                 skilled=skilled,
             )
+            # Optional target resolution (string tier or numeric)
+            target = payload.get("target")
+            resolution: Optional[Dict[str, Any]] = None
+            if target is not None:
+                target_val = self._resolve_target_value(target)
+                success = int(result.get("total", 0)) >= target_val
+                margin = int(result.get("total", 0)) - target_val
+                resolution = {"target": target_val, "success": success, "margin": margin}
             self._log_event("skill_check", {"actor": actor_id, "result": result})
+            if resolution:
+                self._log_event("skill_resolution", {"actor": actor_id, **resolution})
 
         elif action == "use_power":
             # Apply power cost to actor
@@ -126,8 +136,16 @@ class CosmereCombatManager:
             target_char = self.character_manager.load_character(target_id)
             if not target_char:
                 raise ValueError("Target not found")
-            armor = int(target_char.get("derived_stats", {}).get("armor", 0))
-            mitigated = max(0, int(dmg_result.get("total", 0)) - armor)
+            damage_type = str(payload.get("damage_type", "physical")).lower()
+            derived = target_char.get("derived_stats", {})
+            armor = int(derived.get("armor", 0))
+            mental_fort = int(derived.get("mental_fortitude", 0))
+            physical_fort = int(derived.get("physical_fortitude", 0))
+            if damage_type == "mental":
+                mitigation = max(0, mental_fort)
+            else:  # physical by default
+                mitigation = max(0, armor)
+            mitigated = max(0, int(dmg_result.get("total", 0)) - mitigation)
             # Apply HP change
             updated_target = self.character_manager.modify_hp(target_id, -mitigated)
             # Add downed condition if at 0
@@ -138,7 +156,8 @@ class CosmereCombatManager:
                 "target": target_id,
                 "rolls": dmg_result.get("rolls", []),
                 "bonus": bonus,
-                "armor": armor,
+                "damage_type": damage_type,
+                "mitigation": mitigation,
                 "damage": mitigated,
                 "target_hp": updated_target.get("derived_stats", {}).get("hp", 0)
             })
@@ -205,5 +224,21 @@ class CosmereCombatManager:
         part = self._find_participant(character_id)
         if part and condition in part.conditions:
             part.conditions.remove(condition)
+
+    def _resolve_target_value(self, target: Any) -> int:
+        """Map difficulty tiers or numeric to a target value."""
+        try:
+            return int(target)
+        except Exception:
+            pass
+        tiers = {
+            "trivial": 2,
+            "simple": 3,
+            "standard": 4,
+            "hard": 5,
+            "epic": 6,
+        }
+        key = str(target).strip().lower()
+        return tiers.get(key, 4)
 
 
