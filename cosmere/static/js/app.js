@@ -75,6 +75,7 @@ function displayDiceResult(result) {
 window.onload = function() {
     loadCharacters();
     loadPowers();
+    getSession();
 };
 
 function loadCharacters() {
@@ -111,6 +112,11 @@ function populateCharacterSelect(chars) {
             sel.innerHTML = data.characters.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
             sel.onchange = onCharacterSelected;
             onCharacterSelected();
+
+            const saveSel = document.getElementById('save-char-select');
+            if (saveSel) {
+                saveSel.innerHTML = data.characters.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            }
         });
 }
 
@@ -188,4 +194,77 @@ function applyPower() {
         if (data.success) s.textContent = `Applied ${power}. Remaining points: ${data.character.investiture.investiture_points}`;
         else s.textContent = 'Error: ' + data.error;
     });
+}
+
+// Session handling
+function getSession() {
+    fetch('/api/session')
+        .then(r => r.json())
+        .then(data => {
+            const s = document.getElementById('session-status');
+            if (data.success && data.username) {
+                s.textContent = `Logged in as ${data.username}`;
+            } else {
+                s.textContent = 'Not logged in';
+            }
+        });
+}
+
+function login() {
+    const username = document.getElementById('username').value.trim();
+    if (!username) return;
+    fetch('/api/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+    }).then(r => r.json()).then(() => getSession());
+}
+
+function logout() {
+    fetch('/api/session', { method: 'DELETE' })
+        .then(() => getSession());
+}
+
+// Save export/import/delete
+function exportCharacter() {
+    const sel = document.getElementById('save-char-select');
+    const id = sel.value;
+    if (!id) return;
+    fetch(`/api/characters/${id}/export`)
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) { alert('Export error: ' + data.error); return; }
+            const blob = new Blob([JSON.stringify(data.character, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `${data.character.name}_${data.character.id}.json`;
+            document.body.appendChild(a); a.click(); a.remove();
+            URL.revokeObjectURL(url);
+        });
+}
+
+function importCharacter() {
+    const txt = document.getElementById('import-json').value.trim();
+    if (!txt) return;
+    let payload;
+    try { payload = JSON.parse(txt); } catch { alert('Invalid JSON'); return; }
+    fetch('/api/characters/import', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    }).then(r => r.json()).then(data => {
+        if (!data.success) { alert('Import error: ' + data.error); return; }
+        loadCharacters(); populateCharacterSelect();
+        document.getElementById('import-json').value = '';
+    });
+}
+
+function deleteCharacter() {
+    const sel = document.getElementById('save-char-select');
+    const id = sel.value; if (!id) return;
+    if (!confirm('Delete this character?')) return;
+    fetch(`/api/characters/${id}`, { method: 'DELETE' })
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) { alert('Delete error: ' + (data.error || 'unknown')); return; }
+            loadCharacters(); populateCharacterSelect();
+        });
 }

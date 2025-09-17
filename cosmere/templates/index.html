@@ -12,6 +12,34 @@
         <h1>Cosmere RPG Digital Companion</h1>
         <p>Welcome to your journey through the Cosmere!</p>
         
+        <div id="session-section">
+            <h2>Session</h2>
+            <div class="grid-2">
+                <div>
+                    <label>
+                        Username
+                        <input id="username" type="text" placeholder="Worldhopper">
+                    </label>
+                    <button onclick="login()">Login</button>
+                    <button onclick="logout()">Logout</button>
+                    <div id="session-status" class="status"></div>
+                </div>
+                <div>
+                    <h3>Character Saves</h3>
+                    <label>
+                        Select Character
+                        <select id="save-char-select"></select>
+                    </label>
+                    <button onclick="exportCharacter()">Export</button>
+                    <button onclick="deleteCharacter()">Delete</button>
+                    <div style="margin-top:8px;">
+                        <textarea id="import-json" rows="4" style="width:100%;" placeholder='Paste character JSON here to import'></textarea>
+                        <button onclick="importCharacter()">Import</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div id="character-section">
             <h2>Characters</h2>
             <div class="grid-2">
