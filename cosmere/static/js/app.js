@@ -101,7 +101,13 @@ function populateCharacterSelect(chars) {
             if (!data.success) return;
             const sel = document.getElementById('char-select');
             sel.innerHTML = data.characters.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            sel.onchange = onCharacterSelected;
+            onCharacterSelected();
         });
+}
+
+function onCharacterSelected() {
+    // Could fetch and display current pool if a per-character GET existed; for now, pool updates via Save Investiture.
 }
 
 function searchRules() {
@@ -125,12 +131,15 @@ function searchRules() {
 }
 
 function loadPowers() {
-    fetch('/api/investiture/powers')
+    // Optionally filter by type if a type is entered
+    const type = (document.getElementById('inv-type')?.value || '').trim();
+    const url = type ? ('/api/investiture/powers?type=' + encodeURIComponent(type)) : '/api/investiture/powers';
+    fetch(url)
         .then(r => r.json())
         .then(data => {
             if (!data.success) return;
             const sel = document.getElementById('power-select');
-            sel.innerHTML = data.powers.map(p => `<option value="${p.name}">${p.name} (cost ${p.cost})</option>`).join('');
+            sel.innerHTML = data.powers.map(p => `<option value="${p.name}">${p.name}${p.type ? ' ['+p.type+']' : ''} (cost ${p.cost})</option>`).join('');
         });
 }
 
@@ -149,7 +158,9 @@ function updateInvestiture() {
     .then(r => r.json())
     .then(data => {
         const s = document.getElementById('inv-status');
-        if (data.success) s.textContent = 'Saved.'; else s.textContent = 'Error: ' + data.error;
+        if (data.success) s.textContent = `Saved. Points: ${data.character.investiture.investiture_points}/${data.character.investiture.max_investiture}`; else s.textContent = 'Error: ' + data.error;
+        // Reload powers filtered by the saved type
+        loadPowers();
     });
 }
 

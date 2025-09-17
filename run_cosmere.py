@@ -34,17 +34,23 @@ dice_roller = DiceRoller()
 rule_search = CosmereRuleSearch(rules_dir="cosmere/data/rules")
 investiture_manager = InvestitureManager()
 
-# Seed basic powers (can be replaced by data-driven loading later)
-_seed_powers = [
-    {"name": "Steelpush", "cost": 1, "description": "Push metal objects; Allomancy."},
-    {"name": "Ironpull", "cost": 1, "description": "Pull metal objects; Allomancy."},
-    {"name": "Lash", "cost": 2, "description": "Change direction of gravity; Surgebinding."},
-]
-for p in _seed_powers:
-    try:
-        investiture_manager.register_power(p)
-    except Exception:
-        pass
+# Load powers from JSON if available; seed a few if none are loaded
+loaded_count = 0
+try:
+    loaded_count = investiture_manager.load_powers_from_file("cosmere/data/powers.json")
+except Exception:
+    loaded_count = 0
+if loaded_count == 0:
+    _seed_powers = [
+        {"name": "Steelpush", "type": "Allomancy", "cost": 1, "description": "Push metal objects."},
+        {"name": "Ironpull", "type": "Allomancy", "cost": 1, "description": "Pull metal objects."},
+        {"name": "Lash", "type": "Surgebinding", "cost": 2, "description": "Change direction of gravity."},
+    ]
+    for p in _seed_powers:
+        try:
+            investiture_manager.register_power(p)
+        except Exception:
+            pass
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -159,7 +165,8 @@ def handle_investiture_powers():
     """List or register Investiture powers."""
     try:
         if request.method == 'GET':
-            return jsonify({"success": True, "powers": investiture_manager.list_powers()})
+            ptype = request.args.get('type')
+            return jsonify({"success": True, "powers": investiture_manager.list_powers(ptype)})
         else:
             power = request.json or {}
             investiture_manager.register_power(power)
@@ -194,6 +201,26 @@ def apply_investiture_power(character_id):
         updated = investiture_manager.apply_power_cost(character, power_name)
         character_manager.save_character(updated)
         return jsonify({"success": True, "character": updated})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route('/api/session', methods=['GET', 'POST', 'DELETE'])
+def handle_session():
+    """Very simple session management (username only)."""
+    try:
+        if request.method == 'GET':
+            username = session.get('username')
+            return jsonify({"success": True, "username": username})
+        elif request.method == 'POST':
+            data = request.json or {}
+            username = data.get('username')
+            if not username:
+                return jsonify({"success": False, "error": "Missing username"}), 400
+            session['username'] = username
+            return jsonify({"success": True, "username": username})
+        else:  # DELETE
+            session.pop('username', None)
+            return jsonify({"success": True})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 400
 

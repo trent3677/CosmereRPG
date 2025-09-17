@@ -1,0 +1,7 @@
+{
+  "powers": [
+    { "name": "Steelpush", "type": "Allomancy", "cost": 1, "description": "Push metal objects in line of sight." },
+    { "name": "Ironpull", "type": "Allomancy", "cost": 1, "description": "Pull metal objects in line of sight." },
+    { "name": "Lash", "type": "Surgebinding", "cost": 2, "description": "Change the vector of gravity for yourself or a target." }
+  ]
+}
