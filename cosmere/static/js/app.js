@@ -18,10 +18,18 @@ function createNewCharacter() {
         alert('Please fill in name, heritage, path, and origin.');
         return;
     }
+    const stats = {
+        strength: parseInt(document.getElementById('stat-strength').value, 10) || 0,
+        speed: parseInt(document.getElementById('stat-speed').value, 10) || 0,
+        intellect: parseInt(document.getElementById('stat-intellect').value, 10) || 0,
+        willpower: parseInt(document.getElementById('stat-willpower').value, 10) || 0,
+        awareness: parseInt(document.getElementById('stat-awareness').value, 10) || 0,
+        persuasion: parseInt(document.getElementById('stat-persuasion').value, 10) || 0,
+    };
     fetch('/api/characters', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ name, heritage, path, origin })
+        body: JSON.stringify({ name, heritage, path, origin, stats })
     })
     .then(r => r.json())
     .then(data => {

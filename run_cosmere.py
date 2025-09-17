@@ -104,6 +104,46 @@ def handle_character(character_id):
         except Exception as e:
             return jsonify({"success": False, "error": str(e)}), 400
 
+@app.route('/api/characters/<character_id>', methods=['DELETE'])
+def delete_character(character_id):
+    """Delete a character."""
+    try:
+        ok = character_manager.delete_character(character_id)
+        if ok:
+            return jsonify({"success": True})
+        return jsonify({"success": False, "error": "Character not found"}), 404
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route('/api/characters/<character_id>/export', methods=['GET'])
+def export_character(character_id):
+    """Export a character JSON file for download."""
+    try:
+        character = character_manager.load_character(character_id)
+        if not character:
+            return jsonify({"success": False, "error": "Character not found"}), 404
+        return jsonify({"success": True, "character": character})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
+@app.route('/api/characters/import', methods=['POST'])
+def import_character():
+    """Import a character from JSON payload; assigns new ID."""
+    try:
+        data = request.json or {}
+        # Create via standard path to get defaults/validation
+        # Preserve provided fields if present
+        character = character_manager.create_character({
+            "name": data.get("name", "Imported"),
+            "heritage": data.get("heritage", "Unknown"),
+            "path": data.get("path", "Adventurer"),
+            "origin": data.get("origin", "Unknown"),
+            "stats": data.get("stats", {})
+        })
+        return jsonify({"success": True, "character": character})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 400
+
 @app.route('/api/roll', methods=['POST'])
 def handle_dice_roll():
     """Handle dice rolling requests"""

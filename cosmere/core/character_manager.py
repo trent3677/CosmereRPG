@@ -20,7 +20,7 @@ class CosmereCharacterManager:
         # Validate required fields
         required_fields = ["name", "heritage", "path", "origin"]
         for field in required_fields:
-            if field not in character_data:
+            if field not in character_data or not str(character_data[field]).strip():
                 raise ValueError(f"Missing required field: {field}")
         
         # Set default values
@@ -58,9 +58,10 @@ class CosmereCharacterManager:
             "notes": []
         }
         
-        # Apply any custom stats
-        if "stats" in character_data:
-            character["stats"].update(character_data["stats"])
+        # Apply any custom stats with validation
+        if "stats" in character_data and isinstance(character_data["stats"], dict):
+            validated_stats = self._validate_and_coerce_stats(character_data["stats"])
+            character["stats"].update(validated_stats)
             
         # Calculate derived stats
         character["derived_stats"] = self._calculate_derived_stats(character)
@@ -109,11 +110,37 @@ class CosmereCharacterManager:
         filepath = self.characters_dir / f"{character['id']}.json"
         with open(filepath, 'w') as f:
             json.dump(character, f, indent=2)
+
+    def delete_character(self, character_id: str) -> bool:
+        """Delete a character file; returns True if deleted"""
+        filepath = self.characters_dir / f"{character_id}.json"
+        if filepath.exists():
+            filepath.unlink()
+            return True
+        return False
     
     def _generate_character_id(self) -> str:
         """Generate a unique character ID"""
         import uuid
         return str(uuid.uuid4())[:8]
+
+    def _validate_and_coerce_stats(self, stats: Dict[str, Any]) -> Dict[str, int]:
+        """Coerce stats to ints and clamp to a reasonable range (-5..+5)."""
+        allowed = ["strength", "speed", "intellect", "willpower", "awareness", "persuasion"]
+        result: Dict[str, int] = {}
+        for key in allowed:
+            if key in stats:
+                try:
+                    val = int(stats[key])
+                except Exception:
+                    val = 0
+                # Clamp range
+                if val < -5:
+                    val = -5
+                if val > 5:
+                    val = 5
+                result[key] = val
+        return result
     
     def add_talent(self, character_id: str, talent: Dict[str, Any]) -> Dict[str, Any]:
         """Add a talent to a character"""
