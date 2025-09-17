@@ -126,6 +126,54 @@
                 </div>
             </div>
         </div>
+
+        <div id="talents-section">
+            <h2>Talents</h2>
+            <div class="grid-2">
+                <div>
+                    <label>
+                        Path Filter
+                        <input id="talent-path" type="text" placeholder="Windrunner / Coinshot">
+                    </label>
+                    <button onclick="loadTalents()">Load Talents</button>
+                    <div id="talent-list"></div>
+                </div>
+                <div>
+                    <label>
+                        Apply to Character
+                        <select id="talent-char-select"></select>
+                    </label>
+                    <label>
+                        Talent
+                        <select id="talent-select"></select>
+                    </label>
+                    <button onclick="applyTalent()">Apply Talent</button>
+                    <div id="talent-status" class="status"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="combat-section">
+            <h2>Combat</h2>
+            <div class="grid-2">
+                <div>
+                    <h3>Start Combat</h3>
+                    <label>
+                        Participants
+                        <select id="combat-participants" multiple style="height:120px;"></select>
+                    </label>
+                    <button onclick="startCombat()">Start</button>
+                </div>
+                <div>
+                    <h3>Turn</h3>
+                    <div id="combat-state"></div>
+                    <button onclick="combatActSkill()">Skill Check</button>
+                    <button onclick="combatActPower()">Use Power</button>
+                    <button onclick="combatEndTurn()">End Turn</button>
+                    <button onclick="finishCombat()">Finish</button>
+                </div>
+            </div>
+        </div>
     </div>
     
     <script src="/static/js/app.js"></script>

@@ -76,6 +76,7 @@ window.onload = function() {
     loadCharacters();
     loadPowers();
     getSession();
+    loadTalents();
 };
 
 function loadCharacters() {
@@ -117,6 +118,16 @@ function populateCharacterSelect(chars) {
             if (saveSel) {
                 saveSel.innerHTML = data.characters.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
             }
+
+            const tSel = document.getElementById('talent-char-select');
+            if (tSel) {
+                tSel.innerHTML = data.characters.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            }
+
+            const pSel = document.getElementById('combat-participants');
+            if (pSel) {
+                pSel.innerHTML = data.characters.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            }
         });
 }
 
@@ -155,6 +166,85 @@ function loadPowers() {
             const sel = document.getElementById('power-select');
             sel.innerHTML = data.powers.map(p => `<option value="${p.name}">${p.name}${p.type ? ' ['+p.type+']' : ''} (cost ${p.cost})</option>`).join('');
         });
+}
+
+// Talents
+function loadTalents() {
+    const path = (document.getElementById('talent-path')?.value || '').trim();
+    const url = path ? ('/api/talents?path=' + encodeURIComponent(path)) : '/api/talents';
+    fetch(url)
+        .then(r => r.json())
+        .then(data => {
+            if (!data.success) return;
+            const list = document.getElementById('talent-list');
+            const sel = document.getElementById('talent-select');
+            const items = data.talents || [];
+            if (list) list.innerHTML = items.map(t => `<div><strong>${t.name}</strong>${t.path ? ' ['+t.path+']' : ''}<br><small>${t.description||''}</small></div>`).join('');
+            if (sel) sel.innerHTML = items.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+        });
+}
+
+function applyTalent() {
+    const tSel = document.getElementById('talent-select');
+    const name = tSel.value; if (!name) return;
+    const cSel = document.getElementById('talent-char-select');
+    const id = cSel.value; if (!id) return;
+    fetch(`/api/characters/${id}/talents`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ name }) })
+        .then(r => r.json())
+        .then(data => {
+            const s = document.getElementById('talent-status');
+            if (data.success) s.textContent = `Applied ${name} to ${data.character.name}`; else s.textContent = 'Error: ' + data.error;
+        });
+}
+
+// Combat
+function startCombat() {
+    const sel = document.getElementById('combat-participants');
+    const ids = Array.from(sel.selectedOptions).map(o => o.value);
+    if (ids.length === 0) { alert('Select at least one participant'); return; }
+    fetch('/api/combat/start', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ character_ids: ids }) })
+        .then(r => r.json()).then(data => { if (data.success) renderCombatState(data.state); });
+}
+
+function getCombatState() {
+    fetch('/api/combat/state').then(r => r.json()).then(data => { if (data.success) renderCombatState(data.state); });
+}
+
+function combatActSkill() {
+    const state = document.getElementById('combat-state').dataset;
+    const actor = state.turnId; if (!actor) return;
+    fetch('/api/combat/act', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ actor_id: actor, action: 'skill_check', payload: { modifier: 0 } }) })
+        .then(r => r.json()).then(data => { if (data.success) renderCombatState(data.state); });
+}
+
+function combatActPower() {
+    const state = document.getElementById('combat-state').dataset;
+    const actor = state.turnId; if (!actor) return;
+    const power = (document.getElementById('power-select')?.value) || '';
+    if (!power) { alert('Select a power in Investiture section'); return; }
+    fetch('/api/combat/act', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ actor_id: actor, action: 'use_power', payload: { power } }) })
+        .then(r => r.json()).then(data => { if (data.success) renderCombatState(data.state); });
+}
+
+function combatEndTurn() {
+    const state = document.getElementById('combat-state').dataset;
+    const actor = state.turnId; if (!actor) return;
+    fetch('/api/combat/act', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ actor_id: actor, action: 'end_turn' }) })
+        .then(r => r.json()).then(data => { if (data.success) renderCombatState(data.state); });
+}
+
+function finishCombat() {
+    fetch('/api/combat/finish', { method: 'POST' }).then(r => r.json()).then(data => { if (data.success) renderCombatState(data.state); });
+}
+
+function renderCombatState(state) {
+    const div = document.getElementById('combat-state');
+    div.dataset.turnId = state.turn_character_id || '';
+    let html = '';
+    html += `<div><strong>Round:</strong> ${state.round || '-'} | <strong>Turn Index:</strong> ${state.turn_index || 0}</div>`;
+    html += '<div><strong>Order:</strong><ul>' + (state.order||[]).map(o => `<li>${o.name} (${o.initiative})</li>`).join('') + '</ul></div>';
+    html += '<div><strong>Log:</strong><ul>' + (state.log||[]).map(e => `<li>${e.event}</li>`).join('') + '</ul></div>';
+    div.innerHTML = html;
 }
 
 function updateInvestiture() {
